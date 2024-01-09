@@ -1,0 +1,207 @@
+<Datasource name="DsLoCndCpReadKeyTypes" objectClass="LoCndCpReadKeyTypes" businessObjectClass="LoCndCpReadKeyTypes" readOnly="true" external="true" editableEntity="CndCpKeyType" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+				var searchStrategyList = [];
+				if(Utils.isDefined(jsonParams.SearchStrategyList)){
+                    searchStrategyList = jsonParams.SearchStrategyList;
+                }
+				var sqlParams = {};
+				var sql1= "";
+				sql1 += "SELECT ";
+				sql1 +=       "CndCpSearchStrategyKTRel.CndCpSearchStrategyPKey as CndCpSearchStrategyPKey, ";
+				sql1 +=       "CndCpSearchStrategy.Id as SearchStrategyId, ";
+				sql1 +=       "CndCpKeyType.PKey as CndCpKeyTypePKey, ";
+				sql1 +=       "CndCpSearchStrategyKTRel.BpaHierarchySearch as BpaHierarchySearch, ";
+				sql1 +=       "CndCpSearchStrategyKTRel.PrdHierarchySearch as PrdHierarchySearch, ";
+				sql1 +=       "CndCpKeyType.ConsiderBpaMain as ConsiderBpaMain, ";
+				sql1 +=       "CndCpKeyType.ConsiderBpaSet as ConsiderBpaSet, ";
+				sql1 +=       "CndCpKeyType.ConsiderPrdMain as ConsiderPrdMain, ";
+				sql1 +=       "CndCpKeyType.ConsiderPrdSet as ConsiderPrdSet, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key1CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityEntity ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key1CndCpKeyAttributePKey) END) as Key1MobilityEntity, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key1CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityAttribute ";
+				sql1 += "FROM ";
+				sql1 += "      CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key1CndCpKeyAttributePKey) END) as Key1MobilityAttribute, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key2CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityAttribute ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key2CndCpKeyAttributePKey) END) as Key2MobilityAttribute, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key2CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityEntity ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key2CndCpKeyAttributePKey) END) as Key2MobilityEntity, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key3CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityEntity ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key3CndCpKeyAttributePKey) END) as Key3MobilityEntity, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key3CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityAttribute ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key3CndCpKeyAttributePKey) END) as Key3MobilityAttribute, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key4CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityEntity ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key4CndCpKeyAttributePKey) END) as Key4MobilityEntity, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key4CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityAttribute ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key4CndCpKeyAttributePKey) END) as Key4MobilityAttribute, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key5CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityEntity ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key5CndCpKeyAttributePKey) END) as Key5MobilityEntity, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key5CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityAttribute ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key5CndCpKeyAttributePKey) END) as Key5MobilityAttribute, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key6CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityAttribute ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key6CndCpKeyAttributePKey) END) as Key6MobilityAttribute, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key6CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityEntity ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key6CndCpKeyAttributePKey) END) as Key6MobilityEntity, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key7CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityAttribute ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key7CndCpKeyAttributePKey) END) as Key7MobilityAttribute, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key7CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityEntity ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key7CndCpKeyAttributePKey) END) as Key7MobilityEntity, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key8CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityAttribute ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key8CndCpKeyAttributePKey) END) as Key8MobilityAttribute, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key8CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityEntity ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key8CndCpKeyAttributePKey) END) as Key8MobilityEntity, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key9CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityAttribute ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key9CndCpKeyAttributePKey) END) as Key9MobilityAttribute, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key9CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityEntity ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key9CndCpKeyAttributePKey) END) as Key9MobilityEntity, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key10CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityAttribute ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key10CndCpKeyAttributePKey) END) as Key10MobilityAttribute, ";
+				sql1 +=       "(CASE WHEN LTRIM(RTRIM(CndCpKeyType.Key10CndCpKeyAttributePKey ";
+				sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+				sql1 +=       "CndCpKeyAttribute.MobilityEntity ";
+				sql1 += "FROM ";
+				sql1 +=       "CndCpKeyAttribute ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpKeyAttribute.PKey=CndCpKeyType.Key10CndCpKeyAttributePKey) END) as Key10MobilityEntity, ";
+				sql1 +=       "CndCpSearchStrategyKTRel.StepExclusive as StepExclusive, ";
+				sql1 +=       "CndCpKeyType.Id as KeyTypeId, ";
+				sql1 +=       "CndCpSearchStrategyKTRel.Position as Position, ";
+				sql1 +=       "CndCpSearchStrategyKTRel.ConstraintUserExitId as ConstraintUserExitId, ";
+				sql1 +=       "CndCpSearchStrategyKTRel.CustomerRole as CustomerRole, ";
+				sql1 +=       "CndCpKeyType.ConsiderBpaHierarchy as ConsiderBpaHierarchy, ";
+				sql1 +=       "CndCpKeyType.ConsiderSalesOrg as ConsiderSalesOrg, ";
+				sql1 +=       "CndCpKeyType.ConsiderPromotion as ConsiderPromotion, ";
+				sql1 +=       "CndCpKeyType.ConsiderPrdHierarchy as ConsiderPrdHierarchy, ";
+				sql1 +=       "CndCpKeyType.ConsiderDivision as ConsiderDivision, ";
+				sql1 +=       "CndCpKeyType.ConsiderDistribChannel as ConsiderDistribChannel ";
+				sql1 += "FROM ";
+				sql1 +=       "CNDCPSEARCHSTRATEGYKTREL, ";
+				sql1 +=       "CNDCPKEYTYPE, ";
+				sql1 +=       "CNDCPSEARCHSTRATEGY ";
+				sql1 += "WHERE ";
+				sql1 +=       "CndCpSearchStrategyKTRel.CndCpKeyTypePKey=CndCpKeyType.PKey ";
+				sql1 +=       "AND CndCpSearchStrategyKTRel.CndCpSearchStrategyPKey=CndCpSearchStrategy.PKey ";
+				sql1 +=       "AND CndCpSearchStrategyKTRel.SalesOrg= '#SALESORG#' ";
+				sql1 +=       "AND CndCpKeyType.SalesOrg= '#SALESORG#' ";
+				sql1 +=       "AND CndCpSearchStrategy.SalesOrg= '#SALESORG#' ";
+				sql1 +=       "AND CndCpSearchStrategyKTRel.CndCpSearchStrategyPKey IN (";
+				//searchStrategyList
+				searchStrategyList = Utils.getListParams(searchStrategyList);
+                
+				sql2 = ") ORDER BY CndCpSearchStrategyKTRel.CndCpSearchStrategyPKey, Position asc";
+
+				var sqlStmt1Result = Utils.replaceMacrosParam(sql1, sqlParams);
+                var sqlStmt2Result = Utils.replaceMacrosParam(sql2, sqlParams);
+				var finalSql = sqlStmt1Result.sql + searchStrategyList.sql + sqlStmt2Result.sql;
+                var finalParams = sqlStmt1Result.params.concat(searchStrategyList.params).concat(sqlStmt2Result.params);
+                
+                return {sql: finalSql, params: finalParams};
+         ]]></Load>
+    <Update><![CDATA[
+            // Intended to be empty
+            return undefined;
+                    ]]></Update>
+    <Insert><![CDATA[   
+                        // Intended to be empty     
+            return undefined;           
+                    ]]></Insert>
+    <Delete><![CDATA[
+              // Intended to be empty
+              return undefined;  
+                    ]]></Delete>
+  </Database>
+</Datasource>

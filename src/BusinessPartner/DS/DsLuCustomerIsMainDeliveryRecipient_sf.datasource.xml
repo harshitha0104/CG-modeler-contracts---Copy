@@ -1,0 +1,20 @@
+<DataSource name="DsLuCustomerIsMainDeliveryRecipient" backendSystem="sf" businessObjectClass="LuCustomerIsMainDeliveryRecipient" external="false" editableEntity="Account_Relationship__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Relationship__c" column="Id" />
+    <Attribute name="fromPKey" table="Account_Relationship__c" column="Related_Account__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Relationship__c" alias="" />
+  </Entities>
+  <QueryCondition><![CDATA[
+		Account__c = #pKey#
+		AND Is_Primary_Relationship__c = '1'
+        AND Account_Relationship__c.Relationship_Type__c = 'DeliveryRecipient'
+        AND #compareAsDate('Start_Date__c', 'Date','<=',#TodayAsDate#, 'Date')#
+        AND #compareAsDate('End_Date__c', 'Date','>=',#TodayAsDate#, 'Date')#
+        ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

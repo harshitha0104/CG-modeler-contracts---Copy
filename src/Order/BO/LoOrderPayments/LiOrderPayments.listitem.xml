@@ -1,0 +1,18 @@
+<ListItem name="LiOrderPayments">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="sdoMainPKey" type="DomPKey" dataSourceProperty="sdoMainPKey" />
+    <SimpleProperty name="sdoPaymentMetaPKey" type="DomPKey" dataSourceProperty="sdoPaymentMetaPKey" />
+    <SimpleProperty name="initiationDate" type="DomDate" dataSourceProperty="initiationDate" />
+    <SimpleProperty name="amount" type="DomMoney" dataSourceProperty="amount" />
+    <SimpleProperty name="amountReceipt" type="DomMoney" dataSourceProperty="amountReceipt" />
+    <SimpleProperty name="absoluteAmount" type="DomMoney" dataSourceProperty="absoluteAmount" />
+    <SimpleProperty name="currency" type="DomCurrency" dataSourceProperty="currency" />
+    <!-- Attributes for inventory handling - Not stored, not loaded - Set by business logic -->
+    <SimpleProperty name="ivcInformationObject" type="Object" storable="false" dataSourceProperty="ivcInformationObject" />
+    <SimpleProperty name="paymentMethod" type="DomPaymentMethod" storable="true" dataSourceProperty="paymentMethod" />
+    <SimpleProperty name="modReason" type="DomSdoPaymentModReason" storable="false" dataSourceProperty="modReason" />
+    <SimpleProperty name="calcAmount" type="DomMoney" dataSourceProperty="calcAmount" />
+    <SimpleProperty name="expenseType" type="DomSdoPaymentExpenseType" dataSourceProperty="expenseType" />
+  </SimpleProperties>
+</ListItem>

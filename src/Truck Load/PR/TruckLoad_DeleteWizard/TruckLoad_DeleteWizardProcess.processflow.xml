@@ -1,0 +1,65 @@
+<Process name="TruckLoad::DeleteWizardProcess" defaultAction="DeletionAllowed_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="TruckLoadBo" type="BoTruckLoad" />
+        <Declaration name="ResponsibleEqualsLoggedInUser" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadBo" actionType="LOAD" type="BoTruckLoad">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainPKey" />
+          <Input name="process" value="delete" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::TruckLoadBo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="DeletionAllowed_Decision" actionType="DECISION" parameter="ProcessContext::TruckLoadBo.phase">
+        <Case value="Initial" action="CheckResponsible" />
+        <CaseElse action="NotAllowed_Phase" />
+      </Action>
+      <Action name="CheckResponsible" actionType="LOGIC" call="ProcessContext::TruckLoadBo.checkResponsibleEqUser">
+        <Parameters>
+          <Input name="usrMainPKey" value="ApplicationContext::User.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::ResponsibleEqualsLoggedInUser" />
+        <TransitionTo action="Responsible_Decision" />
+      </Action>
+      <Action name="Responsible_Decision" actionType="DECISION" parameter="ProcessContext::ResponsibleEqualsLoggedInUser">
+        <Case value="1" action="ConfirmCancelDelete" />
+        <Case value="0" action="NotAllowed_Responsible" />
+        <CaseElse action="NotAllowed_Responsible" />
+      </Action>
+      <Action actionType="CONFIRM" confirmType="Ok" name="NotAllowed_Phase">
+        <Message messageId="DeleteNotInitialNotAllowedMsg" />
+        <Cases>
+          <Case value="Ok" action="end" />
+        </Cases>
+      </Action>
+      <Action actionType="CONFIRM" confirmType="Ok" name="NotAllowed_Responsible">
+        <Message messageId="DeleteNotResponsibleNotAllowedMsg" />
+        <Cases>
+          <Case value="Ok" action="end" />
+        </Cases>
+      </Action>
+      <Action actionType="CONFIRM" confirmType="YesNoCancel" name="ConfirmCancelDelete">
+        <Message messageId="CasConfirmOrderDeletionMsg"></Message>
+        <Cases>
+          <Case value="Yes" action="delete" />
+          <Case value="No" action="end" />
+        </Cases>
+      </Action>
+      <Action name="delete" actionType="LOGIC" call="ProcessContext::TruckLoadBo.deleteDocument">
+        <TransitionTo action="end" />
+      </Action>
+      <Action actionType="END" name="end"></Action>
+    </Actions>
+  </Body>
+</Process>

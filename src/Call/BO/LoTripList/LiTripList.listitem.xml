@@ -1,0 +1,11 @@
+<ListItem name="LiTripList">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="tplMetaPKey" type="DomPKey" storable="false" dataSourceProperty="tplMetaPKey" />
+    <SimpleProperty name="validFrom" type="DomDate" storable="false" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomValidThru" storable="false" dataSourceProperty="validThru" />
+    <SimpleProperty name="text" type="DomText" storable="false" dataSourceProperty="text" />
+    <SimpleProperty name="metaType" type="DomTplMetaType" storable="false" dataSourceProperty="metaType" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+  </SimpleProperties>
+</ListItem>

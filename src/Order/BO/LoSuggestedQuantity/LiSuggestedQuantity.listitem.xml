@@ -1,0 +1,9 @@
+<ListItem name="LiSuggestedQuantity">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="quantityLogisticUnit" type="DomText" dataSourceProperty="quantityLogisticUnit" />
+    <SimpleProperty name="sdoItemMetaPKey" type="DomPKey" dataSourceProperty="sdoItemMetaPKey" />
+    <SimpleProperty name="suggestedQuantity" type="DomDecimal" dataSourceProperty="suggestedQuantity" />
+  </SimpleProperties>
+</ListItem>

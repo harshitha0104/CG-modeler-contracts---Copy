@@ -1,0 +1,49 @@
+<DataSource name="DsLoCashOverview" businessObjectClass="LoCashOverview" external="false" editableEntity="SdoMain" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="SdoMain" column="PKey" />
+    <Attribute name="id" table="SdoMain" column="Id" />
+    <Attribute name="phase" table="SdoMain" column="Phase" />
+    <Attribute name="sdoMetaPKey" table="SdoMain" column="SdoMetaPKey" />
+    <Attribute name="currency" table="SdoMain" column="Currency" />
+    <Attribute name="initiationDate" table="SdoMain" column="InitiationDate" />
+    <Attribute name="documentType" table="SdoMain" column="DocumentType" />
+    <Attribute name="debitCredit" table="SdoMain" column="DebitCredit" />
+    <Attribute name="usedForStartOfDay" table="TmgTourObjectRel" column="UsedForStartOfDay" />
+    <Attribute name="usedForEndOfDay" table="TmgTourObjectRel" column="UsedForEndOfDay" />
+    <Attribute name="usage" table="TmgTourObjectRel" column="Usage" />
+    <Attribute name="metaText" table="SdoText" column="Text" />
+    <DerivedAttribute name="paidAmount" value="CASE SdoMain.DocumentType WHEN 'CashCheckIn' THEN ABS(SdoMain.PaidAmount) WHEN 'Expenses' THEN ABS(SdoMain.PaidAmount) ELSE SdoMain.PaidAmount END" />
+    <DerivedAttribute name="sort1" value="CASE SdoMain.Phase WHEN 'Initial' THEN '1' WHEN 'Released' THEN '2' WHEN 'Canceled' THEN '3' ELSE '4' END" />
+    <DerivedAttribute name="releaseTime" value="CASE SdoMain.Phase WHEN 'Released' THEN SdoMain.ReleaseTime ELSE ' ' END" />
+    <DerivedAttribute name="sortReleaseTime" value="CASE SdoMain.Phase WHEN 'Released' THEN SdoMain.ReleaseTime ELSE ' ' END" />
+  </Attributes>
+  <Entities>
+    <Entity name="SdoMain" alias="" idAttribute="PKey" />
+    <Entity name="SdoText" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoMain.SdoMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoText.AppPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="TmgTourObjectRel" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoMain.SdoMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="TmgTourObjectRel.ObjectMetaPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+	(SdoMain.DocumentType IN ('CashCheckOut', 'CashCheckIn','Expenses') OR (SdoMain.DocumentType = 'Delivery' AND SdoMain.Phase = 'Released' AND SdoMain.DocTaType = 'CashInvoice'))
+	AND SdoMain.TmgMainPKey = #tmgMainPKey#
+    AND TmgTourObjectRel.TmgTourPKey = #tmgMainPKey#
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="tmgMainPKey" type="TEXT"/>
+  </Parameters>
+  <QuickSearchParameters>
+    <QuickSearchParameter name="SdoMain.DocumentType" />
+  </QuickSearchParameters>
+</DataSource>

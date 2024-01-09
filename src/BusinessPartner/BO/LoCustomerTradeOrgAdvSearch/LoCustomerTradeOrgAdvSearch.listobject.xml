@@ -1,0 +1,7 @@
+<ListObject name="LoCustomerTradeOrgAdvSearch" generateLoadMethod="true" >
+  <DataSource name="DsLoCustomerTradeOrgAdvSearch" />
+  <Item objectClass="LiCustomerTradeOrgAdvSearch" />
+  <Methods>
+    <Method name="loadAsync" />
+  </Methods>
+</ListObject>

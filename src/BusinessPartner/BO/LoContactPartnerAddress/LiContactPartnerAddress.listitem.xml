@@ -1,0 +1,17 @@
+<ListItem name="LiContactPartnerAddress" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="referencePKey" type="DomPKey" dataSourceProperty="referencePKey" />
+    <SimpleProperty name="usage" type="DomBpaAddressType" dataSourceProperty="usage" />
+    <SimpleProperty name="main" type="DomBool" dataSourceProperty="main" />
+    <SimpleProperty name="street" type="DomStreet" dataSourceProperty="street" />
+    <SimpleProperty name="houseNumber" type="DomHouseNumber" dataSourceProperty="houseNumber" />
+    <SimpleProperty name="zipCode" type="DomZipCode" dataSourceProperty="zipCode" />
+    <SimpleProperty name="city" type="DomCity" dataSourceProperty="city" />
+    <SimpleProperty name="countryState" type="DomCountryState" dataSourceProperty="countryState" />
+    <SimpleProperty name="country" type="DomCountry" dataSourceProperty="country" />
+    <SimpleProperty name="latitude" type="DomDegree" dataSourceProperty="latitude" />
+    <SimpleProperty name="longitude" type="DomDegree" dataSourceProperty="longitude" />
+    <SimpleProperty name="address" type="DomText" dataSourceProperty="address" />
+  </SimpleProperties>
+</ListItem>

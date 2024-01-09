@@ -1,0 +1,13 @@
+<ListItem name="LiUsrDRActivity" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="usrDocPKey" type="DomPKey" dataSourceProperty="usrDocPKey" />
+    <SimpleProperty name="duration" type="DomDurationUnit" dataSourceProperty="duration" />
+    <SimpleProperty name="hours" type="DomInteger" dataSourceProperty="hours" />
+    <SimpleProperty name="minutes" type="DomInteger" dataSourceProperty="minutes" />
+    <SimpleProperty name="clbMetaPKey" type="DomPKey" dataSourceProperty="clbMetaPKey" />
+    <SimpleProperty name="clbText" type="DomText" dataSourceProperty="clbText" />
+    <SimpleProperty name="callType" type="DomClbMetaType" dataSourceProperty="callType" />
+    <SimpleProperty name="clbTypeStatus" type="DomString" />
+  </SimpleProperties>
+</ListItem>

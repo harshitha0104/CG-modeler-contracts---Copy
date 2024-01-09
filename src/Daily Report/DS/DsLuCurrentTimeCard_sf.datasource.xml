@@ -1,0 +1,7 @@
+<DataSource name="DsLuCurrentTimeCard" backendSystem="sf" businessObjectClass="LuCurrentTimeCard" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+				return undefined;
+			]]></Load>
+  </Database>
+</DataSource>

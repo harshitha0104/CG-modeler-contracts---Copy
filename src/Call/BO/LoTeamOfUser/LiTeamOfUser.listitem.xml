@@ -1,0 +1,11 @@
+<ListItem name="LiTeamOfUser">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="userPKey" type="DomPKey" storable="false" dataSourceProperty="userPKey" />
+    <SimpleProperty name="userName" type="DomString" storable="false" dataSourceProperty="userName" />
+    <SimpleProperty name="isSelf" type="DomBool" storable="false" dataSourceProperty="isSelf" />
+    <SimpleProperty name="groupAttribute" type="DomString" storable="false" dataSourceProperty="groupAttribute" />
+    <SimpleProperty name="currentlySelectedImageId" type="DomString" storable="false" dataSourceProperty="currentlySelectedImageId" />
+    <SimpleProperty name="sort" type="DomString" storable="false" dataSourceProperty="sort" />
+  </SimpleProperties>
+</ListItem>

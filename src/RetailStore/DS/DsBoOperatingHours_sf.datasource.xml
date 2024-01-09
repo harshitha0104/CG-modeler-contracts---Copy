@@ -1,0 +1,17 @@
+<DataSource name="DsBoOperatingHours" backendSystem="sf" businessObjectClass="BoOperatingHours" external="false" editableEntity="" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="operatingHoursId" table="OperatingHours" column="Id" />
+    <Attribute name="timeZone" table="OperatingHours" column="TimeZone" />
+    
+  </Attributes>
+  <Entities>
+    <Entity name="OperatingHours" alias="" idAttribute="Id" />
+  </Entities>
+    <QueryCondition><![CDATA[
+        OperatingHours.Id = #operatingHoursId#
+      ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="operatingHoursId" type="TEXT"/>
+  </Parameters>
+</DataSource>

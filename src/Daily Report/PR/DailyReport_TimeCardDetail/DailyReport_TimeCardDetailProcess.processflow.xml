@@ -1,0 +1,189 @@
+<Process name="DailyReport::TimeCardDetailProcess" defaultAction="LoadCurrentTimeCard" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="LuCurrentTimeCard" type="LuCurrentTimeCard" />
+        <Declaration name="CurrentTimeCard" type="BoUserDailyReport" />
+        <Declaration name="CreateNew_TimeClbPKey" type="DomPKey" />
+        <Declaration name="CreateNew_TimeTmgPKey" type="DomPKey" />
+        <Declaration name="CreateNew_TimeEntryPKey" type="DomPKey" />
+        <Declaration name="CreateNew_TimeEntryDescription" type="DomString" />
+        <Declaration name="CreateNew_TimeEntryStartdate" type="DomDateTime" />
+        <Declaration name="CreateNew_TimeEntryEnddate" type="DomDateTime" />
+        <Declaration name="CreateNew_TimeEntryEndtime" type="DomTime" />
+        <Declaration name="CreateNew_TimeEntryStarttime" type="DomTime" />
+        <Declaration name="CreateNew_TimeEntryNote" type="DomLongDescription" />
+        <Declaration name="CreateNew_TimeEntryReason" type="DomUsrTimeEntryReasonCode" />
+        <Declaration name="CreateNew_TimeEntryValid" type="DomString" />
+        <Declaration name="CreateNew_TimeFromGeoOffset" type="DomUsrGeoTimeOffset" />
+        <Declaration name="CreateNew_TimeThruGeoOffset" type="DomUsrGeoTimeOffset" />
+        <Declaration name="CreateNew_TimeFromDSTOffset" type="DomUsrDSTTimeOffset" />
+        <Declaration name="CreateNew_TimeThruDSTOffset" type="DomUsrDSTTimeOffset" />
+        <Declaration name="NewTimeEntryPKey" type="DomPKey" />
+        <Declaration name="TEContextMenuList" type="LoUsrTimeEntryContextMenu" />
+        <Declaration name="TimeEntryUpdated" type="DomBool" />
+        <Declaration name="TimeEntryUpdatedList" type="LoUsrTimeEntry" />
+      </Declarations>
+      <Parameters></Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="LoadLuCurrentTimeCard" type="LuCurrentTimeCard">
+        <Parameters>
+          <Input name="UsrMainPKey" value="ApplicationContext::User.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::LuCurrentTimeCard" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="LOAD" name="LoadCurrentTimeCard" type="BoUserDailyReport">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::LuCurrentTimeCard.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTimeCard" />
+        <TransitionTo action="showUI" />
+      </Action>
+      <Action name="showUI" actionType="VIEW">
+        <UIDescription>DailyReport::TimeCardDetailUI</UIDescription>
+        <Events>
+          <Event name="createNewTimeEntry" action="CreateNewTimeEntry" />
+          <Event name="executeBreak" action="ExecuteBreak" />
+          <!-- Handle Selected Event -->
+          <Event name="listTimeItemSelected" action="TimeEntryDetail" />
+          <!-- Context menu events -->
+          <Event name="teContextMenuOpening" action="GetContextMenuTimeEntry" />
+          <Event name="teContextMenuItemSelected" action="ContextMenu_Result_Decision_TimeEntry" />
+        </Events>
+      </Action>
+      <!-- Time Entry Detail Flyout -->
+      <Action name="TimeEntryDetail" actionType="PROCESS" process="DailyReport::FlyoutTimeEntryDetailProcess">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CurrentTimeCard.pKey" />
+          <Input name="tePKey" value="Event.pKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::TimeEntryUpdated" value="Updated" />
+          <Return name="ProcessContext::TimeEntryUpdatedList" value="updatedTimeEntries" />
+        </ReturnValues>
+        <TransitionTo action="saveUpdatedTimeEntries" />
+      </Action>
+      <Action name="saveUpdatedTimeEntries" actionType="LOGIC" call="ProcessContext::CurrentTimeCard.setUpdatedTimeEntry">
+        <Parameters>
+          <Input name="updatedTimeEntries" value="ProcessContext::TimeEntryUpdatedList" />
+        </Parameters>
+        <TransitionTo action="TimeEntryUpdatedDecision" />
+      </Action>
+      <Action name="TimeEntryUpdatedDecision" actionType="DECISION" parameter="ProcessContext::TimeEntryUpdated">
+        <Case value="1" action="calculateDurations" />
+        <CaseElse action="showUI" />
+      </Action>
+      <Action name="calculateDurations" actionType="LOGIC" call="ProcessContext::CurrentTimeCard.calculateTotalActivityDuration">
+        <TransitionTo action="removeCurrent" />
+      </Action>
+      <Action name="removeCurrent" actionType="LOGIC" call="ProcessContext::CurrentTimeCard.loUsrTimeEntry.setCurrent">
+        <TransitionTo action="SaveBeforeReload" />
+      </Action>
+      <Action name="SaveBeforeReload" actionType="SAVE">
+        <TransitionTo action="LoadCurrentTimeCard" />
+      </Action>
+      <!-- Execute Break -->
+      <Action name="ExecuteBreak" actionType="LOGIC" call="ProcessContext::CurrentTimeCard.executeBreak">
+        <TransitionTo action="SaveDailyReport" />
+      </Action>
+      <!-- WIZARD -->
+      <Action name="CreateNewTimeEntry" actionType="PROCESS" process="DailyReport::TimeEntryCreateNewProcess">
+        <Parameters>
+          <Input name="TimeEntryDetails" value="ProcessContext::CurrentTimeCard.loUsrTimeEntry" />
+          <Input name="WorkUsrTimeEntryMetaPKey" value="ProcessContext::CurrentTimeCard.boUserDocMeta.workUsrTimeEntryMetaPKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CreateNew_TimeEntryValid" value="timeEntryValid" />
+          <Return name="ProcessContext::CreateNew_TimeEntryPKey" value="timetemplatePKey" />
+          <Return name="ProcessContext::CreateNew_TimeEntryDescription" value="description" />
+          <Return name="ProcessContext::CreateNew_TimeEntryStartdate" value="startdate" />
+          <Return name="ProcessContext::CreateNew_TimeEntryEnddate" value="enddate" />
+          <Return name="ProcessContext::CreateNew_TimeEntryEndtime" value="endtime" />
+          <Return name="ProcessContext::CreateNew_TimeEntryStarttime" value="starttime" />
+          <Return name="ProcessContext::CreateNew_TimeEntryNote" value="note" />
+          <Return name="ProcessContext::CreateNew_TimeEntryReason" value="reasoncodetext" />
+          <Return name="ProcessContext::CreateNew_TimeFromGeoOffset" value="timeFromGeoOffset" />
+          <Return name="ProcessContext::CreateNew_TimeThruGeoOffset" value="timeThruGeoOffset" />
+          <Return name="ProcessContext::CreateNew_TimeFromDSTOffset" value="timeFromDSTOffset" />
+          <Return name="ProcessContext::CreateNew_TimeThruDSTOffset" value="timeThruDSTOffset" />
+        </ReturnValues>
+        <TransitionTo action="CreateNewWizard_Result_Decision" />
+      </Action>
+      <!-- DESICIONS AFTER CREATE WIZARD -->
+      <Action name="CreateNewWizard_Result_Decision" actionType="DECISION" parameter="ProcessContext::CreateNew_TimeEntryValid">
+        <Case value="1" action="CreateTimeEntryData" />
+        <Case value="0" action="showUI" />
+        <CaseElse action="showUI" />
+      </Action>
+      <!-- CREATE -->
+      <Action actionType="LOGIC" name="CreateTimeEntryData" call="ProcessContext::CurrentTimeCard.createTimeEntry">
+        <Parameters>
+          <Input name="TimeEntryTemplatePKey" value="ProcessContext::CreateNew_TimeEntryPKey" />
+          <Input name="TimeEntryClbPKey" value="ProcessContext::CreateNew_TimeClbPKey" />
+          <Input name="TimeEntryTmgPKey" value="ProcessContext::CreateNew_TimeTmgPKey" />
+          <Input name="TimeEntryDescription" value="ProcessContext::CreateNew_TimeEntryDescription" />
+          <Input name="TimeEntryStartDate" value="ProcessContext::CreateNew_TimeEntryStartdate" />
+          <Input name="TimeEntryEndDate" value="ProcessContext::CreateNew_TimeEntryEnddate" />
+          <Input name="TimeEntryStartTime" value="ProcessContext::CreateNew_TimeEntryStarttime" />
+          <Input name="TimeEntryEndTime" value="ProcessContext::CreateNew_TimeEntryEndtime" />
+          <Input name="TimeEntryReason" value="ProcessContext::CreateNew_TimeEntryReason" />
+          <Input name="TimeEntryNote" value="ProcessContext::CreateNew_TimeEntryNote" />
+          <Input name="TimeEntryManual" type="Literal" value="1" />
+          <Input name="SaveImmediately" type="Literal" value="true" />
+          <Input name="TimeFromGeoOffset" value="ProcessContext::CreateNew_TimeFromGeoOffset" />
+          <Input name="TimeThruGeoOffset" value="ProcessContext::CreateNew_TimeThruGeoOffset" />
+          <Input name="TimeFromDSTOffset" value="ProcessContext::CreateNew_TimeFromDSTOffset" />
+          <Input name="TimeThruDSTOffset" value="ProcessContext::CreateNew_TimeThruDSTOffset" />
+        </Parameters>
+        <Return name="ProcessContext::NewTimeEntryPKey" />
+        <TransitionTo action="RefreshDurationsAndWorkingTime" />
+      </Action>
+      <Action actionType="LOGIC" name="RefreshDurationsAndWorkingTime" call="ProcessContext::CurrentTimeCard.refreshDurationsAndWorkingTime">
+        <Parameters>
+          <Input name="timeEntryPKey" value="ProcessContext::NewTimeEntryPKey" />
+        </Parameters>
+        <TransitionTo action="showUI" />
+      </Action>
+      <!-- SAVE -->
+      <Action name="SaveDailyReport" actionType="SAVE"></Action>
+      <!-- Actions for handling the CONTEXT MENUE -->
+      <Action actionType="LOAD" name="GetContextMenuTimeEntry" type="LoUsrTimeEntryContextMenu">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="manual" value="Event.manual" />
+          <Input name="phase" value="ProcessContext::CurrentTimeCard.phase" />
+          <Input name="owner" value="ProcessContext::CurrentTimeCard.ownerUsrMainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::TEContextMenuList" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision_TimeEntry" actionType="DECISION" parameter="Event.selected">
+        <Case value="Delete" action="DeleteTimeEntryConfirm" />
+        <CaseElse action="showUI" />
+      </Action>
+      <Action name="DeleteTimeEntryConfirm" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmTimeEntryDeletionMsg"></Message>
+        <Cases>
+          <Case value="Yes" action="DeleteTimeEntry" />
+          <Case value="No" action="showUI" />
+        </Cases>
+      </Action>
+      <Action name="DeleteTimeEntry" actionType="LOGIC" call="ProcessContext::CurrentTimeCard.loUsrTimeEntry.deleteItem">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="refreshDurationsAndWorkingTimePostDelete" />
+      </Action>
+      <Action name="refreshDurationsAndWorkingTimePostDelete" actionType="LOGIC" call="ProcessContext::CurrentTimeCard.refreshDurationsAndWorkingTime">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="removeCurrent" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

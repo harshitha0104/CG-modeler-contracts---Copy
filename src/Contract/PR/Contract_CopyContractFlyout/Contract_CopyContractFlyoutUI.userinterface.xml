@@ -1,0 +1,47 @@
+<UIDescription name="Contract::CopyContractFlyoutUI" schemaVersion="1.1">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="CopyCustomerContractTitleId" defaultLabel="Copy Contract" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="createCustomerContract">
+          <Bindings>
+            <Resource target="Text" type="Label" id="CreateCustomerContractId" defaultLabel="Done" />
+            <Resource target="Icon" type="Image" id="CheckGrey24" defaultImage="light/done_24.png" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="FinishWizard">
+              <Params>
+                <Param name="buttonPressed" value="copyCustomerContract" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="Customer">
+          <Lookup name="CustomerName">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Customer" id="CustomerNameId" />
+              <Binding target="Value" binding="ProcessContext::FlyoutBO.luCustomer.name" bindingMode="ONE_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="OpenCustomerNameLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+        <GroupElement name="DateFrom">
+          <DatePickerField name="ContractDate">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Date" id="ContractDateId" />
+              <Binding target="Value" binding="ProcessContext::FlyoutBO.dateFrom" bindingMode="TWO_WAY" />
+            </Bindings>
+          </DatePickerField>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

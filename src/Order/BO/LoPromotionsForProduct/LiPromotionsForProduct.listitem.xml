@@ -1,0 +1,9 @@
+<ListItem name="LiPromotionsForProduct" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="promotionPKey" type="DomPKey" storable="true" dataSourceProperty="promotionPKey" />
+    <SimpleProperty name="text" type="DomText" storable="true" dataSourceProperty="text" />
+    <SimpleProperty name="validFrom" type="DomDate" storable="true" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomValidThru" storable="true" dataSourceProperty="validThru" />
+  </SimpleProperties>
+</ListItem>

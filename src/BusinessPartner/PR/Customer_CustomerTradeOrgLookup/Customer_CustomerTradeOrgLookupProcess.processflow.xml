@@ -1,0 +1,30 @@
+<Process name="Customer::CustomerTradeOrgLookupProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CustomerTradeOrgList" type="LoCustomerTradeOrgAdvSearch" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetCustomerTradeOrgList" actionType="LOAD" type="LoCustomerTradeOrgAdvSearch">
+        <Return name="ProcessContext::CustomerTradeOrgList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Customer::CustomerTradeOrgAdvSearchUI</UIDescription>
+        <Events>
+          <Event name="TradeOrgItemSelected" action="End" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="pKey" value="Event.pKey" />
+          <Return name="name" value="Event.name" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

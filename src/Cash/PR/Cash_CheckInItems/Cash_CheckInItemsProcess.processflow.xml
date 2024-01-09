@@ -1,0 +1,42 @@
+<Process name="Cash::CheckInItemsProcess" defaultAction="ShowCheckInItemsUI" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CurrentSelectedItem" type="Object" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBo" type="BoCash" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="setEARight" actionType="LOGIC" call="ProcessContext::MainBo.loCheckInPayment.setEARights">
+        <Parameters>
+          <Input name="phase" value="ProcessContext::MainBo.phase" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="VIEW" name="ShowCheckInItemsUI">
+        <UIDescription>Cash::CheckInItemsUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="GetItemByPKey" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="End"></Action>
+      <Action name="GetItemByPKey" actionType="LOGIC" call="ProcessContext::MainBo.getCheckInItemByPKey">
+        <Parameters>
+          <Input name="itemPKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentSelectedItem" />
+        <TransitionTo action="setEARights" />
+      </Action>
+      <Action name="setEARights" actionType="LOGIC" call="ProcessContext::MainBo.loCheckInPayment.setEARightsByItem">
+        <Parameters>
+          <Input name="currentItem" value="ProcessContext::CurrentSelectedItem" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

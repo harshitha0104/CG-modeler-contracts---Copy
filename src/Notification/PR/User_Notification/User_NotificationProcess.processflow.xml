@@ -1,0 +1,61 @@
+<Process name="User::NotificationProcess" defaultAction="ShowNotificationsList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="NotificationList" type="LoUsrNotification" />
+        <Declaration name="NotificationDetail" type="BoUsrNotification" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetNotificationsList" actionType="LOAD" type="LoUsrNotification">
+        <Return name="ProcessContext::NotificationList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowNotificationsList" actionType="VIEW">
+        <UIDescription>User::Notification</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="LoadNotificationDetails" />
+          <!-- Menu item events -->
+          <Event name="showAllNotifications" action="ResetNotificationListFilter" />
+          <Event name="showUnreadNotifications" action="SetNotificationFilter_Unread" />
+        </Events>
+      </Action>
+      <!-- Set filter to show only unread notifications -->
+      <Action name="SetNotificationFilter_Unread" actionType="LOGIC" call="ProcessContext::NotificationList.setOnlyUnreadFilter">
+        <TransitionTo action="ShowNotificationsList" />
+      </Action>
+      <!-- Reset order list filters -->
+      <Action name="ResetNotificationListFilter" actionType="LOGIC" call="ProcessContext::NotificationList.resetAllFilters">
+        <TransitionTo action="ShowNotificationsList" />
+      </Action>
+      <!-- BEGIN: Notification Overview -->
+      <Action name="LoadNotificationDetails" actionType="MASTER_DETAIL_HANDLER">
+        <MasterList name="ProcessContext::NotificationList">
+          <!--RELOAD|UPDATE|NONE-->
+          <ItemUnselected type="RELOAD" />
+        </MasterList>
+        <DetailObject name="ProcessContext::NotificationDetail" objectClass="BoUsrNotification">
+          <Save type="DIRTY" confirmation="FALSE" validate="FALSE" />
+        </DetailObject>
+        <TransitionTo action="SetNotificationAsRead" />
+      </Action>
+      <Action name="SetNotificationAsRead" actionType="LOGIC" call="ProcessContext::NotificationDetail.setNotificationAsRead">
+        <TransitionTo action="SetLiAsRead" />
+      </Action>
+      <Action name="SetLiAsRead" actionType="LOGIC" call="ProcessContext::NotificationList.current.setIsRead">
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <TransitionTo action="RemoveUnreadIcon" />
+      </Action>
+      <Action name="RemoveUnreadIcon" actionType="LOGIC" call="ProcessContext::NotificationList.removeUnreadIcon">
+        <Parameters>
+          <Input name="NotificationDetail" value="ProcessContext::NotificationDetail" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

@@ -1,0 +1,185 @@
+<Process name="TruckLoad::HeaderTabProcess" defaultAction="ShowHeader" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="RecipientSelected" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoTruckLoad" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="CalculateLogisticUnitTotals" call="ProcessContext::MainBO.calculateLogisticUnitTotals" />
+      <Action actionType="LOGIC" name="StoreSysReleasePKey" call="ProcessContext::MainBO.storeSysReleaseProcessPKey">
+        <Parameters />
+      </Action>
+      <Action actionType="LOGIC" name="setEARights" call="ProcessContext::MainBO.setEARights"/>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="VIEW" name="ShowHeader">
+        <UIDescription>TruckLoad::HeaderTabUI</UIDescription>
+        <Events>
+          <Event name="release" action="setReleaseTriggered" />
+          <Event name="reviewReleaseInformation" action="ReviewReleaseInformation" />
+          <Event name="recipientDriverLookup" action="OpenRecipientDriverLookup" />
+          <Event name="checkRecipientDriver" action="CheckRecipientDriver" />
+          <Event name="reject" action="RejectInwardDocument" />
+          <Event name="approve" action="setReleaseTriggered" />
+          <Event name="confirm" action="setReleaseTriggered" />
+        </Events>
+      </Action>
+      <!-- Reject Inward Document Process -->
+      <Action name="RejectInwardDocument" actionType="PROCESS" process="TruckLoad::RejectWizardProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::MainBO" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::reasonCode" value="reasonCode" />
+          <Return name="ProcessContext::buttonPressed" value="buttonPressed" />
+        </ReturnValues>
+        <TransitionTo action="Decision_CallSignatureProcess" />
+      </Action>
+      <Action name="Decision_CallSignatureProcess" actionType="DECISION" parameter="ProcessContext::buttonPressed">
+        <Case value="Yes" action="OpenReleaseProcess" />
+        <Case value="No" action="ShowHeader" />
+        <CaseElse action="ShowHeader" />
+      </Action>
+      <!-- End Reject Inward Document Process -->
+      <Action actionType="LOGIC" name="setReleaseTriggered" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::MainBO.releaseTriggered" />
+        <TransitionTo action="Release_Validate" />
+      </Action>
+      <Action name="Release_Validate" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::MainBO.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="Release_CheckValidationResult" />
+      </Action>
+      <Action name="Release_CheckValidationResult" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="CheckRecipientDriver" />
+        <Case value="validateIgnore" action="DcoumentType_Decision" />
+        <CaseElse action="ShowHeader" />
+      </Action>
+      <Action name="DcoumentType_Decision" actionType="DECISION" parameter="ProcessContext::MainBO.documentType">
+        <Case value="TruckIvcTransferOutward" action="ResetInventoryTransaction" />
+        <CaseElse action="setReleaseIgnored" />
+      </Action>
+      <Action actionType="LOGIC" name="ResetInventoryTransaction" call="ProcessContext::MainBO.resetInventoryTransaction">
+        <TransitionTo action="setReleaseIgnored" />
+      </Action>
+      <Action actionType="LOGIC" name="CheckRecipientDriver" call="ProcessContext::MainBO.checkRecipientDriver">
+        <Return name="ProcessContext::RecipientSelected" />
+        <TransitionTo action="RecipientNonEmpty_Decision" />
+      </Action>
+      <Action name="RecipientNonEmpty_Decision" actionType="DECISION" parameter="ProcessContext::RecipientSelected">
+        <Case value="1" action="OpenReleaseProcess" />
+        <CaseElse action="ShowHeader" />
+      </Action>
+      <!-- Integration of release process -->
+      <Action actionType="PROCESS" name="OpenReleaseProcess" process="System::ReleaseHandlerProcess">
+        <Parameters>
+          <Input name="referenceObject" value="ProcessContext::MainBO" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::releaseResultByProcess" value="releaseProcessOutcome" />
+        </ReturnValues>
+        <TransitionTo action="CheckReleaseResultByProcess" />
+      </Action>
+      <Action name="CheckReleaseResultByProcess" actionType="DECISION" parameter="ProcessContext::releaseResultByProcess">
+        <Case value="Confirm" action="Decision_SetNextWorkflowState" />
+        <Case value="Cancel" action="EndCancel" />
+      </Action>
+      <!-- End Integration of release process -->
+      <Action actionType="LOGIC" name="resetReleaseTriggered" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="0" />
+        </Parameters>
+        <Return name="ProcessContext::MainBO.releaseTriggered" />
+        <TransitionTo action="EndCancel" />
+      </Action>
+      <Action actionType="LOGIC" name="setReleaseIgnored" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::MainBO.releaseIgnored" />
+        <TransitionTo action="resetReleaseTriggered" />
+      </Action>
+      <Action name="Decision_SetNextWorkflowState" actionType="DECISION" parameter="ProcessContext::buttonPressed">
+        <Case value="Yes" action="Reject" />
+        <Case value="No" action="ShowHeader" />
+        <CaseEmpty action="SetNextWorkflowStateToRelease" />
+      </Action>
+      <Action name="Reject" actionType="LOGIC" call="ProcessContext::MainBO.cancel">
+        <Parameters>
+          <Input name="reasonCode" value="ProcessContext::ReasonCode" />
+        </Parameters>
+        <TransitionTo action="SetNextWorkflowStateToReject" />
+      </Action>
+      <Action actionType="LOGIC" name="SetNextWorkflowStateToReject" call="ProcessContext::MainBO.setNextWorkflowState">
+        <TransitionTo action="EndWithCancelState" />
+      </Action>
+      <Action actionType="LOGIC" name="SetNextWorkflowStateToRelease" call="ProcessContext::MainBO.setNextWorkflowState">
+        <Parameters>
+          <Input name="actionName" type="Literal" value="release" />
+        </Parameters>
+        <TransitionTo action="EndRelease" />
+      </Action>
+      <!-- Release Information Review -->
+      <Action actionType="PROCESS" name="ReviewReleaseInformation" process="System::ReleaseHandlerProcess">
+        <Parameters>
+          <Input name="referenceObject" value="ProcessContext::MainBO" />
+          <Input name="readOnlyMode" type="Literal" value="1" />
+        </Parameters>
+        <TransitionTo action="ShowHeader" />
+      </Action>
+      <!-- End of Release Information Review -->
+      <Action actionType="END" name="EndRelease">
+        <ReturnValues>
+          <Return name="released" type="Literal" value="1" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndCancel">
+        <ReturnValues>
+          <Return name="released" type="Literal" value="0" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndWithCancelState">
+        <ReturnValues>
+          <Return name="canceled" type="Literal" value="1" />
+        </ReturnValues>
+      </Action>
+      <!-- Recipient Driver lookup -->
+      <Action name="OpenRecipientDriverLookup" actionType="DECISION" parameter="ProcessContext::MainBO.phase">
+        <Case value="Initial" action="ShowRecipientDriverLookup" />
+        <CaseElse action="ShowHeader" />
+      </Action>
+      <Action actionType="PROCESS" name="ShowRecipientDriverLookup" process="TruckLoad::FlyoutSelectRecipientDriverProcess">
+        <ReturnValues>
+          <Return name="ProcessContext::RecipientDriverPKey" value="userPKey" />
+        </ReturnValues>
+        <TransitionTo action="RecipientDriverSelected" />
+      </Action>
+      <Action name="RecipientDriverSelected" actionType="DECISION" parameter="ProcessContext::RecipientDriverPKey">
+        <Case value=" " action="ShowHeader" />
+        <CaseElse action="SetRecipientDriverPKey" />
+      </Action>
+      <Action actionType="LOGIC" name="SetRecipientDriverPKey" call="ProcessContext::MainBO.setRecipientPKey">
+        <Parameters>
+          <Input name="newValue" value="ProcessContext::RecipientDriverPKey" />
+        </Parameters>
+        <TransitionTo action="LoadUserLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadUserLookup" type="LuUser">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainBO.recipientPKey" />
+        </Parameters>
+        <Return name="ProcessContext::MainBO.luRecipientDriver" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

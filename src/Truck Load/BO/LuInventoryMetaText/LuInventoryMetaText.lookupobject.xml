@@ -1,0 +1,14 @@
+<LookupObject name="LuInventoryMetaText" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuInventoryMetaText" />
+  <SimpleProperties>
+    <SimpleProperty name="metaText" type="DomText" storable="true" dataSourceProperty="metaText" />
+    <SimpleProperty name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="sdoItemMetaPKey" type="DomPKey" storable="true" dataSourceProperty="sdoItemMetaPKey" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" storable="true" dataSourceProperty="wfeWorkflowPKey" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

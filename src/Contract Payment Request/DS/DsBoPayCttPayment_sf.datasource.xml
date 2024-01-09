@@ -1,0 +1,37 @@
+<DataSource name="DsBoPayCttPayment" backendSystem="sf" businessObjectClass="BoPayCttPayment" external="false" editableEntity="Contract_Payment__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contract_Payment__c" column="Id" />
+    <Attribute name="businessModified" table="Contract_Payment__c" column="LastModifiedDate" />
+    <Attribute name="id" table="Contract_Payment__c" column="Name" />
+    <Attribute name="beneficiaryPKey" table="Contract_Payment__c" column="Account__c" />
+    <Attribute name="paymentType" table="Contract_Payment_Template__c" column="Description_#Language#__c" />
+    <Attribute name="dateInitiation" table="Contract_Payment__c" column="Initiation_Date__c" />
+    <Attribute name="dateReference" table="Contract_Payment__c" column="Reference_Date__c" />
+    <Attribute name="phase" table="Contract_Payment__c" column="Phase__c" />
+    <Attribute name="requestedAmount" table="Contract_Payment__c" column="Requested_Amount__c" />
+    <Attribute name="paidAmount" table="Contract_Payment__c" column="Paid_Amount__c" />
+    <DerivedAttribute name="nextStatePKey" value="' '" />
+    <DerivedAttribute name="actualStatePKey" value="Contract_Payment__c.Phase__c" />
+    <DerivedAttribute name="wfeWorkflowPKey" value="Contract_Payment_Template__c.Workflow__c" />
+    <Attribute name="responsiblePKey" table="Contract_Payment__c" column="Responsible__c" />
+    <Attribute name="ownerPKey" table="Contract_Payment__c" column="Accountable__c" />
+    <DerivedAttribute name="receiptCurrency" value="'USD'" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contract_Payment__c" alias="" idAttribute="Id" />
+    <Entity name="Contract_Payment_Template__c" alias="">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="Contract_Payment__c.Contract_Payment_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="Contract_Payment_Template__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[ 
+  Contract_Payment__c.Id = #pKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

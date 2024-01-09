@@ -1,0 +1,35 @@
+<BusinessObject name="BoUserCockpitHelper" schemaVersion="1.1">
+  <DataSource name="DsBoUserCockpitHelper" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="cardUserWelcome_DateText" type="DomText" />
+    <SimpleProperty name="collapseState_CardUserWelcome" type="DomBool" />
+    <SimpleProperty name="collapseState_CardVisits" type="DomBool" />
+    <SimpleProperty name="collapseState_CardSync" type="DomBool" />
+    <SimpleProperty name="cardVisits_emptyMainMessage" type="DomText" />
+    <SimpleProperty name="cardVisits_emptySubMessage" type="DomText" />
+    <SimpleProperty name="collapseState_CardVisitsGuide" type="DomBool" />
+  </SimpleProperties>
+  <NestedObjects />
+  <ObjectLookups />
+  <ListObjects />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+    <Method name="isCardVisible" />
+    <Method name="isCardCollapsible" />
+    <Method name="getDisplayedSubcomponentName" />
+    <Method name="refreshSalesCockpitData" />
+  </Methods>
+</BusinessObject>

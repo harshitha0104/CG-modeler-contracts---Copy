@@ -1,0 +1,99 @@
+<UIDescription name="Call::AccountReceivablesUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionPage" cachable="false">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="AccountReceivableId" defaultLabel="Account Receivables" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="MasterList" dataSource="ProcessContext::AccountReceivableList">
+          <Items name="Items" itemPattern="AccountReceivablesPattern">
+            <ItemListLayout>
+              <Default>
+                <Col width="10em">
+                  <Row layoutType="itemIdentifier" bindingId="ExternalIdInvoiceInfo" />
+                </Col>
+                <Col width="2.5em">
+                  <Row layoutType="itemSecondary" bindingId="ReceiptDateLabel" />
+                  <Row layoutType="itemSecondary" bindingId="DueDateLabel" />
+                </Col>
+                <Col width="3em">
+                  <Row layoutType="itemValueSmall" bindingId="ReceiptDateText" />
+                  <Row layoutType="itemValueSmall" bindingId="DueDateText" />
+                </Col>
+                <Col width="2em">
+                  <Row layoutType="itemSecondary itemCenter" bindingId="AmountLabel" />
+                  <Row layoutType="itemSecondary itemCenter" bindingId="AmountOpenLabel" />
+                </Col>
+                <Col width="3em" layoutType="itemRight">
+                  <Row layoutType="itemIdentifier itemRight" bindingId="Amount" />
+                  <Row layoutType="itemIdentifier itemRight" bindingId="AmountOpen" />
+                </Col>
+                <Col width="0.5em" height="1em" layoutType="Image" bindingId="AccountReceivableIcon" />
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="10em">
+                    <Row layoutType="itemIdentifier" bindingId="ExternalIdInvoiceInfo" />
+                  </Col>
+                  <Col width="2.5em">
+                    <Row layoutType="itemLabel" bindingId="ReceiptDateLabel" />
+                    <Row layoutType="itemLabel" bindingId="DueDateLabel" />
+                  </Col>
+                  <Col width="3em">
+                    <Row layoutType="itemValue" bindingId="ReceiptDateText" />
+                    <Row layoutType="itemValue" bindingId="DueDateText" />
+                  </Col>
+                  <Col width="2em">
+                    <Row layoutType="itemLabel itemCenter" bindingId="AmountLabel" />
+                    <Row layoutType="itemLabel itemCenter" bindingId="AmountOpenLabel" />
+                  </Col>
+                  <Col width="3em" layoutType="itemRight">
+                    <Row layoutType="itemIdentifier itemRight" bindingId="Amount" />
+                    <Row layoutType="itemIdentifier itemRight" bindingId="AmountOpen" />
+                  </Col>
+                  <Col width="0.5em" height="1em" layoutType="Image" bindingId="AccountReceivableIcon" />
+                </Default>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col width="9em">
+                    <Row layoutType="itemIdentifier itemLeft" bindingId="ExternalIdInvoiceInfo" />
+                    <Row>
+                      <Col flex="1" layoutType="itemSecondaryCockpit itemLeft" bindingId="ReceiptDateLabel" />
+                      <Col flex="1" layoutType="itemValue itemLeft" bindingId="ReceiptDateText" />
+                    </Row>
+                    <Row>
+                      <Col flex="1" layoutType="itemSecondaryCockpit itemLeft" bindingId="DueDateLabel" />
+                      <Col flex="1" layoutType="itemValue itemLeft" bindingId="DueDateText" />
+                    </Row>
+                  </Col>
+                  <Col width="4em">
+                    <Row layoutType="itemLabel itemRight" bindingId="AmountLabel" />
+                    <Row layoutType="itemIdentifier itemRight" bindingId="Amount" />
+                    <Row layoutType="itemLabel itemRight" bindingId="AmountOpenLabel" />
+                    <Row layoutType="itemIdentifier itemRight" bindingId="AmountOpen" />
+                  </Col>
+                  <Col width="0.5em" height="0.5em" layoutType="Image" bindingId="AccountReceivableIcon" />
+                </Default>
+              </Phone>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="Amount" type="Decimal" binding=".amount" formatV2="10.2" bindingMode="ONE_WAY" />
+              <Binding target="AmountOpen" type="Decimal" binding=".amountOpen" formatV2="10.2" bindingMode="ONE_WAY" />
+              <Binding target="AccountReceivableIcon" type="Image" imageType=".svg" binding=".accountReceivableIcon" bindingMode="ONE_WAY" />
+              <Binding target="ExternalIdInvoiceInfo" type="Text" binding=".externalIdInvoiceInfo" bindingMode="ONE_WAY" />
+              <Binding target="DueDateText" type="Text" binding=".dueDateText" bindingMode="ONE_WAY" />
+              <Binding target="ReceiptDateText" type="Text" binding=".receiptDateText" bindingMode="ONE_WAY" />
+              <Resource target="AmountLabel" type="Label" defaultLabel="Amount" id="AmountLabelId" />
+              <Resource target="AmountOpenLabel" type="Label" defaultLabel="Open" id="AmountOpenLabelId" />
+              <Resource target="DueDateLabel" type="Label" defaultLabel="Due Date" id="DueDateLabelId" />
+              <Resource target="ReceiptDateLabel" type="Label" defaultLabel="Receipt Date" id="ReceiptDateLabelId" />
+            </Bindings>
+          </Items>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

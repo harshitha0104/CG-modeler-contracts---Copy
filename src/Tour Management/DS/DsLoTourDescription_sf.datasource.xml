@@ -1,0 +1,16 @@
+<DataSource name="DsLoTourDescription" backendSystem="sf" businessObjectClass="LoTourDescription" external="false" editableEntity="Tour__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Tour__c" column="Id" />
+    <DerivedAttribute name="tmgTourPKey" value="''" />
+    <Attribute name="text" table="Tour__c" column="Description_#Language#__c" />
+    <DerivedAttribute name="language" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tour__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[Tour__c.Id = #tmgTourPKey#]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="tmgTourPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

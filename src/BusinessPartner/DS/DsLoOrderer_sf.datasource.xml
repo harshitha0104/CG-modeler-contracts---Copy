@@ -1,0 +1,122 @@
+<Datasource name="DsLoOrderer" backendSystem="sf" objectClass="LoOrderer" businessObjectClass="LoOrderer" readOnly="true" external="true" editableEntity="Account" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account" column="Id" />
+    <Attribute name="name" table="Account" column="Name" />
+    <Attribute name="customerId" table="Account" column="Account_Number__c" />
+    <DerivedAttribute name="mainAddress" value="''" />
+    <DerivedAttribute name="customerStreet" value="''" />
+    <Attribute name="customerZIP" table="Account" column="ShippingPostalCode" />
+    <Attribute name="customerCity" table="Account" column="ShippingCity" />
+    <Attribute name="customerState" table="Account" column="ShippingState" />
+    <DerivedAttribute name="prio" value="''" />
+    <DerivedAttribute name="classOfTrade" value="''" />
+    <DerivedAttribute name="tradeOrgName" value="''" />
+    <DerivedAttribute name="grouping1" value="''" />
+    <DerivedAttribute name="substitutedUsrPKey" value="''" />
+    <DerivedAttribute name="subValidFrom" value="''" />
+    <DerivedAttribute name="subValidThru" value="''" />
+    <DerivedAttribute name="isSubstituted" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+        var sqlParams = {};           
+
+        var sqlStmt =      "SELECT  ";
+        sqlStmt +=          "Account.Id AS pKey, ";
+        sqlStmt +=          "Account.Name as name, ";
+        sqlStmt +=          "Account.Account_Number__c as customerId, ";
+		sqlStmt +=          "Account_Extension__c.Priority__c as prio, ";
+		sqlStmt +=          "Account_Extension__c.Class_Of_Trade__c as classOfTrade,   "; 
+        sqlStmt +=          "Account.ShippingStreet || ', ' || Account.ShippingPostalCode || ' ' || Account.ShippingCity || ', ' || Account.ShippingState as mainAddress, ";
+        sqlStmt +=          "Account.ShippingStreet as Street, Account.ShippingPostalCode as customerZIP, Account.ShippingCity as customerCity, Account.ShippingState as customerState, ";
+        sqlStmt +=          "Upper(substr(Account.Name,1,1)) as grouping1, ";
+        sqlStmt +=          "SubMain.Substituted__c AS substitutedUsrPKey, ";
+        sqlStmt +=          "SubBpaRel.Valid_From__c AS subValidFrom, ";
+        sqlStmt +=          "SubBpaRel.Valid_Thru__c AS subValidThru, ";
+        sqlStmt +=          "CASE WHEN SubMain.Substituted__c <> ' ' THEN '1' ELSE '0' END AS isSubstituted, ";
+        sqlStmt +=          "'1' AS isManager, ";
+        sqlStmt +=          "TradeOrg.Name as tradeOrgName ";
+        sqlStmt +=      "FROM  ";
+        sqlStmt +=          "Account ";		
+        sqlStmt +=      "JOIN ";
+        sqlStmt +=          "Account_Extension__c ";
+        sqlStmt +=              "ON Account.Id = Account_Extension__c.Account__c ";
+        sqlStmt +=              "AND #compareDate('Account_Extension__c.Order_Role_Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+        sqlStmt +=              "AND #compareDate('Account_Extension__c.Order_Role_Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+        sqlStmt +=      " LEFT OUTER JOIN ";
+        sqlStmt +=          " Account_Trade_Org_Hierarchy__c";
+        sqlStmt +=              " ON Account.Id = Account_Trade_Org_Hierarchy__c.Child_Account__c ";                    
+        sqlStmt +=              " AND #compareDate('Account_Trade_Org_Hierarchy__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+        sqlStmt +=              " AND #compareDate('Account_Trade_Org_Hierarchy__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+		sqlStmt +=      " LEFT OUTER JOIN ";
+        sqlStmt +=          " Account TradeOrg ";
+        sqlStmt +=              "ON TradeOrg.Id = Account_Trade_Org_Hierarchy__c.Parent_Account__c ";   
+		
+        sqlStmt +=      "JOIN ";
+        sqlStmt +=          "User ";     
+        sqlStmt +=              "ON (User.Id in (";      
+        sqlStmt +=                              "SELECT ";   
+        sqlStmt +=                                  "'#UserSfId#' ";     
+        sqlStmt +=                              "UNION ";      
+        sqlStmt +=                              "SELECT ";    
+        sqlStmt +=                                  "DISTINCT User.Id as userPKey ";     
+        sqlStmt +=                              "FROM "; 
+        sqlStmt +=                                  "Org_Unit_Hierarchy__c ";  
+        sqlStmt +=                              "JOIN ";  
+        sqlStmt +=                                  "Org_Unit_User__c as ParentUserRel ";  
+        sqlStmt +=                                      "ON ParentUserRel.Org_Unit__c = Org_Unit_Hierarchy__c.Parent_Org_Unit__c ";  
+        sqlStmt +=                              "JOIN ";  
+        sqlStmt +=                                  "Org_Unit_User__c as ChildUserRel ";  
+        sqlStmt +=                                      "ON ChildUserRel.Org_Unit__c = Org_Unit_Hierarchy__c.Child_Org_Unit__c ";  
+        sqlStmt +=                              "JOIN ";  
+        sqlStmt +=                                  "User ";  
+        sqlStmt +=                                      " ON User.Id=ChildUserRel.User__c ";  
+        sqlStmt +=                              "WHERE ";  
+        sqlStmt +=                                  "ParentUserRel.User__c = '#UserSfId#' ";  
+        sqlStmt +=                                  "AND #compareAsDate('ParentUserRel.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# "; 
+        sqlStmt +=                                  "AND #compareAsDate('ParentUserRel.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+        sqlStmt +=                                  "AND #compareAsDate('Org_Unit_Hierarchy__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')#  "; 
+        sqlStmt +=                                  "AND #compareAsDate('Org_Unit_Hierarchy__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# "; 
+        sqlStmt +=                                  "AND #compareAsDate('ChildUserRel.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# "; 
+        sqlStmt +=                                  "AND #compareAsDate('ChildUserRel.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# "; 
+        sqlStmt +=                                  "AND ChildUserRel.User__c <> '#UserSfId#' )"; 
+		sqlStmt += 				")";
+        sqlStmt +=      " LEFT OUTER JOIN ";
+        sqlStmt +=          "Account_Manager__c ";
+        sqlStmt +=              "ON Account_Manager__c.User__c = User.Id ";
+        sqlStmt +=              "AND Account_Manager__c.Account__c = Account.Id ";  
+		sqlStmt +=              "AND #compareAsDate('Account_Manager__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";            
+		sqlStmt +=              "AND #compareAsDate('Account_Manager__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+		sqlStmt +=              "AND Account_Manager__c.Management_Type__c <> 'Substitution' "; 
+        sqlStmt +=      "LEFT OUTER JOIN ";
+        sqlStmt +=          "Substitution__c AS SubBpaRel ";
+        sqlStmt +=              "ON SubBpaRel.Account__c = Account.Id ";
+        sqlStmt +=              "AND SubBpaRel.Substitute__c = #USERPKEY# ";
+        sqlStmt +=              "AND SubBpaRel.Active__c = '1' ";
+        sqlStmt +=      "LEFT OUTER JOIN ";
+        sqlStmt +=          "Substitution__c AS SubMain ";
+        sqlStmt +=              "ON SubMain.Id = SubBpaRel.Substitution__c ";
+        sqlStmt +=              "AND SubMain.Sales_Org__c = '#SALESORG#' ";
+        sqlStmt +=              "AND SubMain.Active__c = '1' ";
+        sqlStmt +=    "WHERE ";
+        sqlStmt +=      "( ";          
+        sqlStmt +=          "(NOT Account_Manager__c.Id is NULL)  ";   
+        sqlStmt +=          "OR (SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #TodayAsDate# ";
+        sqlStmt +=          "AND SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c  * 86400 >= #TodayAsDate# "; 
+        sqlStmt +=          "AND SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #TodayAsDate# "; 
+        sqlStmt +=          "AND SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c  * 86400 >= #TodayAsDate#) "; 
+		sqlStmt +=      ") "; 
+
+        sqlStmt +=    "GROUP BY ";
+        sqlStmt +=      "name ";
+        sqlStmt +=    "ORDER BY ";
+        sqlStmt +=      "name ";
+     
+        return Utils.replaceMacrosParam(sqlStmt, sqlParams); 
+        
+        ]]></Load>
+  </Database>
+</Datasource>

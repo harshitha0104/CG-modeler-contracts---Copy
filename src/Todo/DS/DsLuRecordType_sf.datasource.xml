@@ -1,0 +1,40 @@
+<Datasource name="DsLuRecordType" backendSystem="sf" objectClass="LuRecordType" readOnly="true" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Custom>
+      <UserTask><![CDATA[ 
+       var recordType="";       
+
+       if(Utils.isDefined(jsonParams.recordType)) {
+          recordType = Utils.convertForDBParam(jsonParams.recordType);
+        }
+       var sqlParams = {recordType};
+
+       var sqlStmt="";
+          sqlStmt+=" SELECT RecordType.Id AS pKey ";
+          sqlStmt+=" 	,RecordType.DeveloperName AS recordType ";
+          sqlStmt+=" FROM RecordType AS RecordType ";
+          sqlStmt+=" WHERE (1 = 1) ";
+          sqlStmt+=" 	AND RecordType.DeveloperName = #recordType# ";       
+          return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+]]></UserTask>
+      <Inventory><![CDATA[
+    var recordType="";
+
+    if(Utils.isDefined(jsonParams.recordType)) {
+     recordType = Utils.convertForDBParam(jsonParams.recordType);
+    }
+    var sqlParams = {recordType};
+
+    var sqlStmt="";
+    sqlStmt+=" SELECT RecordType.Id AS pKey ";
+    sqlStmt+=" 	,RecordType.DeveloperName AS recordType ";
+    sqlStmt+=" 	,RecordType.SObjectType AS sObjectType ";
+    sqlStmt+=" FROM RecordType AS RecordType ";
+    sqlStmt+=" WHERE (1 = 1) ";
+    sqlStmt+=" 	AND RecordType.DeveloperName = #recordType# ";
+    sqlStmt+=" 	AND RecordType.SObjectType LIKE '%Inventory__c' ";
+    return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+]]></Inventory>
+    </Custom>
+  </Database>
+</Datasource>

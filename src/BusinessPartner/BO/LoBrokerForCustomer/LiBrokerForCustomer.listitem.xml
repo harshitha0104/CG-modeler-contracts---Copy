@@ -1,0 +1,12 @@
+<ListItem name="LiBrokerForCustomer"  >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" storable="false" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="toPKey" type="DomPKey" storable="false" dataSourceProperty="toPKey" />
+    <SimpleProperty name="fromPKey" type="DomPKey" storable="false" dataSourceProperty="fromPKey" />
+    <SimpleProperty name="main" type="DomBool" storable="false" dataSourceProperty="main" />
+    <SimpleProperty name="validFrom" type="DomDate" storable="false" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomValidThru" storable="false" dataSourceProperty="validThru" />
+    <SimpleProperty name="name" type="DomBpaName" storable="false" dataSourceProperty="name" />
+  </SimpleProperties>
+</ListItem>

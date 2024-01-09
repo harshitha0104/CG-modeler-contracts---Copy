@@ -1,0 +1,46 @@
+<BusinessObject name="BoUserSettings"  schemaVersion="1.1" generateLoadMethod="true" generateCreateMethod="true">
+  <DataSource name="DsBoUserSettings" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" id="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="usrMainPKey" type="DomPKey" dataSourceProperty="usrMainPKey" />
+    <SimpleProperty name="clbCalendarInitialViewMobility" type="DomUsrClbCalendarIVMobility" dataSourceProperty="clbCalendarInitialViewMobility" />
+    <SimpleProperty name="clbVisitsInMapMobility" type="DomInteger" dataSourceProperty="clbVisitsInMapMobility" />
+    <SimpleProperty name="clbDisplayUserInMapMobility" type="DomBool" dataSourceProperty="clbDisplayUserInMapMobility" />
+    <SimpleProperty name="clbDisplayVisitsInMapMobility" type="DomUsrClbDisplayVisitsInMapMobility" dataSourceProperty="clbDisplayVisitsInMapMobility" />
+    <SimpleProperty name="usrLandingPageMobility" type="DomUsrLandingPageMobility" dataSourceProperty="usrLandingPageMobility" />
+    <SimpleProperty name="displayWeekend" type="DomBool" dataSourceProperty="displayWeekend" />
+    <SimpleProperty name="clbCalendarInitialTime" type="DomTime" dataSourceProperty="clbCalendarInitialTime" />
+    <SimpleProperty name="clbCalendarDefaultCallStatus" type="DomUsrClbCalendarDefaultCallStatusView" dataSourceProperty="clbCalendarDefaultCallStatus" />
+    <SimpleProperty name="syncTimeIntervall" type="DomSmallInteger" dataSourceProperty="syncTimeIntervall" />
+    <SimpleProperty name="enableSync" type="DomBool" id="false">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="pictureQuality" type="DomRpsPictureQuality" dataSourceProperty="pictureQuality" />
+    <SimpleProperty name="pictureQualityValues" type="DomTglValidationCode" dataSourceProperty="pictureQualityValues" />
+    <SimpleProperty name="clbDisplayTrafficInMapMobility" type="DomBool" dataSourceProperty="clbDisplayTrafficInMapMobility" />
+    <SimpleProperty name="clbDisplayRouteInMapMobility" type="DomBool" dataSourceProperty="clbDisplayRouteInMapMobility" />
+    <SimpleProperty name="clbAgendaDisplayTimeMobility" type="DomBool" dataSourceProperty="clbAgendaDisplayTimeMobility" />
+    <SimpleProperty name="clbShowCalendarWeekMobility" type="DomBool" dataSourceProperty="clbShowCalendarWeekMobility" />
+  </SimpleProperties>
+  <ObjectLookups />
+  <NestedObjects />
+  <ListObjects />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="onPropertyChanged" />
+    <Method name="bindPrinter" />
+    <Method name="loadOnDemand" />
+  </Methods>
+  <Validations />
+</BusinessObject>

@@ -1,0 +1,34 @@
+<BusinessObject name="BoCallReports" schemaVersion="1.1" generateCreateMethod="false">
+  <DataSource name="DsBoCallReports" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+  </SimpleProperties>
+  <ObjectLookups />
+  <NestedObjects>
+    <NestedObject name="chartHelper" objectClass="BoChartHelper" dataSourceProperty="empty" nestingProperty="empty" />
+  </NestedObjects>
+  <ListObjects />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="initializeCallSummaryReport" />
+    <Method name="prepareDataForCallSummaryReport" />
+    <Method name="refreshCallSummaryReport" />
+    <Method name="inputChangedForCallSummaryReport" />
+    <Method name="initializePromotionStoreCalendarReport" />
+    <Method name="prepareDataForPromotionStoreCalendarReport" />
+    <Method name="refreshPromotionStoreCalendarReport" />
+    <Method name="inputChangedForPromotionStoreCalendarReport" />
+    <Method name="centerVerticallyCallSummaryReport" />
+    <Method name="checkReloadChart" />
+  </Methods>
+  <Validations />
+</BusinessObject>

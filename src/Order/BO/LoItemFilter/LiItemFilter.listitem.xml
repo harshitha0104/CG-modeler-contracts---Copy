@@ -1,0 +1,12 @@
+<ListItem name="LiItemFilter">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="imageId" type="DomId" storable="false" dataSourceProperty="imageId" />
+    <SimpleProperty name="name" type="DomText" storable="false" dataSourceProperty="name" />
+    <SimpleProperty name="count" type="DomString" storable="false" dataSourceProperty="count" />
+    <SimpleProperty name="filterCode" type="DomString" storable="false" dataSourceProperty="filterCode" />
+    <SimpleProperty name="defaultGroup" type="DomBool" storable="false" dataSourceProperty="defaultGroup" />
+    <SimpleProperty name="displayOnHierarchyLevel" type="DomInteger" storable="false" dataSourceProperty="displayOnHierarchyLevel" />
+    <SimpleProperty name="sortOrder" type="DomInteger" storable="false" dataSourceProperty="sortOrder" />
+  </SimpleProperties>
+</ListItem>

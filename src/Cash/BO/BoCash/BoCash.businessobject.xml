@@ -1,0 +1,118 @@
+<BusinessObject name="BoCash"  generateLoadMethod="false" generateCreateMethod="false" OERReference="SdoMain" schemaVersion="1.1">
+  <DataSource name="DsBoCash" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="id" type="DomId" storable="true" dataSourceProperty="id" />
+    <SimpleProperty name="invoiceId" type="DomId" storable="true" dataSourceProperty="invoiceId" />
+    <SimpleProperty name="commitDate" type="DomDate" storable="true" dataSourceProperty="commitDate" />
+    <SimpleProperty name="pricingDate" type="DomDate" storable="true" dataSourceProperty="pricingDate" />
+    <SimpleProperty name="deliveryDate" type="DomDate" storable="true" dataSourceProperty="deliveryDate" />
+    <SimpleProperty name="initiationDate" type="DomDate" storable="true" dataSourceProperty="initiationDate" />
+    <SimpleProperty name="initiatorPKey" type="DomPKey" dataSourceProperty="initiatorPKey" />
+    <SimpleProperty name="ownerPKey" type="DomPKey" dataSourceProperty="ownerPKey" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="payerCustomerPKey" type="DomPKey" dataSourceProperty="payerCustomerPKey" />
+    <SimpleProperty name="billToCustomerPKey" type="DomPKey" dataSourceProperty="billToCustomerPKey" />
+    <SimpleProperty name="brokerCustomerPKey" type="DomPKey" dataSourceProperty="brokerCustomerPKey" />
+    <SimpleProperty name="ClbMainPKey" type="DomPKey" dataSourceProperty="ClbMainPKey" />
+    <SimpleProperty name="tmgMainPKey" type="DomPKey" dataSourceProperty="tmgMainPKey" />
+    <SimpleProperty name="phase" type="DomSdoPhase" storable="true" dataSourceProperty="phase" />
+    <SimpleProperty name="paidAmount" type="DomMoney" storable="true" dataSourceProperty="paidAmount" />
+    <SimpleProperty name="absolutePaidAmount" type="DomMoney" storable="true" dataSourceProperty="absolutePaidAmount" />
+    <SimpleProperty name="cancelReason" type="DomSdoCancelReason" storable="true" dataSourceProperty="cancelReason" />
+    <SimpleProperty name="currency" type="DomCurrency" storable="true" dataSourceProperty="currency" />
+    <SimpleProperty name="documentType" type="DomSdoSubType" storable="true" dataSourceProperty="documentType" />
+    <SimpleProperty name="debitCredit" type="DomBpaDebitCredit" storable="true" dataSourceProperty="debitCredit" />
+    <SimpleProperty name="cancelReasonRequired" type="DomBool" storable="true" dataSourceProperty="cancelReasonRequired" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="sdoMetaPKey" type="DomPKey" dataSourceProperty="sdoMetaPKey" />
+    <SimpleProperty name="actualStatePKey" type="DomPKey" dataSourceProperty="actualStatePKey" />
+    <SimpleProperty name="nextStatePKey" type="DomPKey" dataSourceProperty="nextStatePKey" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="etpWarehousePKey" type="DomPKey" dataSourceProperty="etpWarehousePKey" />
+    <SimpleProperty name="docTaType" type="DomBpaPaymentPolicy" dataSourceProperty="docTaType" />
+    <SimpleProperty name="releaseTime" type="DomDateTime" dataSourceProperty="releaseTime" />
+    <SimpleProperty name="orgPhase" type="DomSdoPhase" />
+    <SimpleProperty name="validateForRelease" type="DomBool" />
+    <SimpleProperty name="setPhaseInBeforeSave" type="DomBool" />
+    <SimpleProperty name="expectedAmount" type="DomMoney" />
+    <SimpleProperty name="differenceAmount" type="DomMoney" />
+    <SimpleProperty name="loModReasonSelectionBox" type="Object" storable="false" />
+    <SimpleProperty name="modReasonDict" type="Object" storable="false" />
+    <SimpleProperty name="cndCpCalculationSchemaPKey" type="DomPKey" dataSourceProperty="cndCpCalculationSchemaPKey" />
+    <SimpleProperty name="calculationStatus" type="DomSdoCalculationStatus" dataSourceProperty="calculationStatus" />
+    <SimpleProperty name="distribChannel" type="DomDistribChannel" dataSourceProperty="distribChannel" />
+    <SimpleProperty name="division" type="DomSysIntDivision" dataSourceProperty="division" />
+    <SimpleProperty name="headerDiscount" type="DomDecimal" dataSourceProperty="headerDiscount" />
+    <SimpleProperty name="paymentReason" type="DomSdoPaymentReason" dataSourceProperty="paymentReason" />
+    <SimpleProperty name="totalShippedQuantity" type="DomDecimal" dataSourceProperty="totalShippedQuantity" />
+    <SimpleProperty name="totalReturnedQuantity" type="DomDecimal" dataSourceProperty="totalReturnedQuantity" />
+    <SimpleProperty name="paidAmountReceipt" type="DomMoney" dataSourceProperty="paidAmountReceipt" />
+    <SimpleProperty name="storedSysReleasePKey" type="DomPKey" />
+    <SimpleProperty name="sysReleaseProcessStepsExists" type="DomBool" />
+    <SimpleProperty name="expenseType" type="DomSdoPaymentExpenseType" storable="true" dataSourceProperty="expenseType" />
+  </SimpleProperties>
+  <NestedObjects>
+    <NestedObject name="boCashMeta" objectClass="BoOrderMeta" dataSourceProperty="sdoMetaPKey" nestingProperty="pKey" />
+    <NestedObject name="boWorkflow" objectClass="BoWorkflow" dataSourceProperty="wfeWorkflowPKey" nestingProperty="pKey" />
+  </NestedObjects>
+  <ObjectLookups>
+    <ObjectLookup name="luResponsible" objectClass="LuUser" dataSourceProperty="responsiblePKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luEtpWarehouse" objectClass="LuEtpWarehouse" dataSourceProperty="etpWarehousePKey" lookupProperty="pKey" />
+    <ObjectLookup name="luOwner" objectClass="LuUser" dataSourceProperty="ownerPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luInitiator" objectClass="LuUser" dataSourceProperty="initiatorPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <ListObjects>
+    <ListObject name="loWfeRecentState" objectClass="LoOrderRecentState" dataSourceProperty="pKey" listProperty="pKey" />
+    <!-- <ListObject name="loEtpWarehouse" objectClass="LoEtpWarehouse" dataSourceProperty="responsiblePKey" listProperty="pKey" />-->
+    <ListObject name="loPayments" objectClass="LoOrderPayments" dataSourceProperty="pKey" listProperty="sdoMainPKey" />
+    <ListObject name="loCheckInPayment" objectClass="LoCheckInPaymentItems" dataSourceProperty="tmgMainPKey" listProperty="tmgMainPKey">
+      <Events>
+        <Event name="listItemChanged" eventHandler="onCheckInItemChanged" />
+      </Events>
+    </ListObject>
+    <ListObject name="loInventories" objectClass="LoInventory" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loInventoryTransactions" objectClass="LoInventoryTransaction" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loSysSignatureAttribute" objectClass="LoSysSignatureAttribute" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loSysSignatureBlob" objectClass="LoSysSignatureBlob" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loGeoLocation" objectClass="LoCallLocation" dataSourceProperty="empty" listProperty="empty" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="saveAsync" />
+    <Method name="cancel" />
+    <Method name="release" />
+    <Method name="createPayments" />
+    <Method name="releaseButtonActive" />
+    <Method name="setEARights" />
+    <Method name="loadPayments" />
+    <Method name="calculateAmount" />
+    <Method name="getCheckInItemByPKey" />
+    <Method name="onCheckInItemChanged" />
+    <Method name="reasonCodeCheckInValidation" />
+    <Method name="getPaymentModReasonCodes" />
+    <Method name="createCheckInPayments" />
+    <Method name="determineSysReleaseProcessPKey" />
+    <Method name="getReleaseTitle" />
+    <Method name="processInventoryActions" />
+    <Method name="setInventoryBalanceOfCashPayment" />
+    <Method name="cancelRelease" />
+    <Method name="releaseButtonVisible" />
+    <Method name="isReleaseInformationVisible" />
+    <Method name="storeSysReleaseProcessPKey" />
+  </Methods>
+  <Validations>
+    <Validation name="validateCheckInAmounts" />
+    <Validation name="validateExpenseType" />
+    <Validation name="validateAmount" />    
+  </Validations>
+</BusinessObject>

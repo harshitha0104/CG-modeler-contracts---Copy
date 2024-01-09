@@ -1,0 +1,109 @@
+<BusinessObject name="BoSysReleaseProcess"  schemaVersion="1.1" generateLoadMethod="false" generateCreateMethod="false" OERReference="SysReleaseProcess">
+  <DataSource name="DsBoSysReleaseProcess" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" id="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="active" type="DomBool" dataSourceProperty="active" />
+    <SimpleProperty name="attributeSet" type="DomSysSignatureAttributeSet" dataSourceProperty="attributeSet" />
+    <SimpleProperty name="captureLocation" type="DomBool" dataSourceProperty="captureLocation" />
+    <SimpleProperty name="releaseInProgress" type="DomString" />
+    <SimpleProperty name="readOnlyMode" type="DomString" />
+    <SimpleProperty name="referenceObject" type="Object" />
+    <SimpleProperty name="summaryLabel0" type="DomSysSignatureAttribute" />
+    <SimpleProperty name="summaryValue0" type="DomText" />
+    <SimpleProperty name="summaryLabel1" type="DomSysSignatureAttribute" />
+    <SimpleProperty name="summaryValue1" type="DomText" />
+    <SimpleProperty name="summaryLabel2" type="DomSysSignatureAttribute" />
+    <SimpleProperty name="summaryValue2" type="DomText" />
+    <SimpleProperty name="summaryLabel3" type="DomSysSignatureAttribute" />
+    <SimpleProperty name="summaryValue3" type="DomText" />
+    <SimpleProperty name="summaryLabel4" type="DomSysSignatureAttribute" />
+    <SimpleProperty name="summaryValue4" type="DomText" />
+    <SimpleProperty name="summaryLabel5" type="DomSysSignatureAttribute" />
+    <SimpleProperty name="summaryValue5" type="DomText" />
+    <SimpleProperty name="summaryLabel6" type="DomSysSignatureAttribute" />
+    <SimpleProperty name="summaryValue6" type="DomText" />
+    <SimpleProperty name="summaryLabel7" type="DomSysSignatureAttribute" />
+    <SimpleProperty name="summaryValue7" type="DomText" />
+    <SimpleProperty name="summaryLabel8" type="DomSysSignatureAttribute" />
+    <SimpleProperty name="summaryValue8" type="DomText" />
+    <SimpleProperty name="summaryLabel9" type="DomSysSignatureAttribute" />
+    <SimpleProperty name="summaryValue9" type="DomText" />
+    <SimpleProperty name="signatureName1" type="DomText" />
+    <SimpleProperty name="signatureName2" type="DomText" />
+    <SimpleProperty name="signatureName3" type="DomText" />
+    <SimpleProperty name="signatureName4" type="DomText" />
+    <SimpleProperty name="signatureId1" type="DomText" />
+    <SimpleProperty name="signatureId2" type="DomText" />
+    <SimpleProperty name="signatureId3" type="DomText" />
+    <SimpleProperty name="signatureId4" type="DomText" />
+    <SimpleProperty name="signatureCode1" type="DomText" />
+    <SimpleProperty name="signatureCode2" type="DomText" />
+    <SimpleProperty name="signatureCode3" type="DomText" />
+    <SimpleProperty name="signatureCode4" type="DomText" />
+    <SimpleProperty name="attachmentBlobPKey1" type="DomPKey" />
+    <SimpleProperty name="attachmentBlobPKey2" type="DomPKey" />
+    <SimpleProperty name="attachmentBlobPKey3" type="DomPKey" />
+    <SimpleProperty name="attachmentBlobPKey4" type="DomPKey" />
+    <SimpleProperty name="signatureBlob1" type="DomBlob" blobTable="SysSignatureBlob" blobPKeyField="attachmentBlobPKey1" />
+    <SimpleProperty name="signatureBlob2" type="DomBlob" blobTable="SysSignatureBlob" blobPKeyField="attachmentBlobPKey2" />
+    <SimpleProperty name="signatureBlob3" type="DomBlob" blobTable="SysSignatureBlob" blobPKeyField="attachmentBlobPKey3" />
+    <SimpleProperty name="signatureBlob4" type="DomBlob" blobTable="SysSignatureBlob" blobPKeyField="attachmentBlobPKey4" />
+    <SimpleProperty name="signatureGroupName1" type="DomText" />
+    <SimpleProperty name="signatureGroupName2" type="DomText" />
+    <SimpleProperty name="signatureGroupName3" type="DomText" />
+    <SimpleProperty name="signatureGroupName4" type="DomText" />
+    <SimpleProperty name="signatureApprovalSuccessful1" type="DomBool" />
+    <SimpleProperty name="signatureApprovalSuccessful2" type="DomBool" />
+    <SimpleProperty name="signatureApprovalSuccessful3" type="DomBool" />
+    <SimpleProperty name="signatureApprovalSuccessful4" type="DomBool" />
+  </SimpleProperties>
+  <ObjectLookups />
+  <NestedObjects />
+  <ListObjects>
+    <ListObject name="loSysReleaseProcessStep" objectClass="LoSysReleaseProcessStep" dataSourceProperty="pKey" listProperty="sysReleaseProcessPKey" />
+    <ListObject name="loSysSignatureAttribute" objectClass="LoSysSignatureAttribute" dataSourceProperty="pKey" listProperty="referencePKey" />
+    <ListObject name="loSysSignatureBlob" objectClass="LoSysSignatureBlob" dataSourceProperty="empty" listProperty="empty" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="createAttributeMapping" />
+    <Method name="createAttrMappingCashCheckOut" />
+    <Method name="createAttrMappingCashCheckIn" />
+    <Method name="createAttrMappingUserExit" />
+    <Method name="createAttrMappingProductCheckIn" />
+    <Method name="createAttrMappingProductCheckOut" />
+    <Method name="createAttrMappingTruckOutwardTransfer" />
+    <Method name="createAttrMappingTruckInwardTransfer" />
+    <Method name="createAttrMappingSalesDeliveryDocument" />
+    <Method name="createAttrMappingTourStartEnd" />
+    <Method name="createAttrMappingTruckAudit" />
+    <Method name="createAttrMappingReplenishment" />
+    <Method name="getSignatureGroupVisibility" />
+    <Method name="getSignatureGroupEditable" />
+    <Method name="mapSignatureStepInformation" />
+    <Method name="createSignatureBlobs" />
+    <Method name="mapLoadedSignatureBlobs" />
+    <Method name="mapSignatureInformationToRefObject" />
+    <Method name="setEARights" />
+    <Method name="prepareRelease" />
+    <Method name="releaseButtonVisible" />
+    <Method name="checkLocationCapturing" />
+    <Method name="validateStepAuthentication" />
+    <Method name="getSignatureApprovalVisible" />
+    <Method name="getSignatureApprovalEditable" />
+    <Method name="checkApprovalCode" />
+    <Method name="checkAnySignatureRequired" />
+  </Methods>
+  <Validations>
+    <Validation name="validateRelease" />
+  </Validations>
+</BusinessObject>

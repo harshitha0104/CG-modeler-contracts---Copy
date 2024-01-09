@@ -1,0 +1,8 @@
+<LookupObject name="LuCustomerIsMainPayer">
+  <DataSource name="DsLuCustomerIsMainPayer" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="fromPKey" type="DomPKey" dataSourceProperty="fromPKey" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>

@@ -1,0 +1,18 @@
+<ListItem name="LiEmptiesInformation">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" storable="false" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="unitType" type="DomPrdLogisticUnit" storable="false" dataSourceProperty="unitType" />
+    <SimpleProperty name="emptyPKey" type="DomPKey" storable="false" dataSourceProperty="emptyPKey" />
+    <SimpleProperty name="emptyId" type="DomPKey" storable="false" dataSourceProperty="emptyId" />
+    <SimpleProperty name="emptyDescription" type="DomPKey" storable="false" dataSourceProperty="emptyDescription" />
+    <SimpleProperty name="emptyQuantity" type="DomDecimal" storable="false" dataSourceProperty="emptyQuantity" />
+    <SimpleProperty name="emptyTaxClassification" type="DomTaxClassification" storable="false" dataSourceProperty="emptyTaxClassification" />
+    <SimpleProperty name="emptyLevel2PKey" type="DomPKey" storable="false" dataSourceProperty="emptyLevel2PKey" />
+    <SimpleProperty name="emptyLevel2Id" type="DomPKey" storable="false" dataSourceProperty="emptyLevel2Id" />
+    <SimpleProperty name="emptyLevel2Description" type="DomPKey" storable="false" dataSourceProperty="emptyLevel2Description" />
+    <SimpleProperty name="emptyLevel2Quantity" type="DomDecimal" storable="false" dataSourceProperty="emptyLevel2Quantity" />
+    <SimpleProperty name="emptyLevel2TaxClassification" type="DomTaxClassification" storable="false" dataSourceProperty="emptyLevel2TaxClassification" />
+  </SimpleProperties>
+</ListItem>
+

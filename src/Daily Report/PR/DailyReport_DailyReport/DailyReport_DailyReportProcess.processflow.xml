@@ -1,0 +1,493 @@
+<Process name="DailyReport::DailyReportProcess" defaultAction="GetDailyReportList" schemaVersion="1.1">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="DailyReportList" type="LoUsrDailyReportOverview" />
+        <!-- Needed Helpers for Approve All -->
+        <Declaration name="Over100Reports" type="String" />
+        <Declaration name="PagingReloadRelevant" type="String" />
+        <Declaration name="MaxPageSizeUsed" type="String" />
+        <Declaration name="CurrentDailyReport" type="BoUserDailyReport" />
+        <Declaration name="DateFrom" type="DomDate" />
+        <Declaration name="UsrDocMetaPKey" type="String" />
+        <Declaration name="CreateNew_ButtonPressed" type="String" />
+        <Declaration name="ContextMenuList" type="LoUserDROverviewContextMenu" />
+        <Declaration name="TEContextMenuList" type="LoUsrTimeEntryContextMenu" />
+        <Declaration name="CreateNew_TimeClbPKey" type="DomPKey" />
+        <Declaration name="CreateNew_TimeTmgPKey" type="DomPKey" />
+        <Declaration name="CreateNew_TimeEntryPKey" type="DomPKey" />
+        <Declaration name="CreateNew_TimeEntryDescription" type="DomString" />
+        <Declaration name="CreateNew_TimeEntryStartdate" type="DomDateTime" />
+        <Declaration name="CreateNew_TimeEntryEnddate" type="DomDateTime" />
+        <Declaration name="CreateNew_TimeEntryEndtime" type="DomTime" />
+        <Declaration name="CreateNew_TimeEntryStarttime" type="DomTime" />
+        <Declaration name="CreateNew_TimeEntryNote" type="DomLongDescription" />
+        <Declaration name="CreateNew_TimeEntryReason" type="DomUsrTimeEntryReasonCode" />
+        <Declaration name="CreateNew_TimeEntryValid" type="DomString" />
+        <Declaration name="CreateNew_TimeFromGeoOffset" type="DomUsrGeoTimeOffset" />
+        <Declaration name="CreateNew_TimeThruGeoOffset" type="DomUsrGeoTimeOffset" />
+        <Declaration name="CreateNew_TimeFromDSTOffset" type="DomUsrDSTTimeOffset" />
+        <Declaration name="CreateNew_TimeThruDSTOffset" type="DomUsrDSTTimeOffset" />
+        <!-- Needed for team/supervisor concept -->
+        <Declaration name="TeamList" type="String" />
+        <!--  Needed for delete handling -->
+        <Declaration name="CurrentListItem" type="String" />
+        <Declaration name="NextSelectedListItem" type="String" />
+        <Declaration name="isEqual" type="String" />
+        <Declaration name="NewTimeEntryPKey" type="DomPKey" />
+        <Declaration name="TimeEntry_Updated" type="String" />
+        <!-- Needed for Tab Decision Handling -->
+        <Declaration name="GetTimeEntryByVisitType" type="LoUsrTimeEntryByVisitType" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <!-- Reload team list of user (could be changed via background sync)
+      Param 1 means including current user into teamlist -->
+      <Action actionType="LOGIC" name="LoadTeamOfUser" call="ApplicationContext::User.loadTeamOfUser">
+        <Parameters>
+          <Input name="includeCurrentUser" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="GetTeamListForOverview" call="ApplicationContext::User.getTeamList">
+        <Return name="ProcessContext::TeamList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="LOAD" name="GetDailyReportList" type="LoUsrDailyReportOverview">
+        <Parameters>
+          <Input name="teamList" value="ProcessContext::TeamList" />
+          <Input name="asoName" type="Literal" value="AsoDailyReport" />
+        </Parameters>
+        <Return name="ProcessContext::DailyReportList" />
+        <TransitionTo action="ShowView" />
+      </Action>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>DailyReport::DailyReportUI</UIDescription>
+        <Events>
+          <!-- Handle Selected Events -->
+          <Event name="listItemSelected" action="DailyReportListMasterDetail" />
+          <Event name="listTimeItemSelected" action="TimeEntryDetail" />
+          <!-- Handle Button Events -->
+          <Event name="createNewDailyReport" action="DailyReportListMasterDetail.create" />
+          <Event name="updateDailyReport" action="UpdateDailyReport" />
+          <Event name="releaseDailyReport" action="setDirty" />
+          <Event name="rejectDailyReport" action="RejectDailyReport" />
+          <Event name="approveDailyReport" action="ApproveDailyReport" />
+          <Event name="deleteDailyReport" action="DailyReportListMasterDetail.delete" />
+          <Event name="approveAll" action="ApproveAllValidateCurrent" />
+          <Event name="createNewTimeEntry" action="CreateNewTimeEntry" />
+          <Event name="executeBreak" action="ExecuteBreak" />
+          <Event name="tabSelected" action="setCurrentTabName_Decision" />
+          <!-- Context menu events -->
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+          <Event name="teContextMenuOpening" action="GetContextMenuTimeEntry" />
+          <Event name="teContextMenuItemSelected" action="ContextMenu_Result_Decision_TimeEntry" />
+        </Events>
+      </Action>
+      <!-- Decision Point for selected Tab Pages -->
+      <Action name="setCurrentTabName_Decision" actionType="DECISION" parameter="Event.tabName">
+        <Case value="Main" action="LoadUsrTimeEntryByVisitType" />
+        <Case value="TimeEntries" action="setCurrentTabName_TimeEntries" />
+        <CaseElse action="LoadUsrTimeEntryByVisitType" />
+      </Action>
+      <!-- BEGIN: Handling TabDecision -->
+      <Action actionType="LOGIC" name="setCurrentTabName_TimeEntries" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Time Entries" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+      </Action>
+      <!-- Main Tab -->
+      <Action name="LoadUsrTimeEntryByVisitType" actionType="LOAD" type="LoUsrTimeEntryByVisitType">
+        <Return name="ProcessContext::GetTimeEntryByVisitType" />
+        <TransitionTo action="setCurrentTabName_Main" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Main" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Main" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+      </Action>
+      <!-- END: Handling TabDecision -->
+      <!-- BEGIN: DailyReport Overview -->
+      <Action name="DailyReportListMasterDetail" actionType="MASTER_DETAIL_HANDLER">
+        <MasterList name="ProcessContext::DailyReportList">
+          <!--RELOAD|UPDATE|NONE-->
+          <ItemUnselected type="RELOAD" />
+        </MasterList>
+        <DetailObject name="ProcessContext::CurrentDailyReport" objectClass="BoUserDailyReport">
+          <!--type="DIRTY|ALWAYS|NEVER" confirmation="TRUE|FALSE" validate="TRUE|FALSE" -->
+          <Save type="DIRTY" confirmation="FALSE" validate="TRUE" />
+          <Create autoSave="TRUE">
+            <WizardProcess name="DailyReport::CreateNewWizardProcess" submitParameter="ProcessContext::CreateNew_ButtonPressed">
+              <ReturnValues>
+                <Return name="ProcessContext::DateFrom" value="dateFrom" />
+                <Return name="ProcessContext::UsrDocMetaPKey" value="usrDocMetaPKey" />
+                <Return name="ProcessContext::CreateNew_ButtonPressed" value="buttonPressed" />
+              </ReturnValues>
+            </WizardProcess>
+          </Create>
+          <Delete confirmation="TRUE" messageId="CasConfirmDailyReportDeletionMsg" nextCurrent="Next" />
+        </DetailObject>
+      </Action>
+      <!-- Time Entry Detail Flyout -->
+      <Action name="TimeEntryDetail" actionType="PROCESS" process="DailyReport::FlyoutTimeEntryDetailProcess">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CurrentDailyReport.pKey" />
+          <Input name="tePKey" value="Event.pKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::TimeEntry_Updated" value="Updated" />
+        </ReturnValues>
+        <TransitionTo action="TimeEntry_Update_Decision" />
+      </Action>
+      <Action name="TimeEntry_Update_Decision" actionType="DECISION" parameter="ProcessContext::TimeEntry_Updated">
+        <Case value="1" action="ReLoadTimeEntries" />
+        <CaseElse action="removeCurrent" />
+      </Action>
+      <Action actionType="LOAD" name="ReLoadTimeEntries" type="LoUsrTimeEntry">
+        <Parameters>
+          <Input name="usrDailyReportPKey" value="ProcessContext::CurrentDailyReport.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentDailyReport.loUsrTimeEntry" />
+        <TransitionTo action="calculateDurations" />
+      </Action>
+      <Action name="calculateDurations" actionType="LOGIC" call="ProcessContext::CurrentDailyReport.calculateTotalActivityDuration">
+        <TransitionTo action="removeCurrent" />
+      </Action>
+      <Action name="removeCurrent" actionType="LOGIC" call="ProcessContext::CurrentDailyReport.loUsrTimeEntry.setCurrent">
+        <TransitionTo action="ShowView" />
+      </Action>
+      <!-- Execute Break -->
+      <Action name="ExecuteBreak" actionType="LOGIC" call="ProcessContext::CurrentDailyReport.executeBreak">
+        <TransitionTo action="SaveDailyReport" />
+      </Action>
+      <!-- WIZARD -->
+      <Action name="CreateNewTimeEntry" actionType="PROCESS" process="DailyReport::TimeEntryCreateNewProcess">
+        <Parameters>
+          <Input name="TimeEntryDetails" value="ProcessContext::CurrentDailyReport.loUsrTimeEntry" />
+          <Input name="WorkUsrTimeEntryMetaPKey" value="ProcessContext::CurrentDailyReport.boUserDocMeta.workUsrTimeEntryMetaPKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CreateNew_TimeEntryValid" value="timeEntryValid" />
+          <Return name="ProcessContext::CreateNew_TimeEntryPKey" value="timetemplatePKey" />
+          <Return name="ProcessContext::CreateNew_TimeEntryDescription" value="description" />
+          <Return name="ProcessContext::CreateNew_TimeEntryStartdate" value="startdate" />
+          <Return name="ProcessContext::CreateNew_TimeEntryEnddate" value="enddate" />
+          <Return name="ProcessContext::CreateNew_TimeEntryEndtime" value="endtime" />
+          <Return name="ProcessContext::CreateNew_TimeEntryStarttime" value="starttime" />
+          <Return name="ProcessContext::CreateNew_TimeEntryNote" value="note" />
+          <Return name="ProcessContext::CreateNew_TimeEntryReason" value="reasoncodetext" />
+          <Return name="ProcessContext::CreateNew_TimeFromGeoOffset" value="timeFromGeoOffset" />
+          <Return name="ProcessContext::CreateNew_TimeThruGeoOffset" value="timeThruGeoOffset" />
+          <Return name="ProcessContext::CreateNew_TimeFromDSTOffset" value="timeFromDSTOffset" />
+          <Return name="ProcessContext::CreateNew_TimeThruDSTOffset" value="timeThruDSTOffset" />
+        </ReturnValues>
+        <TransitionTo action="CreateNewWizard_Result_Decision" />
+      </Action>
+      <!-- DESICIONS AFTER CREATE WIZARD -->
+      <Action name="CreateNewWizard_Result_Decision" actionType="DECISION" parameter="ProcessContext::CreateNew_TimeEntryValid">
+        <Case value="1" action="CreateTimeEntryData" />
+        <Case value="0" action="ShowView" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <!-- CREATE -->
+      <Action actionType="LOGIC" name="CreateTimeEntryData" call="ProcessContext::CurrentDailyReport.createTimeEntry">
+        <Parameters>
+          <Input name="TimeEntryTemplatePKey" value="ProcessContext::CreateNew_TimeEntryPKey" />
+          <Input name="TimeEntryClbPKey" value="ProcessContext::CreateNew_TimeClbPKey" />
+          <Input name="TimeEntryTmgPKey" value="ProcessContext::CreateNew_TimeTmgPKey" />
+          <Input name="TimeEntryDescription" value="ProcessContext::CreateNew_TimeEntryDescription" />
+          <Input name="TimeEntryStartDate" value="ProcessContext::CreateNew_TimeEntryStartdate" />
+          <Input name="TimeEntryEndDate" value="ProcessContext::CreateNew_TimeEntryEnddate" />
+          <Input name="TimeEntryStartTime" value="ProcessContext::CreateNew_TimeEntryStarttime" />
+          <Input name="TimeEntryEndTime" value="ProcessContext::CreateNew_TimeEntryEndtime" />
+          <Input name="TimeEntryReason" value="ProcessContext::CreateNew_TimeEntryReason" />
+          <Input name="TimeEntryNote" value="ProcessContext::CreateNew_TimeEntryNote" />
+          <Input name="TimeEntryManual" type="Literal" value="1" />
+          <Input name="SaveImmediately" type="Literal" value="true" />
+          <Input name="TimeFromGeoOffset" value="ProcessContext::CreateNew_TimeFromGeoOffset" />
+          <Input name="TimeThruGeoOffset" value="ProcessContext::CreateNew_TimeThruGeoOffset" />
+          <Input name="TimeFromDSTOffset" value="ProcessContext::CreateNew_TimeFromDSTOffset" />
+          <Input name="TimeThruDSTOffset" value="ProcessContext::CreateNew_TimeThruDSTOffset" />
+        </Parameters>
+        <Return name="ProcessContext::NewTimeEntryPKey" />
+        <TransitionTo action="RefreshDurationsAndWorkingTime" />
+      </Action>
+      <Action actionType="LOGIC" name="RefreshDurationsAndWorkingTime" call="ProcessContext::CurrentDailyReport.refreshDurationsAndWorkingTime">
+        <Parameters>
+          <Input name="timeEntryPKey" value="ProcessContext::NewTimeEntryPKey" />
+        </Parameters>
+        <TransitionTo action="removeCurrent" />
+      </Action>
+      <!-- Actions for handling the CONTEXT MENUE -->
+      <Action actionType="LOAD" name="GetContextMenu" type="LoUserDROverviewContextMenu">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="phase" value="Event.phase" />
+          <Input name="mobilityRelevant" value="Event.mobilityRelevant" />
+          <Input name="uiGroup" value="Event.uiGroup" />
+        </Parameters>
+        <Return name="ProcessContext::ContextMenuList" />
+        <TransitionTo action="SetFocusOnListItem" />
+      </Action>
+      <Action name="SetFocusOnListItem" actionType="LOGIC" call="ProcessContext::DailyReportList.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="PKeyCompare" />
+      </Action>
+      <Action name="PKeyCompare" actionType="LOGIC" call="Utils.startsWith">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="pkey2" value="ProcessContext::CurrentDailyReport.PKey" />
+        </Parameters>
+        <Return name="ProcessContext::isEqual" />
+        <TransitionTo action="CheckIfNotEqualLoadedBO" />
+      </Action>
+      <Action name="CheckIfNotEqualLoadedBO" actionType="DECISION" parameter="ProcessContext::isEqual">
+        <Case value="false" action="LoadFocusedBo" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action name="LoadFocusedBo" actionType="LOAD" type="BoUserDailyReport">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentDailyReport" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Delete" action="DailyReportListMasterDetail.delete" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action actionType="LOAD" name="GetContextMenuTimeEntry" type="LoUsrTimeEntryContextMenu">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="manual" value="Event.manual" />
+          <Input name="phase" value="ProcessContext::CurrentDailyReport.phase" />
+          <Input name="owner" value="ProcessContext::CurrentDailyReport.ownerUsrMainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::TEContextMenuList" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision_TimeEntry" actionType="DECISION" parameter="Event.selected">
+        <Case value="Delete" action="DeleteTimeEntryConfirm" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action name="DeleteTimeEntryConfirm" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmTimeEntryDeletionMsg" />
+        <Cases>
+          <Case value="Yes" action="DeleteTimeEntry" />
+          <Case value="No" action="ShowView" />
+        </Cases>
+      </Action>
+      <Action name="DeleteTimeEntry" actionType="LOGIC" call="ProcessContext::CurrentDailyReport.loUsrTimeEntry.deleteItem">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::DeletedTimeEntryPKey" />
+        <TransitionTo action="refreshDurationsAndWorkingTimePostDelete" />
+      </Action>
+      <Action name="refreshDurationsAndWorkingTimePostDelete" actionType="LOGIC" call="ProcessContext::CurrentDailyReport.refreshDurationsAndWorkingTime">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="removeCurrent" />
+      </Action>
+      <!-- END: DailyReport Overview -->
+      <!--  Start Update New Daily Report -->
+      <Action name="UpdateDailyReport" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmDailyReportUpdateMsg" />
+        <Cases>
+          <Case value="Yes" action="updateDailyReportFinal" />
+          <Case value="No" action="ShowView" />
+        </Cases>
+      </Action>
+      <Action name="updateDailyReportFinal" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::CurrentDailyReport.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="UpdateValidationResult_Decision" />
+      </Action>
+      <Action name="UpdateValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="updateDailyReportFinalIfValid" />
+        <Case value="validateDiscard" action="GetCurrentListItem" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action name="updateDailyReportFinalIfValid" actionType="LOGIC" call="ProcessContext::CurrentDailyReport.updateActivities" />
+      <!--  End Update New Daily Report -->
+      <!--  Start Release New Daily Report -->
+      <Action actionType="LOGIC" name="setDirty" call="ProcessContext::CurrentDailyReport.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="5" />
+        </Parameters>
+        <TransitionTo action="SetReleaseProcessActive" />
+      </Action>
+      <Action actionType="LOGIC" name="SetReleaseProcessActive" call="ProcessContext::CurrentDailyReport.setReleaseProcessActive">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="1" />
+        </Parameters>
+        <TransitionTo action="ReleaseDailyReport" />
+      </Action>
+      <Action name="ReleaseDailyReport" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::CurrentDailyReport.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="ReleaseDailyReportIfValid" />
+        <Case value="validateDiscard" action="GetCurrentListItem" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action name="ReleaseDailyReportIfValid" actionType="LOGIC" call="ProcessContext::CurrentDailyReport.setNextWorkflowState">
+        <Parameters>
+          <Input name="actionName" type="Literal" value="Release" />
+        </Parameters>
+        <TransitionTo action="SaveReloadLoDailyReportWithMarking" />
+      </Action>
+      <!--  End Release New Daily Report -->
+      <!--  Start Reject New Daily Report -->
+      <Action name="RejectDailyReport" actionType="LOGIC" call="ProcessContext::CurrentDailyReport.setNextWorkflowState">
+        <Parameters>
+          <Input name="actionName" type="Literal" value="Reject" />
+        </Parameters>
+        <TransitionTo action="SaveReloadLoDailyReport" />
+      </Action>
+      <!--  End Reject New Daily Report -->
+      <!--  Start Approve New Daily Report -->
+      <Action name="ApproveDailyReport" actionType="LOGIC" call="ProcessContext::CurrentDailyReport.setNextWorkflowState">
+        <Parameters>
+          <Input name="actionName" type="Literal" value="Approve" />
+        </Parameters>
+        <TransitionTo action="SaveReloadLoDailyReportWithMarking" />
+      </Action>
+      <!--  End Approve New Daily Report -->
+      <!-- Start Approve All -->
+      <Action name="ApproveAllValidateCurrent" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::CurrentDailyReport.validateReportWorkTime" />
+        </Validations>
+        <TransitionTo action="ApproveAllSaveCurrent" />
+      </Action>
+      <Action name="ApproveAllSaveCurrent" actionType="SAVE">
+        <TransitionTo action="ApproveAll_GetCurrentPagingSize" />
+      </Action>
+      <Action name="ApproveAll_GetCurrentPagingSize" actionType="LOGIC" call="ProcessContext::DailyReportList.determinePageSizeUsage">
+        <Return name="ProcessContext::PagingReloadRelevant" />
+        <TransitionTo action="ApproveAllReloadPaging_Decision" />
+      </Action>
+      <Action name="ApproveAllReloadPaging_Decision" actionType="DECISION" parameter="ProcessContext::PagingReloadRelevant">
+        <Case value="1" action="ApproveAllReloadPaging" />
+        <CaseElse action="ApproveAllOver100_Determination" />
+      </Action>
+      <Action name="ApproveAllReloadPaging" actionType="LOGIC" call="ProcessContext::DailyReportList.setCustomPageSize">
+        <TransitionTo action="ApproveAll_CheckMaxPagingSizeUsed" />
+      </Action>
+      <Action name="ApproveAll_CheckMaxPagingSizeUsed" actionType="LOGIC" call="ProcessContext::DailyReportList.determineMaxPagingSizeUsed">
+        <Return name="ProcessContext::MaxPageSizeUsed" />
+        <TransitionTo action="ApproveAllOver100_Determination" />
+      </Action>
+      <Action name="ApproveAllOver100_Determination" actionType="LOGIC" call="ProcessContext::DailyReportList.determineOver100Reports">
+        <Return name="ProcessContext::Over100Reports" />
+        <TransitionTo action="ApproveAllOver100_Decision" />
+      </Action>
+      <Action name="ApproveAllOver100_Decision" actionType="DECISION" parameter="ProcessContext::Over100Reports">
+        <Case value="1" action="ApproveAllOver100Msg" />
+        <CaseElse action="ApproveAllConfirmationMsg" />
+      </Action>
+      <Action name="ApproveAllOver100Msg" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmDailyReportApproveOver100Reports" />
+        <Cases>
+          <Case value="Yes" action="ApproveAllFinal" />
+          <Case value="No" action="ShowView" />
+        </Cases>
+      </Action>
+      <Action name="ApproveAllConfirmationMsg" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmDailyReportApproveAllMsg" />
+        <Cases>
+          <Case value="Yes" action="ApproveAllFinal" />
+          <Case value="No" action="ShowView" />
+        </Cases>
+      </Action>
+      <Action name="ApproveAllFinal" actionType="LOGIC" call="ProcessContext::DailyReportList.approveAll">
+        <TransitionTo action="ApproveAllPagingSizeExceeded" />
+      </Action>
+      <Action name="ApproveAllPagingSizeExceeded" actionType="DECISION" parameter="ProcessContext::MaxPageSizeUsed">
+        <Case value="1" action="ApproveAllPagingSizeExceededMessage" />
+        <CaseEmpty action="GetDailyReportList" />
+        <CaseElse action="GetDailyReportList" />
+      </Action>
+      <Action actionType="CONFIRM" confirmType="Ok" name="ApproveAllPagingSizeExceededMessage">
+        <Message messageId="CasConfirmDailyReportApproveAllExceedsPagingSize" />
+        <Cases>
+          <Case value="Ok" action="GetDailyReportList" />
+        </Cases>
+      </Action>
+      <!-- End Approve All -->
+      <!-- SAVE -->
+      <Action name="SaveDailyReport" actionType="SAVE" />
+      <!-- START SAVE and RELOAD-->
+      <Action name="SaveReloadLoDailyReport" actionType="SAVE">
+        <TransitionTo action="GetDailyReportList" />
+      </Action>
+      <!-- END SAVE and RELOAD-->
+      <!-- START SAVE and RELOAD with marking -->
+      <!-- 1. SAVE -->
+      <Action name="SaveReloadLoDailyReportWithMarking" actionType="SAVE">
+        <TransitionTo action="GetCurrentListItem" />
+      </Action>
+      <!-- 2. Get Current of daily report list -->
+      <Action actionType="LOGIC" name="GetCurrentListItem" call="ProcessContext::DailyReportList.getCurrent">
+        <Return name="ProcessContext::CurrentListItem" />
+        <TransitionTo action="GetNextSelectedListItem" />
+      </Action>
+      <!-- 3. Get next list item to select -->
+      <Action name="GetNextSelectedListItem" actionType="LOGIC" call="ProcessContext::DailyReportList.getNextListItemPKey">
+        <Parameters>
+          <Input name="record" value="ProcessContext::CurrentListItem" />
+        </Parameters>
+        <Return name="ProcessContext::NextSelectedListItem" />
+        <TransitionTo action="ReloadDailyReportList" />
+      </Action>
+      <!-- 4. Reload daily report list for removing deleted daily report (Workaround)-->
+      <Action actionType="LOAD" name="ReloadDailyReportList" type="LoUsrDailyReportOverview">
+        <Parameters>
+          <Input name="teamList" value="ProcessContext::TeamList" />
+          <Input name="asoName" type="Literal" value="AsoDailyReport" />
+        </Parameters>
+        <Return name="ProcessContext::DailyReportList" />
+        <TransitionTo action="SetNextSelectedListItem" />
+      </Action>
+      <!-- Commented out because of UI layout issue after removing an item 
+      <Action name="ReloadDailyReportList" actionType="LOGIC" call="ProcessContext::DailyReportList.removeItems">
+        <Parameters>
+          <Input name="currentListItem" value="ProcessContext::CurrentListItem.PKey" />
+        </Parameters>
+        <TransitionTo action="SetNextSelectedListItem" />
+      </Action>
+      -->
+      <!-- 5. Set next list item selected -->
+      <Action name="SetNextSelectedListItem" actionType="LOGIC" call="ProcessContext::DailyReportList.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::NextSelectedListItem" />
+        </Parameters>
+        <TransitionTo action="CheckIfNextItemIsAvailable" />
+      </Action>
+      <!--  6. Check if last element of list was deleted -->
+      <Action name="CheckIfNextItemIsAvailable" actionType="DECISION" parameter="ProcessContext::NextSelectedListItem">
+        <CaseEmpty action="ShowView" />
+        <CaseElse action="LoadSelectedBo" />
+      </Action>
+      <!-- 7. Load new selected daily report for UI detail area -->
+      <Action name="LoadSelectedBo" actionType="LOAD" type="BoUserDailyReport">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::NextSelectedListItem" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentDailyReport" />
+      </Action>
+      <!-- END SAVE and RELOAD with marking -->
+    </Actions>
+  </Body>
+</Process>

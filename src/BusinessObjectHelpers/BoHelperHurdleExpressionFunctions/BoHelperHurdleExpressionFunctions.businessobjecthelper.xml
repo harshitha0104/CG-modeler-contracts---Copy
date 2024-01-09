@@ -1,0 +1,16 @@
+<BusinessObjectHelper name="BoHelperHurdleExpressionFunctions" schemaVersion="1.1">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="createAsync" />
+    <Method name="answerToProductSurvey" />
+    <Method name="answerToQuestion" />
+    <Method name="evaluateOperation" />
+    <Method name="filterItemsByClassification" />
+    <Method name="sumOfQuantity" />
+    <Method name="sumOfValue" />
+  </Methods>
+</BusinessObjectHelper>

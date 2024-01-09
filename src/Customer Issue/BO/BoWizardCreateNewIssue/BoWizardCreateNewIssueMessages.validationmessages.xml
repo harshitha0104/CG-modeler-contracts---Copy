@@ -1,0 +1,5 @@
+<ValidationMessages name="BoWizardCreateNewIssueMessages" businessObject="BoWizardCreateNewIssue" schemaVersion="0.0.0.5">
+  <ValidationMessage name="CasSdoFillInAllValues" defaultMessage="Please fill in all values." comment="All fields need to be filled with values." />
+  <ValidationMessage name="CasBoIssueInitiationDateGTDueDate" defaultMessage="The Due Date must be greater than or equal to Initiation Date." comment="validates Due Date" />
+  <ValidationMessage name="CasClbCannotCreateIssueWhileSubstituted" defaultMessage="You are not allowed to create customer tasks during the substitution time frame, if you are the substituted user." comment="validates if the current user is substituted and a substitution is running" />
+</ValidationMessages>

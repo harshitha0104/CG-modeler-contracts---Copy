@@ -1,0 +1,8 @@
+<ListItem name="LiScannedCustomer">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="name" type="DomBpaName" storable="true" dataSourceProperty="name" />
+    <SimpleProperty name="name2" type="DomBpaName" storable="true" dataSourceProperty="name2" />    
+    <SimpleProperty name="id" type="DomId" storable="true" dataSourceProperty="id" />
+  </SimpleProperties>  
+</ListItem>

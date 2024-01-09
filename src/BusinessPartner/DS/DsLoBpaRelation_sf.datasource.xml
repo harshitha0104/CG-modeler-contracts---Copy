@@ -1,0 +1,82 @@
+<DataSource name="DsLoBpaRelation" backendSystem="sf" objectClass="LoBpaRelation" businessObjectClass="LoBpaRelation" external="true" distinct="false" readOnly="true" editableEntity="Account_Relationship__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Relationship__c" column="Id" />
+    <DerivedAttribute name="relation" value="''" />
+    <Attribute name="name" table="Account" column="Name" />
+    <Attribute name="main" table="Account_Relationship__c" column="Is_Primary_Relationship__c" />
+    <Attribute name="relationId" table="Account" column="Account_Number__c" />
+    <Attribute name="city" table="Account" column="ShippingCity" />
+    <DerivedAttribute name="imageId" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Relationship__c" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var customerPKey = "";
+			var deliveryRecipient = "";
+			var payer = "";
+			var wholesaler = "";
+			var billTo = "";
+
+			if(Utils.isDefined(jsonQuery.customerPKey)) {
+				customerPKey = Utils.convertForDBParam(jsonQuery.customerPKey, "DomPKey");
+			}
+
+			deliveryRecipient = Utils.convertForDBParam(Localization.resolve("Customer_RelationList_Delivery_Recipient", "DomText"));
+			payer = Utils.convertForDBParam(Localization.resolve("Customer_RelationList_Payer", "DomText"));
+			wholesaler = Utils.convertForDBParam(Localization.resolve("Customer_RelationList_Wholesaler", "DomText"));
+			billTo = Utils.convertForDBParam(Localization.resolve("Customer_RelationList_Bill_To", "DomText"));
+
+			var sqlParams = {customerPKey, deliveryRecipient, payer, wholesaler, billTo};
+
+			var sqlStmt = "SELECT Account_Relationship__c.Id AS pKey, #deliveryRecipient# AS relation, Account.Name AS name, Account_Relationship__c.Is_Primary_Relationship__c AS main, Account.Account_Number__c AS relationId, Account.ShippingCity as city, ";
+			sqlStmt += " CASE WHEN Account_Relationship__c.Is_Primary_Relationship__c = '1' then 'Bool_True' ELSE ' ' END AS 'imageId' ";
+			sqlStmt += "FROM Account_Relationship__c, Account Account ";
+			sqlStmt += "WHERE Account.Id = Account_Relationship__c.Related_Account__c ";
+			sqlStmt += "AND Account_Relationship__c.Relationship_Type__c='DeliveryRecipient' ";
+			sqlStmt += "AND #compareAsDate('Account_Relationship__c.Start_Date__c', 'Date','<=', #TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND #compareAsDate('Account_Relationship__c.End_Date__c', 'Date','>=', #TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND  Account_Relationship__c.Account__c = #customerPKey# ";
+
+			sqlStmt += "UNION ";
+
+			sqlStmt += "SELECT Account_Relationship__c.Id AS pKey, #payer# AS relation, Account.Name AS name, Account_Relationship__c.Is_Primary_Relationship__c AS main, Account.Account_Number__c AS relationId, Account.ShippingCity as city, ";
+			sqlStmt += " CASE WHEN Account_Relationship__c.Is_Primary_Relationship__c = '1' then 'Bool_True' ELSE ' ' END AS 'imageId' ";
+			sqlStmt += "FROM Account_Relationship__c, Account ";
+			sqlStmt += "WHERE Account.Id = Account_Relationship__c.Related_Account__c ";
+			sqlStmt += "AND Account_Relationship__c.Relationship_Type__c='Payer' ";
+			sqlStmt += "AND #compareAsDate('Account_Relationship__c.Start_Date__c', 'Date','<=', #TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND #compareAsDate('Account_Relationship__c.End_Date__c', 'Date','>=', #TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND  Account_Relationship__c.Account__c = #customerPKey# ";
+
+			sqlStmt += "UNION ";
+
+			sqlStmt += "SELECT Account_Relationship__c.Id AS pKey, #wholesaler# AS relation, Account.Name AS name, Account_Relationship__c.Is_Primary_Relationship__c AS main, Account.Account_Number__c AS relationId, Account.ShippingCity as city, ";
+			sqlStmt += " CASE WHEN Account_Relationship__c.Is_Primary_Relationship__c = '1' then 'Bool_True' ELSE ' ' END AS 'imageId' ";
+			sqlStmt += "FROM Account_Relationship__c, Account ";
+			sqlStmt += "INNER JOIN Account_Extension__c ON Account.Id = Account_Extension__c.Account__c ";
+			sqlStmt += "AND #compareAsDate('Account_Extension__c.Broker_Role_Valid_From__c', 'Date','<=', #TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND #compareAsDate('Account_Extension__c.Broker_Role_Valid_Thru__c', 'Date','>=', #TodayAsDate#, 'Date')# ";
+			sqlStmt += "WHERE Account.Id = Account_Relationship__c.Related_Account__c ";
+			sqlStmt += "AND Account_Relationship__c.Relationship_Type__c='Wholesaler' ";
+			sqlStmt += "AND #compareAsDate('Account_Relationship__c.Start_Date__c', 'Date','<=', #TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND #compareAsDate('Account_Relationship__c.End_Date__c', 'Date','>=', #TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND  Account_Relationship__c.Account__c = #customerPKey# ";
+
+			sqlStmt += "UNION ";
+
+			sqlStmt += "SELECT Account_Relationship__c.Id AS pKey, #billTo# AS relation, Account.Name AS name, Account_Relationship__c.Is_Primary_Relationship__c AS main, Account.Account_Number__c AS relationId, Account.ShippingCity as city,  ";
+			sqlStmt += " CASE WHEN Account_Relationship__c.Is_Primary_Relationship__c = '1' then 'Bool_True' ELSE ' ' END AS 'imageId' ";
+			sqlStmt += "FROM Account_Relationship__c, Account ";
+			sqlStmt += "WHERE Account.Id = Account_Relationship__c.Related_Account__c ";
+			sqlStmt += "AND Account_Relationship__c.Relationship_Type__c='BillTo' ";
+			sqlStmt += "AND #compareAsDate('Account_Relationship__c.Start_Date__c', 'Date','<=', #TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND #compareAsDate('Account_Relationship__c.End_Date__c', 'Date','>=', #TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND  Account_Relationship__c.Account__c = #customerPKey# ";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+  </Database>
+</DataSource>

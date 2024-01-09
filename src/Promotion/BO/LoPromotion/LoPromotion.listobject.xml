@@ -1,0 +1,26 @@
+<ListObject name="LoPromotion" generateLoadMethod="true" filter="InDatabase" paging="true" schemaVersion="1.1">
+  <DataSource name="DsLoPromotion" />
+  <Item objectClass="LiPromotion" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="setSortOrder" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoApprovePromotion">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="LoPromotion_PhaseId" property="phase" type="Selection" toggleId="PrmPhase" />
+        <AdvancedSearchAttribute label="LoPromotion_DateFromId" property="dateFrom" type="Date" />
+        <AdvancedSearchAttribute label="LoPromotion_DateThruId" property="dateThru" type="Date" />
+        <AdvancedSearchAttribute label="LoPromotion_Owner" property="ownerPKey" lookupProcess="User::LookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="LoPromotion_User" property="responsiblePKey" defaultValue="#UserPKey#" lookupProcess="User::LookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

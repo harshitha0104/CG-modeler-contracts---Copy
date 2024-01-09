@@ -1,0 +1,24 @@
+<DataSource name="DsLuOrderCount" backendSystem="sf" businessObjectClass="LuOrderCount" external="false" readOnly="true" editableEntity="Order__c" schemaVersion="2.0">
+  <Attributes>
+    <!-- First attribute is a workaround to get the DS generated - "Could not find table column type for  in table Order__c!" -->
+    <Attribute name="pKey" table="Order__c" column="Id" />
+    <DerivedAttribute name="orderCount" value="Count(*)" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order__c" alias="" idAttribute="Id" />
+    <Entity name="Order_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Order_Template__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Order__c.Order_Template__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Order__c.Phase__c = 'Initial'       
+        AND Order__c.Responsible__c = '#UserPKey#'
+		AND Order__c.IsDeleted = '0'
+     ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters></Parameters>
+</DataSource>

@@ -1,0 +1,27 @@
+<UIDescription name="VisitGuide::ShowVisitMap" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="VisitGuide" defaultLabel="Visit Guide" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GoogleMap name="VisitsGuide" width="100%" dataSource="ProcessContext::CardVisits_VisitList.Items[]" pKeyField="bpaMainPKey" latitudeField="latitude" longitudeField="longitude" idField="mapPinId" toolTipField="toolTipText">
+          <Bindings>
+            <Resource target="MarkerImage" type="Image" id="MarkerStore" defaultImage="MarkerStore" />
+            <Resource target="CurrentPositionImage" type="Image" id="MarkerUser" defaultImage="MarkerUser" />
+            <Binding target="DisplayTraffic" binding="ProcessContext::DisplayTraffic" bindingMode="ONE_WAY" />
+          </Bindings>
+          <Events>
+            <MarkerInfoClickedEvent event="Customer_MarkerClicked">
+              <Params>
+                <Param name="CustomerPKey" value=".pkey" />
+              </Params>
+            </MarkerInfoClickedEvent>
+          </Events>
+        </GoogleMap>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

@@ -1,0 +1,260 @@
+<UIDescription name="DailyReport::FlyoutTimeEntryDetailUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TimeEntryDetails" defaultLabel="Time Entry Details" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="done">
+          <Bindings>
+            <Resource target="Text" type="Label" id="doneId" defaultLabel="Done" />
+            <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+            <Binding type="Visible" target="Visible" call="ProcessContext::CurrentDailyReport.checkButtonVisibility">
+              <Parameters>
+                <Input name="mode" type="Literal" value="detailDone" />
+              </Parameters>
+            </Binding>
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="updateTimeEntry"></ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="DetailsSection">
+          <InputArea name="Description" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="FlyoutTimeEntryDetails_Description" defaultLabel="Description" />
+              <Binding target="Value" binding="ProcessContext::CurrentDailyReport.loUsrTimeEntry.Current.description" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+        <!-- Original Dates -->
+        <GroupElement name="Original">
+          <Bindings>
+            <Resource target="Title" type="Label" id="OriginalGroupTitle" defaultLabel="Original" />
+          </Bindings>
+          <!-- Original Date From -->
+          <Merger name="OriginalDateFrom" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Start" id="OriginalDateFromId" />
+            </Bindings>
+            <DatePickerField name="OriginalDateFrom" disabled="true">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::CurrentDailyReport.loUsrTimeEntry.Current.systemTimeFrom" bindingMode="ONE_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <InputArea name="Start" editable="false">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::CurrentDailyReport.loUsrTimeEntry.Current.orgTimeFrom" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </Merger>
+          <!-- Comment out Original Date From Offsets 
+          <Merger name="SystemTimeFromGeoDSTOffsets" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Geo / DST Offsets" id="SystemTimeFromGeoDSTOffsetsId" />
+            </Bindings>
+            <SelectionBox name="SystemTimeFromGeoOffset" disabled="true">
+              <Bindings>
+                <Binding target="DataSource" toggleId="UsrGeoTimeOffset" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::CurrentDailyReport.loUsrTimeEntry.Current.systemTimeFromGeoOffset" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="SystemTimeFromDSTOffset" disabled="true">
+              <Bindings>
+                <Binding target="DataSource" toggleId="UsrDSTTimeOffset" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::CurrentDailyReport.loUsrTimeEntry.Current.systemTimeFromDSTOffset" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </Merger>
+-->
+          <!-- Original Date Thru -->
+          <Merger name="OriginalDateThru" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="End" id="OriginalDateThruId" />
+            </Bindings>
+            <DatePickerField name="OriginalDateThru" disabled="true">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::CurrentDailyReport.loUsrTimeEntry.Current.systemTimeThru" bindingMode="ONE_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <InputArea name="End" editable="false">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::CurrentDailyReport.loUsrTimeEntry.Current.orgTimeThru" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </Merger>
+          <!-- Comment out Original Date Thru Offsets
+          <Merger name="SystemTimeThruOffsets" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Geo / DST Offsets" id="SystemTimeThruOffsets" />
+            </Bindings>
+            <SelectionBox name="SystemTimeThruGeoOffset" disabled="true">
+              <Bindings>
+                <Binding target="DataSource" toggleId="UsrGeoTimeOffset" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::CurrentDailyReport.loUsrTimeEntry.Current.systemTimeThruGeoOffset" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="SystemTimeThruDSTOffset" disabled="true">
+              <Bindings>
+                <Binding target="DataSource" toggleId="UsrDSTTimeOffset" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::CurrentDailyReport.loUsrTimeEntry.Current.systemTimeThruDSTOffset" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </Merger>
+-->
+        </GroupElement>
+        <!-- Modified Dates -->
+        <GroupElement name="Modified">
+          <Bindings>
+            <Resource target="Title" type="Label" id="ModifiedGroupTitle" defaultLabel="Modified" />
+          </Bindings>
+          <!-- Modified date from -->
+          <Merger name="EffectiveTimeFrom" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Start" id="EffectiveTimeFrom" />
+            </Bindings>
+            <DatePickerField name="ModifiedDateFrom" disabled="false">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::OriginalTimeEntry.effectiveDateFrom" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <TimePickerField name="EffStartTime">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Time From" id="ETimeStart" />
+                <Binding target="Value" binding="ProcessContext::OriginalTimeEntry.effectiveTimeFrom" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+          <!-- Comment out Modified date from offsets
+          <Merger name="EffectiveTimeFromGeoDstOffset" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="false">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Geo / DST Offsets" id="EffectiveTimeFromGeoDstOffsetId" />
+            </Bindings>
+            <SelectionBox name="EffectiveTimeFromGeoOffset" disabled="false">
+              <Bindings>
+                <Binding target="DataSource" toggleId="UsrGeoTimeOffset" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::OriginalTimeEntry.effectiveTimeFromGeoOffset" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="EffectiveTimeFromDSTOffset" disabled="false">
+              <Bindings>
+                <Binding target="DataSource" toggleId="UsrDSTTimeOffset" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::OriginalTimeEntry.effectiveTimeFromDSTOffset" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </Merger>
+-->
+          <!-- Modified date thru -->
+          <Merger name="Modified" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="End" id="ModifiedEndId" />
+            </Bindings>
+            <DatePickerField name="ModifiedDateThru" disabled="false">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::OriginalTimeEntry.effectiveDateThru" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <TimePickerField name="EffEndTime">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Time From" id="ETimeEnd" />
+                <Binding target="Value" binding="ProcessContext::OriginalTimeEntry.effectiveTimeThru" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+          <!-- Comment out Modified date thru  offsets
+          <Merger name="EffectiveTimeFromGeoDSTOffset" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="false">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Geo / DST Offsets" id="EffectiveTimeFromGeoDSTOffsetId" />
+            </Bindings>
+            <SelectionBox name="EffectiveTimeThruGeoOffset" disabled="false">
+              <Bindings>
+                <Binding target="DataSource" toggleId="UsrGeoTimeOffset" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::OriginalTimeEntry.effectiveTimeThruGeoOffset" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="EffectiveTimeThruDSTOffset" disabled="false">
+              <Bindings>
+                <Binding target="DataSource" toggleId="UsrDSTTimeOffset" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::OriginalTimeEntry.effectiveTimeThruDSTOffset" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </Merger>
+-->
+        </GroupElement>
+        <GroupElement>
+          <SelectionBox name="ReasonCode" disabled="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="ReasonId" defaultLabel="Reason Code" />
+              <Binding target="DataSource" toggleId="UsrTimeEntryReasonCode" bindingMode="ONE_WAY" />
+              <Binding target="Value" binding="ProcessContext::OriginalTimeEntry.reasonCode" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <InputAreaMultiLine name="Note" disabled="false" editable="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="FlyoutTimeEntryDetails_Note" defaultLabel="Note" />
+              <Binding target="Value" binding="ProcessContext::OriginalTimeEntry.note" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

@@ -1,0 +1,15 @@
+<ListObject name="LoBpaHistSurveyProduct" generateLoadMethod="false" schemaVersion="1.1" lightWeight="only">
+  <DataSource name="DsLoBpaHistSurveyProduct" />
+  <Item objectClass="LiBpaHistSurveyProduct" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="saveAsync" />
+    <Method name="addToHistory" />
+    <Method name="deleteFromHistory" />
+  </Methods>
+</ListObject>

@@ -1,0 +1,18 @@
+<ListItem name="LiInventoryTransaction" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="amount" type="DomDecimal" storable="true" dataSourceProperty="amount" />
+    <SimpleProperty name="ivcMainPKey" type="DomPKey" storable="true" dataSourceProperty="ivcMainPKey" />
+    <SimpleProperty name="ivcTaMetaPKey" type="DomPKey" storable="true" dataSourceProperty="ivcTaMetaPKey" />
+    <SimpleProperty name="sdoMainPKey" type="DomPKey" storable="true" dataSourceProperty="sdoMainPKey" />
+    <SimpleProperty name="sdoItemPKey" type="DomPKey" storable="true" dataSourceProperty="sdoItemPKey" />
+    <SimpleProperty name="accounted" type="DomBool" storable="true" dataSourceProperty="accounted" />
+    <SimpleProperty name="initiationDate" type="DomDate" storable="true" dataSourceProperty="initiationDate" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" storable="true" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="initiatorUsrMainPKey" type="DomPKey" storable="true" dataSourceProperty="initiatorUsrMainPKey" />
+    <SimpleProperty name="chargeDate" type="DomDate" storable="true" dataSourceProperty="chargeDate" />
+    <SimpleProperty name="bpaCustomerPKey" type="DomPKey" storable="true" dataSourceProperty="bpaCustomerPKey" />
+    <SimpleProperty name="paymentMethod" type="DomPaymentMethod" storable="true" dataSourceProperty="paymentMethod" />
+    <SimpleProperty name="sdoPaymentPKey" type="DomPKey" storable="true" dataSourceProperty="sdoPaymentPKey" />
+  </SimpleProperties>
+</ListItem>

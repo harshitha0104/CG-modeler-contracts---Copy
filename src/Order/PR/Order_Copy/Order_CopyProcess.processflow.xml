@@ -1,0 +1,110 @@
+<Process name="Order::CopyProcess" defaultAction="GetTemplateList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OrderBo" type="BoOrder" />
+        <Declaration name="SdoMetaPKey" type="DomPKey" />
+        <Declaration name="OrdererPKey" type="DomPKey" />
+        <Declaration name="ClbMainPKey" type="DomPKey" />
+        <Declaration name="CallInContext_clbMainPKey" type="DomPKey" />
+        <Declaration name="CallOutOfStockProducts" type="String" />
+        <!-- SF/CASDIF -->
+        <Declaration name="SfReplicationCallbacks" type="BoSfReplicationCallbacks" />
+        <!-- SF/CASDIF -->
+        <Declaration name="isOrderDataAvailable" type="DomBool" />
+        <Declaration name="DelRole" type="BoDeliveryRole" />
+        <Declaration name="CopyLu" type="LuCopyOrderLookup" />
+        <Declaration name="OrderMetaList" type="LoOrderMeta" />
+        <Declaration name="TemplateLegit" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainPKey" type="DomPKey" />
+        <Input name="SdoMetaPKey" type="DomPKey" />
+        <Input name="OrdererPKey" type="DomPKey" />
+        <Input name="ClbMainPKey" type="DomPKey" />
+        <Input name="EtpWarehousePKey" type="DomPKey" />
+        <Input name="CallInContext_clbMainPKey" type="DomPKey" />
+        <Input name="CallOutOfStockProducts" type="Object" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadLuCopy" actionType="LOAD" type="LuCopyOrderLookup">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::CopyLu" />
+      </Action>
+      <Action name="CreateReplicationCallBacksBo" actionType="CREATE" type="BoSfReplicationCallbacks">
+        <Return name="ProcessContext::SfReplicationCallbacks" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="GetTemplateList" actionType="LOAD" type="LoOrderMeta">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::CopyLu.ordererPKey" />
+        </Parameters>
+        <Return name="ProcessContext::OrderMetaList" />
+        <TransitionTo action="CopyTemplateCheck" />
+      </Action>
+      <Action name="CopyTemplateCheck" actionType="LOGIC" call="ProcessContext::OrderMetaList.contains">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::CopyLu.sdoMetaPKey" />
+        </Parameters>
+        <Return name="ProcessContext::TemplateLegit" />
+        <TransitionTo action="TemplateLegit_Decision" />
+      </Action>
+      <Action name="TemplateLegit_Decision" actionType="DECISION" parameter="ProcessContext::TemplateLegit">
+        <Case value="true" action="CreateOrder" />
+        <CaseElse action="Message_TemplateNotValid" />
+      </Action>
+      <Action name="CreateOrder" actionType="CREATE" type="BoOrder">
+        <Parameters>
+          <Input name="SdoMetaPKey" value="ProcessContext::CopyLu.sdoMetaPKey" />
+          <Input name="OrdererPKey" value="ProcessContext::CopyLu.ordererPKey" />
+          <Input name="ClbMainPKey" type="Literal" value=" " />
+          <!--Input name="ClbMainPKey" value="ProcessContext::OldOrderBo.clbMainPKey" /-->
+          <Input name="etpWarehousePKey" type="Literal" value=" " />
+          <!--Input name="etpWarehousePKey" value="ProcessContext::OldOrderBo.etpWarehousePKey" /-->
+          <Input name="CallInContext_clbMainPKey" value="ProcessContext::CallInContext_clbMainPKey" />
+          <Input name="OwnerPKey" value="ApplicationContext::User.pKey" />
+          <Input name="ResponsiblePKey" value="ApplicationContext::User.pKey" />
+          <Input name="CallOutOfStockProducts" value="ProcessContext::CallOutOfStockProducts" />
+          <Input name="Copy" type="Literal" value="true" />
+        </Parameters>
+        <Return name="ProcessContext::OrderBo" />
+        <TransitionTo action="IsInvalidOrder_Decision" />
+      </Action>
+      <Action name="IsInvalidOrder_Decision" actionType="DECISION" parameter="ProcessContext::OrderBo.isInvalidOrder">
+        <Case value="1" action="End" />
+        <CaseElse action="CopyOrderItems" />
+      </Action>
+      <!-- SF/CASDIF Start -->
+      <Action name="CopyOrderItems" actionType="LOGIC" call="ProcessContext::OrderBo.copyBo">
+        <Parameters>
+          <Input name="oldBo" value="ProcessContext::CopyLu" />
+        </Parameters>
+        <TransitionTo action="SaveOrder" />
+      </Action>
+      <Action name="SaveOrder" actionType="SAVE">
+        <Parameters>
+          <Input name="boOrder" value="ProcessContext::OrderBo" />
+        </Parameters>
+        <TransitionTo action="EndWithReturn" />
+      </Action>
+      <Action name="Message_TemplateNotValid" actionType="CONFIRM" confirmType="Ok">
+        <Message messageId="CasTemplateNotValidForCopy" />
+        <Cases>
+          <Case value="Ok" action="End" />
+        </Cases>
+      </Action>
+      <Action name="End" actionType="END" />
+      <Action name="EndWithReturn" actionType="END">
+        <ReturnValues>
+          <Return name="CopyOrder" value="ProcessContext::OrderBo" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

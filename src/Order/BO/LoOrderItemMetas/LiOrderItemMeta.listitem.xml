@@ -1,0 +1,39 @@
+<ListItem name="LiOrderItemMeta" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="active" type="DomBool" storable="false" dataSourceProperty="active" />
+    <SimpleProperty name="id" type="DomId" storable="false" dataSourceProperty="id" />
+    <SimpleProperty name="quantitySuggestionPolicy" type="DomString" storable="false" dataSourceProperty="quantitySuggestionPolicy" />
+    <SimpleProperty name="text" type="DomText" storable="false" dataSourceProperty="text" />
+    <SimpleProperty name="shortText" type="DomText" storable="false" dataSourceProperty="shortText" />
+    <SimpleProperty name="prdProposalItemMetaPosition" type="DomPrdPdaItemPosition" storable="false" dataSourceProperty="prdProposalItemMetaPosition" />
+    <SimpleProperty name="useAssortmentSdoItem" type="DomBool" storable="false" dataSourceProperty="useAssortmentSdoItem" />
+    <SimpleProperty name="useClosedListing" type="DomBool" storable="false" dataSourceProperty="useClosedListing" />
+    <SimpleProperty name="quantityLogisticUnit" type="DomSdoPdaQuantityLogisticUnit" storable="false" dataSourceProperty="quantityLogisticUnit" />
+    <SimpleProperty name="main" type="DomBool" storable="false" dataSourceProperty="main" />
+    <SimpleProperty name="useSpecialPrice" type="DomBool" storable="false" dataSourceProperty="useSpecialPrice" />
+    <SimpleProperty name="considerDeliveryState" type="DomBool" storable="false" dataSourceProperty="considerDeliveryState" />
+    <SimpleProperty name="priceEffect" type="DomSdoItemMetaPriceEffect" storable="false" dataSourceProperty="priceEffect" />
+    <SimpleProperty name="logisticCategory" type="DomSdoLogisticCategory" storable="false" dataSourceProperty="logisticCategory" />
+    <SimpleProperty name="checkQuotaOver" type="DomSdoCheckType" storable="false" dataSourceProperty="checkQuotaOver" />
+    <SimpleProperty name="checkUserInventoryOver" type="DomSdoCheckType" storable="false" dataSourceProperty="checkUserInventoryOver" />
+    <SimpleProperty name="useQuota" type="DomBool" storable="false" dataSourceProperty="useQuota" />
+    <SimpleProperty name="useUserInventory" type="DomBool" storable="false" dataSourceProperty="useUserInventory" />
+    <SimpleProperty name="checkUniqueness" type="DomBool" storable="false" dataSourceProperty="checkUniqueness" />
+    <SimpleProperty name="checkMaxQuantity" type="DomBool" storable="false" dataSourceProperty="checkMaxQuantity" />
+    <SimpleProperty name="maxQuantity" type="DomDecimal" storable="false" dataSourceProperty="maxQuantity" />
+    <SimpleProperty name="saveZeroQuantity" type="DomBool" storable="false" dataSourceProperty="saveZeroQuantity" />
+    <SimpleProperty name="excludeQuantityRounding" type="DomBool" storable="false" dataSourceProperty="excludeQuantityRounding" />
+    <SimpleProperty name="calculationGroup" type="DomSdoCalculationGroup" storable="false" dataSourceProperty="calculationGroup" />
+    <SimpleProperty name="modifyPresetQuantity" type="DomSdoModifyPresetQuantity" dataSourceProperty="modifyPresetQuantity" />
+    <SimpleProperty name="scanIncrementQuantity" type="DomInteger" dataSourceProperty="scanIncrementQuantity" />
+    <SimpleProperty name="movementDirection" type="DomSdoItemMovementDirection" storable="true" dataSourceProperty="movementDirection" />
+    <SimpleProperty name="modReasonRequired" type="DomSdoModReasonRequired" storable="true" dataSourceProperty="modReasonRequired" />
+    <SimpleProperty name="addAllowed" type="DomBool" storable="false" dataSourceProperty="addAllowed" />
+    <SimpleProperty name="creationPlatform" type="DomCreationPlatform" storable="false" dataSourceProperty="creationPlatform" />
+    <SimpleProperty name="uoMScanBehavior" type="DomSdoUoMScanBehavior" storable="false" dataSourceProperty="uoMScanBehavior" />
+    <SimpleProperty name="uoMScanDefaultUnit" type="DomPrdLogisticUnit" storable="false" dataSourceProperty="uoMScanDefaultUnit" />
+    <SimpleProperty name="validFrom" type="DomDate" storable="false" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomDate" storable="false" dataSourceProperty="validThru" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,9 @@
+<ListItem name="LiMeAuthorizationList" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty id="true" name="prdMainPKey" type="DomPKey" storable="false" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="listed" type="DomBool" storable="false" dataSourceProperty="listed" />
+    <SimpleProperty name="listing" type="DomSdoPdaListingFinding" storable="false" dataSourceProperty="listing" />
+    <SimpleProperty name="listingWithModules" type="DomSdoPdaListingFinding" storable="false" dataSourceProperty="listingWithModules" />
+  </SimpleProperties>
+</ListItem>

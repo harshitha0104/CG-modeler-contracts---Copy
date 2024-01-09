@@ -1,0 +1,13 @@
+<ListItem name="LiPrdAttachments">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="fileName" type="DomFileName" dataSourceProperty="fileName" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+    <!-- Derived attribute required as FW accesses the type property -->
+    <SimpleProperty name="type" type="DomFileType" dataSourceProperty="type" />
+    <SimpleProperty name="description" type="DomText" dataSourceProperty="description" />
+    <SimpleProperty name="attachmentBlobPKey" type="DomPKey" dataSourceProperty="attachmentBlobPKey" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" blobTable="PrdAttachmentBlob" blobPKeyField="attachmentBlobPKey" />
+    <SimpleProperty name="creationDate" type="DomDate" dataSourceProperty="creationDate" />
+  </SimpleProperties>
+</ListItem>

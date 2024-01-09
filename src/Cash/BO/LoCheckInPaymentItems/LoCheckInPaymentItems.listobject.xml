@@ -1,0 +1,16 @@
+<ListObject name="LoCheckInPaymentItems" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoCheckInPaymentItems" />
+  <Item objectClass="LiCheckInPaymentItems" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="setEARights" />
+    <Method name="setEARightsByItem" />
+  </Methods>
+</ListObject>

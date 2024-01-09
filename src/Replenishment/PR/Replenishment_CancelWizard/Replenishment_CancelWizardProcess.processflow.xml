@@ -1,0 +1,58 @@
+<Process name="Replenishment::CancelWizardProcess" defaultAction="Display_UI_Desicion" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CancelReasons" type="LoOrderMetaCancelReason" />
+        <Declaration name="OrderBo" type="BoOrder" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadBo" actionType="LOAD" type="BoOrder">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainPKey" />
+          <Input name="isCanceling" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::OrderBo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="Display_UI_Desicion" actionType="DECISION" parameter="ProcessContext::OrderBo.boOrderMeta.cancelReasonRequired">
+        <Case value="0" action="ConfirmCancel" />
+        <Case value="1" action="LoadCancelReasons" />
+        <CaseElse action="ConfirmCancel" />
+      </Action>
+      <Action name="LoadCancelReasons" actionType="LOAD" type="LoOrderMetaCancelReason">
+        <Parameters>
+          <Input name="sdoMetaPKey" value="ProcessContext::OrderBo.sdoMetaPKey" />
+        </Parameters>
+        <Return name="ProcessContext::CancelReasons" />
+        <TransitionTo action="ShowCancelReasonSelectionView" />
+      </Action>
+      <Action actionType="View" name="ShowCancelReasonSelectionView">
+        <UIDescription>Replenishment::CancelWizardUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="CancelReplenishment" />
+        </Events>
+      </Action>
+      <Action actionType="CONFIRM" confirmType="YesNoCancel" name="ConfirmCancel">
+        <Message messageId="CasConfirmCancelMsg"></Message>
+        <Cases>
+          <Case value="Yes" action="CancelReplenishment" />
+          <Case value="No" action="End" />
+        </Cases>
+      </Action>
+      <Action name="CancelReplenishment" actionType="LOGIC" call="ProcessContext::OrderBo.cancel">
+        <Parameters>
+          <Input name="reasonCode" value="Event.reasonCode" />
+        </Parameters>
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="END" name="End"></Action>
+    </Actions>
+  </Body>
+</Process>

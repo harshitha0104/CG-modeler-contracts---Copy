@@ -1,0 +1,8 @@
+<ListItem name="LiCustomerContactPartnerRelation"  >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="fromPKey" type="DomPKey" dataSourceProperty="fromPKey" />
+    <SimpleProperty name="toPKey" type="DomPKey" dataSourceProperty="toPKey" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,4 @@
+<ValidationMessages name="BoTripListMessages" businessObject="BoTripList" schemaVersion="0.0.0.5">
+  <ValidationMessage name="CasClbFillInAllValues" defaultMessage="Please fill in all values." comment="All fields need to be filled with values." />
+  <ValidationMessage name="CasTplErrorsOnCallCreation" defaultMessage="#ErrorCount# Calls were not valid and could not be created." comment="Used in BoTriplist.CreateCalls" />
+</ValidationMessages>

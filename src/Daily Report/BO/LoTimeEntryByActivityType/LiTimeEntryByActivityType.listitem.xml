@@ -1,0 +1,8 @@
+<ListItem name="LiTimeEntryByActivityType">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="duration" type="DomDurationUnit" dataSourceProperty="duration" />
+    <SimpleProperty name="effectiveUTCTimeFrom" type="DomDateTime" dataSourceProperty="effectiveUTCTimeFrom" />
+    <SimpleProperty name="effectiveUTCTimeThru" type="DomDateTime" dataSourceProperty="effectiveUTCTimeThru" />
+  </SimpleProperties>
+</ListItem>

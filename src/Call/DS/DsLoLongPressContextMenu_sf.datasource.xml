@@ -1,0 +1,20 @@
+<DataSource name="DsLoLongPressContextMenu" backendSystem="sf" businessObjectClass="LoLongPressContextMenu" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+      // Intended to be empty - This list object gets its items by business logic!
+      return undefined;
+   ]]></Load>
+    <Update><![CDATA[
+      // Intended to be empty - This list object gets its items by business logic!
+      return undefined;
+   ]]></Update>
+    <Insert><![CDATA[
+      // Intended to be empty - This list object gets its items by business logic!
+      return undefined;   
+   ]]></Insert>
+    <Delete><![CDATA[
+      // Intended to be empty - This list object gets its items by business logic!
+      return undefined;  
+   ]]></Delete>
+  </Database>
+</DataSource>

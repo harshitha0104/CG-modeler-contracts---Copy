@@ -1,0 +1,19 @@
+<DataSource name="DsLoOrderRecentState" businessObjectClass="LoOrderRecentState" external="false" editableEntity="SdoRecentState" schemaVersion="1.1">
+  <Attributes>
+    <Attribute name="pKey" table="SdoRecentState" column="PKey" />
+    <Attribute name="done" table="SdoRecentState" column="Done" />
+    <Attribute name="sdoMainPKey" table="SdoRecentState" column="SdoMainPKey" />
+    <Attribute name="usrMainPKey" table="SdoRecentState" column="UsrMainPKey" />
+    <Attribute name="wfeStatePKey" table="SdoRecentState" column="WfeStatePKey" />
+  </Attributes>
+  <Entities>
+    <Entity name="SdoRecentState" alias="" idAttribute="PKey" />
+  </Entities>
+  <QueryCondition><![CDATA[
+      SdoMainPKey = '#pkey#'
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" />
+  </Parameters>
+</DataSource>

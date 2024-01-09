@@ -1,0 +1,5 @@
+<ValidationMessages name="BoFlyoutRegisterAssetMessages" businessObject="BoFlyoutRegisterAsset" schemaVersion="1.1">
+  <ValidationMessage name="CasAstRegisterFillInAllValues" defaultMessage="Please fill in all values." comment="All fields need to be filled with values." />
+  <ValidationMessage name="CasAstRegisterSerialNumberTooLong" defaultMessage="Serial Number may not exceed 50 characters." comment="" />
+  <ValidationMessage name="CasClbAssetRequiredScanning" defaultMessage="The asset can be registered only via bar code scanner." comment=" " />
+</ValidationMessages>

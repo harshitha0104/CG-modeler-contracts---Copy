@@ -1,0 +1,12 @@
+<ListObject name="LoProductBoM" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoProductBoM" />
+  <Item objectClass="LiProductBoM" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+  </Methods>
+</ListObject>

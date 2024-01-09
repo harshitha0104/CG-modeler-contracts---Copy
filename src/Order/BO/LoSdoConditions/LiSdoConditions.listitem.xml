@@ -1,0 +1,22 @@
+<ListItem name="LiSdoConditions" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="sdoMainPKey" type="DomPKey" storable="true" dataSourceProperty="sdoMainPKey" />
+    <SimpleProperty name="sdoItemPKey" type="DomPKey" storable="true" dataSourceProperty="sdoItemPKey" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" storable="true" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="cndCpMetaPKey" type="DomPKey" storable="true" dataSourceProperty="cndCpMetaPKey" />
+    <SimpleProperty name="text1" type="DomText" storable="true" dataSourceProperty="text1" />
+    <SimpleProperty name="currency" type="DomCurrency" storable="true" dataSourceProperty="currency" />
+    <SimpleProperty name="currencyConversionRate" type="DomDecimal" storable="true" dataSourceProperty="currencyConversionRate" />
+    <SimpleProperty name="sdoItemErpId" type="DomId" storable="true" dataSourceProperty="sdoItemErpId" />
+    <SimpleProperty name="cndCpCalculationPosition" type="DomInteger" storable="true" dataSourceProperty="cndCpCalculationPosition" />
+    <SimpleProperty name="cndCpSearchStrategyKTRelPos" type="DomInteger" storable="true" dataSourceProperty="cndCpSearchStrategyKTRelPos" />
+    <SimpleProperty name="conditionBaseValue" type="DomDecimal" storable="true" dataSourceProperty="conditionBaseValue" />
+    <SimpleProperty name="conditionValue" type="DomDecimal" storable="true" dataSourceProperty="conditionValue" />
+    <SimpleProperty name="conditionUnit" type="DomPrdLogisticUnit" storable="true" dataSourceProperty="conditionUnit" />
+    <SimpleProperty name="unitFactor" type="DomVariant" storable="true" dataSourceProperty="unitFactor" />
+    <SimpleProperty name="convertedConditionValue" type="DomDecimal" storable="true" dataSourceProperty="convertedConditionValue" />
+    <SimpleProperty name="conditionResult" type="DomDecimal" storable="true" dataSourceProperty="conditionResult" />
+    <SimpleProperty name="cpIsPrintRelevant" type="DomBool" storable="true" dataSourceProperty="cpIsPrintRelevant" />
+  </SimpleProperties>
+</ListItem>

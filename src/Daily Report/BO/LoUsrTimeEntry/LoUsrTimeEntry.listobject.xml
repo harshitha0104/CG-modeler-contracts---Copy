@@ -1,0 +1,16 @@
+<ListObject name="LoUsrTimeEntry" generateLoadMethod="true" filter="InDatabase" paging="false" schemaVersion="1.1">
+  <DataSource name="DsLoUsrTimeEntry" />
+  <Item objectClass="LiUsrTimeEntry" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="copyTimeEntryForRollback" />
+    <Method name="applyChanges" />
+    <Method name="deleteItem" />
+    <Method name="saveImmediately" />
+  </Methods>
+</ListObject>

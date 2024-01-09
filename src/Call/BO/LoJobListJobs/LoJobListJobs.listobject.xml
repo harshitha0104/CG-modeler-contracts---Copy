@@ -1,0 +1,4 @@
+<ListObject name="LoJobListJobs" generateLoadMethod="true" lightWeight="only">
+  <DataSource name="DsLoJobListJobs" />
+  <Item objectClass="LiJobListJob" />
+</ListObject>

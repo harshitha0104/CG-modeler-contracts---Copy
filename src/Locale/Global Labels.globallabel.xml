@@ -1,0 +1,325 @@
+<Global>
+  <!-- ####################################################################################################################################################################################### -->
+  <!-- ### Global Labels from 234 start (Already approved by translation team) -->
+  <!-- Labels for Message Boxes - Generic Labels which should not be changed -->
+  <Label id="Back" text="Back" translationStatus="7" />
+  <Label id="MessageBox_Title_Notification" text="Notification" translationStatus="7" />
+  <!-- Visit Card -->
+  <Label id="CardVisits_NoDataMessageMainDateText" text="No visits planned," translationStatus="7" />
+  <Label id="priorityLabelId" text="Priority" translationStatus="7" />
+  <!-- Sync Card -->
+  <Label id="ReplicationSyncCard_Visit_Plural" text="Visits" translationStatus="7" />
+  <Label id="ReplicationSyncCard_Visit_Singular" text="Visit" translationStatus="7" />
+  <!-- Visit Context Menu -->
+  <Label id="Complete" text="Complete" translationStatus="7" />
+  <Label id="Reschedule" text="Reschedule" translationStatus="7" />
+  <Label id="NavigateToCustomer" text="Navigate to Store" translationStatus="7" />
+  <Label id="Delete" text="Delete" translationStatus="7" />
+  <Label id="Info" text="Info" translationStatus="7" />
+  <Label id="Execute" text="Execute" translationStatus="7" />
+  <Label id="AddImage" text="Add Image" translationStatus="7" />
+  <Label id="ReviewImages" text="Review Images" translationStatus="7" />
+  <Label id="NoOfPicturesExceedsMaxCount" text="You can add only 5 images." translationStatus="7" />
+  <!-- Visit List Empty Message -->
+  <Label id="CardVisits_NoDataMessageMainText" text="Looks free and clear!" translationStatus="7" />
+  <Label id="CardVisits_NoDataMessageSubText" text="You don't have any visits scheduled." translationStatus="7" />
+  <!-- Visit Calendar -->
+  <Label id="Display_Current_Week" text="CW" translationStatus="7" />
+  <!-- Inventory Check - Retail Visit KPI Group Names -->
+  <Label id="PrimaryRetailVisitKPI_GroupText" text="Standard" translationStatus="7" />
+  <Label id="PrimaryRetailVisitKPI_GroupTextAdditional" text="Additional" translationStatus="7" />
+  <!-- Visit Tasks (Store Cockpit) -->
+  <Label id="CardVisitTasks_NoDataMessageMainText" text="You don't have any tasks for the visit." translationStatus="7" />
+  <!-- Visit KPIs: Used for splitting up DateTimes to a date part and a time part. In UI we show 2 rows for a DateTime. Lables are added as Postfix to the KPI question -->
+  <Label id="VisitKPI_DateTimeSplit_DatePart_Postfix" text=" Date" translationStatus="7" />
+  <Label id="VisitKPI_DateTimeSplit_TimePart_Postfix" text=" Time" translationStatus="7" />
+  <!-- Visit KPIs: Product Category filter - Clear Filter label -->
+  <Label id="ClearFilter" text="Clear Filter" translationStatus="7" />
+  <!-- KPI Location Filter - Default label for Store -->
+  <Label id="InStoreLocation_Store" text="Store" translationStatus="7" />
+  <!-- Visit KPI:Product Scan not associated to Store -->
+  <Label id="ProductScan_NoValidStoreText" text="The product isn't associated with your tasks." translationStatus="1" />
+  <Label id="ProductScan_NoValidStoreLocationText" text="This product isn’t available in this in-store location. Try searching the product in another in-store location." translationStatus="7" />
+  <!-- ### Global Labels from 234 end (Already approved by translation team) -->
+  <!-- ####################################################################################################################################################################################### -->
+  <Label id="Options" text="Options" translationStatus="7" />
+  <Label id="Search" text="Search" translationStatus="7" />
+  <Label id="Ok" text="Ok" translationStatus="7" />
+  <Label id="Cancel" text="Cancel" translationStatus="7" />
+  <Label id="Tag" text="Tag" translationStatus="7" />
+  <Label id="Copy" text="Copy" translationStatus="7" />
+  <Label id="Unread" text="Unread" translationStatus="7" />
+  <Label id="MarkAsRead" text="Mark As Read" translationStatus="7" />
+  <Label id="CreateVisit" text="Create Visit" translationStatus="7" />
+  <Label id="Sketch" text="Sketch" translationStatus="7" />
+  <Label id="AddToHistory" text="Add to History" translationStatus="7" />
+  <Label id="DeleteFromHistory" text="Delete from History" translationStatus="7" />
+  <Label id="DeleteFromPOSHistory" text="Delete from POS History" translationStatus="7" />
+  <Label id="Discontinue" text="Discontinue" translationStatus="7" />
+  <Label id="questionnaire" text="Questionnaire" translationStatus="7" />
+  <Label id="storeCheck" text="Store Check" translationStatus="7" />
+  <Label id="survey" text="Survey" translationStatus="7" />
+  <Label id="pictures" text="Pictures" translationStatus="7" />
+  <Label id="promotions" text="Promotions" translationStatus="7" />
+  <Label id="notes" text="Notes" translationStatus="7" />
+  <Label id="customerData" text="Customer Data" translationStatus="7" />
+  <Label id="orderOverview" text="Orders" translationStatus="7" />
+  <Label id="completeCall" text="Complete Visit" translationStatus="7" />
+  <Label id="orderHeader" text="Header" translationStatus="7" />
+  <Label id="orderItems" text="Items" translationStatus="7" />
+  <Label id="surveyDetailProductPrefix" text="Product: " translationStatus="7" />
+  <Label id="surveyStandardACtivities" text="Standard Survey Activities" translationStatus="7" />
+  <Label id="NoResponsibleFoundByWorkflow" text="No responsible could be found by workflow. Ensure that at least one user with role WorkflowDispatcher is configured. Object has been saved without state transition." translationStatus="7" />
+  <Label id="OrderAddProductHierarchyInformationInvalid" text="The hierarchy information of the added product is not valid. This product cannot be displayed in category selection." translationStatus="7" />
+  <Label id="OrderInvalidatedProductsFound" text="The following item(s) are not valid. The quantity is set to zero and the items are not editable anymore." translationStatus="7" />
+  <Label id="OrderInvalidatedPromotionsFound" text="Items belonging to the following selectable promotions are no longer valid: " translationStatus="7" />
+  <Label id="OrderForcedRecalculation" text="The calculation of this document is outdated, it will be recalculated." translationStatus="7" />
+  <Label id="CasSdoNoModReasonEnteredAfterEdit" text="A modification reason must be selected for highlighted items. Please select an appropriate reason code and try again." translationStatus="7" />
+  <Label id="CasSdoMainModReasonRequiredToSave" text="Modification Reason Code is missing for all marked items in Item List. Document cannot be saved." translationStatus="7" />
+  <Label id="CasSdoMainModReasonRequiredToRelease" text="Modification Reason Code is missing for all marked items in Item List. Document cannot be released." translationStatus="7" />
+  <Label id="OrderOutdated" text="Calculation of this document is outdated." translationStatus="7" />
+  <Label id="OrderInvalidProductDuringBarcodeScan" text="Sorry the scanned product is not valid for this customer according to the authorization list or assortment." translationStatus="7" />
+  <Label id="OrderInvalidUoMDuringBarcodeScan" text="The selected unit is not valid for the scanned product." translationStatus="7" />
+  <Label id="TruckInvalidProductDuringBarcodeScan" text="The scanned product does not belong to the relevant warehouse." translationStatus="7" />
+  <Label id="CasSdoCpInvalidKeyAttribue" text="Calculation failed - Invalid KeyAttribute used in Searchstrategy for Calculation Step #Stepnumber#." translationStatus="7" />
+  <Label id="Approve" text="Approve" translationStatus="7" />
+  <Label id="Accept" text="Accept" translationStatus="7" />
+  <Label id="Reject" text="Reject" translationStatus="7" />
+  <Label id="ForApproval" text="For Approval" translationStatus="7" />
+  <Label id="ClbManualQuestionGroupName" text="Misc." translationStatus="7" />
+  <Label id="MessageBox_Title_Info" text="Info" translationStatus="7" />
+  <Label id="MessageBox_Title_Validation" text="We hit a snag." translationStatus="7" />
+  <Label id="MessageBox_Title_Warning" text="Warning" translationStatus="7" />
+  <Label id="MessageBox_Title_Error" text="Error" translationStatus="7" />
+  <Label id="ImageSelector_StoreLabel" text="Store" translationStatus="7" />
+  <Label id="ImageSelector_HierarchyLabel" text="Hierarchy" translationStatus="7" />
+  <Label id="ClbSurveyHeaderColumnIcon" text="Icon" translationStatus="7" />
+  <Label id="ClbSurveyHeaderColumnProduct" text="Product" translationStatus="7" />
+  <Label id="ClbSurveyHeaderColumnListedPlanned" text="P/L" translationStatus="7" />
+  <Label id="ClbSurveyHeaderColumn1" text="F" translationStatus="7" />
+  <Label id="ClbSurveyHeaderColumn2" text="Price" translationStatus="7" />
+  <Label id="ClbSurveyHeaderColumn3" text="Distrib." translationStatus="7" />
+  <Label id="ClbSurveyHeaderColumn4" text="F" translationStatus="7" />
+  <Label id="ClbSurveyHeaderColumn5" text="Price" translationStatus="7" />
+  <Label id="ClbSurveyHeaderColumn6" text="Distrib." translationStatus="7" />
+  <Label id="NoCalculationSchemaFound" text="Calculation schema could not be found." translationStatus="7" />
+  <Label id="FreeItemEdit" text="Editing of item template or quantity logistical unit for generated free items is not allowed." translationStatus="7" />
+  <Label id="FreeItemQtyEdit" text="The current action of free items is not allowed." translationStatus="7" />
+  <Label id="QtyEditNotAllowed" text="Current modification of the quantity is not allowed, item will be reset to the original quantity." translationStatus="7" />
+  <Label id="PaymentReasonChange" text="This operation will change the document transaction type to Non Valuated Delivery Note and reset calculation status. Please confirm." translationStatus="7" />
+  <Label id="NoEmptyPaymentReason" text="You can change the Reason Code to empty only when the Document Type is not a Non Valuated Delivery Note." translationStatus="7" />
+  <Label id="Order_Print_EndOfPrint1" text="End of Order Confirmation" translationStatus="7" />
+  <Label id="Order_Print_EndOfPrint2" text="Printed" translationStatus="7" />
+  <Label id="Order_Print_EndOfPrint3" text="End of Invoice" translationStatus="1" />
+  <Label id="Order_Print_EndOfPrint4" text="End of Credit Memo" translationStatus="1" />
+  <Label id="Draft" text="- Draft -" translationStatus="7" />
+  <Label id="Original" text="- Final Print -" translationStatus="7" />
+  <Label id="Reprint" text="- Reprint -" translationStatus="7" />
+  <Label id="SvcRequestMetaLookupTodoId" text="Task Types" translationStatus="7" />
+  <Label id="SvcRequestMetaLookupIssueId" text="Customer Task Types" translationStatus="7" />
+  <Label id="MsgReplySubjectId" text="RE: " translationStatus="7" />
+  <Label id="MsgForwardSubjectId" text="FW: " translationStatus="7" />
+  <Label id="MsgOriginalMessageId" text="Original Message:" translationStatus="7" />
+  <Label id="MsgFromId" text="From: " translationStatus="7" />
+  <Label id="MsgSentId" text="Sent: " translationStatus="7" />
+  <Label id="MsgSubjectId" text="Subject: " translationStatus="7" />
+  <Label id="InboxId" text="Inbox" translationStatus="7" />
+  <Label id="OutboxId" text="Outbox" translationStatus="7" />
+  <Label id="DraftId" text="Draft" translationStatus="7" />
+  <Label id="Report_CallSummary_Title" text="Survey Exceptions" translationStatus="7" />
+  <Label id="Report_CallSummary_Distributed" text="Distr." translationStatus="7" />
+  <Label id="Report_CallSummary_OutOfStock" text="OOS" translationStatus="7" />
+  <Label id="Report_CallSummary_Facings" text="Facings" translationStatus="7" />
+  <Label id="Report_CallSummary_Price" text="Price" translationStatus="7" />
+  <Label id="Report_CallSummary_NoExceptions" text="# of Exceptions" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_Title" text="Sales" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_Title_VS" text="vs" translationStatus="7" />
+  <Label id="DatePickerUI_January" text="January" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_January" text="J" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_February" text="F" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_March" text="M" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_April" text="A" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_May" text="M" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_June" text="J" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_July" text="J" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_August" text="A" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_September" text="S" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_October" text="O" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_November" text="N" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_December" text="D" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_January_Tooltip" text="January" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_February_Tooltip" text="February" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_March_Tooltip" text="March" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_April_Tooltip" text="April" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_May_Tooltip" text="May" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_June_Tooltip" text="June" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_July_Tooltip" text="July" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_August_Tooltip" text="August" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_September_Tooltip" text="September" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_October_Tooltip" text="October" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_November_Tooltip" text="November" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_December_Tooltip" text="December" translationStatus="7" />
+  <Label id="Report_CustomerRevenue_Currency" text="$" translationStatus="7" />
+  <Label id="CardReportingSales_January" text="January" translationStatus="7" />
+  <Label id="CardReportingSales_February" text="February" translationStatus="7" />
+  <Label id="CardReportingSales_March" text="March" translationStatus="7" />
+  <Label id="CardReportingSales_April" text="April" translationStatus="7" />
+  <Label id="CardReportingSales_May" text="May" translationStatus="7" />
+  <Label id="CardReportingSales_June" text="June" translationStatus="7" />
+  <Label id="CardReportingSales_July" text="July" translationStatus="7" />
+  <Label id="CardReportingSales_August" text="August" translationStatus="7" />
+  <Label id="CardReportingSales_September" text="September" translationStatus="7" />
+  <Label id="CardReportingSales_October" text="October" translationStatus="7" />
+  <Label id="CardReportingSales_November" text="November" translationStatus="7" />
+  <Label id="CardReportingSales_December" text="December" translationStatus="7" />
+  <Label id="CardReportingSales_Currency" text="$" translationStatus="7" />
+  <Label id="CardReportingSales_Title" text="Sales" translationStatus="7" />
+  <Label id="CardReportingSales_SubTitle" text="This year vs last year" translationStatus="7" />
+  <Label id="CardReportingUnsuccessfulVisits_Title" text="Unsuccessful visits (%)" translationStatus="7" />
+  <Label id="CardReportingUnsuccessfulVisits_SubTitleRetail" text="This week" translationStatus="7" />
+  <Label id="CardReportingUnsuccessfulVisits_SubTitleTour" text="This tour" translationStatus="7" />
+  <Label id="CardReportingUnsuccessfulVisits_NoDataMessage" text="Sorry, there‘s not enough data to show you a pretty chart. :(" translationStatus="7" />
+  <Label id="CardReportingVisitRate_Title" text="Visit Rate (%)" translationStatus="7" />
+  <Label id="CardReportingVisitRate_SubTitleRetail" text="This week (till today)" translationStatus="7" />
+  <Label id="CardReportingVisitRate_SubTitleRetail_CurrentDate" text="This week (till this day)" translationStatus="7" />
+  <Label id="CardReportingVisitRate_SubTitleTour" text="This tour" translationStatus="7" />
+  <Label id="BoUserDailyReport_BreakMessageText" text="Break is running:" translationStatus="7" />
+  <Label id="BoUserDailyReport_BreakMessageEndButton" text="End" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_Type" text="Type" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_ValidTimeFrame" text="Valid" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_OrderTimeFrame" text="Order" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_InStoreTimeFrame" text="In Store" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_Anchor" text="Anchor" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_Group" text="Group" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_CalendarWeek" text="CW" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_January" text="January" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_February" text="February" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_March" text="March" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_April" text="April" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_May" text="May" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_June" text="June" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_July" text="July" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_August" text="August" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_September" text="September" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_October" text="October" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_November" text="November" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_December" text="December" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_ShortJanuary" text="Jan" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_ShortFebruary" text="Feb" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_ShortMarch" text="Mar" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_ShortApril" text="Apr" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_ShortMay" text="May" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_ShortJune" text="Jun" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_ShortJuly" text="Jul" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_ShortAugust" text="Aug" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_ShortSeptember" text="Sep" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_ShortOctober" text="Oct" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_ShortNovember" text="Nov" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_ShortDecember" text="Dec" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_Info1" text="of" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_Info2" text="promotions shown. Refer to the promotion overview for all promotions" translationStatus="7" />
+  <Label id="Report_PromotionStoreCalendar_AutoGrantedPromotion" text="Auto Granted Promotion" translationStatus="7" />
+  <Label id="Report_ReportOverviewList_CustomerSales" text="Customer Sales" translationStatus="7" />
+  <Label id="Report_ReportOverviewList_Customer" text="Customer" translationStatus="7" />
+  <Label id="Report_ReportOverviewList_TimeCardSinglePerson" text="Time Card" translationStatus="7" />
+  <Label id="Report_ReportOverviewList_TimeCardTeam" text="Time Card (Team)" translationStatus="7" />
+  <Label id="Report_ReportOverviewList_PromotionCalendar" text="Promotion Calendar" translationStatus="7" />
+  <Label id="Report_ReportOverviewList_TargetSetting" text="Target Setting" translationStatus="7" />
+  <Label id="Report_ReportOverviewList_TargetFulfillment" text="Routes Target Fulfillment" translationStatus="7" />
+  <Label id="Report_ReportOverviewList_TargetActual" text="Actual" translationStatus="7" />
+  <Label id="Report_ReportOverviewList_TargetPlanned" text="Target" translationStatus="7" />
+  <Label id="Report_ReportOverviewList_TargetMessage" text="This report considers the aggregated target values for the assigned routes." translationStatus="7" />
+  <Label id="Report_ReportOverviewList_TargetMessageNoData" text="Sorry, currently there is no target assigned for you." translationStatus="7" />
+  <Label id="Report_TimeCard_Title" text="Time Utilization" translationStatus="7" />
+  <Label id="Report_TimeCard_Title_Team" text="Time Utilization (Team)" translationStatus="7" />
+  <Label id="Report_TimeCard_Unspec" text="Other Productive Time" translationStatus="7" />
+  <Label id="Report_TimeCard_Dist" text="Distribution" translationStatus="7" />
+  <Label id="Report_TimeCard_Total" text="Total Time" translationStatus="7" />
+  <Label id="Report_TimeCard_Team" text="Team" translationStatus="7" />
+  <Label id="BoDailyReport_UsrTimeEntryNotEditable" text="Working time entries are not editable." translationStatus="7" />
+  <Label id="BoTimeCardReports_NoDataAvailable" text="There is no Time Card data available for the specified user(s) in the given time frame." translationStatus="7" />
+  <Label id="ReasonMessage" text="Please select a Reason Code." translationStatus="7" />
+  <Label id="OQtyLabel" text="oQty" translationStatus="7" />
+  <Label id="BoCustomer_DuplicateCP" text="A relation for this Customer and this Contact Partner already exists" translationStatus="7" />
+  <Label id="Customer_RelationList_Delivery_Recipient" text="Delivery Recipient Relation" translationStatus="7" />
+  <Label id="Customer_RelationList_Payer" text="Payer Relation" translationStatus="7" />
+  <Label id="Customer_RelationList_Wholesaler" text="Wholesaler Relation" translationStatus="7" />
+  <Label id="Customer_RelationList_Bill_To" text="Bill To Relation" translationStatus="7" />
+  <Label id="ReleaseProcess_ApprovalCodeMissing" text="Please fill in id and approval code." translationStatus="7" />
+  <Label id="ReleaseProcess_ApprovalCodeMismatch" text="Authentication unsuccessful. User role, id, or approval code wrong or user is not assigned to the required warehouse." translationStatus="7" />
+  <Label id="oQtyId" text="oQty" translationStatus="7" />
+  <Label id="DifferenceId" text="Difference" translationStatus="7" />
+  <Label id="NotificationToRecipient" text="has proposed an inventory transfer." translationStatus="7" />
+  <Label id="NotificationToSender" text="has rejected the inventory transfer." translationStatus="7" />
+  <Label id="BoTruckLoad_EmptyRecipient" text="The Recipient cannot be empty." translationStatus="7" />
+  <Label id="BoTruckLoad_DuplicateSender" text="The Sender and Recipient cannot be same." translationStatus="7" />
+  <Label id="Order_SplittingGroup_Delivery" text="Delivery" translationStatus="7" />
+  <Label id="Order_SplittingGroup_Return" text="Return" translationStatus="7" />
+  <Label id="Order_SplittingGroup_FullGoodsDelivery" text="Full Goods Delivery" translationStatus="7" />
+  <Label id="Order_SplittingGroup_EmptiesDelivery" text="Empties Delivery" translationStatus="7" />
+  <Label id="Order_SplittingGroup_FullGoodsReturn" text="Full Goods Return" translationStatus="7" />
+  <Label id="Order_SplittingGroup_EmptiesReturn" text="Empties Return" translationStatus="7" />
+  <Label id="Order_SplittingGroup_Misc" text="Misc" translationStatus="7" />
+  <Label id="AddNotAllowedMessage" text="It is not possible to add a new product of this item type." translationStatus="7" />
+  <Label id="BoCall_validateCallDate" text="Please fill in all values." translationStatus="7" />
+  <Label id="BoTruckLoad_ComputePriceRequire" text="Document must be calculated before release." translationStatus="7" />
+  <Label id="BoCash_validateAmount1" text="The total value " translationStatus="7" />
+  <Label id="BoCash_validateAmount2" text=" of the sales document is smaller than the minimum value " translationStatus="7" />
+  <Label id="BoCash_validateAmount3" text=" of the sales document is greater than the maximum value " translationStatus="7" />
+  <Label id="BoCash_validateAmount4" text=" of the template." translationStatus="7" />
+  <Label id="BoTour_StartOfDaySecurityCheck" text="Start of day - Security Checks" translationStatus="7" />
+  <Label id="BoTour_StartOfDayVehicleCheck" text="Start of day - Vehicle Checks" translationStatus="7" />
+  <Label id="BoTour_EndOfDaySecurityCheck" text="End of day - Security Checks" translationStatus="7" />
+  <Label id="BoTour_EndOfDayVehicleCheck" text="End of day - Vehicle Checks" translationStatus="7" />
+  <Label id="SalesFolder_DetailsButton" text="SHOW DETAILS" translationStatus="7" />
+  <Label id="ThousandSign_Chart" text="k" translationStatus="7" />
+  <Label id="aQtyId" text="aQty" translationStatus="7" />
+  <Label id="FreeQtyId" text="Free" translationStatus="7" />
+  <Label id="CardTasks_NoDataMessageMainText" text="Great, you are all done for today," translationStatus="7" />
+  <Label id="CardTasks_NoDataMessageSubText" text="you can check out your task list to see what’s due tomorrow." translationStatus="7" />
+  <Label id="CardTasks_NoDataMessageMainDateText" text="No tasks at the moment," translationStatus="7" />
+  <Label id="CardTasks_NoDataMessageMainDateSubText" text="why don't you check out your task list to see all?" translationStatus="7" />
+  <Label id="CardVisits_NoDataMessageMainTourText" text="No visits planned today" translationStatus="7" />
+  <Label id="CardVisits_NoDataMessageMainText" text="No visits planned today," translationStatus="7" />
+  <Label id="CardVisits_NoDataMessageSubText" text="why don't you add one?" translationStatus="7" />
+  <Label id="CardVisits_NoDataMessageMainDateText" text="No visits planned," translationStatus="7" />
+  <Label id="CardActivities_StoreCheck" text="Store Check" translationStatus="7" />
+  <Label id="CardActivities_CaptureSurvey" text="Capture Survey" translationStatus="7" />
+  <Label id="CardActivities_CreateOrder" text="Create Order" translationStatus="7" />
+  <Label id="CardActivities_TrackAssets" text="Track Assets" translationStatus="7" />
+  <Label id="CardCustomerTasks_CreatedToday" text="Today" translationStatus="7" />
+  <Label id="CardCustomerTasks_CreatedYesterday" text="Yesterday" translationStatus="7" />
+  <Label id="CardCustomerTasks_DueTommorrow" text="Tomorrow" translationStatus="7" />
+  <Label id="LoCustomerOverview_LocationNotFound" text="Your location could not be determined" translationStatus="7" />
+  <Label id="CardSurveyExceptions_Distributed" text="Distribution" translationStatus="7" />
+  <Label id="CardSurveyExceptions_OutOfStock" text="Out-of-stock" translationStatus="7" />
+  <Label id="CardSurveyExceptions_Facings" text="Facings" translationStatus="7" />
+  <Label id="CardSurveyExceptions_Price" text="Price" translationStatus="7" />
+  <Label id="CardSurveyExceptions_NoExceptions" text="# of Exceptions" translationStatus="7" />
+  <Label id="CardVisitNotes_CreatedToday" text="Today" translationStatus="7" />
+  <Label id="CardVisitNotes_CreatedYesterday" text="Yesterday" translationStatus="7" />
+  <Label id="CardVisitNotes_DueTommorrow" text="Tomorrow" translationStatus="7" />
+  <Label id="LoSalesFolderPromotion_NoDataAvailable" text="Nothing to view in this Sales Folder" translationStatus="7" />
+  <Label id="ReplicationSyncCard_Call__c_Singular" text="completed visit" translationStatus="7" />
+  <Label id="ReplicationSyncCard_Call__c_Plural" text="completed visits" translationStatus="7" />
+  <Label id="ReplicationSyncCard_Order__c_Singular" text="released order" translationStatus="7" />
+  <Label id="ReplicationSyncCard_Order__c_Plural" text="released orders" translationStatus="7" />
+  <Label id="separatorMinus" text=" - " translationStatus="7" />
+  <Label id="Order_ClearPromotionFilter" text="Clear Filter" translationStatus="7" />
+  <Label id="Order_PromotionFilterCleared" text="Filter by Promotion..." translationStatus="7" />
+  <Label id="CardCustomersOverdue_NoDataMessageMainText" text="Great job, there are no customers overdue today." translationStatus="7" />
+  <Label id="Hurdle_more" text="more" translationStatus="7" />
+  <Label id="Hurdle_less" text="less" translationStatus="7" />
+  <Label id="Hurdle_moreless" text="more/less" translationStatus="7" />
+  <Label id="Promotion_Misc" text="Misc" translationStatus="7" />
+  <Label id="Order_Free" text="Free" translationStatus="7" />
+  <Label id="ChooseYourReward" text="Choose your reward:" translationStatus="7" />
+  <Label id="RewardsId" text="Rewards:" translationStatus="7" />
+  <Label id="SelectProducts" text="Select Products" translationStatus="7" />
+  <Label id="Create_Trip_List_Title" text="Create Trip List" translationStatus="7" />
+  <Label id="Update_Trip_List_Title" text="Update Trip List" translationStatus="7" />
+  <Label id="Delete_Trip_List_Title" text="Delete Trip List" translationStatus="7" />
+  <Label id="TakePicture" text="Take Picture" translationStatus="7" />
+  <Label id="SelectPicture" text="Select Picture from Gallery" translationStatus="7" />
+  <Label id="ReviewPicture" text="Review Pictures" translationStatus="7" />
+</Global>

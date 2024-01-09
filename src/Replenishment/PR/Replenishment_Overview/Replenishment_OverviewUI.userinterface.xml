@@ -1,0 +1,157 @@
+<UIDescription name="Replenishment::OverviewUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="ReplenishmentOverviewId" defaultLabel="Replenishment" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="createNewReplenishment">
+          <Bindings>
+            <Resource target="Text" type="Label" id="createNewReplenishmentId" defaultLabel="New Document" />
+            <Resource target="Icon" type="Image" id="PlusDarkGrey24" />
+            <Binding type="Visible" target="Visible" call="ProcessContext::OverviewList.setVisibility">
+              <Parameters>
+                <Input name="token" type="Literal" value="NewDocument" />
+              </Parameters>
+            </Binding>
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="createNewReplenishment" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <!-- [.. MASTER SECTION ..] -->
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <!-- [. AREA .] Main -->
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="ReplenishmentList" searchable="true" onItemDisclosure="true" dataSource="ProcessContext::OverviewList.Items[]">
+          <SearchAttributes>
+            <SearchAttribute name="Id" />
+            <SearchAttribute name="Phase" />
+            <SearchAttribute name="text" />
+          </SearchAttributes>
+          <Items name="Items" itemPattern="ReplenishmentOverviewItem">
+            <ItemListLayout>
+              <Default>
+                <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="Phase" />
+                <Col width="12em">
+                  <Row layoutType="itemValue" bindingId="text" />
+                  <Row layoutType="itemIdentifierSmall" bindingId="Id" />
+                </Col>
+                <Col width="12em">
+                  <Row layoutType="itemImportantValue small" bindingId="releaseTime" />
+                  <Row layoutType="itemSecondary" bindingId="relTime" />
+                </Col>
+                <Col width="6em" layoutType="itemRight itemImportantValue" bindingId="GrossTotalValue" />
+                <Col width="2.5em" layoutType="itemRight itemImportantValue" bindingId="Currency" />
+              </Default>
+              <Phone>
+                <Default>
+                  <Col>
+                    <Row>
+                      <Col width="1.7em" height="1.4em" layoutType="itemRight itemIdentifier" bindingId="Spacer" />
+                      <Col layoutType="itemValueSmall" bindingId="text" />
+                    </Row>
+                    <Row>
+                      <Col width="1.5em" height="1.4em" layoutType="Image" bindingId="Phase" />
+                      <Col width="10em">
+                        <Row layoutType="itemIdentifierSmall" bindingId="Id" />
+                        <Row>
+                          <Col width="5em" layoutType="itemSecondarySmall" bindingId="releaseTime" />
+                          <Col width="0.5em" layoutType="itemRight itemIdentifier" bindingId="Spacer" />
+                          <Col width="4em" layoutType="itemSecondarySmall" bindingId="relTime" />
+                        </Row>
+                      </Col>
+                      <Col>
+                        <Row>
+                          <Col width="6em" layoutType="itemRight itemImportantValueSmall" bindingId="GrossTotalValue" />
+                          <Col width="2.5em" layoutType="itemRight itemImportantValueSmall" bindingId="Currency" />
+                        </Row>
+                        <Row layoutType="itemValue" bindingId="Spacer" />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Default>
+              </Phone>
+              <Tablet>
+                <Default>
+                  <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="Phase" />
+                  <Col width="12em">
+                    <Row layoutType="itemValue" bindingId="text" />
+                    <Row layoutType="itemIdentifierSmall" bindingId="Id" />
+                  </Col>
+                  <Col width="12em">
+                    <Row layoutType="itemImportantValue small" bindingId="releaseTime" />
+                    <Row layoutType="itemSecondary" bindingId="relTime" />
+                  </Col>
+                  <Col width="6em" layoutType="itemRight itemImportantValue" bindingId="GrossTotalValue" />
+                  <Col width="2.5em" layoutType="itemRight itemImportantValue" bindingId="Currency" />
+                </Default>
+                <Android>
+                  <Col width="2.5em" height="1.8em" layoutType="Image" bindingId="Phase" />
+                  <Col width="12em">
+                    <Row layoutType="itemValue" bindingId="text" />
+                    <Row layoutType="itemIdentifierSmall" bindingId="Id" />
+                  </Col>
+                  <Col width="12em">
+                    <Row layoutType="itemImportantValue small" bindingId="releaseTime" />
+                    <Row layoutType="itemSecondary" bindingId="relTime" />
+                  </Col>
+                  <Col width="6em" layoutType="itemRight itemImportantValue" bindingId="GrossTotalValue" />
+                  <Col width="2.5em" layoutType="itemRight itemImportantValue" bindingId="Currency" />
+                </Android>
+              </Tablet>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="Id" type="Text" binding=".id" bindingMode="ONE_WAY" />
+              <Binding target="Phase" type="Image" binding=".phase.imageId" bindingMode="ONE_WAY" />
+              <Binding target="releaseTime" type="Text" binding=".releaseTime" bindingMode="ONE_WAY" />
+              <Binding target="relTime" type="Text" binding=".relTime" bindingMode="ONE_WAY" />
+              <Resource target="EmptyLabel" type="Label" id="emptyLabelId" defaultLabel=" " />
+              <Binding target="text" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              <Binding target="Currency" type="Text" binding=".currency.id" bindingMode="ONE_WAY" />
+              <Binding target="GrossTotalValue" type="Decimal" formatV2="5.2" binding=".grossTotalValue" bindingMode="ONE_WAY" />
+              <Resource target="Spacer" type="Label" id="Spacer" defaultLabel=" " />
+            </Bindings>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::ContextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                  <Binding type="Visible" target="Visible" binding=".actionVisible" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+            <ContextOpeningEvent event="contextMenuOpening">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="phase" value=".phase" />
+                <Param name="responsiblePKey" value=".responsiblePKey" />
+                <Param name="initiatorPKey" value=".initiatorPKey" />
+                <Param name="deletionAllowed" value=".deletionAllowed" />
+                <Param name="mobilityRelevant" value=".mobilityRelevant" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="contextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

@@ -1,0 +1,59 @@
+<Datasource name="DsLoCndCpReadCalculationSteps" objectClass="LoCndCpReadCalculationSteps" readOnly="true" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <CndCpReadCalculationSteps><![CDATA[
+				var cndCpCalculationSchemaPKey = "";
+				if (Utils.isDefined(jsonParams.CndCpCalculationSchemaPKey)){
+                    cndCpCalculationSchemaPKey = Utils.convertForDBParam(jsonParams.CndCpCalculationSchemaPKey, "DomPKey");
+                }
+				var sqlParams = {cndCpCalculationSchemaPKey};
+				var sql = "";
+                sql += "SELECT ";
+                sql +=       "CndCpCalculationStep.Position as Position, ";
+                sql +=       "CndCpCalculationStep.StepReference as StepReference, ";
+                sql +=       "CndCpCalculationStep.CndCpMetaPKey as CndCpMetaPKey, ";
+                sql +=       "CndCpMetaMeta.Id as CndCpMetaMetaId, ";
+                sql +=       "CndCpMeta.Id as ConditionMetaId, ";
+                sql +=       "CndCpMeta.ConditionLevel as ConditionLevel, ";
+                sql +=       "CndCpMeta.Base as Base, ";
+                sql +=       "CndCpMeta.ScaleType as ScaleType, ";
+                sql +=       "CndCpMeta.DistributeToItem as DistributeToItem, ";
+                sql +=       "CndCpMeta.ItemGrouping as ItemGrouping, ";
+                sql +=       "CndCpMeta.Manual as Manual, ";
+                sql +=       "CndCpMetaMeta.Subtotal as Subtotal, ";
+                sql +=       "CndCpCalculationStep.Statistical as Statistical, ";
+                sql +=       "CndCpCalculationStep.PrintRelevant as PrintRelevant, ";
+                sql +=       "CndCpCalculationStep.CalcVariable as CalcVariable, ";
+                sql +=       "CndCpCalculationStep.TargetAttributeCondition as TargetAttributeCondition, ";
+                sql +=       "CndCpCalculationStep.TargetAttributeResult as TargetAttributeResult, ";
+                sql +=       "CndCpCalculationStep.ConstraintUserExitId as ConstraintUserExitId, ";
+                sql +=       "CndCpCalculationStep.BaseUserExitId as BaseUserExitId, ";
+                sql +=       "CndCpCalculationStep.UserExitId as UserExitId, ";
+                sql +=       "CndCpCalculationStep.CalculationGroups as CalculationGroups, ";
+                sql +=       "CndCpCalculationStep.CndCpItemMetaRulePKey as CndCpItemMetaRulePKey, ";
+                sql +=       "CndCpCalculationStep.Accrual as Accrual, ";
+                sql +=       "CndCpMeta.CndCpSearchStrategyPKey as CndCpSearchStrategyPKey, ";
+                sql +=       "CndCpMeta.DecimalPlaces as DecimalPlaces, ";
+                sql +=       "CndCpMeta.Rounding as Rounding, ";
+                sql +=       "CndCpCalculationStep.IsMandatory as Mandatory, ";
+                sql +=       "CndCpCalculationSchema.PDARelevant as PDARelevant ";
+                sql += "FROM ";
+                sql +=       "CNDCPCALCULATIONSTEP, ";
+                sql +=       "CNDCPMETA, ";
+                sql +=       "CNDCPCALCULATIONSCHEMA, ";
+                sql +=       "CNDCPMETAMETA ";
+                sql += "WHERE ";
+                sql +=       "CndCpCalculationStep.CndCpMetaPKey=CndCpMeta.PKey ";
+                sql +=       "AND CndCpCalculationStep.CndCpCalculationSchemaPKey=CndCpCalculationSchema.PKey ";
+                sql +=       "AND CndCpMeta.CndCpMetaMetaPKey=CndCpMetaMeta.PKey ";
+                sql +=       "AND CndCpCalculationStep.SalesOrg='#SALESORG#' ";
+                sql +=       "AND CndCpMeta.SalesOrg='#SALESORG#' ";
+                sql +=       "AND CndCpCalculationSchema.SalesOrg='#SALESORG#' ";
+                sql +=       "AND CndCpMetaMeta.SalesOrg='#SALESORG#' ";
+                sql +=       "AND CndCpCalculationStep.Active='1' ";
+                sql +=       "AND CndCpCalculationStep.CndCpCalculationSchemaPKey=#cndCpCalculationSchemaPKey# ";
+                sql += "ORDER BY ";
+                sql +=       "Position asc";
+                return Utils.replaceMacrosParam(sql, sqlParams);
+                ]]></CndCpReadCalculationSteps>
+  </Database>
+</Datasource>

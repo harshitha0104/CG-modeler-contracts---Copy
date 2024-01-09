@@ -1,0 +1,29 @@
+<UIDescription name="Workflow::NextStatesFlyoutUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader></PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="NextStateList" dataSource="ProcessContext::FlyoutBO.nextStateList.Items[]">
+          <Items name="Items" itemPattern="WfeNextStateListItem">
+            <Bindings>
+              <Binding target="Name" type="Text" binding=".text" bindingMode="ONE_WAY" />
+            </Bindings>
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemIdentifier" bindingId="Name" />
+              </Col>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="stateType" value=".stateType" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

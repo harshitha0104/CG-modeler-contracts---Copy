@@ -1,0 +1,25 @@
+<DataSource name="DsLoAccountReceivables" backendSystem="sf" businessObjectClass="LoAccountReceivables" external="false" distinct="false" readOnly="true" editableEntity="Account_Receivable__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Receivable__c" column="Id" />
+    <Attribute name="externalId" table="Account_Receivable__c" column="External_Id__c" />
+    <Attribute name="documentType" table="Account_Receivable__c" column="Document_Type__c" />
+    <Attribute name="receiptDate" table="Account_Receivable__c" column="Receipt_Date__c" />
+    <Attribute name="dueDate" table="Account_Receivable__c" column="Due_Date__c" />
+    <Attribute name="amount" table="Account_Receivable__c" column="Amount__c" />
+    <Attribute name="amountOpen" table="Account_Receivable__c" column="Amount_Open__c" />
+    <Attribute name="invoiceStatus" table="Account_Receivable__c" column="Invoice_Status__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Receivable__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+			Account_Receivable__c.Account__c = #customerPKey#
+		]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Account_Receivable__c" attribute="Receipt_Date__c" direction="ASC" />
+    <OrderCriterion entity="Account_Receivable__c" attribute="External_Id__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="customerPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

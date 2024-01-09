@@ -1,0 +1,17 @@
+<DataSource name="DsLoCustomerPOSMetaTypes" backendSystem="sf" businessObjectClass="LoCustomerPOSMetaTypes" external="false" editableEntity="POS_Template__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="POS_Template__c" column="Id" />
+    <Attribute name="text" table="POS_Template__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="POS_Template__c" alias="" />
+  </Entities>
+  <QueryCondition><![CDATA[
+    POS_Template__c.Active__c = '1'
+    AND POS_Template__c.Sales_Org__c = '#SALESORG#'
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="POS_Template__c" attribute="Description_#Language#__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters></Parameters>
+</DataSource>

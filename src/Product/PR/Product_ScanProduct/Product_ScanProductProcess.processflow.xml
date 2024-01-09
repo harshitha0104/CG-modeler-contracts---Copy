@@ -1,0 +1,144 @@
+<Process name="Product::ScanProductProcess" defaultAction="externalBarcode_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="loScannedProduct" type="LoScannedProduct" />
+        <Declaration name="EAN" type="String" />
+        <Declaration name="ProductPKey" type="String" />
+        <Declaration name="loScannedProductCount" type="String" />
+        <Declaration name="scannedProductResult" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="fieldStateFilter" type="String" />
+        <Input name="allowForeignProducts" type="String" />
+        <Input name="uoMScanBehavior" type="String" />
+        <Input name="externalEAN" type="String" />
+        <Input name="productsForAdd" type="Object" />
+        <Input name="uoMScanDefaultUnit" type="String" />
+        <Input name="processType" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetScannedProductList" actionType="CREATE" type="LoScannedProduct">
+        <Return name="ProcessContext::loScannedProduct" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="externalBarcode_Decision" actionType="DECISION" parameter="ProcessContext::externalEAN">
+        <CaseEmpty action="scanProductBarcode_Logic" />
+        <CaseElse action="trimExternalBarcode" />
+      </Action>
+      <Action actionType="LOGIC" name="trimExternalBarcode" call="ProcessContext::loScannedProduct.trimBarcode">
+        <Parameters>
+          <Input name="value" value="ProcessContext::externalEAN" />
+        </Parameters>
+        <Return name="ProcessContext::EAN" />
+        <TransitionTo action="loadLoScannedProduct" />
+      </Action>
+      <Action name="scanProductBarcode_Logic" actionType="LOGIC" call="ProcessContext::loScannedProduct.scanBarcode">
+        <Return name="ProcessContext::EAN" />
+        <TransitionTo action="scanProductBarcode_Decision" />
+      </Action>
+      <Action name="scanProductBarcode_Decision" actionType="DECISION" parameter="ProcessContext::EAN">
+        <Case value="cancelled" action="clearEAN_Logic" />
+        <CaseElse action="loadLoScannedProduct" />
+        <CaseEmpty action="loadLoScannedProduct" />
+      </Action>
+      <Action actionType="LOGIC" name="clearEAN_Logic" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value=" " />
+        </Parameters>
+        <Return name="ProcessContext::EAN" />
+        <TransitionTo action="End" />
+      </Action>
+      <Action name="loadLoScannedProduct" actionType="LOGIC" call="ProcessContext::loScannedProduct.getScannedProducts">
+        <Parameters>
+          <Input name="eAN" value="ProcessContext::EAN" />
+          <Input name="uoMScanBehavior" value="ProcessContext::uoMScanBehavior" />
+          <Input name="uoMScanDefaultUnit" value="ProcessContext::uoMScanDefaultUnit" />
+          <Input name="processType" value="ProcessContext::processType" />
+        </Parameters>
+        <Return name="ProcessContext::loScannedProduct" />
+        <TransitionTo action="filterUnusedProducts" />
+      </Action>
+      <Action actionType="LOGIC" name="filterUnusedProducts" call="ProcessContext::loScannedProduct.filterUnusedProducts">
+        <Parameters>
+          <Input name="loProductsForAdd" value="ProcessContext::productsForAdd" />
+        </Parameters>
+        <Return name="ProcessContext::scannedProductResult" />
+        <TransitionTo action="filterProducts_Logic" />
+      </Action>
+      <Action actionType="LOGIC" name="filterProducts_Logic" call="ProcessContext::loScannedProduct.filterProducts">
+        <Parameters>
+          <Input name="fieldStateFilter" value="ProcessContext::fieldStateFilter" />
+          <Input name="allowForeignProducts" value="ProcessContext::allowForeignProducts" />
+        </Parameters>
+        <Return name="ProcessContext::scannedProductResult" />
+        <TransitionTo action="showScannedProductsFlyout_Decision" />
+      </Action>
+      <Action name="showScannedProductsFlyout_Decision" actionType="DECISION" parameter="ProcessContext::scannedProductResult">
+        <Case value="ONEPRODUCT" action="returnScannedProductValues" />
+        <Case value="NOPRODUCTS" action="noProducts" />
+        <Case value="INVALIDPRODUCT" action="invalidProduct" />
+        <Case value="FOREIGNPRODUCT" action="foreignProduct" />
+        <Case value="MULTIPLEPRODUCTS" action="ShowScannedProductsFlyout" />
+        <Case value="MULTIPLEPRODUCTSWITHMULTIPLEUOMS" action="ShowScannedProductsFlyout" />
+        <CaseElse action="checkScanBehaviorAndShowFlyout_Decision" />
+      </Action>
+      <Action name="checkScanBehaviorAndShowFlyout_Decision" actionType="DECISION" parameter="ProcessContext::uoMScanBehavior">
+        <Case value="Barcode" action="ShowScannedProductsFlyout" />
+        <CaseElse action="returnScannedProductValues" />
+        <CaseEmpty action="returnScannedProductValues" />
+      </Action>
+      <Action actionType="CONFIRM" confirmType="Ok" name="noProducts">
+        <Message messageId="NoProductsMsg"></Message>
+        <Cases>
+          <Case value="Ok" action="End" />
+        </Cases>
+      </Action>
+      <Action actionType="CONFIRM" confirmType="Ok" name="invalidProduct">
+        <Message messageId="NoFieldState"></Message>
+        <Cases>
+          <Case value="Ok" action="End" />
+        </Cases>
+      </Action>
+      <Action actionType="CONFIRM" confirmType="Ok" name="foreignProduct">
+        <Message messageId="ForeignProductMsg"></Message>
+        <Cases>
+          <Case value="Ok" action="End" />
+        </Cases>
+      </Action>
+      <Action actionType="View" name="ShowScannedProductsFlyout">
+        <UIDescription>Product::ScanProductUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="EndItemSelected" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="returnScannedProductValues">
+        <ReturnValues>
+          <Return name="ProductPKey" value="ProcessContext::loScannedProduct.getFirstItem().productPKey" />
+          <Return name="ProductId" value="ProcessContext::loScannedProduct.getFirstItem().id" />
+          <Return name="ProductUoM" value="ProcessContext::loScannedProduct.getFirstItem().unitType" />
+          <Return name="Success" type="Literal" value="1" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndItemSelected">
+        <ReturnValues>
+          <Return name="ProductPKey" value="Event.pKey" />
+          <Return name="ProductId" value="Event.id" />
+          <Return name="ProductUoM" value="Event.unitType" />
+          <Return name="Success" type="Literal" value="1" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="ProductPKey" type="Literal" value=" " />
+          <Return name="ProductId" type="Literal" value=" " />
+          <Return name="Success" type="Literal" value="0" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

@@ -1,0 +1,4 @@
+<ValidationMessages name="BoTodoMessages" businessObject="BoTodo" schemaVersion="">
+  <ValidationMessage name="CasBoToDoDescriptionEmpty" defaultMessage="Please enter a description." comment="" />
+  <ValidationMessage name="CasBoToDoInitiationDateGTDueDate" defaultMessage="Please enter a Due Date that is greater than or equal to Initiation Date." comment="validates Due Date" />
+</ValidationMessages>

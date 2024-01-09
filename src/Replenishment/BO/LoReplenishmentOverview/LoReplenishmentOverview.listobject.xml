@@ -1,0 +1,15 @@
+<ListObject name="LoReplenishmentOverview" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoReplenishmentOverview" />
+  <Item objectClass="LiReplenishmentOverview" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="setVisibility" />
+  </Methods>
+</ListObject>

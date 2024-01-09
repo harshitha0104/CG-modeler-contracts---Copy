@@ -1,0 +1,20 @@
+<DataSource name="DsBoTimeSlot" backendSystem="sf" businessObjectClass="BoTimeSlot" external="false" editableEntity="TimeSlot" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="TimeSlot" column="Id" />
+    <Attribute name="dayOfWeek" table="TimeSlot" column="DayOfWeek" />
+    <Attribute name="operatingHoursId" table="TimeSlot" column="OperatingHoursId" />
+    <Attribute name="startTime" table="TimeSlot" column="StartTime" />
+    <Attribute name="endTime" table="TimeSlot" column="EndTime" />
+    <Attribute name="type" table="TimeSlot" column="Type" />
+  </Attributes>
+  <Entities>
+    <Entity name="TimeSlot" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        TimeSlot.Id = #pKey#
+      ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

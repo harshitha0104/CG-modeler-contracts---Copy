@@ -1,0 +1,12 @@
+<LookupObject name="LuTourObjectRelInformation" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuTourObjectRelInformation" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="sysReleaseProcessPKey" type="DomPKey" storable="false" dataSourceProperty="sysReleaseProcessPKey" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

@@ -1,0 +1,8 @@
+<ListItem name="LiTourDescription">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="tmgTourPKey" type="DomPKey" dataSourceProperty="tmgTourPKey" />
+    <SimpleProperty name="text" type="DomString" storable="true" dataSourceProperty="text" />
+    <SimpleProperty name="language" type="DomLanguage" dataSourceProperty="language" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,55 @@
+<Process name="TourManagement::CreateNewProcess" defaultAction="StartNavigation" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="TourBo" type="BoTour" />
+        <Declaration name="TourTemplatePKey" type="DomPKey" />
+        <Declaration name="TourwarehousePKey" type="DomPKey" />
+        <Declaration name="NavigationProcessId" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="TourTemplatePKey" type="DomPKey" />
+        <Input name="TourwarehousePKey" type="DomPKey" />
+        <Input name="NavigationMode" type="DomString" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateTour" actionType="CREATE" type="BoTour">
+        <Parameters>
+          <Input name="tmgMetaPKey" value="ProcessContext::TourTemplatePKey" />
+          <Input name="startEtpWarehousePKey" value="ProcessContext::TourwarehousePKey" />
+          <Input name="endEtpWarehousePKey" value="ProcessContext::TourwarehousePKey" />
+        </Parameters>
+        <Return name="ProcessContext::TourBo" />
+      </Action>
+      <Action name="GetNavigationId" actionType="LOGIC" call="ProcessContext::TourBo.getNavigationProcess">
+        <Return name="ProcessContext::NavigationProcessId" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="StartNavigation" actionType="DECISION" parameter="ProcessContext::NavigationProcessId">
+        <Case value="None" action="StartDetail" />
+        <Case value="Delivery" action="StartNavigation_Decision" />
+        <CaseElse action="StartDetail" />
+        <CaseEmpty action="StartDetail" />
+      </Action>
+      <Action name="StartDetail" actionType="PROCESS" process="TourManagement::DetailProcess">
+        <Parameters>
+          <Input name="TourDetail" value="ProcessContext::TourBo" />
+        </Parameters>
+      </Action>
+      <Action name="StartNavigation_Decision" actionType="DECISION" parameter="ProcessContext::NavigationMode">
+        <Case value="StartOfDay" action="StartNavigation_Tour" />
+        <CaseElse action="StartDetail" />
+        <CaseEmpty action="StartDetail" />
+      </Action>
+      <Action name="StartNavigation_Tour" actionType="PROCESS" process="TourManagement::PreTourNavigationProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::TourBo" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

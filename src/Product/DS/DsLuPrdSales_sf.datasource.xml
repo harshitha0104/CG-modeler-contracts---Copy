@@ -1,0 +1,22 @@
+<DataSource name="DsLuPrdSales" backendSystem="sf" businessObjectClass="LuPrdSales" external="false" readOnly="true" editableEntity="Product2" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="productPKey" table="Product2" column="Id" />
+    <Attribute name="criterion1" table="Product2" column="Criterion_1_Product_Code__c" />
+    <Attribute name="criterion2" table="Product2" column="Criterion_2_Product_Code__c" />
+    <Attribute name="criterion3" table="Product2" column="Criterion_3_Product_Code__c" />
+    <Attribute name="criterion4" table="Product2" column="Criterion_4_Product_Code__c" />
+    <Attribute name="criterion5" table="Product2" column="Criterion_5_Product_Code__c" />
+    <Attribute name="criterion6" table="Product2" column="Criterion_6_Product_Code__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Product2" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        Product2.Id = #productPKey#
+        AND Product2.Sales_Org__c = '#SalesOrg#'
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="productPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

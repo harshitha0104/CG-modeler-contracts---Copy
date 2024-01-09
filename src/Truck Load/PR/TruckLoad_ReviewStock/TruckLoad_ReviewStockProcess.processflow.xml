@@ -1,0 +1,46 @@
+<Process name="TruckLoad::ReviewStockProcess" defaultAction="ShowCurrentStockList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CurrentStockList" type="LoTruckLoadItems" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoTruckLoad" />
+        <Input name="Mode" type="DomString" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowCurrentStockList" actionType="VIEW">
+        <UIDescription>TruckLoad::ReviewStockUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="SelectItemByPKey" />
+        </Events>
+      </Action>
+      <Action name="LoadTruckDetails" actionType="MASTER_DETAIL_HANDLER">
+        <MasterList name="ProcessContext::CurrentStockList">
+          <ItemUnselected type="RELOAD" />
+        </MasterList>
+        <DetailObject name="ProcessContext::MainBO.loItems" objectClass="BoTruckLoad">
+          <Save type="DIRTY" confirmation="FALSE" validate="TRUE" />
+        </DetailObject>
+      </Action>
+      <Action name="SelectItemByPKey" actionType="LOGIC" call="ProcessContext::MainBO.setCurrentItem">
+        <TransitionTo action="SetItemEARights" />
+        <Parameters>
+          <Input name="itemPKey" value="Event.pKey" />
+          <Input name="itemPKeys" value="Event.pKeys" />
+          <Input name="startIndex" value="Event.startIndex" />
+        </Parameters>
+      </Action>
+      <Action name="SetItemEARights" actionType="LOGIC" call="ProcessContext::MainBO.loItems.setEARights">
+        <Parameters>
+          <Input name="documentType" value="ProcessContext::MainBO.documentType" />
+          <Input name="computePrice" value="ProcessContext::MainBO.BoOrderMeta.computePrice" />
+        </Parameters>
+      </Action>       
+    </Actions>
+  </Body>
+</Process>

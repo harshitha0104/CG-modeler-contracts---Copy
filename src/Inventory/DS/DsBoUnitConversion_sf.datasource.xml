@@ -1,0 +1,20 @@
+<DataSource name="DsBoUnitConversion" backendSystem="sf" businessObjectClass="BoUnitConversion" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+    // Intended to be empty - Object contains only PKey which is passed on load/create!
+      return undefined;
+   ]]></Load>
+    <Update><![CDATA[
+    // Intended to be empty - Read only information!
+      return undefined;
+   ]]></Update>
+    <Insert><![CDATA[
+    // Intended to be empty - Read only information!
+      return undefined;
+   ]]></Insert>
+    <Delete><![CDATA[
+    // Intended to be empty - Read only information!
+      return undefined;
+   ]]></Delete>
+  </Database>
+</DataSource>

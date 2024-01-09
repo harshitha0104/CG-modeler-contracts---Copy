@@ -1,0 +1,27 @@
+<ListItem name="LiVisitsByDate">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="name" type="DomText" dataSourceProperty="name" />
+    <SimpleProperty name="priority" type="DomVisitPriority" dataSourceProperty="priority" />
+    <SimpleProperty name="plannedStartDate" type="DomDate" dataSourceProperty="plannedStartDate" />
+    <SimpleProperty name="plannedStartTime" type="DomTime" dataSourceProperty="plannedStartTime" />
+    <SimpleProperty name="retailStoreName" type="DomText" dataSourceProperty="retailStoreName" />
+    <SimpleProperty name="city" type="DomText" dataSourceProperty="visitorCity" />
+    <SimpleProperty name="street" type="DomText" dataSourceProperty="visitorStreet" />
+    <SimpleProperty name="state" type="DomText" dataSourceProperty="state" />
+    <SimpleProperty name="country" type="DomText" dataSourceProperty="country" />
+    <SimpleProperty name="postalCode" type="DomText" dataSourceProperty="visitorPostalCode" />
+    <SimpleProperty name="combinedAddress" type="DomText" dataSourceProperty="combinedAddress" />
+    <SimpleProperty name="visitStatus" type="DomVisitStatus" dataSourceProperty="visitStatus" />
+    <!-- These Lat and Long could be from Retail Store or Location -->
+    <SimpleProperty name="longitude" type="DomDegree" dataSourceProperty="longitude" />
+    <SimpleProperty name="latitude" type="DomDegree" dataSourceProperty="latitude" />
+    <!-- These Lat and Long will be from Retail Store -->
+    <SimpleProperty name="retailStoreLongitude" type="DomDegree" dataSourceProperty="retailStoreLongitude" />
+    <SimpleProperty name="retailStoreLatitude" type="DomDegree" dataSourceProperty="retailStoreLatitude" />
+    <!-- Visitor Address-->
+    <SimpleProperty name="visitorCity" type="DomText" dataSourceProperty="visitorCity" />
+    <SimpleProperty name="visitorStreet" type="DomText" dataSourceProperty="visitorStreet" />
+    <SimpleProperty name="visitorPostalCode" type="DomText" dataSourceProperty="visitorPostalCode" />
+  </SimpleProperties>
+</ListItem>

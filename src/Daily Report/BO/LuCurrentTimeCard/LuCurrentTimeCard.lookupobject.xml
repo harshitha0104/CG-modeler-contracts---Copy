@@ -1,0 +1,11 @@
+<LookupObject name="LuCurrentTimeCard" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuCurrentTimeCard" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="breakUsrTimeEntryMetaPKey" type="DomPKey" storable="false" dataSourceProperty="breakUsrTimeEntryMetaPKey" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

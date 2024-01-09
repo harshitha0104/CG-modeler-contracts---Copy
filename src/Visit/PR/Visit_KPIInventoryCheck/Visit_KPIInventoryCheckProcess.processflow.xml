@@ -1,0 +1,152 @@
+<Process name="Visit::KPIInventoryCheckProcess" defaultAction="ShowInventoryCheck" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="LuPrimaryAssessmentIndicatorDefinition" type="LuPrimaryAssessmentIndicatorDefinition" />
+        <Declaration name="contextMenuList" type="LoKPIContextMenu" />
+        <Declaration name="retailVisitKpiId" type="String" />
+        <Declaration name="BoAssessmentTask" type="BoVisitAssessmentTask" />
+        <Declaration name="RetailStoreDetail" type="BoRetailStore" />
+        <Declaration name="ScannedProductId" type="String" />
+        <Declaration name="isValidStoreProductScan" type="DomBool" />
+        <Declaration name="isInStoreProduct" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="RetailStoreName" type="String" />
+        <Input name="BoVisit" type="BoVisit" />
+        <Input name="AssessmentTaskId" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadAssessmentTask" actionType="LOAD" type="BoVisitAssessmentTask">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::AssessmentTaskId" />
+        </Parameters>
+        <Return name="ProcessContext::BoAssessmentTask" />
+      </Action>
+      <Action name="LoadPrimaryAssessmentIndicatorDefinition" actionType="LOAD" type="LuPrimaryAssessmentIndicatorDefinition">
+        <Parameters>
+          <Input name="assessmentTaskId" value="ProcessContext::AssessmentTaskId" />
+        </Parameters>
+        <Return name="ProcessContext::LuPrimaryAssessmentIndicatorDefinition" />
+      </Action>
+      <Action actionType="LOAD" name="LoadRetailStore" type="BoRetailStore">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::BoVisit.StoreId" />
+        </Parameters>
+        <Return name="ProcessContext::RetailStoreDetail" />
+      </Action>
+      <Action name="LoadInStoreLocations" actionType="LOGIC" call="ProcessContext::RetailStoreDetail.loadLoInStoreLocationAsync">
+        <Parameters>
+          <Input name="addStoreDefault" value="1" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="LoadPrimaryRetailVisitKPI" call="ProcessContext::BoAssessmentTask.loadPrimaryRetailVisitKPI">
+        <Parameters>
+          <Input name="primaryAssessmentIndicatorDefinition" value="ProcessContext::LuPrimaryAssessmentIndicatorDefinition.assessmentIndicatorDefinitionId" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="LoadPrimaryRetailVisitKPISetEARights" call="ProcessContext::BoAssessmentTask.loPrimaryRetailVisitKPI.setEARights">
+        <Parameters>
+          <Input name="assessmentIndicatorDefinitionDataType" value="ProcessContext::LuPrimaryAssessmentIndicatorDefinition.dataType" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowInventoryCheck">
+        <UIDescription>Visit::KPIInventoryCheckUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="FilterDetailList" />
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+          <Event name="quickFilterOpeningEvent" action="PrepareCategoryQuickFilterList" />
+          <Event name="quickFilterSelectedEvent" action="FilterByCategory" />
+          <Event name="locationSelected" action="FilterByLocation" />
+          <Event name="scanProduct" action="ScanAndAddProduct" />
+        </Events>
+      </Action>
+      <Action actionType="LOGIC" name="FilterDetailList" call="ProcessContext::BoAssessmentTask.loRetailVisitKPI.filterByProduct">
+        <Parameters>
+          <Input name="productId" value="Event.productId" />
+          <Input name="boAssessmentTask" value="ProcessContext::BoAssessmentTask"></Input>
+        </Parameters>
+      </Action>
+      <!-- LOAD ContextMenu -->
+      <Action name="GetContextMenu" actionType="LOAD" type="LoKPIContextMenu">
+        <Return name="ProcessContext::contextMenuList" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="AddImage" action="AddImage" />
+        <Case value="ReviewImages" action="ReviewImages" />
+        <CaseElse action="ShowInventoryCheck" />
+        <CaseEmpty action="ShowInventoryCheck" />
+      </Action>
+      <!-- Action for Adding image to KPI-->
+      <Action name="AddImage" actionType="PROCESS" process="Visit::CapturePictureProcess">
+        <Parameters>
+          <Input name="BoVisit" value="ProcessContext::BoVisit" />
+          <Input name="parentId" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <Action name="ReviewImages" actionType="PROCESS" process="Visit::ReviewImageProcess">
+        <Parameters>
+          <Input name="parentId" value="Event.pKey" />
+          <Input name="retailStoreName" value="ProcessContext::RetailStoreName" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="FilterByLocation" call="ProcessContext::BoAssessmentTask.filterRetailVisitKPI">
+        <Parameters>
+          <Input name="locationName" value="Event.storeLocation" />
+        </Parameters>
+      </Action>
+      <!-- Category Filter handling -->
+      <Action name="PrepareCategoryQuickFilterList" actionType="LOGIC" call="ProcessContext::BoAssessmentTask.prepareCategoryQuickFilterList">
+        <TransitionTo action="ShowInventoryCheck" />
+      </Action>
+      <Action name="FilterByCategory" actionType="LOGIC" call="ProcessContext::BoAssessmentTask.filterProductsByQuickFilter">
+        <Parameters>
+          <Input name="items" value="Event.items" />
+        </Parameters>
+      </Action>
+      <Action name="ScanAndAddProduct" actionType="PROCESS" process="Product::ScanKPIProductProcess">
+        <ReturnValues>
+          <Return name="ProcessContext::ScannedProductId" value="ProductPKey" />
+        </ReturnValues>
+        <TransitionTo action="validStoreProduct" />
+      </Action>
+      <Action actionType="LOGIC" name="validStoreProduct" call="ProcessContext::BoAssessmentTask.validStoreProduct">
+        <Parameters>
+          <Input name="productId" value="ProcessContext::ScannedProductId" />
+        </Parameters>
+        <Return name="ProcessContext::isValidStoreProductScan" />
+        <TransitionTo action="validStoreProductScan" />
+      </Action>
+      <Action name="validStoreProductScan" actionType="DECISION" parameter="ProcessContext::isValidStoreProductScan">
+        <Case value="true" action="FilterDetailListScan" />
+        <Case value="false" action="ShowInventoryCheck" />
+        <CaseEmpty action="ShowInventoryCheck" />
+        <CaseElse action="ShowInventoryCheck" />
+      </Action>
+      <Action actionType="LOGIC" name="FilterDetailListScan" call="ProcessContext::BoAssessmentTask.loRetailVisitKPI.selectItemAfterScan">
+        <Parameters>
+          <Input name="productId" value="ProcessContext::ScannedProductId" />
+          <Input name="boAssessmentTask" value="ProcessContext::BoAssessmentTask"></Input>
+        </Parameters>
+        <Return name="ProcessContext::isInStoreProduct" />
+        <TransitionTo action="validStoreLocationProduct" />
+      </Action>
+      <Action actionType="LOGIC" name="validStoreLocationProduct" call="ProcessContext::BoAssessmentTask.validStoreLocationProduct">
+        <Parameters>
+          <Input name="ProductPKey" value="ProcessContext::isInStoreProduct" />
+        </Parameters>
+      </Action>
+      <Action name="endScan" actionType="END">
+        <ReturnValues>
+          <Return name="success" value="0" type="Literal" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

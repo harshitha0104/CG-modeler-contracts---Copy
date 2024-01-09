@@ -1,0 +1,9 @@
+<ListObject name="LoOrderMeta" generateLoadMethod="true" >
+  <DataSource name="DsLoOrderMeta" />
+  <Item objectClass="LiOrderMeta" />
+  <Methods>
+    <Method name="getFirstEntry" />
+    <Method name="contains" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</ListObject>

@@ -1,0 +1,16 @@
+<ListObject name="LoTimeSlot" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoTimeSlot" />
+  <Item objectClass="LiTimeSlot" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="addOrUpdateTimeSlot" />
+    <Method name="deleteItem" />
+  </Methods>
+</ListObject>

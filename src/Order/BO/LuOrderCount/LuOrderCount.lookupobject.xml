@@ -1,0 +1,7 @@
+<LookupObject name="LuOrderCount">
+  <DataSource name="DsLuOrderCount" />
+  <SimpleProperties>
+    <SimpleProperty name="orderCount" type="DomInteger" storable="true" dataSourceProperty="orderCount" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>

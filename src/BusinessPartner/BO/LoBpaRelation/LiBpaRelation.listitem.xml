@@ -1,0 +1,11 @@
+<ListItem name="LiBpaRelation"  >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="relation" type="DomText" dataSourceProperty="relation" />
+    <SimpleProperty name="name" type="DomBpaName" dataSourceProperty="name" />
+    <SimpleProperty name="main" type="DomBool" dataSourceProperty="main" />
+    <SimpleProperty name="relationId" type="DomId" dataSourceProperty="relationId" />
+    <SimpleProperty name="city" type="DomCity" dataSourceProperty="city" />
+    <SimpleProperty name="imageId" type="DomString" dataSourceProperty="imageId" />
+  </SimpleProperties>
+</ListItem>

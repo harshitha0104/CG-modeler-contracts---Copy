@@ -1,0 +1,3 @@
+<ValidationMessages name="BoWizardCreateNewTourMessages" businessObject="BoWizardCreateNewTour" schemaVersion="0.0.0.5">
+  <ValidationMessage name="CasSdoFillInAllValues" defaultMessage="Please fill in all values." comment="All fields need to be filled with values." />
+</ValidationMessages>

@@ -1,0 +1,13 @@
+<ListObject name="LoPrmMeta" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoPrmMeta" />
+  <Item objectClass="LiPrmMeta" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="getFirstEntry" />
+  </Methods>
+</ListObject>

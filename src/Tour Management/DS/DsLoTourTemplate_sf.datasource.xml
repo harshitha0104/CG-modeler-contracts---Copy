@@ -1,0 +1,16 @@
+<DataSource name="DsLoTourTemplate" backendSystem="sf" businessObjectClass="LoTourTemplate" external="false" editableEntity="Tour_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Tour_Template__c" column="Id" />
+    <Attribute name="id" table="Tour_Template__c" column="Name" />
+    <Attribute name="text" table="Tour_Template__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tour_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <!-- TmgMeta.CreationPlatform does not yet exist in the Salesforce backend. -->
+  <QueryCondition><![CDATA[
+		Tour_Template__c.Active__c = 1 
+		]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters />
+</DataSource>

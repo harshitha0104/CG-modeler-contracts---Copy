@@ -1,0 +1,6 @@
+<ValidationMessages name="BoCashMessages" businessObject="BoCash" schemaVersion="">
+  <ValidationMessage name="CasCashInvalidCheckInAmount" defaultMessage="The actual amount for payment method #paymentMethod# must be greater than 0." comment="The absolute paid amount must be greater than zero" />
+  <ValidationMessage name="CasCashExpenseTypeNeeded" defaultMessage="Please enter an Expense Type." comment="Expense Type should have some value" />
+  <ValidationMessage name="CasCashValidateMinAmount" defaultMessage="The total value #totalValue# of the sales document is smaller than the minimum value #minValue# of the template." comment="Validates if the paid amount is less than the value speficied in the template." />
+  <ValidationMessage name="CasCashValidateMaxAmount" defaultMessage="The total value #totalValue# of the sales document is greater than the maximum value #maxValue# of the template." comment="Validates if the paid amount is greater than the value speficied in the template." />
+</ValidationMessages>

@@ -1,0 +1,28 @@
+<DataSource name="DsLoBpaAddress" backendSystem="sf" businessObjectClass="LoBpaAddress" external="false" editableEntity="Account" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account" column="Id" />
+    <DerivedAttribute name="referencePKey" value="Account.Id" />
+    <DerivedAttribute name="usage" value="'Delivery'" />
+    <DerivedAttribute name="main" value="'1'" />
+    <Attribute name="street" table="Account" column="ShippingStreet" />
+    <DerivedAttribute name="houseNumber" value="' '" />
+    <Attribute name="zipCode" table="Account" column="ShippingPostalCode" />
+    <Attribute name="city" table="Account" column="ShippingCity" />
+    <Attribute name="countryState" table="Account" column="ShippingState" />
+    <Attribute name="country" table="Account" column="ShippingCountry" />
+    <Attribute name="latitude" table="Account" column="ShippingLatitude" />
+    <Attribute name="longitude" table="Account" column="ShippingLongitude" />
+    <DerivedAttribute name="address" value="Account.ShippingStreet ||', ' || Account.ShippingPostalCode || ' ' || Account.ShippingCity || ', ' || Account.ShippingState" />
+    <DerivedAttribute name="zipCodeAndCity" value="Account.ShippingPostalCode || ' ' || Account.ShippingCity " />
+  </Attributes>
+  <Entities>
+    <Entity name="Account" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+       Account.Id = #referencePKey# 
+        ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="referencePKey" type="TEXT" />
+  </Parameters>
+</DataSource>

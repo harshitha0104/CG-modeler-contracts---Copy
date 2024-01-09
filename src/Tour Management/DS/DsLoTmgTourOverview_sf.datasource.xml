@@ -1,0 +1,78 @@
+<DataSource name="DsLoTmgTourOverview" backendSystem="sf" businessObjectClass="LoTmgTourOverview" external="false" editableEntity="Tour__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Tour__c" column="Id" />
+    <Attribute name="id" table="Tour__c" column="Name" />
+    <DateTimeAttribute dateName="dateFrom" timeName="timeFrom" table="Tour__c" column="Start_Date_Time__c" />
+    <DateTimeAttribute dateName="dateThru" timeName="timeThru" table="Tour__c" column="End_Date_Time__c" />
+    <Attribute name="tmgStatus" table="Tour__c" column="Status__c" />
+    <Attribute name="tmgMetaPKey" table="Tour__c" column="Tour_Template__c" />
+    <Attribute name="text" table="Tour__c" column="Description_#Language#__c" />
+    <Attribute name="startEtpWarehousePKey" table="Tour__c" column="Start_Warehouse__c" />
+    <Attribute name="wId" table="Warehouse__c" column="Name" />
+    <DerivedAttribute name="visitCount" value="(SELECT COUNT(Visit.Id) FROM Visit INNER JOIN Visit_Template__c ON Visit.Visit_Template__c=Visit_Template__c.Id WHERE Visit.Tour__c = Tour__c.Id AND Visit_Template__c.Meta_Type__c != 'IdleTime' AND Visit.IsDeleted = 0)" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tour__c" alias="" idAttribute="Id" />
+    <Entity name="Warehouse__c" alias="">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="Tour__c.Start_Warehouse__c" comparator="eq" rightSideType="Attribute" rightSideValue="Warehouse__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[(Tour__c.Default_Driver__c= '#UserPKey#')
+                                ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Tour__c" attribute="Start_Date_Time__c" direction="DESC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="tmgMetaPKeyComp" type="TEXT" />
+    <Parameter name="tmgMetaPKey" type="TEXT" />
+    <Parameter name="textComp" type="TEXT" />
+    <Parameter name="text" type="TEXT" />
+    <Parameter name="dateFromComp" type="TEXT" />
+    <Parameter name="dateFrom" type="INTEGER" />
+    <Parameter name="warehouseIdComp" type="TEXT" />
+    <Parameter name="warehouseId" type="TEXT" />
+    <Parameter name="startEtpWarehousePKeyComp" type="TEXT" />
+    <Parameter name="startEtpWarehousePKey" type="TEXT" />
+    <Parameter name="tmgStatusComp" type="TEXT" />
+    <Parameter name="tmgStatus" type="TEXT" />
+  </Parameters>
+  <QuickSearchParameters>
+    <QuickSearchParameter name="Tour__c.Description_#Language#__c" />
+  </QuickSearchParameters>
+  <ConditionalParameters>
+    <ConditionalParameter name="tmgMetaPKey">
+      <SimpleConditions>
+        <Condition leftSideValue="Tour__c.Tour_Template__c" comparator="#tmgMetaPKeyComp#" rightSideType="Attribute" rightSideValue="'#tmgMetaPKey#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="text">
+      <SimpleConditions>
+        <Condition leftSideValue="Tour__c.Name" comparator="#textComp#" rightSideType="Attribute" rightSideValue="'#text#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="dateFrom">
+      <SimpleConditions>
+        <Condition leftSideValue="Tour__c.Start_Date_Time__c" leftSideType="DateTime" comparator="#dateFromComp#" comparatorType="Date" rightSideValue="#dateFrom#" rightSideType="Date" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="warehouseId">
+      <SimpleConditions>
+        <Condition leftSideValue="Warehouse__c.Name" comparator="#warehouseIdComp#" rightSideType="Attribute" rightSideValue="'#warehouseId#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="startEtpWarehousePKey">
+      <SimpleConditions>
+        <Condition leftSideValue="Tour__c.Start_Warehouse__c" comparator="#startEtpWarehousePKeyComp#" rightSideType="Attribute" rightSideValue="'#startEtpWarehousePKey#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="tmgStatus">
+      <SimpleConditions>
+        <Condition leftSideValue="Tour__c.Status__c" comparator="#tmgStatusComp#" rightSideType="Attribute" rightSideValue="'#tmgStatus#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+  </ConditionalParameters>
+</DataSource>

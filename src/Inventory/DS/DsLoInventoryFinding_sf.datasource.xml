@@ -1,0 +1,62 @@
+<DataSource name="DsLoInventoryFinding" backendSystem="sf" businessObjectClass="LoInventoryFinding" external="false" readOnly="true" editableEntity="Inventory__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="ivcMainPKey" table="Inventory__c" column="Id" />
+    <Attribute name="ivcMetaPKey" table="Inventory__c" column="Inventory_Template__c" />
+    <Attribute name="usrMainPKey" table="Inventory__c" column="User__c" />
+    <Attribute name="bpaMainPKey" table="Inventory__c" column="Account__c" />
+    <Attribute name="prdMainPKey" table="Inventory__c" column="Product__c" />
+    <DerivedAttribute name="balance" value="SUM(CASE WHEN Inventory_Transaction__c.Amount__c IS NULL THEN 0.0 ELSE Inventory_Transaction__c.Amount__c END)" />
+  </Attributes>
+  <Entities>
+    <Entity name="Inventory__c" alias="" idAttribute="Id" />
+    <Entity name="Inventory_Transaction__c" alias="">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="Inventory__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Inventory_Transaction__c.Inventory__c" />
+          <Condition leftSideValue="Inventory_Transaction__c.Accounted__c" comparator="eq" rightSideType="Parameter" rightSideValue="'0'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Inventory_Transaction_Template__c" alias="">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="Inventory_Transaction__c.Inventory_Transaction_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="Inventory_Transaction_Template__c.Id" />
+        </SimpleJoin>
+        <ComplexJoin><![CDATA[
+              (Inventory_Transaction_Template__c.Transaction_Control__c <> 'Neutral' 
+              OR Inventory_Transaction_Template__c.Transaction_Type__c = 'Balance')
+          ]]></ComplexJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Inventory__c.Phase__c = 'Active' 
+        AND Inventory__c.Invalid__c = '0'
+        AND #compareAsDate('Inventory__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# 
+        AND #compareAsDate('Inventory__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#
+        AND Inventory__c.Inventory_Template__c IN (#ivcMetaPKeys#)
+        AND Inventory__c.User__c IN (#usrMainPKeys#)
+        AND Inventory__c.Account__c IN (#bpaMainPKeys#)
+        AND Inventory__c.Product__c IN (#prdMainPKeys#)
+        #addCond_Tour#
+        #addCond_Vehicle#
+        #addCond_OrderCurrency#
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <GroupBy>
+    <GroupByCriterion entity="Inventory__c" attribute="Id" />
+    <GroupByCriterion entity="Inventory__c" attribute="Inventory_Template__c" />
+    <GroupByCriterion entity="Inventory__c" attribute="User__c" />
+    <GroupByCriterion entity="Inventory__c" attribute="Account__c" />
+    <GroupByCriterion entity="Inventory__c" attribute="Product__c" />
+  </GroupBy>
+  <Parameters>
+    <Parameter name="ivcMetaPKeys" type="LIST" />
+    <Parameter name="usrMainPKeys" type="LIST" />
+    <Parameter name="bpaMainPKeys" type="LIST" />
+    <Parameter name="prdMainPKeys" type="LIST" />
+    <Parameter name="addCond_Tour" treatAs="sqlSnippet"/>
+    <Parameter name="addCond_Vehicle" treatAs="sqlSnippet"/>
+    <Parameter name="addCond_OrderCurrency" treatAs="sqlSnippet"/>
+  </Parameters>
+</DataSource>

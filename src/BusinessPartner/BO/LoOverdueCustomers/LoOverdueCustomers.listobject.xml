@@ -1,0 +1,17 @@
+<ListObject name="LoOverdueCustomers" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoOverdueCustomers" />
+  <Item objectClass="LiOverdueCustomers" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="getOverdueCustomersforCard" />
+    <Method name="getInfoForOverdueCustomersCard" />
+    <Method name="isOverdueButtonEnabled"/>
+  </Methods>
+</ListObject>

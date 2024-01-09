@@ -1,0 +1,7 @@
+<ListObject name="LoInventoryFinding" generateLoadMethod="true">
+  <DataSource name="DsLoInventoryFinding" />
+  <Item objectClass="LiInventoryFinding" />
+  <Methods>
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</ListObject>

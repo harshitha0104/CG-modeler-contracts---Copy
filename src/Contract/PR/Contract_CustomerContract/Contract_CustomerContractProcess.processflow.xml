@@ -1,0 +1,386 @@
+<Process name="Contract::CustomerContractProcess" defaultAction="ShowCustomerContractsList" schemaVersion="1.1">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CustomerContractList" type="LoPrmContracts" />
+        <Declaration name="CustomerContractDetail" type="BoPrmContract" />
+        <Declaration name="ContextMenuList" type="LoPrmContractContextMenu" />
+        <Declaration name="TacticContextMenuList" type="LoPrmCttTacticContextMenu" />
+        <Declaration name="ProductContextMenuList" type="LoPrmCttProductContextMenu" />
+        <Declaration name="PrmMetaPKey" type="String" />
+        <Declaration name="CustomerPKey" type="String" />
+        <Declaration name="CurrentUserPKey" type="String" />
+        <Declaration name="CreateNewContract_ButtonPressed" type="String" />
+        <Declaration name="CopyContract_ButtonPressed" type="String" />
+        <Declaration name="DateFrom" type="String" />
+        <Declaration name="DateThru" type="String" />
+        <Declaration name="TacticMetaPKey" type="String" />
+        <Declaration name="TacticMetaId" type="String" />
+        <Declaration name="ProductPKey" type="String" />
+        <Declaration name="ProductId" type="String" />
+        <Declaration name="ProductGroupPKey" type="String" />
+        <Declaration name="ProductGroupId" type="String" />
+        <Declaration name="StateType" type="String" />
+        <Declaration name="ContractName" type="String" />
+        <Declaration name="SubstitutedUsrPKey" type="DomPKey" />
+        <Declaration name="IsManagedCustomer" type="DomBool" />
+        <Declaration name="NextListItem" type="LiPrmContract" />
+        <Declaration name="isEqual" type="String" />
+        <Declaration name="bpaCustomerPKey" type="DomPKey" />
+        <Declaration name="initiatorPKey" type="DomPKey" />
+        <Declaration name="responsiblePKey" type="DomPKey" />
+        <Declaration name="ownerPKey" type="DomPKey" />
+      </Declarations>
+    </ProcessContext>
+    <!-- Entry actions are executed sequentially in the order listed here. -->
+    <EntryActions>
+      <Action actionType="LOGIC" name="LoadTeamOfUser" call="ApplicationContext::User.loadTeamOfUser">
+        <Parameters>
+          <Input name="includeCurrentUser" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+      <Action name="GetCustomerContractList" actionType="LOAD" type="LoPrmContracts">
+        <Parameters>
+          <Input name="asoName" value="AsoContracts" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerContractList" />
+      </Action>
+      <Action actionType="LOGIC" name="AssignUserPKey" call="ApplicationContext::User.getPKey">
+        <Return name="ProcessContext::CurrentUserPKey" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ReloadCustomerContractList" actionType="LOAD" type="LoPrmContracts">
+        <Return name="ProcessContext::CustomerContractList"></Return>
+        <TransitionTo action="setCurrentOnList"></TransitionTo>
+        <Parameters>
+          <Input name="asoName" value="AsoContracts" type="Literal"></Input>
+        </Parameters>
+      </Action>
+      <Action name="setCurrentOnList" actionType="LOGIC" call="ProcessContext::CustomerContractList.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::customerContractDetail.pKey" />
+        </Parameters>
+      </Action>
+      <!-- Show GUI and handle events -->
+      <Action actionType="VIEW" name="ShowCustomerContractsList">
+        <UIDescription>Contract::CustomerContractUI</UIDescription>
+        <Events>
+          <Event name="listItemSelected" action="OverviewListMasterDetail" />
+          <Event name="createCustomerContract" action="OverviewListMasterDetail.create" />
+          <Event name="addTactic" action="AddTacticFlyout" />
+          <Event name="releaseCustomerContract" action="ReleaseCustomerContract" />
+          <Event name="approveCustomerContract" action="ApproveCustomerContract" />
+          <Event name="rejectCustomerContract" action="RejectCustomerContract" />
+          <Event name="cancelCustomerContract" action="CancelCustomerContract" />
+          <Event name="addProduct" action="AddProductFlyout" />
+          <Event name="addProductGroup" action="AddProductGroupFlyout" />
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+          <Event name="tacticContextMenuOpening" action="GetTacticContextMenu" />
+          <Event name="tacticContextMenuItemSelected" action="TacticContextMenu_Result_Decision" />
+          <Event name="productContextMenuOpening" action="GetProductContextMenu" />
+          <Event name="productContextMenuItemSelected" action="ProductContextMenu_Result_Decision" />
+        </Events>
+      </Action>
+      <!-- Master Detail Handler -->
+      <Action name="OverviewListMasterDetail" actionType="MASTER_DETAIL_HANDLER">
+        <MasterList name="ProcessContext::CustomerContractList">
+          <ItemUnselected type="RELOAD" />
+        </MasterList>
+        <DetailObject name="ProcessContext::CustomerContractDetail" objectClass="BoPrmContract">
+          <Save type="DIRTY" confirmation="FALSE" validate="FALSE" />
+          <Create autoSave="false">
+            <WizardProcess name="Contract::CreateContractFlyoutProcess" submitParameter="ProcessContext::CreateNewContract_ButtonPressed">
+              <Parameters>
+                <Input name="MetaType" type="Literal" value="CustomerContract" />
+                <Input name="UsrMainPKey" value="ProcessContext::CurrentUserPKey" />
+              </Parameters>
+              <ReturnValues>
+                <Return name="ProcessContext::PrmMetaPKey" value="prmMetaPKey" />
+                <Return name="ProcessContext::bpaCustomerPKey" value="customerPKey" />
+                <Return name="ProcessContext::initiatorPKey" value="usrMainPKey" />
+                <Return name="ProcessContext::responsiblePKey" value="usrMainPKey" />
+                <Return name="ProcessContext::ownerPKey" value="usrMainPKey" />
+                <Return name="ProcessContext::SubstitutedUsrPKey" value="substitutedUsrPKey" />
+                <Return name="ProcessContext::IsManagedCustomer" value="isManagedCustomer" />
+                <Return name="ProcessContext::ContractName" value="contractName" />
+                <Return name="ProcessContext::DateFrom" value="dateFrom" />
+                <Return name="ProcessContext::DateThru" value="dateThru" />
+                <Return name="ProcessContext::CreateNewContract_ButtonPressed" value="buttonPressed" />
+              </ReturnValues>
+            </WizardProcess>
+          </Create>
+          <Delete confirmation="TRUE" messageId="CasConfirmDeletionMsg" nextCurrent="Next" />
+        </DetailObject>
+      </Action>
+      <!-- Contract ContextMenu -->
+      <Action actionType="LOAD" name="GetContextMenu" type="LoPrmContractContextMenu">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="phase" value="Event.phase" />
+          <Input name="hasSubstitute" value="Event.hasSubstitute" />
+          <Input name="isSubstituted" value="Event.isSubstituted" />
+          <Input name="responsiblePKey" value="Event.responsiblePKey" />
+          <Input name="hasSubstituteSubBpaRelUsrPKey" value="Event.hasSubstituteSubBpaRelUsrPKey" />
+        </Parameters>
+        <Return name="ProcessContext::ContextMenuList" />
+        <TransitionTo action="SetFocusOnListItem" />
+      </Action>
+      <Action name="SetFocusOnListItem" actionType="LOGIC" call="ProcessContext::CustomerContractList.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="PKeyCompare" />
+      </Action>
+      <Action name="PKeyCompare" actionType="LOGIC" call="Utils.startsWith">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="pkey2" value="ProcessContext::CustomerContractDetail.PKey" />
+        </Parameters>
+        <Return name="ProcessContext::isEqual" />
+        <TransitionTo action="CheckIfNotEqualLoadedBO" />
+      </Action>
+      <Action name="CheckIfNotEqualLoadedBO" actionType="DECISION" parameter="ProcessContext::isEqual">
+        <Case value="false" action="LoadFocusedBo" />
+        <CaseElse action="ShowCustomerContractsList" />
+      </Action>
+      <Action name="LoadFocusedBo" actionType="LOAD" type="BoPrmContract">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerContractDetail" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Copy" action="ValidateContactBeforeCopy" />
+        <Case value="Delete" action="OverviewListMasterDetail.delete" />
+        <CaseElse action="ShowCustomerContractsList" />
+      </Action>
+      <Action name="ValidateContactBeforeCopy" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::CustomerContractDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidateContactBeforeCopyResult_Decision" />
+      </Action>
+      <Action name="ValidateContactBeforeCopyResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="SaveBeforeCopy" />
+        <Case value="validateDiscard" action="ShowCustomerContractsList" />
+        <CaseElse action="ShowCustomerContractsList" />
+      </Action>
+      <!-- Product ContextMenu -->
+      <Action actionType="LOAD" name="GetProductContextMenu" type="LoPrmCttProductContextMenu">
+        <Parameters>
+          <Input name="boContract" value="ProcessContext::CustomerContractDetail" />
+        </Parameters>
+        <Return name="ProcessContext::ProductContextMenuList" />
+      </Action>
+      <Action name="ProductContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Delete" action="ConfirmProductDeletion" />
+        <CaseElse action="ShowCustomerContractsList" />
+      </Action>
+      <Action actionType="CONFIRM" confirmType="YesNo" name="ConfirmProductDeletion">
+        <Message messageId="CasConfirmGeneralDeletionMsg" />
+        <Cases>
+          <Case value="Yes" action="DeleteProduct" />
+          <Case value="No" action="ShowCustomerContractsList" />
+        </Cases>
+      </Action>
+      <Action name="DeleteProduct" actionType="LOGIC" call="ProcessContext::CustomerContractDetail.setProductDeleted">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <!-- Tactic ContextMenu -->
+      <Action actionType="LOAD" name="GetTacticContextMenu" type="LoPrmCttTacticContextMenu">
+        <Parameters>
+          <Input name="boContract" value="ProcessContext::CustomerContractDetail" />
+        </Parameters>
+        <Return name="ProcessContext::TacticContextMenuList" />
+      </Action>
+      <Action name="TacticContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Delete" action="ConfirmTacticDeletion" />
+        <CaseElse action="ShowCustomerContractsList" />
+      </Action>
+      <Action actionType="CONFIRM" confirmType="YesNo" name="ConfirmTacticDeletion">
+        <Message messageId="CasConfirmGeneralDeletionMsg" />
+        <Cases>
+          <Case value="Yes" action="DeleteTactic" />
+          <Case value="No" action="ShowCustomerContractsList" />
+        </Cases>
+      </Action>
+      <Action name="DeleteTactic" actionType="LOGIC" call="ProcessContext::CustomerContractDetail.setTacticDeleted">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <!-- Copy Contract -->
+      <Action name="SaveBeforeCopy" actionType="SAVE">
+		<TransitionTo action="CopyCustomerContractFlyout"/>
+      </Action>
+      <Action name="CopyCustomerContractFlyout" actionType="PROCESS" process="Contract::CopyContractFlyoutProcess">
+        <Parameters>
+          <Input name="prmMetaPKey" value="ProcessContext::CustomerContractDetail.prmMetaPKey" />
+          <Input name="contractName" value="ProcessContext::CustomerContractDetail.boSlogan.text" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::PrmMetaPKey" value="prmMetaPKey" />
+          <Return name="ProcessContext::CustomerPKey" value="customerPKey" />
+          <Return name="ProcessContext::DateFrom" value="dateFrom" />
+          <Return name="ProcessContext::CopyContract_ButtonPressed" value="buttonPressed" />
+          <Return name="ProcessContext::SubstitutedUsrPKey" value="substitutedUsrPKey" />
+          <Return name="ProcessContext::IsManagedCustomer" value="isManagedCustomer" />
+        </ReturnValues>
+        <TransitionTo action="CopyContractFlyout_Decision" />
+      </Action>
+      <Action name="CopyContractFlyout_Decision" actionType="DECISION" parameter="ProcessContext::CopyContract_ButtonPressed">
+        <CaseEmpty action="ShowCustomerContractsList" />
+        <CaseElse action="CopyContract" />
+      </Action>
+      <Action name="CopyContract" actionType="LOGIC" call="ProcessContext::CustomerContractDetail.copyBO">
+        <Parameters>
+          <Input name="userPKey" value="ProcessContext::CurrentUserPKey" />
+          <Input name="prmMetaPKey" value="ProcessContext::PrmMetaPKey" />
+          <Input name="bpaCustomerPKey" value="ProcessContext::CustomerPKey" />
+          <Input name="dateFrom" value="ProcessContext::DateFrom" />
+          <Input name="isManagedCustomer" value="ProcessContext::IsManagedCustomer" />
+          <Input name="substitutedUsrPKey" value="ProcessContext::SubstitutedUsrPKey" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerContractDetail" />
+        <TransitionTo action="UnprotectedSave" />
+      </Action>
+      <Action name="UnprotectedSave" actionType="SAVE">
+        <TransitionTo action="AddNewCustomerContractToList" />
+      </Action>
+      <Action name="AddNewCustomerContractToList" actionType="LOGIC" call="ProcessContext::CustomerContractList.addItem">
+        <Parameters>
+          <Input name="boContract" value="ProcessContext::CustomerContractDetail" />
+        </Parameters>
+      </Action>
+      <!-- Add Tactic -->
+      <Action name="AddTacticFlyout" actionType="PROCESS" process="PromotionTemplate::AddTacticLookupProcess">
+        <Parameters>
+          <Input name="parentPKey" value="ProcessContext::CustomerContractDetail.prmMetaPKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::TacticMetaPKey" value="tacticMetaPKey" />
+          <Return name="ProcessContext::TacticMetaId" value="tacticMetaId" />
+        </ReturnValues>
+        <TransitionTo action="AddTacticFlyout_Decision" />
+      </Action>
+      <Action name="AddTacticFlyout_Decision" actionType="DECISION" parameter="ProcessContext::TacticMetaPKey">
+        <CaseEmpty action="ShowCustomerContractsList" />
+        <CaseElse action="AddTactic" />
+      </Action>
+      <Action name="AddTactic" actionType="LOGIC" call="ProcessContext::CustomerContractDetail.addTactic">
+        <Parameters>
+          <Input name="tacticMetaPKey" value="ProcessContext::TacticMetaPKey" />
+          <Input name="tacticMetaId" value="ProcessContext::TacticMetaId" />
+        </Parameters>
+      </Action>
+      <!-- Workflow Status Change -->
+      <Action name="ReleaseCustomerContract" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="ForApproval" />
+        </Parameters>
+        <Return name="ProcessContext::StateType" />
+        <TransitionTo action="ValidateContractBeforeTransition" />
+      </Action>
+      <Action name="ApproveCustomerContract" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="Committed" />
+        </Parameters>
+        <Return name="ProcessContext::StateType" />
+        <TransitionTo action="ValidateContractBeforeTransition" />
+      </Action>
+      <Action name="RejectCustomerContract" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="Rejected" />
+        </Parameters>
+        <Return name="ProcessContext::StateType" />
+        <TransitionTo action="ValidateContractBeforeTransition" />
+      </Action>
+      <Action name="CancelCustomerContract" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="Cancelled" />
+        </Parameters>
+        <Return name="ProcessContext::StateType" />
+        <TransitionTo action="ValidateContractBeforeTransition" />
+      </Action>
+      <Action name="ValidateContractBeforeTransition" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::CustomerContractDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateDiscard" action="ReLoadSelectedBo" />
+        <Case value="validateOk" action="ContractStateTransition" />
+        <CaseElse action="ShowCustomerContractsList" />
+      </Action>
+      <Action name="ReLoadSelectedBo" actionType="LOAD" type="BoPrmContract">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CustomerContractList.Current.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerContractDetail" />
+      </Action>
+      <Action name="ContractStateTransition" actionType="LOGIC" call="ProcessContext::CustomerContractDetail.stateTransition">
+        <Parameters>
+          <Input name="stateType" value="ProcessContext::StateType" />
+        </Parameters>
+        <TransitionTo action="SaveContract" />
+      </Action>
+      <Action name="SaveContract" actionType="SAVE">
+        <TransitionTo action="refreshEARights" />
+      </Action>
+      <Action name="refreshEARights" actionType="LOGIC" call="BindingUtils.refreshEARights">
+        <Parameters>
+          <Input name="includeLists" type="Literal" value="1" />
+        </Parameters>
+        <TransitionTo action="ReloadCustomerContractList" />
+      </Action>
+      <!-- Add Product -->
+      <Action actionType="PROCESS" name="AddProductFlyout" process="Product::LookupProcess">
+        <Parameters>
+          <Input name="PrdStateType" type="Literal" value="KAM" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::ProductPKey" value="productPKey" />
+          <Return name="ProcessContext::ProductId" value="ProductId" />
+        </ReturnValues>
+        <TransitionTo action="AddProduct_Result_Decision" />
+      </Action>
+      <Action name="AddProduct_Result_Decision" actionType="DECISION" parameter="ProcessContext::ProductPKey">
+        <CaseEmpty action="ShowCustomerContractsList" />
+        <CaseElse action="AddProductLogic" />
+      </Action>
+      <Action actionType="LOGIC" name="AddProductLogic" call="ProcessContext::CustomerContractDetail.addProduct">
+        <Parameters>
+          <Input name="productPKey" value="ProcessContext::ProductPKey" />
+          <Input name="productId" value="ProcessContext::ProductId" />
+        </Parameters>
+      </Action>
+      <Action actionType="PROCESS" name="AddProductGroupFlyout" process="Product::GroupLookupProcess">
+        <Parameters>
+          <Input name="PrdStateType" type="Literal" value="PPG" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::ProductGroupPKey" value="productGroupPKey" />
+          <Return name="ProcessContext::ProductGroupId" value="ProductGroupId" />
+        </ReturnValues>
+        <TransitionTo action="AddProductGroup_Result_Decision" />
+      </Action>
+      <Action name="AddProductGroup_Result_Decision" actionType="DECISION" parameter="ProcessContext::ProductGroupPKey">
+        <CaseEmpty action="ShowCustomerContractsList" />
+        <CaseElse action="AddProductGroupLogic" />
+      </Action>
+      <Action actionType="LOGIC" name="AddProductGroupLogic" call="ProcessContext::CustomerContractDetail.addProductGroup">
+        <Parameters>
+          <Input name="productGroupPKey" value="ProcessContext::ProductGroupPKey" />
+          <Input name="productGroupId" value="ProcessContext::ProductGroupId" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

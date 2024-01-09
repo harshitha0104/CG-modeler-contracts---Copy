@@ -1,0 +1,85 @@
+<Process name="TruckLoad::PreTruckLoadNavigationProcess" defaultAction="StartNavigation" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="MainBO" type="BoTruckLoad" />
+        <Declaration name="currentTabPage" type="String" />
+        <Declaration name="CurrentItemFilterId" type="String" />
+        <Declaration name="CheckOutReleased" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoTruckLoad" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="NAVIGATION" name="StartNavigation">
+        <Parameters name="ProcessContext::NavigationName">
+          <Processes defaultProcess="Header">
+            <!--To do change to Truck load item and tab processes-->
+            <Process id="ItemList" image="ShoppingCartItem" label="orderItems" defaultLabel="Items" process="TruckLoad::ItemListTabProcess" action="setCurrentTabName_itemList" />
+            <Process id="Header" image="Info" label="orderHeader" defaultLabel="Header" process="TruckLoad::HeaderTabProcess" action="setCurrentTabName_header" />
+          </Processes>
+        </Parameters>
+        <TransitionTo action="setEARights" />
+      </Action>
+      <Action actionType="LOGIC" name="setEARights" call="ProcessContext::MainBO.setEARights">
+        <TransitionTo action="setCurrentTabName_itemList" />
+      </Action>
+      <!-- Item list process -->
+      <Action actionType="LOGIC" name="setCurrentTabName_itemList" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_ItemList" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="setCheckOutType" />
+      </Action>
+      <Action actionType="LOGIC" name="setCheckOutType" call="ProcessContext::MainBO.setCheckOutType">
+        <TransitionTo action="StartItemListProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartItemListProcess" process="TruckLoad::ItemListTabProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::MainBO" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CurrentItemFilterId" value="currentItemFilterId" />
+        </ReturnValues>
+        <!-- <TransitionTo action="StoreCurrentItemFilterId_ItemTabManager" />-->
+      </Action>
+      <Action actionType="LOGIC" name="setValidateForQuantityFlag" call="ProcessContext::MainBO.setValidateForQuantity">
+        <Parameters>
+          <Input name="value" type="Literal" value="1" />
+        </Parameters>
+        <TransitionTo action="AfterValidationErrorUIRedirect_Decision" />
+      </Action>
+      <!-- Redirect decission for validation errors to stay on the page where the user was before the validation -->
+      <Action name="AfterValidationErrorUIRedirect_Decision" actionType="DECISION" parameter="ProcessContext::currentTabPage">
+        <Case value="tab_ItemList" action="StartItemListProcess" />
+        <Case value="tab_Header" action="StartHeaderProcess" />
+        <CaseElse action="StartHeaderProcess" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_header" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Header" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="StartHeaderProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartHeaderProcess" process="TruckLoad::HeaderTabProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::MainBO" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CheckOutReleased" value="released" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+  <ExitHandlers>
+    <ExitHandler handlerName="beforeExit1" type="Validate" name="ProcessContext::MainBO">
+      <OnValidationError transitionTo="setValidateForQuantityFlag" />
+    </ExitHandler>
+  </ExitHandlers>
+</Process>

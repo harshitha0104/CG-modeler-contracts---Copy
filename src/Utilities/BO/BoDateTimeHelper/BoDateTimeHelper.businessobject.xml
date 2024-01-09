@@ -1,0 +1,29 @@
+<BusinessObject name="BoDateTimeHelper" schemaVersion="1.1">
+  <DataSource name="DsBoDateTimeHelper" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="empty" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <!-- Date Time methods -->
+    <Method name="getDateDiff" />
+    <Method name="getTimeZoneOffset" />
+    <Method name="getUTCAnsiString" />
+    <Method name="getUTCDate" />
+    <Method name="getUTCDateWithoutSeconds" />
+    <Method name="sortTimeEntries" />
+    <Method name="getFormattedTimeString" />
+  </Methods>
+</BusinessObject>

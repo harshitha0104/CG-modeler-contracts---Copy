@@ -1,0 +1,16 @@
+<LookupObject name="LuTimeEntryType" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuTimeEntryType" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="Id" type="DomId" storable="false" dataSourceProperty="id" />
+    <SimpleProperty name="ShowAggregation" type="DomBool" storable="false" dataSourceProperty="showAggregation" />
+    <SimpleProperty name="text" type="DomText" storable="false" dataSourceProperty="text" />
+    <SimpleProperty name="productiveTimeEffect" type="DomUsrTimeEntryEffect" dataSourceProperty="productiveTimeEffect" />
+    <SimpleProperty name="activityType" type="DomUsrActivityType" dataSourceProperty="activityType" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

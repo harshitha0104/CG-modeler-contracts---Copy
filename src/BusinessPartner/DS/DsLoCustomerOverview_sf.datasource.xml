@@ -1,0 +1,357 @@
+<Datasource name="DsLoCustomerOverview" backendSystem="sf" objectClass="LoCustomerOverview" businessObjectClass="LoCustomerOverview" readOnly="true" external="true" editableEntity="Account" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account" column="Id" />
+    <Attribute name="name" table="Account" column="Name" />
+    <Attribute name="customerId" table="Account" column="Account_Number__c" />
+    <DerivedAttribute name="mainAddress" value="''" />
+    <Attribute name="street" table="Account" column="ShippingStreet" />
+    <Attribute name="zipCode" table="Account" column="ShippingPostalCode" />
+    <Attribute name="city" table="Account" column="ShippingCity" />
+    <Attribute name="countryState" table="Account" column="ShippingState" />
+    <Attribute name="classOfTrade" table="Account_Extension__c" column="Class_Of_Trade__c" />
+    <Attribute name="tradeOrg" table="Account" column="Name" />
+    <Attribute name="tradeOrgPKey" table="Account_Trade_Org_Hierarchy__c" column="Parent_Account__c" />
+    <Attribute name="subValidFrom" table="Substitution__c" column="Valid_From__c" />
+    <Attribute name="subValidThru" table="Substitution__c" column="Valid_Thru__c" />
+    <Attribute name="managementRelationValidFrom" table="Account_Manager__c" column="Valid_From__c" />
+    <Attribute name="managementRelationValidThru" table="Account_Manager__c" column="Valid_Thru__c" />
+    <Attribute name="latitude" table="Account" column="ShippingLatitude" />
+    <Attribute name="longitude" table="Account" column="ShippingLongitude" />
+    <Attribute name="distributionIssue" table="Account_Extension__c" column="Distribution_Issue__c" />
+    <Attribute name="outOfStockIssue" table="Account_Extension__c" column="OOS_Issue__c" />
+    <DerivedAttribute name="prio" value="''" />
+    <DerivedAttribute name="grouping1" value="''" />
+    <DerivedAttribute name="substitutedUsrPKey" value="''" />
+    <DerivedAttribute name="isSubstituted" value="'0'" />
+    <DerivedAttribute name="managed" value="'0'" />
+    <DerivedAttribute name="isOverdue" value="'0'" />
+    <DerivedAttribute name="mapIcon" value="'PurpleGoogleMarkerEmpty'" />
+    <DerivedAttribute name="hasActivity" value="'0'" />
+    <DerivedAttribute name="hasPromotion" value="'0'" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			if (!jsonQuery){jsonQuery={'params': []};}
+
+			if (Utils.isDefined(jsonQuery)){
+              var newParams = jsonQuery;
+              if (Utils.isOldParamsFormat(newParams)){
+              	newParams = Utils.convertDsParamsOldToNew(newParams);
+              }
+			}
+
+			var userPKeys = Utils.isDefined(newParams.referenceUserPKey) ? "'" + newParams.referenceUserPKey + "'" : ApplicationContext.get('user').getTeamList();
+
+			var addCond_LeadTimeFollowUpTime = "";
+            var addCond_OverdueCustomers = "";
+			var currentDate = "";
+            var referenceUserPKey = "";
+			var referenceDateThru;
+			var referenceDateFrom;
+			var addCondSearch = "";
+			var customerId = "";
+			var name = "";
+			var street = "";
+			var zipCode = "";
+			var city = "";
+			var countryState = "";
+			var prio = "";
+			var classOfTrade = "";
+			var substituted = "";
+			var tradeOrgPKey = "";
+			var overdue = "";
+            var distributionIssue = "";
+            var outOfStockIssue = "";
+            var hasActivity = "";
+            var hasPromotion = ""; 
+            var currentLongitude = 0; 
+            var currentLatitude = 0;
+			var distance = 0;
+
+			if(Utils.isDefined(newParams.addCond_LeadTimeFollowUpTime)){
+				addCond_LeadTimeFollowUpTime = newParams.addCond_LeadTimeFollowUpTime;
+			}
+            if(Utils.isDefined(newParams.addCond_OverdueCustomers)){
+				addCond_OverdueCustomers = newParams.addCond_OverdueCustomers;
+			}
+			if(Utils.isDefined(newParams.currentDate)){
+				currentDate = newParams.currentDate;
+			}
+            if(Utils.isDefined(newParams.referenceUserPKey)){
+				referenceUserPKey = newParams.referenceUserPKey;
+			}
+
+			if (Utils.isDefined(newParams.referenceDateFrom) && Utils.isDefined(newParams.referenceDateThru)){
+              referenceDateThru = Utils.convertForDBParam(newParams.referenceDateThru,'DomDate');
+			  referenceDateFrom = Utils.convertForDBParam(newParams.referenceDateFrom,'DomDate');
+			}
+			else{
+              referenceDateThru = Utils.convertForDBParam(Utils.createAnsiDateToday(), 'DomDate');
+              referenceDateFrom = Utils.convertForDBParam(Utils.createAnsiDateToday(), 'DomDate');
+			}
+
+			//Needed for calling overview from create new order
+			var ordererCondition = false;
+			if (Utils.isDefined(newParams.mode) && newParams.mode === "order"){
+				ordererCondition = true;
+			}
+
+            if(Utils.isDefined(newParams.currentLatitude)) {
+                currentLatitude = Utils.convertForDBParam(newParams.currentLatitude, "DomDecimal");
+            }
+            if(Utils.isDefined(newParams.currentLongitude)) {
+                currentLongitude = Utils.convertForDBParam(newParams.currentLongitude, "DomDecimal");
+            }
+
+			//############################
+			//## Advanced Search Paging ##
+			//############################
+
+			/**  Customer Id  */
+			if (Utils.isDefined(newParams.customerId)){
+              customerId = Utils.convertForDBParam(newParams.customerId, "DomId");
+              addCondSearch += " AND customers.customerId " + Utils.replaceOperator(newParams.customerIdComp) + "#customerId# ";
+			} 
+
+			/**  Customer Name  */
+			if (Utils.isDefined(newParams.name)){
+              name = Utils.convertForDBParam(newParams.name, "DomBpaName");
+              addCondSearch += " AND customers.name " + Utils.replaceOperator(newParams.nameComp) + "#name# ";
+			}
+
+			/**  Street  */
+			if (Utils.isDefined(newParams.street)){
+              street = Utils.convertForDBParam(newParams.street, "DomStreet");
+              addCondSearch += " AND customers.street " + Utils.replaceOperator(newParams.streetComp) + "#street# ";
+			}
+
+			/**  Zip Code  */
+			if (Utils.isDefined(newParams.zipCode)){
+              zipCode = Utils.convertForDBParam(newParams.zipCode, "DomZipCode");
+              addCondSearch += " AND customers.zipCode " + Utils.replaceOperator(newParams.zipCodeComp) + "#zipCode# ";
+			}
+
+			/**  City  */
+			if (Utils.isDefined(newParams.city)){
+              city = Utils.convertForDBParam(newParams.city, "DomCity");
+              addCondSearch += " AND customers.city " + Utils.replaceOperator(newParams.cityComp) + "#city# ";
+			}
+
+			/**  Country State  */
+			if (Utils.isDefined(newParams.countryState)){
+              countryState = Utils.convertForDBParam(newParams.countryState, "DomCountryState");
+              addCondSearch += " AND customers.countryState " + Utils.replaceOperator(newParams.countryStateComp) + "#countryState# ";
+			}
+
+			/**  Priority  */
+			if (Utils.isDefined(newParams.prio)){
+              prio = Utils.convertForDBParam(newParams.prio, "DomABC");
+              addCondSearch += " AND customers.prio " + Utils.replaceOperator(newParams.prioComp) + "#prio# ";
+			}
+
+			/**  Class of Trade  */
+			if (Utils.isDefined(newParams.classOfTrade)){
+              classOfTrade = Utils.convertForDBParam(newParams.classOfTrade, "DomBpaClassOfTrade");
+              addCondSearch += " AND customers.classOfTrade " + Utils.replaceOperator(newParams.classOfTradeComp) + "#classOfTrade# ";
+			}
+
+			/**  Substituted  */
+			if (Utils.isDefined(newParams.substituted)){
+              substituted = Utils.convertForDBParam(newParams.substituted, "DomBool");
+              addCondSearch += " AND customers.isSubstituted " + Utils.replaceOperator(newParams.substitutedComp) + "#substituted# ";
+			}
+
+			/**  Trade Org  */
+			if (Utils.isDefined(newParams.tradeOrgPKey)){
+              tradeOrgPKey = Utils.convertForDBParam(newParams.tradeOrgPKey, "DomPKey");
+              addCondSearch += " AND customers.tradeOrgPKey " + Utils.replaceOperator(newParams.tradeOrgPKeyComp) + "#tradeOrgPKey# ";
+			}
+			
+			/**  overdue  */
+			if (Utils.isDefined(newParams.overdue)){
+              overdue = Utils.convertForDBParam(newParams.overdue, "DomBool");
+              addCondSearch += " AND customers.isOverdue " + Utils.replaceOperator(newParams.overdueComp) + "#overdue# ";
+			}
+            
+            /**  distributionIssue  */
+			if (Utils.isDefined(newParams.distributionIssue)){
+              distributionIssue = Utils.convertForDBParam(newParams.distributionIssue, "DomBool");
+              addCondSearch += " AND customers.distributionIssue " + Utils.replaceOperator(newParams.distributionIssueComp) + "#distributionIssue# ";
+			}
+
+            /**  outOfStockIssue  */
+			if (Utils.isDefined(newParams.outOfStockIssue)){
+              outOfStockIssue = Utils.convertForDBParam(newParams.outOfStockIssue, "DomBool");
+              addCondSearch += " AND customers.outOfStockIssue " + Utils.replaceOperator(newParams.outOfStockIssueComp) + "#outOfStockIssue# ";
+			}
+         
+            /**  Activity  */
+			if (Utils.isDefined(newParams.hasActivity)){
+              hasActivity = Utils.convertForDBParam(newParams.hasActivity, "DomBool");
+              addCondSearch += " AND customers.hasActivity " + Utils.replaceOperator(newParams.hasActivityComp) + "#hasActivity# ";
+			}
+   
+            /**  Promotion  */
+			if (Utils.isDefined(newParams.hasPromotion)){
+              hasPromotion = Utils.convertForDBParam(newParams.hasPromotion, "DomBool");
+              addCondSearch += " AND customers.hasPromotion " + Utils.replaceOperator(newParams.hasPromotionComp) + "#hasPromotion# ";
+			}
+
+            /** distance **/
+            if(Utils.isDefined(newParams.Distance_1)){
+                var latitudeProperty = newParams.Distance_1.latitudeProperty;
+                var longitudeProperty = newParams.Distance_1.longitudeProperty;
+				distance =  Utils.convertForDBParam(newParams.Distance_1.distance, "DomDecimal");
+                addCondSearch += " AND DISTANCE(#currentLatitude#, #currentLongitude#, " + latitudeProperty + ", " + longitudeProperty + ") " + Utils.replaceOperator(newParams.Distance_1Comp) + " #distance# ";
+            }
+
+			var sqlParams1 = {referenceDateThru, referenceDateFrom, currentLatitude, currentLongitude, distance};
+			var sqlParams2 = {referenceDateThru, referenceDateFrom, customerId, name, street, zipCode, city, countryState, prio, classOfTrade, substituted, tradeOrgPKey, currentDate, overdue, distributionIssue, outOfStockIssue, hasActivity, hasPromotion, currentLatitude, currentLongitude, referenceUserPKey, distance};
+
+			var sqlStmt1 = "SELECT ";
+			sqlStmt1 +=      "customers.pKey AS pKey, ";
+			sqlStmt1 +=      "customers.name  as name, ";
+			sqlStmt1 +=      "customers.customerid as customerId, ";
+			sqlStmt1 +=      "customers.Prio as prio, ";
+			sqlStmt1 +=      "customers.ClassOfTrade as classOfTrade, ";
+			sqlStmt1 +=      "customers.mainaddress as mainAddress, ";
+			sqlStmt1 +=      "customers.Street as street, ";
+			sqlStmt1 +=      "customers.ZipCode as zipCode, ";
+			sqlStmt1 +=      "customers.City as city, ";
+			sqlStmt1 +=      "customers.CountryState as countryState, ";
+			sqlStmt1 +=      "upper(customers.grouping1) as grouping1, ";
+			sqlStmt1 +=      "ifnull(max(customers.substitutedUsrPKey), ' ') as substitutedUsrPKey, ";
+			sqlStmt1 +=      "ifnull(max(customers.subValidFrom), #MinDate#) as subValidFrom, ";
+			sqlStmt1 +=      "ifnull(max(customers.subValidThru), #MinDate#) as subValidThru, ";
+			sqlStmt1 +=      "customers.isSubstituted as isSubstituted, ";
+			sqlStmt1 +=      "customers.isManager as managed, ";
+			sqlStmt1 +=      "ifnull(customers.TradeOrgName, ' ') as tradeOrg, ";
+			sqlStmt1 +=      "ifnull(customers.TradeOrgPKey, ' ') as tradeOrgPKey, ";
+			sqlStmt1 +=      "ifnull(customers.mgmtValidFrom, #MinDate#) as managementRelationValidFrom, ";
+			sqlStmt1 +=      "ifnull(customers.mgmtValidThru, #MinDate#) as managementRelationValidThru, ";
+			sqlStmt1 +=      "customers.longitude as longitude, ";
+			sqlStmt1 +=      "customers.latitude as latitude, ";
+			sqlStmt1 +=      "customers.isOverdue as isOverdue, ";
+            sqlStmt1 +=      "customers.distributionIssue as distributionIssue, ";
+            sqlStmt1 +=      "customers.outOfStockIssue as outOfStockIssue, ";
+            sqlStmt1 +=      "customers.hasActivity as hasActivity, ";
+            sqlStmt1 +=      "customers.hasPromotion as hasPromotion ";
+			sqlStmt1 +=      "FROM ( ";
+			sqlStmt1 +=      " SELECT  ";
+			sqlStmt1 +=          "Account.Id AS pKey, ";
+			sqlStmt1 +=          "Account.Name as name, ";
+			sqlStmt1 +=          "Account.Account_Number__c as customerId,";
+			sqlStmt1 +=          "#toggleMapping('Account_Extension__c', 'Priority__c')# as prio, ";
+			sqlStmt1 +=          "Account_Extension__c.Class_Of_Trade__c as ClassOfTrade,   ";
+			sqlStmt1 +=          "Account.ShippingStreet || ', ' || Account.ShippingPostalCode || ' ' || Account.ShippingCity || ', ' || Account.ShippingState as mainAddress, ";
+			sqlStmt1 +=          "Account.ShippingStreet as Street, Account.ShippingPostalCode as ZipCode, Account.ShippingCity as City, Account.ShippingState as CountryState, ";
+			sqlStmt1 +=          "Upper(substr(Account.Name,1,1)) as grouping1, ";
+			sqlStmt1 +=          "substitution.SubMainUsrMainPKey AS substitutedUsrPKey, ";
+			sqlStmt1 +=          "substitution.SubBpaRelValidFrom AS subValidFrom, ";
+			sqlStmt1 +=          "substitution.SubBpaRelValidThru AS subValidThru, ";
+			sqlStmt1 +=          "CASE WHEN substitution.SubMainUsrMainPKey <> ' ' THEN '1' ELSE '0' END AS isSubstituted, ";
+			sqlStmt1 +=          "CASE WHEN Account_Manager__c.Id <> ' ' THEN '1' ELSE '0' END as isManager, ";
+			sqlStmt1 +=          "TradeOrg.Name as tradeOrgName, ";
+			sqlStmt1 +=          "Account_Trade_Org_Hierarchy__c.Parent_Account__c as TradeOrgPKey, ";
+			sqlStmt1 +=          "Account_Manager__c.Valid_From__c as mgmtValidFrom, ";
+			sqlStmt1 +=          "Account_Manager__c.Valid_Thru__c as mgmtValidThru, ";
+			sqlStmt1 +=          "Account.ShippingLongitude as longitude, ";
+			sqlStmt1 +=          "Account.ShippingLatitude as latitude, ";
+			sqlStmt1 +=          "CASE WHEN #compareAsDate('Account_Visit_Setting__c.Overdue_Date__c', 'Date','<',#TodayAsDate#, 'Date')# THEN '1' ELSE '0' END AS isOverdue, ";
+            sqlStmt1 +=          "Account_Extension__c.Distribution_Issue__c as distributionIssue, ";
+            sqlStmt1 +=          "Account_Extension__c.OOS_Issue__c as outOfStockIssue, ";
+            sqlStmt1 +=          "CASE WHEN EXISTS (SELECT Null FROM Job_Definition_List_Account__c WHERE Account.Id = Job_Definition_List_Account__c.Account__c) THEN '1' ELSE '0' END as hasActivity, ";
+            sqlStmt1 +=          "CASE WHEN EXISTS (SELECT Null FROM Promotion_Store__c, Promotion__c WHERE Promotion_Store__c.Promotion__c = Promotion__c.Id AND Account.Id = Promotion_Store__c.Store__c AND Promotion__c.Active__c ='1' AND Promotion__c.Phase__c='Committed') "
+            sqlStmt1 +=          "OR EXISTS (SELECT Null FROM Account_Set_Account__c, Promotion__c WHERE Promotion__c.Anchor_Account_Set__c = Account_Set_Account__c.Account_Set__c AND Account_Set_Account__c.Account_Set_Account__c = Account.Id AND Promotion__c.Active__c ='1' AND Promotion__c.Phase__c='Committed') THEN '1' ELSE '0' END as hasPromotion ";
+			sqlStmt1 +=      " FROM  ";
+			sqlStmt1 +=          "Account";
+			sqlStmt1 +=      " JOIN ";
+			sqlStmt1 +=          "Account_Extension__c ";
+			sqlStmt1 +=              "ON Account.Id = Account_Extension__c.Account__c ";
+			if(ordererCondition){
+				sqlStmt1 +=              "AND #compareAsDate('Account_Extension__c.Order_Role_Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+				sqlStmt1 +=              "AND #compareAsDate('Account_Extension__c.Order_Role_Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+			}  
+
+			sqlStmt1 +=      " LEFT OUTER JOIN ";
+			sqlStmt1 +=          " Account_Trade_Org_Hierarchy__c";
+			sqlStmt1 +=              " ON Account.Id = Account_Trade_Org_Hierarchy__c.Child_Account__c ";                    
+			sqlStmt1 +=              "AND #compareAsDate('Account_Trade_Org_Hierarchy__c.Valid_From__c', 'Date','<=',#referenceDateThru#, 'Date')# ";
+			sqlStmt1 +=              "AND #compareAsDate('Account_Trade_Org_Hierarchy__c.Valid_Thru__c', 'Date','>=',#referenceDateFrom#, 'Date')# ";
+			sqlStmt1 +=      " LEFT OUTER JOIN ";
+			sqlStmt1 +=          " Account TradeOrg ";
+			sqlStmt1 +=              "ON TradeOrg.Id = Account_Trade_Org_Hierarchy__c.Parent_Account__c ";
+			sqlStmt1 +=      " JOIN ";
+			sqlStmt1 +=          " User ";
+			sqlStmt1 +=              " ON (User.Id IN (";
+  
+			//userPKeys
+			var userPKeyObj = Utils.getListParams(userPKeys);
+
+			var sqlStmt2 =                             " )";
+			sqlStmt2 +=                 ")";
+			sqlStmt2 +=      " LEFT OUTER JOIN ";
+			sqlStmt2 +=          "Account_Manager__c ";
+			sqlStmt2 +=              "ON Account_Manager__c.User__c = User.Id ";
+			sqlStmt2 +=              "AND Account_Manager__c.Account__c = Account.Id ";
+			sqlStmt2 += 		" AND #compareAsDate('Account_Manager__c.Valid_From__c', 'Date','<=',#referenceDateThru#, 'Date')# ";
+			sqlStmt2 += 		" AND #compareAsDate('Account_Manager__c.Valid_Thru__c', 'Date','>=',#referenceDateFrom#, 'Date')# ";
+			sqlStmt2 += 		" AND Account_Manager__c.Management_Type__c <> 'Substitution' ";
+			sqlStmt2 +=      "LEFT OUTER JOIN ( ";
+			sqlStmt2 +=              "SELECT SubBpaRel.Account__c as BpaMainPKey, ";
+			sqlStmt2 +=              "SubBpaRel.Valid_From__c as SubBpaRelValidFrom, ";
+			sqlStmt2 +=              "SubBpaRel.Valid_Thru__c as SubBpaRelValidThru, ";
+			sqlStmt2 +=              "SubBpaRel.Substitute__c as SubBpaRelUsrMainPKey, ";
+			sqlStmt2 +=              "SubMain.Substituted__c as SubMainUsrMainPKey ";
+			sqlStmt2 +=              "FROM Substitution__c AS SubBpaRel ";
+			sqlStmt2 +=              "INNER JOIN Substitution__c AS SubMain ON SubMain.Id = SubBpaRel.Substitution__c AND SubMain.Sales_Org__c = '#SALESORG#' ";
+			sqlStmt2 +=          "AND (SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400) <= #referenceDateThru# ";
+			sqlStmt2 +=          "AND (SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400) >= #referenceDateFrom# ";
+			sqlStmt2 +=          "AND (SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400) <= #referenceDateThru# ";
+			sqlStmt2 +=          "AND (SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400) >= #referenceDateFrom# ";
+			sqlStmt2 +=              "AND SubMain.Active__c = '1' ";
+			sqlStmt2 +=              "AND SubBpaRel.Active__c = '1' ";
+			sqlStmt2 +=              " ) Substitution ";
+			sqlStmt2 +=              "ON Substitution.BpaMainPKey = Account.Id AND Substitution.SubBpaRelUsrMainPKey = '#referenceUserPKey#' ";
+			sqlStmt2 +=              "LEFT OUTER JOIN Account_Visit_Setting__c ";
+			sqlStmt2 +=              "ON Account_Visit_Setting__c.Account__c = Account.Id AND Account_Visit_Setting__c.Active__c='1' ";
+			sqlStmt2 +=              "AND Account_Manager__c.Management_Type__c = Account_Visit_Setting__c.Management_Type__c ";
+			sqlStmt2 +=              "AND Account_Visit_Setting__c.Overdue_Check__c='1' AND Account_Visit_Setting__c.Planning_Mode__c <> ' ' ";
+			sqlStmt2 +=              "AND Account_Visit_Setting__c.Overdue_Date__c <> '#MinDate#' ";
+			sqlStmt2 +=              "AND #compareAsDate('Account_Visit_Setting__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+			sqlStmt2 +=              "AND #compareAsDate('Account_Visit_Setting__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+			sqlStmt2 +=              "AND #compareAsDate('Account_Visit_Setting__c.Overdue_Date__c', 'Date','<',#TodayAsDate#, 'Date')# ";
+			sqlStmt2 +=    " WHERE ";
+			sqlStmt2 +=      "( ";
+			sqlStmt2 +=       addCond_LeadTimeFollowUpTime;
+			sqlStmt2 +=          "((NOT Account_Manager__c.Id IS NULL)  ";
+			sqlStmt2 +=          "OR (NOT Substitution.SubMainUsrMainPKey is NULL) ";
+			sqlStmt2 +=          "OR EXISTS ";
+			sqlStmt2 +=          "( ";
+			sqlStmt2 +=              "SELECT NULL FROM Visit WHERE Account.Id = Visit.AccountId AND Visit.Accountable__c = '#UserPKey#') ";
+			sqlStmt2 +=          "))";
+			sqlStmt2 +=      ") customers ";
+			sqlStmt2 +=    "WHERE 1=1 ";
+            sqlStmt2 +=    addCond_OverdueCustomers;
+
+			sqlStmt2 +=    addCondSearch;
+			sqlStmt2 +=    "GROUP BY ";
+			sqlStmt2 +=      "pKey ";
+			sqlStmt2 +=    "ORDER BY ";
+			sqlStmt2 +=      "upper(name) ";
+
+			var sqlStmt1Result = Utils.replaceMacrosParam(sqlStmt1, sqlParams1);
+			var sqlStmt2Result = Utils.replaceMacrosParam(sqlStmt2, sqlParams2);
+
+		
+			var finalSql = sqlStmt1Result.sql + userPKeyObj.sql + sqlStmt2Result.sql;
+            var finalParams = sqlStmt1Result.params.concat(userPKeyObj.params).concat(sqlStmt2Result.params);
+
+			return {sql: finalSql, params: finalParams};
+		]]></Load>
+  </Database>
+</Datasource>

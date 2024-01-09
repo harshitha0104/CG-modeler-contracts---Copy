@@ -1,0 +1,67 @@
+<Process name="Call::JobListSideBar" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OpenJobLists" type="LoOpenJobLists" />
+        <Declaration name="CustomerPKey" type="String" />
+        <Declaration name="CallMetaPKey" type="String" />
+        <Declaration name="JobListPKey" type="String" />
+        <Declaration name="DateFromAnsi" type="String" />
+        <Declaration name="ButtonPressed" type="String" />
+        <Declaration name="JobListSelectedParams" type="Object" />
+      </Declarations>
+      <Parameters>
+        <Input name="DateFrom" type="String" />
+        <Input name="TimeFrom" type="String" />
+        <Input name="ResponsiblePKey" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="ConvertToAnsi" call="Utils.convertDate2Ansi">
+        <Parameters>
+          <Input name="date" value="ProcessContext::DateFrom" />
+        </Parameters>
+        <Return name="ProcessContext::DateFromAnsi" />
+      </Action>
+      <Action name="LoadJobLists" actionType="LOAD" type="LoOpenJobLists">
+        <Parameters>
+          <Input name="referenceDateFrom" value="ProcessContext::DateFromAnsi" />
+          <Input name="referenceDateThru" value="ProcessContext::DateFromAnsi" />
+          <Input name="responsiblePKey" value="ProcessContext::ResponsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::OpenJobLists" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Call::JobListSideBarUI</UIDescription>
+        <Events>
+          <Event name="JobListSelected" action="AssignEventParams" />
+        </Events>
+      </Action>
+      <Action actionType="LOGIC" name="AssignEventParams" call="@params.valueOf">
+        <Return name="ProcessContext::JobListSelectedParams" />
+        <TransitionTo action="AssignButtonPressed" />
+      </Action>
+      <Action actionType="LOGIC" name="AssignButtonPressed" call="Utils.identity">
+        <Parameters>
+          <Input name="param1" type="Literal" value="createCall" />
+        </Parameters>
+        <Return name="ProcessContext::ButtonPressed" />
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="callMetaPKey" value="ProcessContext::JobListSelectedParams.clbMetaPKey" />
+          <Return name="customerPKey" value="ProcessContext::JobListSelectedParams.customerPKey" />
+          <Return name="jobListPKey" value="ProcessContext::JobListSelectedParams.jobListPKey" />
+          <Return name="substitutedUsrPKey" value="ProcessContext::JobListSelectedParams.substitutedUsrPKey" />
+          <Return name="isManagedCustomer" value="ProcessContext::JobListSelectedParams.isManagedCustomer" />
+          <Return name="buttonPressed" value="ProcessContext::ButtonPressed" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

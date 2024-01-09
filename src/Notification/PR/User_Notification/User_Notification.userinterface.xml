@@ -1,0 +1,175 @@
+<UIDescription  name="User::Notification" schemaVersion="0.0.0.5" simpleEditorOnly="true">
+  <Page pagePattern="MasterDetailSectionPage" masterSectionFlex="40" detailSectionFlex="60">
+    <ViewVariables>
+      <ViewVariable name="currentTabName" value="Main" />
+    </ViewVariables>
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="NotificationsTitleId" defaultLabel="Notifications" bindingMode="ONE_TIME" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="false" itemId="AllNotifications">
+          <Bindings>
+            <Resource target="Icon" type="Image" id="EnvelopeDarkGrey24" defaultImage="EnvelopeDarkGrey24" />
+            <Resource target="Text" type="Label" id="AllNotificationsId" defaultLabel="All Notifications" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showAllNotifications" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="UnreadNotifications">
+          <Bindings>
+            <Resource target="Icon" type="Image" id="EnvelopeUnreadDarkGrey24" defaultImage="EnvelopeUnreadDarkGrey24" />
+            <Resource target="Text" type="Label" id="UnreadNotificationsId" defaultLabel="Only Unread" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showUnreadNotifications" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <!-- Master Section -->
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="NotificationList" searchable="true" master="true" dataSource="ProcessContext::NotificationList.Items[]">
+          <Items name="Items" itemPattern="UserNotificationItem">
+            <Bindings>
+              <Binding target="priority" type="Image" binding=".priorityImage" bindingMode="ONE_WAY" />
+              <Binding target="IsRead" type="Image" binding=".isReadImage" bindingMode="ONE_WAY" />
+              <Binding target="Subject" type="Text" binding=".subject" bindingMode="ONE_WAY" />
+              <Binding target="Category" type="Text" binding=".category" bindingMode="ONE_WAY" />
+              <Binding target="DueDate" type="Date" binding=".dueDate" bindingMode="ONE_WAY" />
+              <Resource target="Spacer" type="Label" id="Spacer" defaultLabel="    " />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col width="0.5em" height="1.4em" layoutType="Image" bindingId="priority" />
+                <Col width="0.8em" height="1.4em" layoutType="Image" bindingId="IsRead" />
+                <Col width="7.9em">
+                  <Row layoutType="itemIdentifier" bindingId="Subject" />
+                  <Row layoutType="itemSecondary" bindingId="Category" />
+                </Col>
+                <Col width="3.7em">
+                  <Row layoutType="itemSecondary" bindingId="DueDate" />
+                </Col>
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="0.5em" height="1.4em" layoutType="Image" bindingId="priority" />
+                  <Col width="0.8em" height="1.4em" layoutType="Image" bindingId="IsRead" />
+                  <Col width="7.9em">
+                    <Row layoutType="itemIdentifier" bindingId="Subject" />
+                    <Row layoutType="itemSecondary" bindingId="Category" />
+                  </Col>
+                  <Col width="3.7em">
+                    <Row layoutType="itemSecondary" bindingId="DueDate" />
+                  </Col>
+                </Default>
+                <Apple>
+                  <Col width="0.5em" height="1.4em" layoutType="Image" bindingId="priority" />
+                  <Col width="0.7em" height="1.4em" layoutType="Image" bindingId="IsRead" />
+                  <Col width="7.8em">
+                    <Row layoutType="itemIdentifier" bindingId="Subject" />
+                    <Row layoutType="itemSecondary" bindingId="Category" />
+                  </Col>
+                  <Col width="3.9em">
+                    <Row layoutType="itemSecondary" bindingId="DueDate" />
+                  </Col>
+                </Apple>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col width="0.5em" height="1.4em" layoutType="Image" bindingId="priority" />
+                  <Col width="1em" height="1.4em" layoutType="Image" bindingId="IsRead" />
+                  <Col width="8em">
+                    <Row layoutType="itemIdentifier" bindingId="Subject" />
+                    <Row layoutType="itemSecondary" bindingId="Category" />
+                  </Col>
+                  <Col width="3.5em">
+                    <Row layoutType="itemSecondary" bindingId="DueDate" />
+                  </Col>
+                </Default>
+                <Apple>
+                  <Col width="0.5em" height="1.4em" layoutType="Image" bindingId="priority" />
+                  <Col width="1em" height="1.4em" layoutType="Image" bindingId="IsRead" />
+                  <Col width="8em">
+                    <Row layoutType="itemIdentifier" bindingId="Subject" />
+                    <Row layoutType="itemSecondary" bindingId="Category" />
+                  </Col>
+                  <Col width="3.5em">
+                    <Row layoutType="itemSecondary" bindingId="DueDate" />
+                  </Col>
+                </Apple>
+              </Phone>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected" resetMultiAreas="true">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+          <SearchAttributes>
+            <SearchAttribute name="Category" />
+            <SearchAttribute name="DueDate" />
+          </SearchAttributes>
+        </GroupedList>
+      </Area>
+    </Section>
+    <!-- Detail Section -->
+    <Section sectionName="detailSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="NotificationGroup">
+          <SelectionBox name="Priority" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="PriorityId" defaultLabel="Priority" />
+              <Binding target="DataSource" toggleId="ABC" bindingMode="ONE_WAY" />
+              <Binding target="Value" binding="ProcessContext::NotificationDetail.priority" bindingMode="ONE_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <CheckBox name="isNotificationRead">
+            <Bindings>
+              <Resource target="Label" type="Label" id="ReadId" defaultLabel="Read" />
+              <Binding target="checkedValue" binding="ProcessContext::NotificationDetail.isRead" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+          <InputArea name="Category" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="CategoryId" defaultLabel="Category" />
+              <Binding target="Value" binding="ProcessContext::NotificationDetail.category" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="Date" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="DateId" defaultLabel="Date" />
+              <Binding target="Value" type="Date" binding="ProcessContext::NotificationDetail.dueDate" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="Initiator" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="InitiatorId" defaultLabel="Initiator" />
+              <Binding target="Value" binding="ProcessContext::NotificationDetail.usrName" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+        <GroupElement name="NotesDetail">
+          <Bindings>
+            <Resource target="Title" type="Label" id="MessageId" defaultLabel="Message" />
+          </Bindings>
+          <InputAreaMultiLine name="Message" editable="false" noOfRows="8">
+            <Bindings>
+              <Binding target="Value" binding="ProcessContext::NotificationDetail.subject" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

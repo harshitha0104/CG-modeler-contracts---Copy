@@ -1,0 +1,12 @@
+<ListItem name="LiWfeStateTransitions" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="fromStatePKey" type="DomPKey" storable="true" dataSourceProperty="fromStatePKey" />
+    <SimpleProperty name="toStatePKey" type="DomPKey" storable="true" dataSourceProperty="toStatePKey" />
+    <SimpleProperty name="event" type="DomId" storable="true" dataSourceProperty="event" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" storable="true" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="usrRolePKey" type="DomPKey" storable="true" dataSourceProperty="usrRolePKey" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" storable="true" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="usrUserPKey" type="DomPKey" storable="true" dataSourceProperty="usrUserPKey" />
+  </SimpleProperties>
+</ListItem>

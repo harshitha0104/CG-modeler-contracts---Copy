@@ -1,0 +1,22 @@
+<DataSource name="DsBoOrderRole" backendSystem="sf" businessObjectClass="BoOrderRole" external="false" editableEntity="Account_Extension__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Extension__c" column="Id" />
+    <Attribute name="customerPKey" table="Account_Extension__c" column="Account__c" />
+    <DerivedAttribute name="bpaRolePKey" value="' '" />
+    <Attribute name="ordererType" table="Account_Extension__c" column="Order_Role_Orderer_Type__c" />
+    <Attribute name="sdoMetaBlocked" table="Account_Extension__c" column="Order_Role_Order_Template_Blocked__c" />
+    <DerivedAttribute name="salesOrg" value="'#SalesOrg#'" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Extension__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   Account_Extension__c.Account__c = #customerPKey#
+   AND #compareAsDate('Account_Extension__c.Order_Role_Valid_From__c', 'Date','<=', #TodayAsDate#, 'Date')#
+   AND #compareAsDate('Account_Extension__c.Order_Role_Valid_Thru__c', 'Date','>=', #TodayAsDate#, 'Date')#
+        ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="customerPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

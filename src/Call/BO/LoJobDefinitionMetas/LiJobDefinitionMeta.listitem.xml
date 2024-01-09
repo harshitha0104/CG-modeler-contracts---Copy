@@ -1,0 +1,22 @@
+<ListItem name="LiJobDefinitionMeta">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomText" storable="true" dataSourceProperty="text" />
+    <SimpleProperty name="dataType" type="DomRpsDataType" storable="false" dataSourceProperty="dataType" />
+    <SimpleProperty name="dataLength" type="DomVariant" storable="false" dataSourceProperty="dataLength" />
+    <SimpleProperty name="toggleId" type="DomId" storable="false" dataSourceProperty="toggleId" />
+    <SimpleProperty name="pOS" type="DomBool" storable="false" dataSourceProperty="pOS" />
+    <SimpleProperty name="jobMetaPKey" type="DomPKey" storable="false" dataSourceProperty="jobMetaPKey" />
+    <SimpleProperty name="useStepper" type="DomBool" storable="false" dataSourceProperty="useStepper" />
+    <SimpleProperty name="stepSize" type="DomDecimal" storable="false" dataSourceProperty="stepSize" />
+    <SimpleProperty name="considerMinValue" type="DomBool" storable="false" dataSourceProperty="considerMinValue" />
+    <SimpleProperty name="minValue" type="DomString" storable="false" dataSourceProperty="minValue" />
+    <SimpleProperty name="minDatePolicy" type="DomJobDatePolicy" storable="false" dataSourceProperty="minDatePolicy" />
+    <SimpleProperty name="considerMaxValue" type="DomBool" storable="false" dataSourceProperty="considerMaxValue" />
+    <SimpleProperty name="maxValue" type="DomString" storable="false" dataSourceProperty="maxValue" />
+    <SimpleProperty name="decimalPlaces" type="DomSmallInteger" storable="false" dataSourceProperty="decimalPlaces" />
+    <SimpleProperty name="maxDatePolicy" type="DomJobDatePolicy" storable="false" dataSourceProperty="maxDatePolicy" />
+    <SimpleProperty name="defaultValue" type="DomVariant" dataSourceProperty="defaultValue" storable="false" />
+    <SimpleProperty name="pictureTaking" type="DomBool" dataSourceProperty="pictureTaking" />
+  </SimpleProperties>
+</ListItem>

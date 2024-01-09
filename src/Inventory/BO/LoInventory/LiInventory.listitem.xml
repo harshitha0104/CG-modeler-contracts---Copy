@@ -1,0 +1,19 @@
+<ListItem name="LiInventory" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="id" type="DomId" storable="true" dataSourceProperty="id" />
+    <SimpleProperty name="ivcMetaPKey" type="DomPKey" storable="true" dataSourceProperty="ivcMetaPKey" />
+    <SimpleProperty name="usrMainPKey" type="DomPKey" storable="true" dataSourceProperty="usrMainPKey" />
+    <SimpleProperty name="bpaMainPKey" type="DomPKey" storable="true" dataSourceProperty="bpaMainPKey" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" storable="true" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="phase" type="DomIvcPhase" storable="true" dataSourceProperty="phase" />
+    <SimpleProperty name="validFrom" type="DomDate" storable="true" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomValidThru" storable="true" dataSourceProperty="validThru" />
+    <SimpleProperty name="invalid" type="DomBool" storable="true" dataSourceProperty="invalid" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" storable="true" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="tmgTourPKey" type="DomPKey" storable="true" dataSourceProperty="tmgTourPKey" />
+    <SimpleProperty name="etpVehiclePKey" type="DomPKey" storable="true" dataSourceProperty="etpVehiclePKey" />
+    <SimpleProperty name="currency" type="DomCurrency" storable="true" dataSourceProperty="currency" />
+    <SimpleProperty name="recordTypeId" type="DomPKey" dataSourceProperty="recordTypeId" />
+  </SimpleProperties>
+</ListItem>

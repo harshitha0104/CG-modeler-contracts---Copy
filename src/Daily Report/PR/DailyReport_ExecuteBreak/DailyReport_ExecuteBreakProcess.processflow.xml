@@ -1,0 +1,63 @@
+<Process name="DailyReport::ExecuteBreakProcess" defaultAction="GetCurrentTimeCardOfCall" schemaVersion="1.1">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CurrentTimeCard" type="BoUserDailyReport" />
+        <Declaration name="CurrentTimeCardOfCallDefined" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="ClbMainBo" type="BoCall" />
+        <Input name="TimeCardLoaded" type="String" />
+        <Input name="TimeEntryPKey" type="DomPKey" />
+        <Input name="EffectiveUTCTimeFrom" type="DomDateTime" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="LOGIC" name="GetCurrentTimeCardOfCall" call="Utils.isDefined">
+        <Parameters>
+          <Input name="timeCard" value="ProcessContext::ClbMainBo.boUserDailyReport" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTimeCardOfCallDefined" />
+        <TransitionTo action="Check_Undefined" />
+      </Action>
+      <Action name="Check_Undefined" actionType="DECISION" parameter="ProcessContext::CurrentTimeCardOfCallDefined">
+        <Case value="false" action="LoadCurrentTimeCard" />
+        <CaseElse action="Check_TimeCardObject" />
+      </Action>
+      <Action name="Check_TimeCardObject" actionType="DECISION" parameter="ProcessContext::TimeCardLoaded">
+        <Case value="1" action="GetCurrentTimeCard" />
+        <CaseElse action="LoadCurrentTimeCard" />
+        <CaseEmpty action="LoadCurrentTimeCard" />
+      </Action>
+      <Action actionType="LOGIC" name="GetCurrentTimeCard" call="Utils.identity">
+        <Parameters>
+          <Input name="timeCard" value="ProcessContext::ClbMainBo.boUserDailyReport" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTimeCard" />
+        <TransitionTo action="ExecuteBreak" />
+      </Action>
+      <Action actionType="LOAD" name="LoadCurrentTimeCard" type="BoUserDailyReport">
+        <Parameters>
+          <Input name="pKey" value="ApplicationContext::OpenTimeCardPKey" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTimeCard" />
+        <TransitionTo action="ExecuteBreak" />
+      </Action>
+      <Action name="ExecuteBreak" actionType="LOGIC" call="ProcessContext::CurrentTimeCard.executeBreak">
+        <Parameters>
+          <Input name="clbMainBo" value="ProcessContext::ClbMainBo" />
+          <Input name="timeEntryPKey" value="ProcessContext::TimeEntryPKey" />
+          <Input name="effectiveUTCTimeFrom" value="ProcessContext::EffectiveUTCTimeFrom" />
+        </Parameters>
+        <TransitionTo action="SaveTimeCard" />
+      </Action>
+      <Action name="SaveTimeCard" actionType="SAVE">
+        <TransitionTo action="EndCancel" />
+      </Action>
+      <Action actionType="END" name="EndCancel"></Action>
+    </Actions>
+  </Body>
+</Process>

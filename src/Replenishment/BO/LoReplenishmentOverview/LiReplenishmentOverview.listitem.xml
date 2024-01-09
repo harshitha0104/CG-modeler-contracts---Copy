@@ -1,0 +1,18 @@
+<ListItem name="LiReplenishmentOverview">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="id" type="DomId" storable="true" dataSourceProperty="id" />
+    <SimpleProperty name="phase" type="DomSdoPhase" storable="true" dataSourceProperty="phase" />
+    <SimpleProperty name="grossTotalValue" type="DomMoney" storable="true" dataSourceProperty="grossTotalValue" />
+    <SimpleProperty name="text" type="DomText" storable="true" dataSourceProperty="text" />
+    <SimpleProperty name="sortReleaseTime" type="DomDateTime" storable="true" dataSourceProperty="sortReleaseTime" />
+    <SimpleProperty name="releaseTime" type="DomDateTime" storable="true" dataSourceProperty="releaseTime" />
+    <SimpleProperty name="relTime" type="DomString" />
+    <SimpleProperty name="currency" type="DomCurrency" storable="true" dataSourceProperty="currency" />
+    <SimpleProperty name="sortOrder" type="DomInteger" storable="true" dataSourceProperty="sortOrder" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="initiatorPKey" type="DomPKey" dataSourceProperty="initiatorPKey" />
+    <SimpleProperty name="mobilityRelevant" type="DomBool" storable="false" dataSourceProperty="mobilityRelevant" />
+    <SimpleProperty name="deletionAllowed" type="DomBool" storable="false" dataSourceProperty="deletionAllowed" />
+  </SimpleProperties>
+</ListItem>

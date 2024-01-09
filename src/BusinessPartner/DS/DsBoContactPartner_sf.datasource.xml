@@ -1,0 +1,30 @@
+<DataSource name="DsBoContactPartner" backendSystem="sf" businessObjectClass="BoContactPartner" external="false" editableEntity="Contact" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contact" column="Id" />
+    <Attribute name="salutation" table="Contact" column="Salutation" />
+    <Attribute name="name" table="Contact" column="Name" />
+    <Attribute name="firstName" table="Contact" column="FirstName" />
+    <Attribute name="lastName" table="Contact" column="LastName" />
+    <Attribute name="jobTitle" table="Contact" column="Job_Title__c" />
+    <Attribute name="mainFunction" table="Contact" column="Main_Function__c" />
+    <Attribute name="phone1" table="Contact" column="Phone" />
+    <Attribute name="phone2" table="Contact" column="MobilePhone" />
+    <Attribute name="email1" table="Contact" column="Email" />
+    <Attribute name="fax1" table="Contact" column="Fax" />
+    <Attribute name="account" table="Contact" column="AccountId" />
+    <Attribute name="department" table="Contact" column="Department" />
+    <Attribute name="description" table="Contact" column="Description" />
+    <DerivedAttribute name="bpaMetaPKey" value="' '" />
+    <DerivedAttribute name="emailEditable" value="'0'" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contact" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+  Contact.Id = #pKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

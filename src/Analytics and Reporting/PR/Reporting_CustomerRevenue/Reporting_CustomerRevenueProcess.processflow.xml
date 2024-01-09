@@ -1,0 +1,45 @@
+<Process name="Reporting::CustomerRevenueProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="boCustomerReports" type="BoCustomerReports" />
+        <Declaration name="loCustomerSalesRevenue" type="LoCustomerSalesRevenue" />
+        <Declaration name="currentYear" type="DomString" />        
+        <Declaration name="MaximizedMode" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="customerPKey" type="DomPKey" />
+        <Input name="customerName" type="DomString" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateCustomerReportsBo" actionType="CREATE" type="BoCustomerReports">
+        <Return name="ProcessContext::boCustomerReports" />
+      </Action>
+      <Action actionType="LOGIC" name="GetCurrentYear" call="ProcessContext::boCustomerReports.getCurrentYear">
+        <Return name="ProcessContext::currentYear" />
+      </Action>
+      <Action name="LoadCustomerSalesRevenueData" actionType="LOAD" type="LoCustomerSalesRevenue">
+        <Parameters>
+          <Input name="bpaMainPKey" value="ProcessContext::customerPKey" />
+          <Input name="year" value="ProcessContext::currentYear" />
+        </Parameters>
+        <Return name="ProcessContext::loCustomerSalesRevenue" />
+      </Action>      
+      <Action name="SetMaximizedMode" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::MaximizedMode" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowView" actionType="VIEW">
+        <UIDescription>Reporting::CustomerRevenueUI</UIDescription>
+        <Events></Events>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

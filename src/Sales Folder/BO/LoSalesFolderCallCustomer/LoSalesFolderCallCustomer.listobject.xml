@@ -1,0 +1,15 @@
+<ListObject name="LoSalesFolderCallCustomer" generateLoadMethod="true" filter="InDatabase" paging="true" schemaVersion="1.1">
+  <DataSource name="DsLoSalesFolderCallCustomer" />
+  <Item objectClass="LiSalesFolderCallCustomer" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="setSortOrderForVisit" />
+    <Method name="getSellInsForCard" />
+    <Method name="getInfoForSellInsCard" />
+  </Methods>
+</ListObject>

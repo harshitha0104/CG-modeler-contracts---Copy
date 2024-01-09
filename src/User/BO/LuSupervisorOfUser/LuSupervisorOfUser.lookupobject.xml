@@ -1,0 +1,12 @@
+<LookupObject name="LuSupervisorOfUser" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuSupervisorOfUser" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="supervisorPKey" type="DomPKey" dataSourceProperty="supervisorPKey" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

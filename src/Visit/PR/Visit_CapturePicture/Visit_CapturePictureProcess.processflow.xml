@@ -1,0 +1,84 @@
+<Process name="Visit::CapturePictureProcess" defaultAction="ValidateMaxPictures" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="imageURI" type="String" />
+        <Declaration name="CameraSettings" type="Object" />
+        <Declaration name="imageHelper" type="BoImageHelper"/>
+        <Declaration name="picsCountExceeded" type="DomBool" />
+        <Declaration name="attachmentList" type="LoRetailVisitKPIAttachment" />
+      </Declarations>
+      <Parameters>
+        <Input name="parentId" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="loadImages" actionType="LOAD" type="LoRetailVisitKPIAttachment">
+        <Parameters>
+          <Input name="parentId" value="ProcessContext::parentId" />
+        </Parameters>
+        <Return name="ProcessContext::attachmentList" />
+      </Action>
+      <Action name="createImageHelper" actionType="CREATE" type="BoImageHelper">
+        <Return name="ProcessContext::imageHelper" />
+      </Action>
+   </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+       <Action name="ValidateMaxPictures" actionType="LOGIC" call="ProcessContext::attachmentList.validateImageCount">
+        <Return name="ProcessContext::picsCountExceeded" />
+        <TransitionTo action="ValidateMaxPictures_Decision" />
+      </Action>
+      <Action name="ValidateMaxPictures_Decision" actionType="DECISION" parameter="ProcessContext::picsCountExceeded">
+        <Case value="false" action="GetCameraSettings" />
+        <Case value="true" action="CancelCapturePicture" />
+        <CaseElse action="CancelCapturePicture" />
+        <CaseEmpty action="CancelCapturePicture" />
+      </Action>
+      <Action name="GetCameraSettings" actionType="LOGIC" call="ProcessContext::imageHelper.getCameraSettings">
+        <Return name="ProcessContext::CameraSettings" />
+        <TransitionTo action="CapturePicture" />
+        <Parameters>
+          <Input name="settingsType" value="picture" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="CapturePicture" actionType="LOGIC" call="ProcessContext::imageHelper.capturePicture">
+        <Return name="ProcessContext::imageURI" />
+        <TransitionTo action="CapturePicture_Decision" />
+        <Parameters>
+          <Input name="cameraSettings" value="ProcessContext::CameraSettings" />
+        </Parameters>
+      </Action>
+      <Action name="CapturePicture_Decision" actionType="DECISION" parameter="ProcessContext::imageURI">
+        <CaseElse action="CreateNewAttachmentByMediaPath" />
+        <CaseEmpty action="ClearImageURI" />
+      </Action>
+      <Action name="CreateNewAttachmentByMediaPath" actionType="LOGIC" call="ProcessContext::attachmentList.addPicture">
+        <TransitionTo action="LeaveCapturePicture" />
+        <Parameters>
+          <Input name="mediaPath" value="ProcessContext::imageURI" />
+          <Input name="parentId" value="ProcessContext::parentId" />
+        </Parameters>
+      </Action>
+      <Action name="ClearImageURI" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::imageURI" />
+        <Parameters>
+          <Input name="value" value=" " type="Literal" />
+        </Parameters>
+        <TransitionTo action="CancelCapturePicture" />
+      </Action>
+      <Action name="LeaveCapturePicture" actionType="END">
+        <ReturnValues>
+          <Return name="success" value="1" type="Literal" />
+          <Return name="parentId" value="ProcessContext::parentId" />
+        </ReturnValues>
+      </Action>
+      <Action name="CancelCapturePicture" actionType="END">
+        <ReturnValues>
+          <Return name="success" value="0" type="Literal" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

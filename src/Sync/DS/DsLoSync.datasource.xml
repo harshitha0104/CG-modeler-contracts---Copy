@@ -1,0 +1,26 @@
+<Datasource name="DsLoSync" objectClass="LoSync" external="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="syncId" table="CssRplInboundPackageRegistry" column="Id" />
+    <Attribute name="changeSetId" table="CssRplInboundPackageRegistry" column="ChangeSetId" />
+    <Attribute name="workState" table="CssRplInboundPackageRegistry" column="WorkState" />
+    <Attribute name="workerStartTime" table="CssRplInboundPackageRegistry" column="WorkerStartTime" />
+    <Attribute name="workerEndTime" table="CssRplInboundPackageRegistry" column="WorkerEndTime" />
+    <Attribute name="registerTime" table="CssRplInboundPackageRegistry" column="RegisterTime" />
+    <Attribute name="packageFileName" table="CssRplInboundPackageRegistry" column="PackageFileName" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+var sqlParams = {};
+
+var sqlStmt = "SELECT ";
+    sqlStmt += "Id AS syncId, ChangeSetId AS changeSetId, WorkState AS workState, WorkerStartTime as workerStartTime, ";
+    sqlStmt += "WorkerEndTime AS workerEndTime, RegisterTime AS registerTime, PackageFileName AS packageFileName ";
+    sqlStmt += "FROM CssRplInboundPackageRegistry ";
+    sqlStmt += "ORDER BY WorkerEndTime desc LIMIT 5000 ";
+
+   return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+  ]]></Load>
+  </Database>
+</Datasource>

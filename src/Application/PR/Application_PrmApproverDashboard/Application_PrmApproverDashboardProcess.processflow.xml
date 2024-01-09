@@ -1,0 +1,40 @@
+<Process name="Application::PrmApproverDashboardProcess" defaultAction="LoadPromotionCount" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="PromotionCount" type="LuApprovablePromotionCount" />
+      </Declarations>
+      <Parameters />
+    </ProcessContext>
+    <EntryActions>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="LoadPromotionCount" actionType="LOAD" type="LuApprovablePromotionCount">
+        <Return name="ProcessContext::PromotionCount" />
+        <TransitionTo action="ShowMainMenu" />
+      </Action>
+      <Action name="ShowMainMenu" actionType="VIEW">
+        <UIDescription>Application::PrmApproverDashboardUI</UIDescription>
+        <Events>
+          <Event name="openApprovePromotion" action="PromotionApprovalProcess" />
+          <Event name="synchronizeData" action="SyncOverviewProcess" />
+          <Event name="replicationDone" action="LoadPromotionCount" />
+          <Event name="openAboutScreen" action="OpenAboutScreen" />
+          <Event name="openAdvLoggingPanel" action="OpenAdvLoggingPanel" />
+          <Event name="myFlushLogs" action="FlushLogs" />
+          <Event name="OpenSalesFolder" action="SalesFolderOverview" />
+        </Events>
+      </Action>
+      <Action name="SyncOverviewProcess" actionType="PROCESS" process="Sync::OverviewProcess"></Action>
+      <Action name="PromotionApprovalProcess" actionType="PROCESS" process="PromotionApproval::OverviewProcess">
+        <TransitionTo action="LoadPromotionCount" />
+      </Action>
+      <Action name="OpenAboutScreen" actionType="PROCESS" process="Application::AboutProcess"></Action>
+      <Action name="OpenAdvLoggingPanel" actionType="LOGIC" call="window.showFrameworkSettingsPanel"></Action>
+      <Action name="FlushLogs" actionType="LOGIC" call="Log.flush"></Action>
+      <Action name="SalesFolderOverview" actionType="PROCESS" process="SalesFolder::SalesFolderOverviewProcess"></Action>
+    </Actions>
+  </Body>
+</Process>

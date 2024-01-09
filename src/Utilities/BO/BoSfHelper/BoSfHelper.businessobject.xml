@@ -1,0 +1,24 @@
+<BusinessObject name="BoSfHelper" schemaVersion="1.1">
+  <DataSource name="DsBoSfHelper" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+  </SimpleProperties>
+  <ObjectLookups />
+  <NestedObjects />
+  <ListObjects />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="saveTrackedObject" />
+    <Method name="saveTrackedObjectWithMapping" />
+  </Methods>
+  <Validations />
+</BusinessObject>

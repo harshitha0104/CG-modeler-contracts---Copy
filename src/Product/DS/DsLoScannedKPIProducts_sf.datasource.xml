@@ -1,0 +1,19 @@
+<DataSource name="DsLoScannedKPIProducts" backendSystem="sf" businessObjectClass="LoScannedKPIProducts" external="false" editableEntity="Product2" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="productPKey" table="Product2" column="Id" />
+    <Attribute name="productName" table="Product2" column="Name" />
+    <Attribute name="productCode" table="Product2" column="ProductCode" />
+    <Attribute name="gtin" table="Product2" column="GTIN__c" />
+    <DerivedAttribute name="grouping1" value="substr(Product2.Description_1_#Language#__c,1,1)" />
+  </Attributes>
+  <Entities>
+    <Entity name="Product2" alias="" idAttribute="" />
+  </Entities>
+  <QueryCondition><![CDATA[
+    Product2.GTIN__c = #gTIN#
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="gTIN" type="TEXT" />
+  </Parameters>
+</DataSource>

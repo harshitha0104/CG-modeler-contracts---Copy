@@ -1,0 +1,7 @@
+<ListItem name="LiMeTruckLoadItems">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty id="true" name="prdMainPKey" type="DomPKey" storable="false" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="currentInventory" type="DomBool" storable="false" dataSourceProperty="currentInventory" />
+  </SimpleProperties>
+</ListItem>

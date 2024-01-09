@@ -1,0 +1,23 @@
+<DataSource name="DsLuIssueOwnerForCreate" backendSystem="sf" businessObjectClass="LuIssueOwnerForCreate" external="false" editableEntity="Account_Manager__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Manager__c" column="Id" />
+    <Attribute name="usrMainPKey" table="Account_Manager__c" column="User__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Manager__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+      Account_Manager__c.Account__c = #customerPKey#
+      AND Account_Manager__c.Management_Type__c = #managementType#
+      AND #compareAsDate('Account_Manager__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')#
+      AND #compareAsDate('Account_Manager__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#
+    ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Account_Manager__c" attribute="Main__c" direction="DESC" />
+    <OrderCriterion entity="Account_Manager__c" attribute="Valid_From__c" direction="DESC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="customerPKey" type="TEXT" />
+    <Parameter name="managementType" type="TEXT" />
+  </Parameters>
+</DataSource>

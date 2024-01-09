@@ -1,0 +1,11 @@
+<LookupObject name="LuPaymentRequestCount">
+  <DataSource name="DsLuPaymentRequestCount" />
+  <SimpleProperties>
+    <SimpleProperty name="paymentRequestCount" type="DomInteger" storable="true" dataSourceProperty="paymentRequestCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

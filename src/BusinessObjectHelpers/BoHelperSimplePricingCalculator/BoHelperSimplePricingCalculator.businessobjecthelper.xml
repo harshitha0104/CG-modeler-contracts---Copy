@@ -1,0 +1,12 @@
+<BusinessObjectHelper name="BoHelperSimplePricingCalculator" schemaVersion="1.1">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="createAsync" />
+    <Method name="calculateItemValue" />
+    <Method name="calculateHeaderValue" />
+  </Methods>
+</BusinessObjectHelper>

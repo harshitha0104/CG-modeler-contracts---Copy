@@ -1,0 +1,11 @@
+<LookupObject name="LuTourRelatedSalesDocuments" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuTourRelatedSalesDocuments" />
+  <SimpleProperties>
+    <SimpleProperty name="openDocsCount" type="DomInteger" storable="false" dataSourceProperty="openDocsCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

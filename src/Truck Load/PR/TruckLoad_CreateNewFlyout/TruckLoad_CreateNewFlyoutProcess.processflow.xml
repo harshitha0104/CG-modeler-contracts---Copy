@@ -1,0 +1,69 @@
+<Process name="TruckLoad::CreateNewFlyoutProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="SdoMetaPKey" type="DomPKey" />
+        <Declaration name="LuEtpWarehouse" type="LuEtpWarehouse" />
+        <Declaration name="WizardBo" type="BoWizardCreateCheckOut" />
+        <Declaration name="WarehousePKey" type="DomPKey" />
+      </Declarations>
+      <Parameters>
+        <Input name="TemplateList" type="LoTruckLoadTemplates" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="setFirstItem" call="ProcessContext::TemplateList.getFirstItemPKey">
+        <Return name="ProcessContext::SdoMetaPKey" />
+      </Action>
+      <Action name="CreateWizardBo" actionType="CREATE" type="BoWizardCreateCheckOut">
+        <Return name="ProcessContext::WizardBo" />
+      </Action>
+      <Action actionType="LOGIC" name="setWarehouseOfRunningTour" call="Utils.identity">
+        <Parameters>
+          <Input name="pKey" value="ApplicationContext::CurrentTour.startEtpWarehousePKey" />
+        </Parameters>
+        <Return name="ProcessContext::WarehousePKey" />
+      </Action>
+      <Action actionType="LOAD" name="LoadDefaultWarehouse" type="LuEtpWarehouse">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::WarehousePKey" />
+        </Parameters>
+        <Return name="ProcessContext::WizardBo.luEtpWarehouse" />
+      </Action>
+      <Action actionType="LOGIC" name="setEARights" call="ProcessContext::WizardBo.setEARights" />
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>TruckLoad::CreateNewFlyoutUI</UIDescription>
+        <Events>
+          <Event name="createDocument" action="EndCreateDocument" />
+          <Event name="warehouseLookup" action="OpenEtpWarehouseLookup" />
+        </Events>
+      </Action>
+      <Action actionType="PROCESS" name="OpenEtpWarehouseLookup" process="TourManagement::FlyoutSelectWarehouseProcess">
+         <Parameters>
+          <Input name="warehousePKey" value="ProcessContext::WarehousePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::WarehousePKey" value="warehousePKey" />
+        </ReturnValues>
+        <TransitionTo action="LoadWarehouseLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadWarehouseLookup" type="LuEtpWarehouse">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::WarehousePKey" />
+        </Parameters>
+        <Return name="ProcessContext::WizardBo.luEtpWarehouse" />
+      </Action>
+      <Action actionType="END" name="EndCreateDocument">
+        <ReturnValues>
+          <Return name="sdoMetaPKey" value="ProcessContext::SdoMetaPKey" />
+          <Return name="etpWarehousePKey" value="ProcessContext::WarehousePKey" />
+          <Return name="buttonPressed" value="Event.buttonPressed" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

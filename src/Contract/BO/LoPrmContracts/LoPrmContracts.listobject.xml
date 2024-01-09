@@ -1,0 +1,28 @@
+<ListObject name="LoPrmContracts" generateLoadMethod="true" filter="InDatabase" paging="true" schemaVersion="1.1">
+  <DataSource name="DsLoPrmContracts" />
+  <Item objectClass="LiPrmContract" />
+  <Methods>
+    <Method name="addItem" />
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoContracts">
+      <AdvancedSearchAttributes profileId="default">
+        <!--<AdvancedSearchAttribute label="LoPrmContracts_SloganId" property="prmText" type="Text" />-->
+        <!--<AdvancedSearchAttribute label="LoPrmContracts_CustomerNameId" property="customerName" type="Text" />-->
+        <AdvancedSearchAttribute label="LoPrmContracts_CustomerNameId" property="customerPKey" lookupProcess="Customer::LookupProcess" lookupProcessReturnValue="customerPKey" lookupObject="LuCustomer" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="LoPrmContracts_PhaseId" property="phase" type="Selection" toggleId="PrmContractPhase" />
+        <AdvancedSearchAttribute label="LoPrmContracts_DateFromId" property="dateFrom" type="Date" />
+        <AdvancedSearchAttribute label="LoPrmContracts_DateThruId" property="dateThru" type="Date" />
+        <AdvancedSearchAttribute label="LoPrmContracts_Owner" property="ownerPKey" lookupProcess="User::LookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="LoPrmContracts_User" property="responsiblePKey" lookupProcess="User::LookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

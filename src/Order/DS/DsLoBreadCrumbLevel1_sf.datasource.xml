@@ -1,0 +1,42 @@
+<Datasource name="DsLoBreadCrumbLevel1" objectClass="LoBreadCrumbLevel1" backendSystem="sf" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+      
+      var sqlStmt = "";
+      var criterionAttribute = "";      
+	  if (Utils.isDefined(jsonQuery.criterionAttribute)){
+		criterionAttribute = Utils.convertForDBParam(jsonQuery.criterionAttribute);
+	  }
+	  var sqlParams = {};
+	  sqlStmt += "SELECT ";
+      sqlStmt += "PrdGroup.Consumer_Goods_Product_Code__c as id, ";
+      sqlStmt += "PrdGroup.Description_1_#Language#__c as label ";
+      sqlStmt += "FROM ";
+      sqlStmt += "Product2 ";
+      sqlStmt += "JOIN Product2 as PrdGroup ON ";
+      sqlStmt += "Product2." + criterionAttribute +  " =PrdGroup.Consumer_Goods_Product_Code__c AND PrdGroup.Sales_Org__c = '#SalesOrg#'  ";
+      sqlStmt += "WHERE 1=1 ";
+      sqlStmt += "AND Product2.Sales_Org__c = '#SalesOrg#' ";
+      sqlStmt += "GROUP BY ";
+      sqlStmt += "PrdGroup.Consumer_Goods_Product_Code__c, ";
+      sqlStmt += "PrdGroup.Description_1_#Language#__c ";
+      sqlStmt += "ORDER BY ";
+      sqlStmt += "PrdGroup.Consumer_Goods_Product_Code__c ASC ";
+      
+      return Utils.replaceMacrosParam(sqlStmt, sqlParams); 
+      
+      ]]></Load>
+    <Update><![CDATA[ 
+      // Intended to be empty - Overview list => read only!
+      return undefined;
+      ]]></Update>
+    <Insert><![CDATA[ 
+      // Intended to be empty - Overview list => read only!
+      return undefined;
+      ]]></Insert>
+    <Delete><![CDATA[ 
+      // Intended to be empty - Overview list => read only!
+      return undefined;
+      ]]></Delete>
+  </Database>
+</Datasource>

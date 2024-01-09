@@ -1,0 +1,44 @@
+<DataSource name="DsLuTourCashDocumentsNotRelatedToEOD" backendSystem="sf" businessObjectClass="LuTourCashDocumentsNotRelatedToEOD" external="true" readOnly="true" editableEntity="Order__c" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[  
+   
+ var tmgMainPKey = "";
+
+      if(Utils.isDefined(ApplicationContext.get('currentTourPKey')) && ApplicationContext.get('currentTourStatus') === "Running")
+      {
+        tmgMainPKey = Utils.convertForDBParam(ApplicationContext.get('currentTourPKey'), 'DomPKey');
+      }
+      if(ApplicationContext.get('user').hasRole('TourUser') && Utils.isEmptyString(tmgMainPKey))
+      {
+        tmgMainPKey='NoTourSelected';
+      } 
+	  var sqlParams = {tmgMainPKey};
+ // Count for cash Documents
+      var sqlStmt_CashDocsCount = "SELECT Order__c.Id, COUNT(*)  As openCashDocumentsCount  FROM Order__c ";
+          sqlStmt_CashDocsCount += "INNER JOIN Order_Template__c ON ";
+          sqlStmt_CashDocsCount += "Order__c.Order_Template__c = Order_Template__c.Id "; 
+          sqlStmt_CashDocsCount += "INNER JOIN RecordType ON ";
+          sqlStmt_CashDocsCount += "RecordType.Id = Order_Template__c.RecordTypeId "; 
+          sqlStmt_CashDocsCount += "AND RecordType.SObjectType = 'Order_Template__c' ";
+          sqlStmt_CashDocsCount += "WHERE (1=1) AND Order__c.Phase = 'Initial' ";
+          sqlStmt_CashDocsCount += "AND Order__c.Tour__c = #tmgMainPKey# ";
+          sqlStmt_CashDocsCount += "AND RecordType.DeveloperName = 'Cash_Document' ";
+          
+   return Utils.replaceMacrosParam(sqlStmt_CashDocsCount, sqlParams);
+
+  ]]></Load>
+    <Update><![CDATA[ 
+        // Intended to be empty     
+        return undefined;     
+      ]]></Update>
+    <Insert><![CDATA[     
+        // Intended to be empty     
+        return undefined;     
+
+      ]]></Insert>
+    <Delete><![CDATA[      
+        // Intended to be empty     
+        return undefined;     
+      ]]></Delete>
+  </Database>
+</DataSource>

@@ -1,0 +1,13 @@
+<ListItem name="LiCustomerCall" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" />
+    <SimpleProperty name="clbStatus" type="DomVisitStatus" dataSourceProperty="clbStatus" />
+    <SimpleProperty name="dateFrom" type="DomDate" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="responsibleName" type="DomBpaName" dataSourceProperty="responsibleName" />
+    <SimpleProperty name="subject" type="DomText" dataSourceProperty="subject" />
+    <SimpleProperty name="timeFrom" type="DomTime" dataSourceProperty="timeFrom" />
+    <SimpleProperty name="timeThru" type="DomTime" dataSourceProperty="timeThru" />
+    <SimpleProperty name="clbTypeStatus" type="DomString" storable="true" dataSourceProperty="clbTypeStatus" />
+  </SimpleProperties>
+</ListItem>

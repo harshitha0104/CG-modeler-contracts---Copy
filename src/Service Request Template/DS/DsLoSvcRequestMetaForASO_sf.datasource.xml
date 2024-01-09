@@ -1,0 +1,22 @@
+<DataSource name="DsLoSvcRequestMetaForASO" backendSystem="sf" businessObjectClass="LoSvcRequestMetaForASO" external="false" editableEntity="Account_Task_Template__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Task_Template__c" column="Id" />
+    <Attribute name="salesOrg" table="Account_Task_Template__c" column="Sales_Org__c" />
+    <Attribute name="businessModified" table="Account_Task_Template__c" column="LastModifiedDate" />
+    <DerivedAttribute name="issueType" value="'CustomerIssue'" />
+    <DerivedAttribute name="metaType" value="'Issue'" />
+    <Attribute name="sort" table="Account_Task_Template__c" column="Sort__c" />
+    <DerivedAttribute name="isPrivate" value="'0'" />
+    <Attribute name="text" table="Account_Task_Template__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Task_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[    
+    Account_Task_Template__c.Active__c= '1'
+   ]]></QueryCondition>
+  <OrderCriteria>
+  	<OrderCriterion entity="Account_Task_Template__c" attribute="Sort__c" direction="ASC"/>
+  </OrderCriteria>
+  <Parameters />
+</DataSource>

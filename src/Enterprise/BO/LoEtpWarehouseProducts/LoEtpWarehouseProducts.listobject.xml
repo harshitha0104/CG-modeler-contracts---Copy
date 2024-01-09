@@ -1,0 +1,25 @@
+<ListObject name="LoEtpWarehouseProducts" generateLoadMethod="true" filter="InDatabase" paging="true" schemaVersion="1.1">
+  <DataSource name="DsLoEtpWarehouseProducts" />
+  <Item objectClass="LiEtpWarehouseProducts" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoEtpProductForAdd">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="EtpProductForSearch_prdId" property="prdId" type="Number" />
+        <AdvancedSearchAttribute label="EtpProductForSearch_text1" property="text1" type="Text" />
+        <AdvancedSearchAttribute label="EtpProductForSearch_eAN" property="eAN" type="Number" />
+        <AdvancedSearchAttribute label="EtpProductForSearch_prdType" property="prdType" toggleId="PrdType" type="Selection" />
+        <AdvancedSearchAttribute label="EtpProductForSearch_category" property="category" toggleId="PrdCategory" type="Selection" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

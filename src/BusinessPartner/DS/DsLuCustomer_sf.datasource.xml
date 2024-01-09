@@ -1,0 +1,24 @@
+<DataSource name="DsLuCustomer" backendSystem="sf" businessObjectClass="LuCustomer" external="false" editableEntity="Account" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account" column="Id" />
+    <Attribute name="name" table="Account" column="Name" />
+    <Attribute name="street" table="Account" column="ShippingStreet" />
+    <DerivedAttribute name="houseNumber" value="' '" />
+    <Attribute name="zipCode" table="Account" column="ShippingPostalCode" />
+    <Attribute name="city" table="Account" column="ShippingCity" />
+    <DerivedAttribute name="mainAddress" value="Account.ShippingStreet || ', ' || Account.ShippingCity" />
+    <Attribute name="state" table="Account" column="ShippingState" />
+    <Attribute name="latitude" table="Account" column="ShippingLatitude" />
+    <Attribute name="longitude" table="Account" column="ShippingLongitude" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account" alias="" />
+  </Entities>
+  <QueryCondition><![CDATA[
+     Account.Id = #pKey#
+        ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,17 @@
+<ListItem name="LiCustomerOpeningTime" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="customerPKey" type="DomPKey" dataSourceProperty="customerPKey" />
+    <SimpleProperty name="timeFrom" type="DomTime" dataSourceProperty="timeFrom" />
+    <SimpleProperty name="timeThru" type="DomTime" dataSourceProperty="timeThru" />
+    <SimpleProperty name="monday" type="DomBool" dataSourceProperty="monday" />
+    <SimpleProperty name="tuesday" type="DomBool" dataSourceProperty="tuesday" />
+    <SimpleProperty name="wednesday" type="DomBool" dataSourceProperty="wednesday" />
+    <SimpleProperty name="thursday" type="DomBool" dataSourceProperty="thursday" />
+    <SimpleProperty name="friday" type="DomBool" dataSourceProperty="friday" />
+    <SimpleProperty name="saturday" type="DomBool" dataSourceProperty="saturday" />
+    <SimpleProperty name="sunday" type="DomBool" dataSourceProperty="sunday" />
+    <SimpleProperty name="openDays" type="DomText" dataSourceProperty="openDays" />
+    <SimpleProperty name="isNew" type="DomBool" />
+  </SimpleProperties>
+</ListItem>

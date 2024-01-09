@@ -1,0 +1,8 @@
+<ListItem name="LiTeamUserOverview" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="userAccountableId" type="DomPKey" dataSourceProperty="userAccountableId" />
+    <SimpleProperty name="name" type="DomBpaName" dataSourceProperty="name" />
+    <SimpleProperty name="grouping1" type="DomText" dataSourceProperty="grouping1" />
+  </SimpleProperties>
+</ListItem>

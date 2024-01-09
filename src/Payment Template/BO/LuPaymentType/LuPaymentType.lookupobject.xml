@@ -1,0 +1,8 @@
+<LookupObject name="LuPaymentType" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuPaymentType" />
+  <Methods></Methods>
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomString" dataSourceProperty="text" />
+  </SimpleProperties>
+</LookupObject>

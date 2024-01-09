@@ -1,0 +1,33 @@
+<Process name="Customer::ContactPartnerLookupProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="ContactPartnerList" type="LoContactPartnerOverview" />
+      </Declarations>
+      <Parameters></Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="GetContactPartnerList" type="LoContactPartnerOverview">
+        <Parameters>
+          <Input name="asoName" value="AsoContactPartnerOverview" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::ContactPartnerList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Customer::ContactPartnerLookupUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="EndWithNewValue" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="EndWithNewValue">
+        <ReturnValues>
+          <Return name="pKey" value="Event.pKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

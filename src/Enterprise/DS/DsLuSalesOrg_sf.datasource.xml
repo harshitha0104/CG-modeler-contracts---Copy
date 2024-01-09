@@ -1,0 +1,24 @@
+<DataSource name="DsLuSalesOrg" backendSystem="sf" businessObjectClass="LuSalesOrg" external="false" editableEntity="Sales_Organization__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Sales_Organization__c" column="Id" />
+    <Attribute name="street" table="Sales_Organization__c" column="Street__c" />
+    <Attribute name="houseNumber" table="Sales_Organization__c" column="No__c" />
+    <Attribute name="zipCode" table="Sales_Organization__c" column="Zip_Code__c" />
+    <Attribute name="city" table="Sales_Organization__c" column="City__c" />
+    <Attribute name="phone1" table="Sales_Organization__c" column="Phone__c" />
+    <Attribute name="fax1" table="Sales_Organization__c" column="Fax__c" />
+    <Attribute name="text" table="Sales_Organization__c" column="Description_#Language#__c" />
+    <Attribute name="taxJurisdictionCode" table="Sales_Organization__c" column="Tax_Jurisdiction_Code__c" />
+    <Attribute name="accountNumber" table="Sales_Organization__c" column="Account_Number__c" />
+    <Attribute name="legalInformation" table="Sales_Organization__c" column="Legal_Information__c" />
+    <Attribute name="currency" table="Sales_Organization__c" column="Currency__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Sales_Organization__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+  Sales_Organization__c.Name='#SalesOrg#'
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters />
+</DataSource>

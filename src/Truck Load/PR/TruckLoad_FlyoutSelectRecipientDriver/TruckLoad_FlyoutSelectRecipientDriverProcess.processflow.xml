@@ -1,0 +1,32 @@
+<Process name="TruckLoad::FlyoutSelectRecipientDriverProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="UserList" type="LoUserByRole" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetUserList" actionType="LOAD" type="LoUserByRole">
+        <Parameters>
+          <Input name="usrRoleId" type="Literal" value="MobileDSDDriver" />
+        </Parameters>
+        <Return name="ProcessContext::UserList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>TruckLoad::FlyoutSelectRecipientDriverUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="AssignUserId" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="AssignUserId">
+        <ReturnValues>
+          <Return name="userPKey" value="Event.pKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

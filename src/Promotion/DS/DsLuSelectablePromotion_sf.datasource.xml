@@ -1,0 +1,24 @@
+<DataSource name="DsLuSelectablePromotion" backendSystem="sf" businessObjectClass="LuSelectablePromotion" external="false" editableEntity="Promotion__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="PKey" table="Promotion__c" column="Id" />
+    <Attribute name="slogan" table="Promotion__c" column="Slogan_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Promotion__c" alias="" idAttribute="Id" />
+    <Entity name="Promotion_Template__c">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Promotion__c.Promotion_Template__c" comparator="EQ" rightSideType="Attribute" rightSideValue="Promotion_Template__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+    Promotion__c.Id = #pKey#
+    AND Promotion_Template__c.Selectable_Promotion__c = '1'
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,57 @@
+<ListItem name="LiJobProduct">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" storable="false" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="shortText" type="DomText" storable="false" dataSourceProperty="shortText" />
+    <SimpleProperty name="text1" type="DomText" storable="false" dataSourceProperty="text1" />
+    <SimpleProperty name="prdGroupText" type="DomText" storable="false" dataSourceProperty="prdGroupText" />
+    <SimpleProperty name="prdGroupId" type="DomText" storable="false" dataSourceProperty="prdGroupId" />
+    <SimpleProperty name="eAN" type="DomPrdNumber" storable="false" dataSourceProperty="eAN" />
+    <SimpleProperty name="prdId" type="DomId" storable="false" dataSourceProperty="prdId" />
+    <SimpleProperty name="jDLPKeys" type="DomText" storable="false" dataSourceProperty="jDLPKeys" />
+    <SimpleProperty name="posId" type="DomPKey" storable="false" dataSourceProperty="posId" />
+    <SimpleProperty name="planned" type="DomBool" storable="false" dataSourceProperty="planned" />
+    <SimpleProperty name="listedPlanned" type="DomPrdListedPromoted" storable="false" dataSourceProperty="listedPlanned" />
+    <SimpleProperty name="historical" type="DomBool" storable="false" dataSourceProperty="historical" />
+    <SimpleProperty name="foreignProduct" type="DomBool" storable="false" dataSourceProperty="foreignProduct" />
+    <SimpleProperty name="presetting1" type="DomVariant" storable="false" dataSourceProperty="presetting1" />
+    <SimpleProperty name="presetting2" type="DomVariant" storable="false" dataSourceProperty="presetting2" />
+    <SimpleProperty name="presetting3" type="DomVariant" storable="false" dataSourceProperty="presetting3" />
+    <SimpleProperty name="presetting4" type="DomVariant" storable="false" dataSourceProperty="presetting4" />
+    <SimpleProperty name="presetting5" type="DomVariant" storable="false" dataSourceProperty="presetting5" />
+    <SimpleProperty name="presetting6" type="DomVariant" storable="false" dataSourceProperty="presetting6" />
+    <SimpleProperty name="presetting7" type="DomVariant" storable="false" dataSourceProperty="presetting7" />
+    <SimpleProperty name="presetting8" type="DomVariant" storable="false" dataSourceProperty="presetting8" />
+    <SimpleProperty name="svyFacings" type="DomSmallInteger" storable="false" dataSourceProperty="svyFacings" />
+    <SimpleProperty name="svyFacingsTargetValue" type="DomSmallInteger" storable="false" dataSourceProperty="svyFacingsTargetValue" />
+    <SimpleProperty name="svyFacingsLastValue" type="DomSmallInteger" storable="false" dataSourceProperty="svyFacingsLastValue" />
+    <SimpleProperty name="svyPrice" type="DomPdaConsumerPrice" storable="false" dataSourceProperty="svyPrice" />
+    <SimpleProperty name="svyPriceTargetValue" type="DomPdaConsumerPrice" storable="false" dataSourceProperty="svyPriceTargetValue" />
+    <SimpleProperty name="svyPriceLastValue" type="DomPdaConsumerPrice" storable="false" dataSourceProperty="svyPriceLastValue" />
+    <SimpleProperty name="svyDistributed" type="DomPrdDistributed" storable="false" dataSourceProperty="svyDistributed" />
+    <SimpleProperty name="svyDistributedTargetValue" type="DomPrdDistributed" storable="false" dataSourceProperty="svyDistributedTargetValue" />
+    <SimpleProperty name="svyDistributedLastValue" type="DomPrdDistributed" storable="false" dataSourceProperty="svyDistributedLastValue" />
+    <SimpleProperty name="svyPosFacings" type="DomSmallInteger" storable="false" dataSourceProperty="svyPosFacings" />
+    <SimpleProperty name="svyPosFacingsTargetValue" type="DomSmallInteger" storable="false" dataSourceProperty="svyPosFacingsTargetValue" />
+    <SimpleProperty name="svyPosFacingsLastValue" type="DomSmallInteger" storable="false" dataSourceProperty="svyPosFacingsLastValue" />
+    <SimpleProperty name="svyPosDistributed" type="DomPrdDistributed" storable="false" dataSourceProperty="svyPosDistributed" />
+    <SimpleProperty name="svyPosDistributedTargetValue" type="DomPrdDistributed" storable="false" dataSourceProperty="svyPosDistributedTargetValue" />
+    <SimpleProperty name="svyPosDistributedLastValue" type="DomPrdDistributed" storable="false" dataSourceProperty="svyPosDistributedLastValue" />
+    <SimpleProperty name="svyPosPrice" type="DomPdaConsumerPrice" storable="false" dataSourceProperty="svyPosPrice" />
+    <SimpleProperty name="svyPosPriceTargetValue" type="DomPdaConsumerPrice" storable="false" dataSourceProperty="svyPosPriceTargetValue" />
+    <SimpleProperty name="svyPosPriceLastValue" type="DomPdaConsumerPrice" storable="false" dataSourceProperty="svyPosPriceLastValue" />
+    <SimpleProperty name="surveysInitialized" type="DomBool" storable="false" dataSourceProperty="surveysInitialized" />
+    <SimpleProperty name="manualProduct" type="DomBool" storable="false" dataSourceProperty="manualProduct" />
+    <SimpleProperty name="hasDiscrepance" type="DomBool" storable="false" dataSourceProperty="hasDiscrepance" />
+    <SimpleProperty name="dataWareHouseKey" type="DomJobDatawareHouseKey" storable="false" dataSourceProperty="dataWareHouseKey" />
+    <SimpleProperty name="svyFacingsDataWareHouseKey" type="DomJobDatawareHouseKey" storable="false" dataSourceProperty="dataWareHouseKey" />
+    <SimpleProperty name="svyPriceDataWareHouseKey" type="DomJobDatawareHouseKey" storable="false" dataSourceProperty="dataWareHouseKey" />
+    <SimpleProperty name="svyPosFacingsDataWareHouseKey" type="DomJobDatawareHouseKey" storable="false" dataSourceProperty="dataWareHouseKey" />
+    <SimpleProperty name="svyPosPriceDataWareHouseKey" type="DomJobDatawareHouseKey" storable="false" dataSourceProperty="dataWareHouseKey" />
+    <SimpleProperty name="category" type="DomPrdCategory" dataSourceProperty="category" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+    <SimpleProperty name="isProductAddedManually" type="DomBool" />
+    <SimpleProperty name="isSurveyInitializedByManualPrdAdd" type="DomBool" />
+  </SimpleProperties>
+</ListItem>

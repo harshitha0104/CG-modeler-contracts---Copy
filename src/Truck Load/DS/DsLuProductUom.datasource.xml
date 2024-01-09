@@ -1,0 +1,38 @@
+<DataSource name="DsLuProductUom" businessObjectClass="LuProductUom" external="false" readOnly="true" editableEntity="PrdProduct" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="orderQuantityLogisticUnit" table="PrdLogisticAbstract" column="OrderUnitType" />
+    <Attribute name="consumerQuantityLogisticUnit" table="PrdLogisticAbstract" column="ConsumerUnitType" />
+    <Attribute name="priceQuantityLogisticUnit" table="PrdLogisticAbstract" column="PriceUnitType" />
+    <Attribute name="piecesPerSmallestUnit" table="PrdLogisticAbstract" column="OrderPiecesPerSmallestUnit" />
+  </Attributes>
+  <Entities>
+    <Entity name="PrdProduct" alias="" idAttribute="PKey" />
+    <Entity name="PrdLogisticAbstract">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="PrdProduct.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="PrdLogisticAbstract.ProductPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="CndMain" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="PrdProduct.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="CndMain.PrdMainPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+      PrdProduct.PKey = #prdMainPKey#
+      AND PrdProduct.State='4'
+      #addCond#   
+    ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="PrdProduct" attribute="PKey" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="prdMainPKey" type="TEXT" />
+    <Parameter name="addCond" treatAs="sqlSnippet" />
+    <Parameter name="commitDate" type="TEXT" />
+  </Parameters>
+</DataSource>

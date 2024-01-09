@@ -1,0 +1,12 @@
+<ListItem name="LiQuantitySums">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="targetQuantity" type="DomDecimal" storable="true" />
+    <SimpleProperty name="quantityLogisticUnit" type="DomPrdLogisticUnit" />
+    <SimpleProperty name="quantity" type="DomDecimal" />
+    <SimpleProperty name="qtyDifference" type="DomDecimal" storable="false" />
+    <SimpleProperty name="differenceExist" type="DomString" storable="false" />
+    <SimpleProperty name="sort" type="DomSort" storable="false" />
+    <SimpleProperty name="itemMetaText" type="DomText" storable="false" />
+  </SimpleProperties>
+</ListItem>

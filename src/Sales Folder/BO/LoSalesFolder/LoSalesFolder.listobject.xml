@@ -1,0 +1,24 @@
+<ListObject name="LoSalesFolder" generateLoadMethod="true" filter="InDatabase" paging="true" schemaVersion="1.1">
+  <DataSource name="DsLoSalesFolder" />
+  <Item objectClass="LiSalesFolder" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="setSortOrder" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoSalesFolderOverview">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="SalesFolder_Id" property="id" type="Text" />
+        <AdvancedSearchAttribute label="SalesFolder_Customer" property="customerPKey" type="Lookup" lookupProcess="Customer::LookupProcess" lookupProcessReturnValue="customerPKey" lookupObject="LuCustomer" lookupObjectDisplayValue="name"></AdvancedSearchAttribute>
+        <AdvancedSearchAttribute label="SalesFolder_SloganText" property="sloganText" type="Text" />
+        <AdvancedSearchAttribute label="SalesFolder_DateFrom" property="dateFrom" type="Date" />
+        <AdvancedSearchAttribute label="SalesFolder_DateThru" property="dateThru" type="Date" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

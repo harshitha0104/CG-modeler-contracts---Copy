@@ -1,0 +1,46 @@
+<UIDescription name="TourManagement::CreateTourUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TourCreateNewTitleId" defaultLabel="New Tour" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="done">
+          <Bindings>
+            <Resource target="Text" type="Label" id="doneId" defaultLabel="Create" />
+            <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="createTour"></ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="Template">
+          <Lookup name="TourTemplate">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Tour Template" id="templateId" />
+              <Binding target="Value" binding="ProcessContext::validationBo.luTemplate.text" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="templateLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+        <GroupElement name="WarehouseName">
+          <Lookup name="WarehouseTemplate">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Start Warehouse" id="warehouseId" />
+              <Binding target="Value" binding="ProcessContext::validationBo.luWarehouse.text" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="warehouseLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

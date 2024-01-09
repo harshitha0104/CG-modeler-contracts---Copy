@@ -1,0 +1,37 @@
+<UIDescription name="Call::VisitNotesWizardUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="false">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="NotesTitleId" defaultLabel="Visit Notes" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="NoteGroup">
+          <InputArea name="Initiator" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="InitiatorId" defaultLabel="Initiator" />
+              <Binding target="Value" binding="ProcessContext::NoteDetail.responsibleName" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="Date" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="DateId" defaultLabel="Date" />
+              <Binding target="Value" type="Date" binding="ProcessContext::NoteDetail.noteDate" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+        <GroupElement name="NotesDetail">
+          <Bindings>
+            <Resource target="Title" type="Label" id="NoteId" defaultLabel="Note" />
+          </Bindings>
+          <InputAreaMultiLine name="Note" noOfRows="8">
+            <Bindings>
+              <Binding target="Value" binding="ProcessContext::WizardBO.note" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

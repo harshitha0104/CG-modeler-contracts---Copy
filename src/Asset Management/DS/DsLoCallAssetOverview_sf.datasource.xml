@@ -1,0 +1,184 @@
+<Datasource name="DsLoCallAssetOverview" backendSystem="sf" businessObjectClass="LoCallAssetOverview" external="true" editableEntity="Asset_Audit__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Asset_Audit__c" column="Id" />
+    <Attribute name="astSurveyAstAssetPKey" table="Asset_Audit__c" column="Asset__c" />
+    <Attribute name="astSurveyClbMainPKey" table="Asset_Audit__c" column="Visit__c" />
+    <Attribute name="astSurveyCreationDate" table="Asset_Audit__c" column="Creation_Date__c" />
+    <Attribute name="present" table="Asset_Audit__c" column="Sighted__c" />
+    <Attribute name="astSurveyUsrUserPKey" table="Asset_Audit__c" column="User__c" />
+    <Attribute name="astSurveySalesOrg" table="Asset_Audit__c" column="Sales_Org__c" />
+    <Attribute name="astSurveySerialNumber" table="Asset_Audit__c" column="Asset_Tag_Number__c" />
+    <Attribute name="astSurveyCustomer" table="Asset_Audit__c" column="Account__c" />
+    <Attribute name="astSurveyUsage" table="Asset_Audit__c" column="Usage__c" />
+    <Attribute name="astSurveyLocation" table="Asset_Audit__c" column="Location__c" />
+    <Attribute name="astSurveyLocationRating" table="Asset_Audit__c" column="Location_Rating__c" />
+    <Attribute name="astSurveyNote" table="Asset_Audit__c" column="Note__c" />
+    <Attribute name="astSurveyCondition" table="Asset_Audit__c" column="Condition__c" />
+    <Attribute name="astSurveyMethod" table="Asset_Audit__c" column="Method__c" />
+    <Attribute name="serialNumber" table="Asset" column="SerialNumber" />
+    <Attribute name="brand" table="Asset" column="Brand__c" />
+    <Attribute name="assetType" table="Product2" column="Name" />
+    <Attribute name="validFrom" table="Asset" column="Valid_From__c" />
+    <Attribute name="validThru" table="Asset" column="Valid_Thru__c" />
+    <Attribute name="assetName" table="Asset" column="Description__c" />
+    <Attribute name="assetPKey" table="Asset" column="Id" />
+    <Attribute name="posName" table="POS__c" column="Name" />
+    <Attribute name="annotation" table="Asset" column="Note__c" />
+    <Attribute name="blindMode" table="Asset_Template__c" column="Blind_Mode__c" />
+    <DerivedAttribute name="presence" value="'0'" />
+    <DerivedAttribute name="surveyAvailable" value="'0'" />
+    <DerivedAttribute name="latestSurveyDate" value="'#MinDate#'" />
+    <DerivedAttribute name="latestSurveyDateBackup" value="'#MinDate#'" />
+    <DerivedAttribute name="isNewSurvey" value="'0'" />
+    <DerivedAttribute name="scanRequired" value="'0'" />
+    <DerivedAttribute name="hidden" value="'0'" />
+    <DerivedAttribute name="registeredAsset" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="Asset_Audit__c" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+      var clbDate = "";
+      var clbPKey = "";
+      var customerPKey = "";
+      if (Utils.isDefined(jsonQuery.clbDate)){
+          clbDate = Utils.convertForDBParam(jsonQuery.clbDate, "DomDate");
+	  }
+	  if (Utils.isDefined(jsonQuery.clbPKey)){
+          clbPKey = Utils.convertForDBParam(jsonQuery.clbPKey, "DomPKey");
+	  }
+	  if (Utils.isDefined(jsonQuery.customerPKey)){
+          customerPKey = Utils.convertForDBParam(jsonQuery.customerPKey, "DomPKey");
+	  }
+	  var sqlParams = {clbDate,clbPKey,customerPKey};
+	 
+      var sqlStmt = "SELECT ";
+      sqlStmt += "CASE WHEN ASVY.Id IS NULL ";
+      sqlStmt += "THEN AA.Id ";
+      sqlStmt += "ELSE ASVY.Id ";
+      sqlStmt += "END as pKey, ";
+
+      sqlStmt += "AA.SerialNumber as serialNumber, AA.Brand__c as brand, AA.Description__c as assetName, ";
+      sqlStmt += "AA.Id as assetPKey, ";
+
+      // Presence
+      sqlStmt += "CASE WHEN ASVY.Sighted__c IS NULL THEN";
+      sqlStmt += "  CASE WHEN AM.Scanning_Required__c IS '1' THEN '2' ELSE '0' END ";
+      sqlStmt += "ELSE ";
+      sqlStmt += "  CASE WHEN ASVY.Sighted__c IS '1' THEN ";
+      sqlStmt += "    CASE WHEN ASVY.Method__c IS 'M' THEN '1' ELSE '3' END ";
+      sqlStmt += "  ELSE ";
+      sqlStmt += "    CASE WHEN ASVY.Sighted__c IS '0' THEN ";
+      sqlStmt += "      CASE WHEN AM.Scanning_Required__c IS '1' THEN '2'  ELSE '0' END ";
+      sqlStmt += "    ELSE ASVY.Sighted__c END ";
+      sqlStmt += "  END ";      
+      sqlStmt += "END as presence, ";      
+
+      sqlStmt += "CASE WHEN ASVY.Sighted__c IS NULL THEN '0' ELSE '1' END as present, ";
+      sqlStmt += "CASE WHEN  ASVY.Id IS NULL THEN '0' ELSE '1' END as surveyAvailable, ";
+      sqlStmt += "ASVY.Asset__c as astSurveyAstAssetPKey, ";
+      sqlStmt += "ASVY.Visit__c as astSurveyClbMainPKey, ";
+      sqlStmt += "ASVY.Creation_Date__c as astSurveyCreationDate, ";      
+      sqlStmt += "CASE WHEN (Select Count(*) From Asset_Audit__c AS ASVY2 Where ASVY2.Asset__c = AA.Id And ASVY2.Account__c = AA.AccountId And ASVY2.Creation_Date__c > AA.Valid_From__c And ASVY2.Creation_Date__c < AA.Valid_Thru__c AND ASVY2.Creation_Date__c <= #clbDate# AND ASVY2.Sighted__c in ('1','3')) IS 0 THEN '#MinDate#' ELSE (Select Max(Creation_Date__c) From Asset_Audit__c AS ASVY2 Where ASVY2.Asset__c = AA.Id And ASVY2.Account__c = AA.AccountId And ASVY2.Creation_Date__c > AA.Valid_From__c And ASVY2.Creation_Date__c < AA.Valid_Thru__c AND ASVY2.Creation_Date__c <= #clbDate# AND ASVY2.Sighted__c in ('1','3')) END as latestSurveyDate, ";
+      sqlStmt += "CASE WHEN (Select Count(*) From Asset_Audit__c AS ASVY2 Where ASVY2.Asset__c = AA.Id And ASVY2.Account__c = AA.AccountId And ASVY2.Creation_Date__c > AA.Valid_From__c And ASVY2.Creation_Date__c < AA.Valid_Thru__c AND ASVY2.Creation_Date__c <= #clbDate# AND ASVY2.Sighted__c in ('1','3') AND ASVY2.Visit__c != #clbPKey#) IS 0 THEN '#MinDate#' ELSE (Select Max(Creation_Date__c) From Asset_Audit__c AS ASVY2 Where ASVY2.Asset__c = AA.Id And ASVY2.Account__c = AA.AccountId And ASVY2.Creation_Date__c > AA.Valid_From__c And ASVY2.Creation_Date__c < AA.Valid_Thru__c AND ASVY2.Creation_Date__c <= #clbDate# AND ASVY2.Sighted__c in ('1','3') AND ASVY2.Visit__c != #clbPKey#) END as latestSurveyDateBackup, ";
+      sqlStmt += "ASVY.User__c as astSurveyUsrUserPKey, ";
+      sqlStmt += "AA.Sales_Org__c as astSurveySalesOrg, ";
+      sqlStmt += "CASE WHEN  ASVY.Id IS NULL THEN AA.SerialNumber ELSE ASVY.Asset_Tag_Number__c END as astSurveySerialNumber, ";
+      sqlStmt += "ASVY.Usage__c as astSurveyUsage, ";
+      sqlStmt += "ASVY.Location__c as astSurveyLocation, ";
+      sqlStmt += "ASVY.Location_Rating__c as astSurveyLocationRating, ";
+      sqlStmt += "ASVY.Note__c as astSurveyNote, ";
+      sqlStmt += "ASVY.Condition__c as astSurveyCondition, ";
+      sqlStmt += "ASVY.Method__c as astSurveyMethod, ";      
+      sqlStmt += "ASVY.Account__c as astSurveyCustomer, ";
+      sqlStmt += "PrdDescription.Name as assetType, ";
+      sqlStmt += "AA.Valid_From__c as validFrom, ";
+      sqlStmt += "AA.Valid_Thru__c as validThru, ";      
+      sqlStmt += "BPAPOS.Name as posName, ";
+      sqlStmt += "AA.Note__c as annotation, ";
+      sqlStmt += "'0' as isNewSurvey, ";
+      sqlStmt += "AM.Scanning_Required__c as scanRequired, ";
+      sqlStmt += "AM.Blind_Mode__c as blindMode, ";
+      sqlStmt += "CASE ";
+      sqlStmt += "WHEN AM.Blind_Mode__c IS NULL THEN CASE WHEN ASVY.Sighted__c IS '0' THEN '1' ELSE '0' END ";
+      sqlStmt += "WHEN AM.Blind_Mode__c IS '1' THEN CASE WHEN ASVY.Sighted__c IS NULL THEN '1' WHEN ASVY.Sighted__c IS '0' THEN '1' ELSE '0' END ";
+      sqlStmt += "ELSE '0' END as hidden ";
+      sqlStmt += "FROM Asset AS AA ";
+      sqlStmt += "INNER JOIN Asset_Template__c AS AM ";
+      sqlStmt += "ON AA.Asset_Template__c = AM.Id AND AM.Sales_Org__c = '#SALESORG#' AND AA.AccountId = #customerPKey# ";
+
+      sqlStmt += "INNER JOIN Product2 as PrdDescription ";
+      sqlStmt += "ON  PrdDescription.Id = AA.Asset_Type__c AND PrdDescription.Sales_Org__c = '#SalesOrg#' ";
+      sqlStmt += "LEFT OUTER JOIN Asset_Audit__c AS ASVY ";
+      sqlStmt += "ON ASVY.Asset__c = AA.Id AND ASVY.Sales_Org__c = '#SALESORG#' AND ASVY.Visit__c = #clbPKey# ";
+
+      sqlStmt += "LEFT OUTER JOIN POS__c AS BPAPOS ";
+      sqlStmt += "ON AA.POS__c = BPAPOS.Id ";
+
+	  sqlStmt += "WHERE #compareAsDate('AA.Valid_From__c', 'Date', '<=', #TodayAsDate# , 'Date')# ";
+      sqlStmt += "AND #compareAsDate('AA.Valid_Thru__c', 'Date', '>=', #TodayAsDate# , 'Date')# ";
+
+	  sqlStmt += "AND AA.Status = 'Active' ";
+      sqlStmt += "AND AA.Sales_Org__c = '#SALESORG#' ";
+
+
+      sqlStmt += "UNION ";
+
+      sqlStmt += "SELECT ";
+      sqlStmt += "ASVY.Id AS pKey, ASVY.Asset_Tag_Number__c as serialNumber, ";
+      sqlStmt += "' ', ";
+      sqlStmt += "' ', ";
+      sqlStmt += "' ' as assetPKey, ";
+      sqlStmt += "CASE WHEN ";
+      sqlStmt += "ASVY.Sighted__c IS '1' ";
+      sqlStmt += "THEN CASE ";
+      sqlStmt += "WHEN ASVY.Method__c IS 'M' ";
+      sqlStmt += "THEN '1' ";
+      sqlStmt += "ELSE '3' ";
+      sqlStmt += "END ";
+      sqlStmt += "ELSE CASE ";
+      sqlStmt += "WHEN ASVY.Sighted__c IS '0' ";
+      sqlStmt += "Then CASE ";
+      sqlStmt += "WHEN ASVY.Method__c IS 'M' ";
+      sqlStmt += "THEN '0' ";
+      sqlStmt += "ELSE '2' ";
+      sqlStmt += "END END END as presence, ";
+      sqlStmt += "ASVY.Sighted__c as present, ";
+      sqlStmt += "'1' as surveyAvailable , ";
+      sqlStmt += "ASVY.Asset__c as astSurveyAstAssetPKey, ";
+      sqlStmt += "ASVY.Visit__c as astSurveyClbMainPKey, ";
+      sqlStmt += "ASVY.Creation_Date__c as astSurveyCreationDate, ";      
+      sqlStmt += "CASE WHEN ASVY.Sighted__c IS '0' THEN '#MinDate#' ELSE ASVY.Creation_Date__c END as latestSurveyDate, ";      
+      sqlStmt += "'#MinDate#' as latestSurveyDateBackup, ";
+      sqlStmt += "ASVY.User__c as astSurveyUsrUserPKey, ";
+      sqlStmt += "ASVY.Sales_Org__c as astSurveySalesOrg, ";
+      sqlStmt += "ASVY.Asset_Tag_Number__c as astSurveySerialNumber, ";
+      sqlStmt += "ASVY.Usage__c as astSurveyUsage, ";
+      sqlStmt += "ASVY.Location__c as astSurveyLocation, ";
+      sqlStmt += "ASVY.Location_Rating__c as astSurveyLocationRating, ";
+      sqlStmt += "ASVY.Note__c as astSurveyNote, ";
+      sqlStmt += "ASVY.Condition__c as astSurveyCondition, ";
+      sqlStmt += "ASVY.Method__c as astSurveyMethod, ";
+      sqlStmt += "ASVY.Account__c as astSurveyCustomer, ";
+      sqlStmt += "' ' as assetType, ";
+      sqlStmt += "' ', ";
+      sqlStmt += "' ', ";
+      sqlStmt += "' ', ";
+      sqlStmt += "' ', ";
+      sqlStmt += "'0' as isNewSurvey, ";
+      sqlStmt += "'0' as scanRequired, ";
+      sqlStmt += "'0' as blindMode, ";
+      sqlStmt += "'0' as hidden ";
+      sqlStmt += "FROM Asset_Audit__c AS ASVY ";
+      sqlStmt += "WHERE ASVY.Asset__c = ' ' ";
+      sqlStmt += "AND ASVY.Sales_Org__c = '#SALESORG#' ";
+      sqlStmt += "AND ASVY.Visit__c = #clbPKey# ";
+      sqlStmt += "ORDER BY LatestSurveyDate DESC ";
+
+      return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+      ]]></Load>
+  </Database>
+</Datasource>

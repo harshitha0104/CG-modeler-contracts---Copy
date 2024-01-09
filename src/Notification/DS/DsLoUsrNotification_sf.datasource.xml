@@ -1,0 +1,40 @@
+<DataSource name="DsLoUsrNotification" backendSystem="sf" businessObjectClass="LoUsrNotification" external="false" editableEntity="Task" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Task" column="Id" />
+    <Attribute name="priority" table="Task" column="Priority" />
+    <DerivedAttribute name="priorityImage" value="CASE Task.Priority WHEN 'High' THEN 'HighPriority' WHEN 'Low' THEN 'LowPriority' ELSE 'EmptyImage' END" />
+    <DerivedAttribute name="isReadImage" value="CASE Task.Status WHEN 'Completed' THEN 'EmptyImage' ELSE 'CheckMarkFalse' END" />
+    <DerivedAttribute name="isRead" value="CASE Task.Status WHEN 'Completed' THEN '1' ELSE '0' END" />
+    <Attribute name="subject" table="Task" column="Description" />
+    <Attribute name="category" table="Task" column="Subject" />
+    <Attribute name="dueDate" table="Task" column="ActivityDate" />
+    <DerivedAttribute name="priorityCardImage" value="'TaskPriority_' || CASE WHEN Task.Priority = 'High' THEN 'A' WHEN Task.Priority = 'Normal' THEN 'B' WHEN Task.Priority = 'Low' THEN 'C' ELSE 'A' END" />
+  </Attributes>
+  <Entities>
+    <Entity name="Task" alias="" idAttribute="Id" />
+    <Entity name="RecordType" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Task.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+          <Condition leftSideValue="RecordType.DeveloperName" comparator="eq" rightSideType="Literal" rightSideValue="'User_Notification'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Task.OwnerId= '#UserSfId#'
+  #cond#
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Task" attribute="ActivityDate" direction="DESC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="cond" treatAs="sqlSnippet" />
+    <Parameter name="status" type="TEXT" />
+  </Parameters>
+  <QuickSearchParameters>
+    <QuickSearchParameter name="Task.Subject" />
+    <QuickSearchParameter name="Task.ActivityDate" />
+  </QuickSearchParameters>
+  <ConditionalParameters />
+</DataSource>

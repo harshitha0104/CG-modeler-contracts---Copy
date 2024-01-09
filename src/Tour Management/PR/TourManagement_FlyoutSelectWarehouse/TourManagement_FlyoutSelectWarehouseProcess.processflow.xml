@@ -1,0 +1,39 @@
+<Process name="TourManagement::FlyoutSelectWarehouseProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="WarehouseList" type="LoEtpWarehouse" />
+        <Declaration name="WarehouseId" type="DomId" />
+      </Declarations>
+      <Parameters>
+        <Input name="warehousePKey" type="DomPKey" />  
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetWarehouseList" actionType="LOAD" type="LoEtpWarehouse">
+        <Return name="ProcessContext::WarehouseList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>TourManagement::FlyoutSelectWarehouseUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="AssignWarehouseId" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="AssignWarehouseId">
+        <ReturnValues>
+          <Return name="warehousePKey" value="Event.pKey" />
+          <Return name="warehouseId" value="Event.id" />
+        </ReturnValues>
+      </Action>
+       <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="warehousePKey" value="ProcessContext::warehousePKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

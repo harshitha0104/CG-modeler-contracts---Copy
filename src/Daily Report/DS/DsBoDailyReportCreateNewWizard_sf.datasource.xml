@@ -1,0 +1,17 @@
+<DataSource name="DsBoDailyReportCreateNewWizard" backendSystem="sf" businessObjectClass="BoDailyReportCreateNewWizard" external="false" editableEntity="User_Document_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="usrDocMetaPKey" table="User_Document_Template__c" column="Id" />
+    <DerivedAttribute name="uniquePerDay" value="'0'" />
+    <Attribute name="allowPostdating" table="User_Document_Template__c" column="Allow_Postdating__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="User_Document_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        User_Document_Template__c.Id = #usrDocMetaPKey#
+        ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="usrDocMetaPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

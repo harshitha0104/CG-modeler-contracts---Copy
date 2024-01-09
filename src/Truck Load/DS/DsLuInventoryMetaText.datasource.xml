@@ -1,0 +1,44 @@
+<DataSource name="DsLuInventoryMetaText" businessObjectClass="LuInventoryMetaText" external="true" readOnly="true" editableEntity="SdoMain" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[     
+
+			var tmgMainPKey = "";
+
+			if(Utils.isDefined(ApplicationContext.get('currentTourPKey')) && ApplicationContext.get('currentTourStatus') === "Running"){
+				tmgMainPKey = Utils.convertForDBParam(ApplicationContext.get('currentTourPKey'), 'DomPKey');
+			}
+			if(ApplicationContext.get('user').hasRole('TourUser') && Utils.isEmptyString(tmgMainPKey)){
+				tmgMainPKey = "'NoTourSelected'";
+			}
+
+			var sqlParams = {tmgMainPKey};
+
+			var sqlStmt = "SELECT sdotext.text as metaText, SdoMeta.PKey AS pKey, SdoMetaItemRel.SdoItemMetaPKey AS sdoItemMetaPKey, SdoMeta.WfeWorkflowPKey AS wfeWorkflowPKey FROM SdoMeta ";
+			sqlStmt += "INNER JOIN SdoText ON ";
+			sqlStmt += "SdoMeta.PKey = SdoText.AppPKey ";
+			sqlStmt += "INNER JOIN TmgTourObjectRel ON ";
+			sqlStmt += "SdoMeta.PKey = TmgTourObjectRel.ObjectMetaPKey ";
+			sqlStmt += "INNER JOIN SdoMetaItemRel ON ";
+			sqlStmt += "SdoMeta.PKey = SdoMetaItemRel.SdoMetaPKey ";
+			sqlStmt += "WHERE (1=1) AND SdoMeta.MetaType = 'TruckLoad' ";
+			sqlStmt += "AND SdoMeta.SdoSubType = 'TruckIvcTransferInward' ";
+			sqlStmt += "AND TmgTourObjectRel.TmgTourPKey = #tmgMainPKey# ";
+			sqlStmt += "AND TmgTourObjectRel.Usage = 'SdoMeta.TckIvcTransferInward' ";
+			sqlStmt += "AND SdoMetaItemRel.Main = '1' ";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+    <Update><![CDATA[ 
+			// Intended to be empty     
+			return undefined;     
+		]]></Update>
+    <Insert><![CDATA[     
+			// Intended to be empty     
+			return undefined;     
+		]]></Insert>
+    <Delete><![CDATA[      
+			// Intended to be empty     
+			return undefined;     
+		]]></Delete>
+  </Database>
+</DataSource>

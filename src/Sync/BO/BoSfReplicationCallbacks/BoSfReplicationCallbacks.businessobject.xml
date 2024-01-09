@@ -1,0 +1,42 @@
+<BusinessObject name="BoSfReplicationCallbacks"  schemaVersion="1.1" generateLoadMethod="false" baseClass="FrameworkSfReplicationCallbacks">
+  <DataSource name="DsBoSfReplicationCallbacks" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+  </SimpleProperties>
+  <ObjectLookups />
+  <NestedObjects />
+  <ListObjects />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="requestOnDemandDataAsync" />
+    <Method name="cleanUpOnDemandDataAsync" />
+    <Method name="requestOrderOnDemandDataAsync" />
+    <Method name="isOrderOnDemandDataAvailable" />
+    <Method name="requestCallOnDemandDataAsync" />
+    <Method name="isCallOnDemandDataAvailable" />
+    <Method name="removeLocalIDs" />
+    <Method name="isLocalID" />
+    <Method name="evaluateAvailabilityResult" />
+    <Method name="getPropertyValuesFromArray" />
+    <Method name="getWorkingDays" />
+    <Method name="getNextOrPreviousWorkday" />
+    <Method name="isSalesFolderOnDemandDataAvailable" />
+    <Method name="requestMandatoryAttachmentDataAsync" />
+    <Method name="addOrderNftsToRequest" />
+    <Method name="addCallNftsToRequest" />
+    <Method name="isPromotionOnDemandDataAvailable" />
+    <Method name="requestPromotionOnDemandDataAsync" />
+    <Method name="addPromotionNftsToRequest" />
+    <Method name="executeRequestsAsync"/>
+  </Methods>
+  <Validations />
+</BusinessObject>

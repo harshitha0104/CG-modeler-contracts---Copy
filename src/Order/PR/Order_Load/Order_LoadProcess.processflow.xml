@@ -1,0 +1,107 @@
+<Process name="Order::LoadProcess" defaultAction="CheckIfDataIsAvailable" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OrderBo" type="BoOrder" />
+        <Declaration name="ClbMainPKey" type="DomPKey" />
+        <Declaration name="CallInContext_clbMainPKey" type="DomPKey" />
+        <Declaration name="CallOutOfStockProducts" type="String" />
+        <Declaration name="CustomerPKey" type="DomPKey" />
+        <Declaration name="IsOrderDataAvailable" type="DomBool" />
+        <Declaration name="TriggerReload" type="DomBool" />
+        <!-- SF/CASDIF Start -->
+        <Declaration name="SfReplicationCallbacks" type="BoSfReplicationCallbacks" />
+        <Declaration name="BoHelperHurdleExpressionFunctions" type="BoHelperHurdleExpressionFunctions" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainPKey" type="DomPKey" />
+        <Input name="ClbMainPKey" type="DomPKey" />
+        <Input name="CallInContext_clbMainPKey" type="DomPKey" />
+        <Input name="CallOutOfStockProducts" type="String" />
+        <Input name="CustomerPKey" type="DomPKey" />
+        <Input name="BoCall" type="BoCall" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <!-- SF/CASDIF Start -->
+      <Action name="CreateReplicationCallBacksBo" actionType="CREATE" type="BoSfReplicationCallbacks">
+        <Return name="ProcessContext::SfReplicationCallbacks" />
+      </Action>
+      <!-- SF/CASDIF End -->
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="StartNavigation" actionType="DECISION" parameter="ProcessContext::OrderBo.boOrderMeta.sdoSubType">
+        <Case value="Delivery" action="StartNavigation_Delivery" />
+        <CaseElse action="StartNavigation_Order" />
+        <CaseEmpty action="StartNavigation_Order" />
+      </Action>
+      <!-- SF/CASDIF Start -->
+      <Action name="CheckIfDataIsAvailable" actionType="LOGIC" call="ProcessContext::SfReplicationCallbacks.isOrderOnDemandDataAvailable">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::CustomerPKey" />
+          <Input name="orderPKey" value="ProcessContext::MainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::IsOrderDataAvailable" />
+        <TransitionTo action="CanLoadOrderDecision" />
+      </Action>
+      <Action name="CanLoadOrderDecision" actionType="DECISION" parameter="ProcessContext::IsOrderDataAvailable">
+        <Case value="1" action="LoadBo" />
+        <Case value="2" action="Message_LoadingOrderData" />
+        <CaseElse action="Message_OrderDataNotOnDevice" />
+      </Action>
+      <Action name="Message_LoadingOrderData" actionType="CONFIRM" confirmType="Ok">
+        <Message messageId="CasOrderDataLoadingInProgress" />
+        <Cases>
+          <Case value="Ok" action="EndWithoutReload" />
+        </Cases>
+      </Action>
+      <Action name="Message_OrderDataNotOnDevice" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmRequestOrderOnDemandData" />
+        <Cases>
+          <Case value="Yes" action="RequestOnDemandData" />
+          <Case value="No" action="EndWithoutReload" />
+        </Cases>
+      </Action>
+      <Action name="RequestOnDemandData" actionType="LOGIC" call="ProcessContext::SfReplicationCallbacks.requestOrderOnDemandDataAsync">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::CustomerPKey" />
+          <Input name="orderPKey" value="ProcessContext::MainPKey" />
+        </Parameters>
+        <TransitionTo action="EndWithoutReload" />
+      </Action>
+      <Action actionType="END" name="EndWithoutReload">
+        <ReturnValues>
+          <Return name="TriggerReload" value="0" />
+        </ReturnValues>
+      </Action>
+      <!-- SF/CASDIF End -->
+      <Action name="LoadBo" actionType="LOAD" type="BoOrder">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainPKey" />
+          <Input name="ClbMainPKey" value="ProcessContext::ClbMainPKey" />
+          <Input name="CallInContext_clbMainPKey" value="ProcessContext::CallInContext_clbMainPKey" />
+          <Input name="CallOutOfStockProducts" value="ProcessContext::CallOutOfStockProducts" />
+          <Input name="boCallCache" value="ProcessContext::BoCall" />
+        </Parameters>
+        <Return name="ProcessContext::OrderBo" />
+        <TransitionTo action="IsInvalidOrder_Decision" />
+      </Action>
+      <Action name="IsInvalidOrder_Decision" actionType="DECISION" parameter="ProcessContext::OrderBo.isInvalidOrder">
+        <Case value="1" action="EndWithoutReload" />
+        <CaseElse action="StartNavigation" />
+      </Action>
+      <Action name="StartNavigation_Delivery" actionType="PROCESS" process="Order::PreDeliveryNavigationProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::OrderBo" />
+        </Parameters>
+      </Action>
+      <Action name="StartNavigation_Order" actionType="PROCESS" process="Order::PreOrderNavigationProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::OrderBo" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

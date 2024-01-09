@@ -1,0 +1,51 @@
+<DataSource name="DsLoRewards" backendSystem="sf" businessObjectClass="LoRewards" external="false" editableEntity="Promotion_Reward__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Promotion_Reward__c" column="Id" />
+    <Attribute name="rewardTitle" table="Promotion_Reward__c" column="Title_#Language#__c" />
+    <Attribute name="pricingConditionTemplate" table="Promotion_Reward__c" column="Pricing_Condition_Template__c" />
+    <Attribute name="defaultValue" table="Promotion_Reward__c" column="Default_Value__c" />
+    <Attribute name="promotionPKey" table="Promotion_Reward_Group__c" column="Promotion__c" />
+    <Attribute name="rewardType" table="Promotion_Reward__c" column="Reward_Type__c" />
+    <Attribute name="rewardGroupId" table="Promotion_Reward__c" column="Promotion_Reward_Group__c" />
+    <DerivedAttribute name="isApplicable" value="'0'" />
+    <DerivedAttribute name="counterString" value="' '" />
+    <Attribute name="sort" table="Promotion_Reward__c" column="Sort__c" />
+    <Attribute name="promotionRewardGroupTitle" table="Promotion_Reward_Group__c" column="Title_#Language#__c" />
+    <Attribute name="automaticallyGranted" table="Promotion_Reward__c" column="Automatically_Granted__c" />
+    <Attribute name="subGroup" table="Promotion_Reward__c" column="SubGroup__c " />
+    <Attribute name="hurdlePKey" table="Promotion_Reward__c" column="Hurdle__c" />
+    <Attribute name="userExit" table="Promotion_Reward__c" column="User_Exit__c" />
+    <Attribute name="numericValue" table="Promotion_Reward__c" column="Numeric_Value__c" />
+    <Attribute name="booleanValue" table="Promotion_Reward__c" column="Boolean_Value__c" />
+    <Attribute name="textValue" table="Promotion_Reward__c" column="Text_Value__c" />
+    <Attribute name="dateValue" table="Promotion_Reward__c" column="Date_Value__c" />
+    <DerivedAttribute name="perFactor" value="-1" />
+    <DerivedAttribute name="isReadyToBeApplicable" value="'0'" />
+    <DerivedAttribute name="showButton" value="'0'" />
+    <DerivedAttribute name="buttonText" value="' '" />
+    <DerivedAttribute name="editable" value="'0'" />
+    <DerivedAttribute name="isSelectedOnUI" value="'0'" />
+    <Attribute name="classification" table="Promotion_Reward__c" column="Classification__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Promotion_Reward__c" alias="" idAttribute="Id" />
+    <Entity name="Promotion_Reward_Group__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Promotion_Reward_Group__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Promotion_Reward__c.Promotion_Reward_Group__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Promotion_Reward_Group__c.Promotion__c in (#promotionPKeyList#)
+  AND Promotion_Reward__c.Included__c = '1' AND Promotion_Reward_Group__c.Included__c = '1'
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Promotion_Reward__c" attribute="Promotion_Reward_Group__c" direction="ASC" />
+    <OrderCriterion entity="Promotion_Reward__c" attribute="Sort__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="promotionPKeyList" type="LIST" />
+  </Parameters>
+</DataSource>

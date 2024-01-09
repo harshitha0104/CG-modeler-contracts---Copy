@@ -1,0 +1,16 @@
+<DataSource name="DsBoVisitAssessmentTask" backendSystem="sf" businessObjectClass="BoVisitAssessmentTask" external="false" editableEntity="AssessmentTask" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="AssessmentTask" column="Id" />
+    <Attribute name="status" table="AssessmentTask" column="Status" />
+  </Attributes>
+  <Entities>
+    <Entity name="AssessmentTask" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        AssessmentTask.Id = #pKey#
+      ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

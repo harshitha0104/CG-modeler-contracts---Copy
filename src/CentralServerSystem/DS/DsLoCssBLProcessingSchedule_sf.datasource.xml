@@ -1,0 +1,23 @@
+<DataSource name="DsLoCssBLProcessingSchedule" backendSystem="sf" objectClass="LoCssBLProcessingSchedule" businessObjectClass="LoCssBLProcessingSchedule" external="true" readOnly="true" editableEntity="CssBLProcessingSchedule" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="pKey" value="''" />
+    <DerivedAttribute name="registerTime" value="''" />
+    <DerivedAttribute name="workState" value="''" />
+    <DerivedAttribute name="objectPKey" value="''" />
+    <DerivedAttribute name="workerFunction" value="''" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+		return undefined;
+      ]]></Load>
+    <Update><![CDATA[
+		return undefined;
+      ]]></Update>
+    <Insert><![CDATA[   
+		return undefined;
+      ]]></Insert>
+    <Delete><![CDATA[
+		return undefined;
+      ]]></Delete>
+  </Database>
+</DataSource>

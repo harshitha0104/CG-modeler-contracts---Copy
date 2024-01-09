@@ -1,0 +1,23 @@
+<DataSource name="DsLoEmptiesBom" backendSystem="sf" businessObjectClass="LoEmptiesBom" external="true" editableEntity="Product_Part__c" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="parentEmptyPKey" value="''" />
+    <DerivedAttribute name="childPKey" value="''" />
+    <DerivedAttribute name="childId" value="''" />
+    <DerivedAttribute name="childDescription" value="''" />
+    <DerivedAttribute name="quantity" value="''" />
+    <DerivedAttribute name="childTaxClassification" value="''" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+  return undefined;]]></Load>
+    <Update><![CDATA[
+  // Empties not available in CGCloud
+  return undefined;]]></Update>
+    <Insert><![CDATA[
+  // Empties not available in CGCloud 
+  return undefined;]]></Insert>
+    <Delete><![CDATA[
+  // Empties not available in CGCloud
+  return undefined; ]]></Delete>
+  </Database>
+</DataSource>

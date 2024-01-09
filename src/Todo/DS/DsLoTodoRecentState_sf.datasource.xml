@@ -1,0 +1,25 @@
+<DataSource name="DsLoTodoRecentState" backendSystem="sf" businessObjectClass="LoTodoRecentState" external="False" distinct="false" readonly="false" editableEntity="Task" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="pKey" value="''" />
+    <DerivedAttribute name="svcTodoPKey" value="''" />
+    <DerivedAttribute name="done" value="''" />
+    <DerivedAttribute name="usrMainPKey" value="''" />
+    <DerivedAttribute name="wfeStatePKey" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="Task" alias="" />
+    <Entity name="RecordType" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Task.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+          <Condition leftSideValue="RecordType.DeveloperName" comparator="eq" rightSideType="Literal" rightSideValue="'User_Task'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <OrderCriteria />
+  <QueryCondition><![CDATA[
+     1=1
+]]></QueryCondition>
+  <Parameters />
+</DataSource>

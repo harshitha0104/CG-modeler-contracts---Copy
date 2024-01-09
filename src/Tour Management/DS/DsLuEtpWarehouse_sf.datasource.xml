@@ -1,0 +1,18 @@
+<DataSource name="DsLuEtpWarehouse" businessObjectClass="LuEtpWarehouse" external="false" editableEntity="Warehouse__c" backendSystem="sf" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Warehouse__c" column="Id" />
+    <Attribute name="id" table="Warehouse__c" column="Name" />
+    <Attribute name="salesOrg" table="Warehouse__c" column="Sales_Org__c" />
+    <Attribute name="text" table="Warehouse__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Warehouse__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+		Warehouse__c.Id = #pKey#
+		]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT"/>
+  </Parameters>
+</DataSource>

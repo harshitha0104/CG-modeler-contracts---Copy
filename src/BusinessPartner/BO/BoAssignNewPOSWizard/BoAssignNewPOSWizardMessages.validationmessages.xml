@@ -1,0 +1,3 @@
+<ValidationMessages name="BoAssignNewPOSWizardMessages" businessObject="BoAssignNewPOSWizard" schemaVersion="0.0.0.5">
+  <ValidationMessage name="CasBoAssignNewPOSWizardMessagesNameMustNotBeEmpty" defaultMessage="Please enter a name for the POS." comment="Validates if the name of customer is not empty." />
+</ValidationMessages>

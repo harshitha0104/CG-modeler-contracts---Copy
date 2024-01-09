@@ -1,0 +1,69 @@
+<Datasource name="DsOrderItemPreparation" backendSystem="sf" objectClass="OrderItemPreparation" readOnly="true" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Custom>
+      <PrepareOrderItems><![CDATA[
+var mainItemTemplate;
+var query;
+var queryParams;
+
+var index = 0;
+for (index in jsonParams.params) {
+  switch (jsonParams.params[index].field) {
+    case "mainItemTemplate":
+      mainItemTemplate = jsonParams.params[index].value;
+      break;
+    case "query":
+      query = Utils.convertForDBParam(jsonParams.params[index].value, "DomText");
+      break;
+    case "queryParams":
+      queryParams = jsonParams.params[index].value;
+      break;
+  }
+}
+
+var quantityLogisticUnit = mainItemTemplate.getQuantityLogisticUnit();
+var defaultQuantityLogisticUnit;
+var defaultPiecesPerSmallestUnit;
+
+if (quantityLogisticUnit == "Order") {
+  defaultQuantityLogisticUnit = "product.orderQuantityLogisticUnit";
+  defaultPiecesPerSmallestUnit = "product.orderPiecesPerSmallestUnit";
+} else if (quantityLogisticUnit == "Consumer") {
+  defaultQuantityLogisticUnit = "product.consumerQuantityLogisticUnit";
+  defaultPiecesPerSmallestUnit = "product.consumerPiecesPerSmallestUnit";
+} else if (quantityLogisticUnit == "Price") {
+  defaultQuantityLogisticUnit = "product.priceQuantityLogisticUnit";
+  defaultPiecesPerSmallestUnit = "product.pricePiecesPerSmallestUnit";
+} else {
+  defaultQuantityLogisticUnit = "product.orderQuantityLogisticUnit";
+  defaultPiecesPerSmallestUnit = "product.orderPiecesPerSmallestUnit";
+}
+
+var sqlParams = {};
+var sql = "";
+sql += "INSERT INTO TmpOrderItemMergeResult_T SELECT ";
+sql += "product.pKey, ";
+sql += "listing.listed, listing.listing, listing.listingWithModules, listing.customerProductNumber, listing.focusProductType, listing.focusProductImage, ";
+sql += "oos.outOfStock, ";
+sql += "sda.sdoAssortment, ";
+sql += "historic.history, ";
+sql += "promotion.promoted, ";
+sql += defaultQuantityLogisticUnit + ", " + defaultPiecesPerSmallestUnit + ", " ;
+sql += "product.text1, product.text2, product.prdId, product.shortId, product.taxClassification, product.simplePricingBasePrice, ";
+sql += "product.deliveryState, product.fieldState, product.foreignProduct, product.eAN, product.newState, product.piecesPerSmallestUnitForBasePrice, product.groupId, product.groupText, product.category, product.prdType, "; 
+sql += "null, null, null, null, null, null, null, null, null, null, null, null, 0 ";
+sql += "FROM ";
+sql += query;
+
+var sqlStmtResult = Utils.replaceMacrosParam(sql, sqlParams);
+var finalParams = sqlStmtResult.params.concat(queryParams);
+
+			//var finalParams = persistedSqlQuery.params.concat(sqlStmtResult.params);
+			//var finalParams = selectPromotionSqlQuery.params.concat(persistedSqlQuery.params).concat(sqlStmtResult.params);
+
+			return {sql: sqlStmtResult.sql, params: finalParams};
+
+      ]]></PrepareOrderItems>
+    </Custom>
+  </Database>
+</Datasource>

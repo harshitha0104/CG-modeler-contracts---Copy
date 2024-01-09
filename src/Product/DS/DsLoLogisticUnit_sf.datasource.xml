@@ -1,0 +1,36 @@
+<Datasource name="DsLoLogisticUnit" objectClass="LoLogisticUnit" backendSystem="sf" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+      var productPKey = "";
+      var addProductCond = "";
+      var addLogisticCond = "";
+
+      if(Utils.isDefined(jsonQuery.ProductPKey)){				
+          productPKey =  Utils.convertForDBParam(jsonQuery.ProductPKey, "DomPKey");
+          addProductCond += "AND Product__c  = #productPKey# ";
+       }
+
+      if(Utils.isDefined(jsonQuery.LogisticCategory)){
+       if(jsonQuery.LogisticCategory === 'Order'){      
+         addLogisticCond += "AND Order_Ability__c = '1' ";
+       }         
+     } 
+   
+     var sqlParams = {productPKey}; 
+
+     var sqlStmt = "SELECT Unit_Type__c AS unitType ";
+     sqlStmt += ", Is_Order_Unit__c AS isOrderUnit ";
+     sqlStmt += ", Is_Consumer_Unit__c AS isConsumerUnit ";
+     sqlStmt += ", Is_Price_Unit__c AS isPriceUnit ";
+     sqlStmt += ", Sort__c AS sort ";
+     sqlStmt += ", Pieces_per_Smallest_Unit__c AS piecesPerSmallestUnit ";
+     sqlStmt += "FROM Unit_of_Measure__c ";
+     sqlStmt += "WHERE (1=1) ";
+     sqlStmt += addProductCond;
+     sqlStmt += addLogisticCond;
+
+     return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+  ]]></Load>
+  </Database>
+</Datasource>

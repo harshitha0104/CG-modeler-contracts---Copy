@@ -1,0 +1,18 @@
+<DataSource name="DsLuSalesFolderCount" backendSystem="sf" businessObjectClass="LuSalesFolderCount" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var sqlParams = {};
+			var sqlStmt1 = "SELECT COUNT(*) AS salesFolderCallCustomerCount FROM ( ";
+
+			var loadLoSalesFolderCallCustomer = Facade.myProxy.getLoadStatement("LoSalesFolderCallCustomer", jsonQuery);
+
+			var sqlStmt2 = " ) ";
+
+			var finalSql = sqlStmt1 + loadLoSalesFolderCallCustomer.sql + sqlStmt2;
+			var finalParams = loadLoSalesFolderCallCustomer.params;
+
+			return {sql: finalSql, params: finalParams};
+		]]></Load>
+  </Database>
+</DataSource>

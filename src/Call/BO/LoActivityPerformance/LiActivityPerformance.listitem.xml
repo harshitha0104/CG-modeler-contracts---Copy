@@ -1,0 +1,22 @@
+<ListItem name="LiActivityPerformance">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="activityDescription" type="DomText" dataSourceProperty="activityDescription" />
+    <SimpleProperty name="activityScore" type="DomDecimal" dataSourceProperty="activityScore" />
+    <SimpleProperty name="thresholdFulfilled" type="DomDecimal" dataSourceProperty="thresholdFulfilled" />
+    <SimpleProperty name="thresholdPartiallyFulfilled" type="DomDecimal" dataSourceProperty="thresholdPartiallyFulfilled" />
+    <SimpleProperty name="activityValidFrom" type="DomDate" dataSourceProperty="activityValidFrom" />
+    <SimpleProperty name="activityValidThru" type="DomDate" dataSourceProperty="activityValidThru" />
+    <SimpleProperty name="activityTemplateDescription" type="DomText" dataSourceProperty="activityTemplateDescription" />
+    <SimpleProperty name="promotionId" type="DomPKey" dataSourceProperty="promotionId" />
+    <SimpleProperty name="promotionDescription" type="DomText" dataSourceProperty="promotionDescription" />
+    <SimpleProperty name="promotionDateFrom" type="DomDate" dataSourceProperty="promotionDateFrom" storable="false"/>
+    <SimpleProperty name="promotionDateThru" type="DomDate" dataSourceProperty="promotionDateThru" storable="false"/>
+    <SimpleProperty name="usage" type="DomText" dataSourceProperty="usage" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" blobTable="PrmAttachmentBlob" blobPKeyField="attachmentBlobPKey" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+    <SimpleProperty name="thresholdText" type="DomString" />
+    <SimpleProperty name="thresholdIcon" type="DomString" />
+    <SimpleProperty name="promotionDateText" type="DomString" />
+  </SimpleProperties>
+</ListItem>

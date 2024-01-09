@@ -1,0 +1,7 @@
+<ListItem name="LiPrdGroupLevelCriterionMapping" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="groupLevel" type="DomPrdGroupLevel" storable="false" dataSourceProperty="groupLevel" />
+    <SimpleProperty name="criterion" type="DomString" storable="false" dataSourceProperty="criterion" />
+  </SimpleProperties>
+</ListItem>

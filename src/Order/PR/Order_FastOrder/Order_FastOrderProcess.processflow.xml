@@ -1,0 +1,84 @@
+<Process name="Order::FastOrderProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="FastOrderProductsForGrid" type="LoFastOrderProducts" />
+        <Declaration name="ApplyFastOrderState" type="DomString" />
+        <Declaration name="ValidationBo" type="BoFastOrderValidation" />
+        <Declaration name="ImportedItems" type="Object" />
+      </Declarations>
+      <Parameters>
+        <Input name="FastOrderProducts" type="LoFastOrderProducts" />
+        <Input name="ProductNumberDictionary" type="Object" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="InstantiateFastOrderForGrid" actionType="LOGIC" call="BoFactory.instantiate">
+        <Parameters>
+          <Input type="Literal" name="LoFastOrderProducts" value="LoFastOrderProducts" />
+        </Parameters>
+        <Return name="ProcessContext::FastOrderProductsForGrid" />
+      </Action>
+      <Action name="CreateValidationBo" actionType="CREATE" type="BoFastOrderValidation">
+        <Parameters>
+          <Input name="FastOrderProductsForGrid" value="ProcessContext::FastOrderProductsForGrid" />
+        </Parameters>
+        <Return name="ProcessContext::ValidationBo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Order::FastOrderUI</UIDescription>
+        <Events>
+          <Event name="AddItemToGrid" action="AddItemToGrid" />
+          <Event name="DeleteItemFromGrid" action="DeleteItemFromGrid" />
+          <Event name="EndFastOrder" action="SetButtonValue" />
+          <Event name="PasteFromClipboard" action="PasteFromClipboard" />
+        </Events>
+      </Action>
+      <Action name="PasteFromClipboard" actionType="PROCESS" process="Order::PasteFromClipboardProcess">
+        <Parameters>
+          <Input name="ValidationList" value="ProcessContext::FastOrderProducts" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::ImportedItems" value="ImportedItems" />
+        </ReturnValues>
+        <TransitionTo action="AddImportedItemsToGrid" />
+      </Action>
+      <Action name="AddImportedItemsToGrid" actionType="LOGIC" call="ProcessContext::FastOrderProductsForGrid.importProductsFromClipboard">
+        <Parameters>
+          <Input name="ImportedItems" value="ProcessContext::ImportedItems" />
+          <Input name="ProductNumberDictionary" value="ProcessContext::ProductNumberDictionary" />
+        </Parameters>
+      </Action>
+      <Action name="AddItemToGrid" actionType="LOGIC" call="ProcessContext::FastOrderProductsForGrid.addOrUpdateItem">
+        <Parameters>
+          <Input name="pKey" value="Event.PKey" />
+          <Input name="quantityInputField" value="Event.quantityInputField" />
+          <Input name="productNumber" value="Event.productNumber" />
+          <Input name="productDescription" value="Event.productDescription" />
+        </Parameters>
+      </Action>
+      <Action name="DeleteItemFromGrid" actionType="LOGIC" call="ProcessContext::FastOrderProductsForGrid.deleteItem">
+        <Parameters>
+          <Input name="pKey" value="Event.PKey" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="SetButtonValue" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Apply" />
+        </Parameters>
+        <Return name="ProcessContext::ApplyFastOrderState" />
+        <TransitionTo action="EndFastOrder" />
+      </Action>
+      <Action actionType="END" name="EndFastOrder">
+        <ReturnValues>
+          <Return name="fastOrderProducts" value="ProcessContext::FastOrderProductsForGrid" />
+          <Return name="buttonPressed" value="ProcessContext::ApplyFastOrderState" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

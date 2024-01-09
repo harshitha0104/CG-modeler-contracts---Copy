@@ -1,0 +1,77 @@
+<DataSource name="DsLoItemFilter" backendSystem="sf" businessObjectClass="LoItemFilter" external="true" readOnly="true" schemaVersion="2.0">
+  <Entities>
+    <Entity name="Order_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+var sdoMetaPKey =  "" ;
+
+if (Utils.isDefined(jsonQuery.sdoMetaPKey)) {
+   sdoMetaPKey = Utils.convertForDBParam(jsonQuery.sdoMetaPKey, "DomPKey");
+}
+
+var sqlParams = {sdoMetaPKey};
+
+var sqlStmt = "";
+sqlStmt += " SELECT DISTINCT Sync_Mobile_App_PL_Repo__c.Text_#Language#__c as name,";
+sqlStmt += " Order_Template_Product_Selector_Group__c.Level_1__c as filterCode, ";
+sqlStmt += " Order_Template_Product_Selector_Group__c.Default__c as defaultGroup, ";
+sqlStmt += " CASE Order_Template_Product_Selector_Group__c.Level_1__c " ;
+sqlStmt += " WHEN 'All' THEN 0" ;
+sqlStmt += " WHEN 'Basket' THEN 1" ;
+sqlStmt += " WHEN 'Promotion' THEN 2" ;
+sqlStmt += " WHEN 'New' THEN 3" ;
+sqlStmt += " WHEN 'History' THEN 4" ;
+sqlStmt += " WHEN 'OutOfStock' THEN 5" ;
+sqlStmt += " ELSE 100" ;
+sqlStmt += " END AS sortOrder, " ;
+sqlStmt += " CASE Order_Template_Product_Selector_Group__c.Level_1__c " ;
+sqlStmt += " WHEN 'All' THEN '0000001'" ;
+sqlStmt += " WHEN 'Basket' THEN '0000006'" ;
+sqlStmt += " WHEN 'Promotion' THEN '0000002'" ;
+sqlStmt += " WHEN 'New' THEN '0000003'" ;
+sqlStmt += " WHEN 'History' THEN '0000004'" ;
+sqlStmt += " WHEN 'OutOfStock' THEN '0000005'" ;
+sqlStmt += " ELSE '0000000'" ;
+sqlStmt += " END AS pKey," ;
+sqlStmt += " CASE Order_Template_Product_Selector_Group__c.Level_1__c " ;
+sqlStmt += " WHEN 'All' THEN 'ProductsGrey24'" ;
+sqlStmt += " WHEN 'Basket' THEN 'ShoppingCartGrey24'" ;
+sqlStmt += " WHEN 'Promotion' THEN 'FlagGrey24'" ;
+sqlStmt += " WHEN 'New' THEN 'StarGrey24'" ;
+sqlStmt += " WHEN 'History' THEN 'HistoryGrey24'" ;
+sqlStmt += " WHEN 'OutOfStock' THEN 'WarningGrey24'" ;
+sqlStmt += " ELSE ''" ;
+sqlStmt += " END AS imageId," ;
+sqlStmt += " 0 AS count, " ;
+sqlStmt += " CASE Order_Template_Product_Selector_Group__c.Level_1__c " ;
+sqlStmt += " WHEN 'Basket' THEN '1'" ;
+sqlStmt += " ELSE '0'" ;
+sqlStmt += " END AS displayOnHierarchyLevel" ;        
+sqlStmt += " FROM Order_Template_Product_Selector_Group__c " ;
+sqlStmt += " INNER JOIN Sync_Mobile_App_PL_Repo__c ON Order_Template_Product_Selector_Group__c.Level_1__c = Sync_Mobile_App_PL_Repo__c.Picklist_Value__c ";
+sqlStmt += " AND Sync_Mobile_App_PL_Repo__c.Mobile_App_Domain__c = 'DomSdoPrdSelectorLevel1' ";
+sqlStmt += " WHERE Order_Template_Product_Selector_Group__c.Level_1__c != ''";
+sqlStmt += " AND Order_Template_Product_Selector_Group__c.Level_1__c NOT LIKE '%Category'";
+sqlStmt += " AND Order_Template_Product_Selector_Group__c.Level_1__c NOT LIKE '%Brand' ";
+sqlStmt += " AND Order_Template_Product_Selector_Group__c.Order_Template_Id__c = #sdoMetaPKey# ";
+sqlStmt += " ORDER BY SortOrder" ;
+
+return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+        ]]></Load>
+    <Update><![CDATA[
+          // Intended to be empty - This list object gets its items by business logic!
+          return undefined;
+        ]]></Update>
+    <Insert><![CDATA[
+          // Intended to be empty - This list object gets its items by business logic!
+          return undefined;  
+        ]]></Insert>
+    <Delete><![CDATA[
+          // Intended to be empty - This list object gets its items by business logic!
+          return undefined;
+        ]]></Delete>
+  </Database>
+</DataSource>

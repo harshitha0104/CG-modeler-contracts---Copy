@@ -1,0 +1,153 @@
+<DataSource name="DsLoSalesFolderCallCustomer" backendSystem="sf" businessObjectClass="LoSalesFolderCallCustomer" external="true" readOnly="true" distinct="true" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="customerName" value="CASE WHEN Account.Name IS NULL THEN '' ELSE Account.Name END" />
+    <Attribute name="customerPKey" table="Sales_Folder__c" column="Account__c" />
+    <Attribute name="mediaPath" table="SF_File" column="VersionData" />
+    <DerivedAttribute name="fileType" value="replace(file.PathOnClient, rtrim(file.PathOnClient, replace(file.PathOnClient, '.', '')), '')" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var currentCustomerPKey = "";
+			var callDate = "";
+			var callDateThru = "";
+			var prmPromotionPKey = "";
+			var addCond = "";
+
+			if(Utils.isDefined(jsonQuery.currentCustomerPKey)) {
+				currentCustomerPKey = Utils.convertForDBParam(jsonQuery.currentCustomerPKey, "DomPKey");
+			}
+			if(Utils.isDefined(jsonQuery.callDate)) {      		
+				callDate= Utils.convertForDBParam(jsonQuery.callDate, 'DomDate');
+			}
+			if(Utils.isDefined(jsonQuery.callDateThru)) {
+				callDateThru = Utils.convertForDBParam(jsonQuery.callDateThru, 'DomDate');
+			}
+			if (Utils.isDefined(jsonQuery.prmPromotionPKey)){
+			  prmPromotionPKey = Utils.convertForDBParam(jsonQuery.prmPromotionPKey, 'DomKey');
+              addCond += "INNER JOIN Promotion_Sales_Folder__c ON Sales_Folder__c.Id=Promotion_Sales_Folder__c.Sales_Folder__c ";
+              addCond += "AND Promotion_Sales_Folder__c.Promotion__c=#prmPromotionPKey# ";
+			}	
+
+			var sqlParams = {currentCustomerPKey, callDate, callDateThru, prmPromotionPKey};
+
+			//Get all customers within current customer hierarchy
+			var sqlStmt = "WITH RECURSIVE Cte_CustomerHierarchy  AS ( ";
+			sqlStmt += "Select  Account_Trade_Org_Hierarchy__c.Parent_Account__c AS TradeOrgPKey, Account_Trade_Org_Hierarchy__c.Child_Account__c ";
+			sqlStmt += "FROM Account_Trade_Org_Hierarchy__c   ";
+			sqlStmt += "WHERE #compareAsDate('Account_Trade_Org_Hierarchy__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND #compareAsDate('Account_Trade_Org_Hierarchy__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND Account_Trade_Org_Hierarchy__c.Child_Account__c= #currentCustomerPKey# ";
+
+			sqlStmt += "UNION ALL ";
+
+			sqlStmt += "Select Account_Trade_Org_Hierarchy__c.Parent_Account__c , Account_Trade_Org_Hierarchy__c.Child_Account__c ";
+			sqlStmt += "FROM Account_Trade_Org_Hierarchy__c AS Account_Trade_Org_Hierarchy__c  ";
+			sqlStmt += "INNER JOIN Cte_CustomerHierarchy r  ON Account_Trade_Org_Hierarchy__c.Child_Account__c = r.TradeOrgPKey ";
+			sqlStmt += "WHERE #compareAsDate('Account_Trade_Org_Hierarchy__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND #compareAsDate('Account_Trade_Org_Hierarchy__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#), ";
+
+			//Get all Orgunits within Orgunit hierarchy for loggedin user's orgunit
+			sqlStmt += "Cte_OrgUnitHierarchy  (OrgPkey) AS ( ";
+			sqlStmt += "SELECT Distinct( OrgUnitUserTable.Org_Unit__c) as OrgPkey ";
+			sqlStmt += "FROM  Org_Unit_User__c as OrgUnitUserTable  ";
+			sqlStmt += "INNER JOIN Org_Unit__c On OrgUnitUserTable.Org_Unit__c=Org_Unit__c.Id ";
+			sqlStmt += "INNER JOIN Account_Org_Unit__c On Org_Unit__c.Id=Account_Org_Unit__c.Org_Unit__c  ";
+			sqlStmt += "INNER JOIN Account On Account_Org_Unit__c.Account__c=Account.Id  ";
+			sqlStmt += "INNER JOIN Visit On Account.Id=Visit.AccountId  ";
+			sqlStmt += "WHERE Visit.Responsible__c= '#UserPKey#' ";
+			sqlStmt += "AND OrgUnitUserTable.Main__c='1' and Org_Unit__c.Sales_Org__c='#SALESORG#' ";
+			sqlStmt += "AND #compareAsDate('OrgUnitUserTable.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND #compareAsDate('OrgUnitUserTable.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND Org_Unit__c.Org_Type__c='Sales' ";
+
+			sqlStmt += "UNION ALL  ";
+
+			sqlStmt += "SELECT OrgUnitHierarchyAux.Parent_Org_Unit__c OrgPkey  ";
+			sqlStmt += "FROM Org_Unit_Hierarchy__c OrgUnitHierarchyAux,Cte_OrgUnitHierarchy CteOrgUnitHierarchyAux ";
+			sqlStmt += "WHERE  OrgUnitHierarchyAux.Child_Org_Unit__c=CteOrgUnitHierarchyAux.OrgPkey ";
+			sqlStmt += "AND #compareAsDate('OrgUnitHierarchyAux.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND #compareAsDate('OrgUnitHierarchyAux.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#) ";
+
+			//Get salesfolder details for selected salesfolders through selected customers and ogunit hierarchy 
+			sqlStmt += "SELECT Sales_Folder__c.Id as pKey, Sales_Folder__c.Name as id, CASE WHEN Account.Name IS NULL THEN '' ELSE Account.Name END as customerName, Sales_Folder__c.Org_Unit__c, ";
+			sqlStmt += "Sales_Folder__c.Account__c as customerPKey, Sales_Folder__c.Description_#Language#__c as sloganText, Sales_Folder__c.Org_Unit__c, ";
+			sqlStmt += "Sales_Folder__c.Valid_From__c as dateFrom, Sales_Folder__c.Valid_Thru__c as dateThru, Sales_Folder_Template__c.Description_#Language#__c as metaText, ";
+			sqlStmt += "Sales_Folder__c.LastModifiedDate as businessModified, ";
+			sqlStmt += "FilesAuxTable.VersionData AS mediaPath, FilesAuxTable.Id AS attachmentBlobPKey, ";
+			sqlStmt += "replace(FilesAuxTable.PathOnClient, rtrim(FilesAuxTable.PathOnClient, replace(FilesAuxTable.PathOnClient, '.', '')), '') AS fileType ";
+
+			sqlStmt += "FROM Sales_Folder__c ";
+			sqlStmt += "INNER JOIN Account ON Sales_Folder__c.Account__c=Account.Id ";
+			sqlStmt += "LEFT OUTER JOIN Org_Unit__c ON Sales_Folder__c.Org_Unit__c=Org_Unit__c.Id ";
+
+			sqlStmt += "LEFT OUTER JOIN ";
+			sqlStmt += "(SF_FileLink ";
+			sqlStmt += "JOIN SF_File as FilesAuxTable ON SF_FileLink.FileId=FilesAuxTable.Id ";
+			sqlStmt += "AND FilesAuxTable.Usage__c = 'Icon' ";
+			sqlStmt += "AND NOT EXISTS (SELECT FilesFilteredIcons.Id FROM SF_File as FilesFilteredIcons, SF_FileLink as FileLinkFilteredIcons WHERE FileLinkFilteredIcons.FileId=FilesFilteredIcons.Id AND FilesFilteredIcons.Usage__c = 'Icon' AND FilesFilteredIcons.CreatedDate > FilesAuxTable.CreatedDate AND SF_FileLink.ParentId = FileLinkFilteredIcons.ParentId) ";
+			sqlStmt += ") ON Sales_Folder__c.Id=SF_FileLink.ParentId ";
+
+			sqlStmt += "JOIN Sales_Folder_Template__c ON Sales_Folder_Template__c.Id=Sales_Folder__c.Sales_Folder_Template__c ";
+			sqlStmt += addCond;
+
+			sqlStmt += "WHERE Sales_Folder__c.Sales_Org__c = '#SALESORG#' AND Sales_Folder__c.Active__c='1' ";
+			sqlStmt += "AND Sales_Folder_Template__c.Sales_Org__c = '#SALESORG#' AND Sales_Folder_Template__c.Sales_Org__c = '#SALESORG#' ";
+			sqlStmt += "AND (Sales_Folder__c.Account__c IN ( Select Distinct(TradeOrgPKey) from Cte_CustomerHierarchy ) OR Sales_Folder__c.Account__c = #currentCustomerPKey# ) ";
+			sqlStmt += "AND #compareAsDate('Sales_Folder__c.Valid_From__c', 'Date','<=', #callDate#, 'Date')# ";
+			sqlStmt += "AND #compareAsDate('Sales_Folder__c.Valid_Thru__c', 'Date','>=', #callDateThru#, 'Date')# ";
+			sqlStmt += "GROUP BY pKey ";
+
+			sqlStmt += "UNION  ";
+
+			sqlStmt += "SELECT Sales_Folder__c.Id as pKey, Sales_Folder__c.Name as id, CASE WHEN Account.Name IS NULL THEN '' ELSE Account.Name END as customerName, Sales_Folder__c.Org_Unit__c, ";
+			sqlStmt += "Sales_Folder__c.Account__c as customerPKey, Sales_Folder__c.Description_#Language#__c as sloganText, Sales_Folder__c.Org_Unit__c, ";
+			sqlStmt += "Sales_Folder__c.Valid_From__c as dateFrom, Sales_Folder__c.Valid_Thru__c as dateThru, Sales_Folder_Template__c.Description_#Language#__c as metaText, ";
+			sqlStmt += "Sales_Folder__c.LastModifiedDate as businessModified, ";
+			sqlStmt += "FilesAuxTable.VersionData AS mediaPath, FilesAuxTable.Id AS attachmentBlobPKey, ";
+			sqlStmt += "replace(FilesAuxTable.PathOnClient, rtrim(FilesAuxTable.PathOnClient, replace(FilesAuxTable.PathOnClient, '.', '')), '') AS fileType ";
+
+			sqlStmt += "FROM Sales_Folder__c ";
+			sqlStmt += "LEFT OUTER JOIN Account ON Sales_Folder__c.Account__c=Account.Id ";
+			sqlStmt += "INNER JOIN Org_Unit__c ON Sales_Folder__c.Org_Unit__c=Org_Unit__c.Id ";
+
+			sqlStmt += "LEFT OUTER JOIN ";
+			sqlStmt += "(SF_FileLink ";
+			sqlStmt += "JOIN SF_File as FilesAuxTable ON SF_FileLink.FileId=FilesAuxTable.Id ";
+			sqlStmt += "AND FilesAuxTable.Usage__c = 'Icon' ";
+			sqlStmt += "AND NOT EXISTS (SELECT FilesFilteredIcons.Id FROM SF_File as FilesFilteredIcons, SF_FileLink as FileLinkFilteredIcons WHERE FileLinkFilteredIcons.FileId=FilesFilteredIcons.Id AND FilesFilteredIcons.Usage__c = 'Icon' AND FilesFilteredIcons.CreatedDate > FilesAuxTable.CreatedDate AND SF_FileLink.ParentId = FileLinkFilteredIcons.ParentId) ";
+			sqlStmt += ") ON Sales_Folder__c.Id=SF_FileLink.ParentId ";
+
+			sqlStmt += "JOIN Sales_Folder_Template__c ON Sales_Folder_Template__c.Id=Sales_Folder__c.Sales_Folder_Template__c ";
+			sqlStmt += addCond;
+
+			sqlStmt += "WHERE Sales_Folder__c.Sales_Org__c = '#SALESORG#' AND Sales_Folder_Template__c.Sales_Org__c = '#SALESORG#' AND Sales_Folder__c.Active__c='1' ";
+			sqlStmt += "AND Sales_Folder__c.Org_Unit__c IN ( ";
+			sqlStmt += "SELECT ";
+			sqlStmt += "Distinct(cr.OrgPkey) ";
+			sqlStmt += "FROM Cte_OrgUnitHierarchy cr) ";
+			sqlStmt += "AND #compareAsDate('Sales_Folder__c.Valid_From__c', 'Date','<=', #callDate#, 'Date')# ";
+			sqlStmt += "AND #compareAsDate('Sales_Folder__c.Valid_Thru__c', 'Date','>=', #callDateThru#, 'Date')# ";
+
+			sqlStmt += "GROUP BY pKey ";
+			sqlStmt += "ORDER BY ";
+			sqlStmt += "Sales_Folder_Template__c.Description_#Language#__c ASC, ";
+			sqlStmt += "Sales_Folder__c.Description_#Language#__c ASC ";
+
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+    <Update><![CDATA[
+			// Read only datasource
+			return undefined;
+		]]></Update>
+    <Insert><![CDATA[   
+			// Read only datasource
+			return undefined;
+		]]></Insert>
+    <Delete><![CDATA[
+			// Read only datasource
+			return undefined;
+		]]></Delete>
+  </Database>
+</DataSource>

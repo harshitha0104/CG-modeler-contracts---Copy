@@ -1,0 +1,10 @@
+<ValidationMessages name="BoTruckLoadMessages" businessObject="BoTruckLoad" schemaVersion="0.0.0.5">
+  <ValidationMessage name="CasSdoMainModReasonRequiredToRelease" defaultMessage="Modification Reason Code is missing for all marked items in Item List. Document cannot be released." comment="" />
+  <ValidationMessage name="CasSdoMainModReasonRequiredToSave" defaultMessage="Modification Reason Code is missing for all marked items in Item List. Document cannot be saved." comment="" />
+  <ValidationMessage name="CasSdoMainProductItemMetaAndUnitNotUnique" defaultMessage="The product(s) #summary# has/have been assigned more than once using the same item template or quantity logistic unit." comment="Product with same item template and quantity logistic unit can only exist once." />
+  <ValidationMessage name="CasSdoMainBlindModeItemsNotYetEdited" defaultMessage="There are scheduled items that have not yet been edited and document could not be released." comment="" />
+  <ValidationMessage name="CasSdoMainQuantityExceedsUserInventorySummary" defaultMessage="The user inventory for some products is overdrawn: #summary#. Please reduce the quantity for this product." comment="Validates if userinventory is overdrawn." />
+  <ValidationMessage name="CasSdoMainQuantityExceedsUserInventoryWarningSummary" defaultMessage="The user inventory for some products is overdrawn: #summary#." comment="Validates if userinventory is overdrawn." />
+  <ValidationMessage name="CasSdoMainQuantityExceedsQuotaSummary" defaultMessage="The quota for some products are overdrawn: #summary#. Please reduce the quantity for this product." comment="Validates if quota is overdrawn." />
+  <ValidationMessage name="CasSdoMainQuantityExceedsQuotaWarningSummary" defaultMessage="The quota for some products is overdrawn: #summary#." comment="Validates if quota is overdrawn." />
+</ValidationMessages>

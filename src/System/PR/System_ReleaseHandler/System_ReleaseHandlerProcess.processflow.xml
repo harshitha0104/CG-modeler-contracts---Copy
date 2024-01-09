@@ -1,0 +1,129 @@
+<Process name="System::ReleaseHandlerProcess" defaultAction="CheckPKeyAvailableDecision" schemaVersion="1.1">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="SysReleaseProcessPKey" type="DomPKey" />
+        <Declaration name="ReleaseProcessObject" type="BoSysReleaseProcess" />
+        <Declaration name="titleText" type="DomText" />
+        <Declaration name="SignatureRequired" type="DomBool" />
+        <Declaration name="BoAlreadyPresent" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="referenceObject" type="Object" />
+        <Input name="readOnlyMode" type="String" />
+        <Input name="phaseFilter" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="DetermineSysReleaseProcessPKey" call="ProcessContext::referenceObject.determineSysReleaseProcessPKey">
+        <Parameters>
+          <Input name="phaseFilter" value="ProcessContext::phaseFilter" />
+        </Parameters>
+        <Return name="ProcessContext::SysReleaseProcessPKey" />
+      </Action>
+      <Action actionType="LOGIC" name="GetTitleText" call="ProcessContext::referenceObject.getReleaseTitle">
+        <Parameters />
+        <Return name="ProcessContext::titleText" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="CheckPKeyAvailableDecision" actionType="DECISION" parameter="ProcessContext::SysReleaseProcessPKey">
+        <CaseEmpty action="EndConfirmNoPrint" />
+        <CaseElse action="CheckReleaseBoPresent" />
+      </Action>
+      <Action actionType="LOGIC" name="CheckReleaseBoPresent" call="Utils.isDefined">
+        <Parameters>
+          <Input name="referenceObject" value="ProcessContext::referenceObject.releaseProcessBo" />
+        </Parameters>
+        <Return name="ProcessContext::BoAlreadyPresent" />
+        <TransitionTo action="CheckReleaseBoPresent_Decision" />
+      </Action>
+      <Action name="CheckReleaseBoPresent_Decision" actionType="DECISION" parameter="ProcessContext::BoAlreadyPresent">
+        <Case value="true" action="CopyOverBO" />
+        <Case value="false" action="LoadReleaseProcessObject" />
+        <CaseElse action="LoadReleaseProcessObject" />
+      </Action>
+      <Action actionType="LOGIC" name="CopyOverBO" call="ProcessContext::referenceObject.getReleaseProcessBo">
+        <Return name="ProcessContext::ReleaseProcessObject" />
+        <TransitionTo action="CheckAnySingatureRequired" />
+      </Action>
+      <Action actionType="LOAD" name="LoadReleaseProcessObject" type="BoSysReleaseProcess">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::SysReleaseProcessPKey" />
+          <Input name="referenceObject" value="ProcessContext::referenceObject" />
+          <Input name="readOnlyMode" value="ProcessContext::readOnlyMode" />
+          <Input name="phaseFilter" value="ProcessContext::phaseFilter" />
+        </Parameters>
+        <Return name="ProcessContext::ReleaseProcessObject" />
+        <TransitionTo action="CheckAnySingatureRequired" />
+      </Action>
+      <Action actionType="LOGIC" name="CheckAnySingatureRequired" call="ProcessContext::ReleaseProcessObject.checkAnySignatureRequired">
+        <Return name="ProcessContext::SignatureRequired" />
+        <TransitionTo action="CheckAnySingatureRequired_Decision" />
+      </Action>
+      <Action name="CheckAnySingatureRequired_Decision" actionType="DECISION" parameter="ProcessContext::SignatureRequired">
+        <Case value="1" action="CreateMapping" />
+        <Case value="0" action="EndConfirmNoPrint" />
+        <CaseElse action="EndConfirmNoPrint" />
+      </Action>
+      <Action actionType="LOGIC" name="CreateMapping" call="ProcessContext::ReleaseProcessObject.createAttributeMapping">
+        <TransitionTo action="MapSignatureStepInformation" />
+      </Action>
+      <Action actionType="LOGIC" name="MapSignatureStepInformation" call="ProcessContext::ReleaseProcessObject.mapSignatureStepInformation">
+        <TransitionTo action="ShowView" />
+      </Action>
+      <Action actionType="VIEW" name="ShowView">
+        <UIDescription>System::ReleaseHandlerUI</UIDescription>
+        <Events>
+          <Event name="release" action="PrepareRelease" />
+          <Event name="SignatureConfirmApproval1_Pressed" action="CheckApprovalCode" />
+          <Event name="SignatureConfirmApproval2_Pressed" action="CheckApprovalCode" />
+          <Event name="SignatureConfirmApproval3_Pressed" action="CheckApprovalCode" />
+          <Event name="SignatureConfirmApproval4_Pressed" action="CheckApprovalCode" />
+        </Events>
+      </Action>
+      <Action actionType="LOGIC" name="CheckApprovalCode" call="ProcessContext::ReleaseProcessObject.checkApprovalCode">
+        <Parameters>
+          <Input name="eventId" value="Event.eventId" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="PrepareRelease" call="ProcessContext::ReleaseProcessObject.prepareRelease">
+        <TransitionTo action="ValidateReleaseProcess" />
+      </Action>
+      <Action actionType="VALIDATION" name="ValidateReleaseProcess">
+        <Validations>
+          <Validation name="ProcessContext::ReleaseProcessObject.validateRelease" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="PassReleaseInformationToRefObject" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action actionType="LOGIC" name="PassReleaseInformationToRefObject" call="ProcessContext::ReleaseProcessObject.mapSignatureInformationToRefObject">
+        <TransitionTo action="CheckLocationCapturing" />
+      </Action>
+      <Action actionType="LOGIC" name="CheckLocationCapturing" call="ProcessContext::ReleaseProcessObject.checkLocationCapturing">
+        <TransitionTo action="EndConfirmNoPrint" />
+      </Action>
+      <Action actionType="END" name="EndConfirmNoPrint">
+        <ReturnValues>
+          <Return name="releaseProcessOutcome" type="Literal" value="Confirm" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndCancel">
+        <ReturnValues>
+          <Return name="releaseProcessOutcome" type="Literal" value="Cancel" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="releaseProcessOutcome" type="Literal" value="Cancel" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

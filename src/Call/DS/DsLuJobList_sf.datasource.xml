@@ -1,0 +1,34 @@
+<DataSource name="DsLuJobList" backendSystem="sf" businessObjectClass="LuJobList" external="false" distinct="false" readOnly="true" editableEntity="Job_List__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Job_List__c" column="Id" />
+    <Attribute name="jobDefListText" table="Job_Definition_List__c" column="Description_#Language#__c" />
+    <Attribute name="customerPKey" table="Job_List__c" column="Account__c" />
+    <Attribute name="customerName" table="Account" column="Name" />
+    <Attribute name="validFrom" table="Job_List__c" column="Valid_From__c" />
+    <Attribute name="validThru" table="Job_List__c" column="Valid_Thru__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Job_List__c" alias="" idAttribute="Id" />
+    <Entity name="Job_Definition_List__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Job_List__c.Job_Definition_List__c" comparator="eq" rightSideType="Attribute" rightSideValue="Job_Definition_List__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Account" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Job_List__c.Account__c" comparator="eq" rightSideType="Attribute" rightSideValue="Account.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <OrderCriteria />
+  <QueryCondition><![CDATA[
+			Job_List__c.Id = #pKey#
+		]]></QueryCondition>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

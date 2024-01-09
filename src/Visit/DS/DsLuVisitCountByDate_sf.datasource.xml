@@ -1,0 +1,25 @@
+<Datasource name="DsLuVisitCountByDate" objectClass="LuVisitCountByDate" external="true" backendSystem="sf" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var currentDate = Utils.convertForDBParam(Utils.convertDate2Ansi(Utils.createDateToday()), 'DomDate');
+
+			if (Utils.isDefined(jsonQuery.cardDate)){
+				currentDate = Utils.convertForDBParam(jsonQuery.cardDate, 'DomDate');
+			}
+			
+
+			var sqlParams = {currentDate};
+
+			var sqlStmt = "SELECT Count(*) AS visitCount FROM Visit ";
+            sqlStmt +=    "WHERE Visit.VisitorId = '#UserPKey#' ";
+            sqlStmt +=    "AND #compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','=',#currentDate#, 'Date')# ";
+			sqlStmt +=    "AND ( Visit.status = 'Planned' OR Visit.status = 'InProgress' ) ";
+			sqlStmt +=    "AND Visit.IsDeleted = '0' ";
+	 		sqlStmt += 	  "AND Visit.Visit_Template__c = ' ' ";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+		]]></Load>
+  </Database>
+</Datasource>

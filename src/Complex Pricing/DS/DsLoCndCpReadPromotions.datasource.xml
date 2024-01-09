@@ -1,0 +1,48 @@
+<Datasource name="DsLoCndCpReadPromotions" objectClass="LoCndCpReadPromotions" businessObjectClass="LoCndCpReadPromotions" readOnly="true" external="true" editableEntity="PrdProposalPrmBpaTacticRel" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+				var customerPKey = "";
+				var validFrom = "";
+				var validThru = "";
+				if (Utils.isDefined(jsonParams.CustomerPKey)){
+                    customerPKey = Utils.convertForDBParam(jsonParams.CustomerPKey, "DomPKey");
+                }
+				if (Utils.isDefined(jsonParams.ValidFrom)){
+                    validFrom = Utils.convertForDBParam(jsonParams.ValidFrom, "DomDate");
+                }
+				if (Utils.isDefined(jsonParams.ValidThru)){
+                    validThru = Utils.convertForDBParam(jsonParams.ValidThru, "DomDate");
+                }
+				var sqlParams = {customerPKey,validFrom,validThru};
+				var sql= "";
+				sql += "SELECT ";
+				sql += "PrdProposalPrmBpaTacticRel.PKey as PKey, ";
+				sql += "PrdProposalPrmBpaTacticRel.ValidFrom as ValidFrom, ";
+				sql += "PrdProposalPrmBpaTacticRel.ValidThru as ValidThru, ";
+				sql += "PrdProposalPrmBpaTacticRel.CustomerPKey as CustomerPKey, ";
+				sql += "PrdProposalPrmBpaTacticRel.PrmMainPKey as PrmMainPKey, ";	
+				sql += "PrdProposalPrmBpaTacticRel.PromotionPrmMainPKey as PromotionPrmMainPKey " ;
+				sql += "FROM ";
+				sql += "PrdProposalPrmBpaTacticRel "; 
+				sql += "WHERE ";
+				sql +=  "PrdProposalPrmBpaTacticRel.Status<>'d' ";
+				sql += "AND PrdProposalPrmBpaTacticRel.SalesOrg= '#SalesOrg#' ";
+				sql += "AND PrdProposalPrmBpaTacticRel.CustomerPKey= #customerPKey# ";
+				sql += "AND PrdProposalPrmBpaTacticRel.ValidFrom<= #validFrom# ";
+				sql += "AND  #validThru# <=PrdProposalPrmBpaTacticRel.ValidThru ";
+                return Utils.replaceMacrosParam(sql, sqlParams);
+         ]]></Load>
+    <Update><![CDATA[
+            // Intended to be empty
+            return undefined;
+                    ]]></Update>
+    <Insert><![CDATA[   
+                        // Intended to be empty     
+            return undefined;           
+                    ]]></Insert>
+    <Delete><![CDATA[
+              // Intended to be empty
+              return undefined;  
+                    ]]></Delete>
+  </Database>
+</Datasource>

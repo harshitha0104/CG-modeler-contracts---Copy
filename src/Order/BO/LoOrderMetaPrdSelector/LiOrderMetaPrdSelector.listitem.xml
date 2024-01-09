@@ -1,0 +1,8 @@
+<ListItem name="LiOrderMetaPrdSelector" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="defaultGroup" type="DomBool" storable="false" dataSourceProperty="defaultGroup" />
+    <SimpleProperty name="level1" type="DomSdoPrdSelectorLevel1" storable="false" dataSourceProperty="level1" />
+    <SimpleProperty name="level2" type="DomSdoPrdSelectorLevel2" storable="false" dataSourceProperty="level2" />
+  </SimpleProperties>
+</ListItem>

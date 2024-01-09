@@ -1,0 +1,36 @@
+<Process name="PromotionTemplate::AddTacticLookupProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="TacticList" type="LoPrmTacticMeta" />
+      </Declarations>
+      <Parameters>
+        <Input name="parentPKey" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="GetTacticList" type="LoPrmTacticMeta">
+        <Parameters>
+          <Input name="parentPKey" value="ProcessContext::ParentPKey" />
+        </Parameters>
+        <Return name="ProcessContext::TacticList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>PromotionTemplate::AddTacticLookupUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="End" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="tacticMetaPKey" value="Event.pKey" />
+          <Return name="tacticMetaId" value="Event.metaId" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

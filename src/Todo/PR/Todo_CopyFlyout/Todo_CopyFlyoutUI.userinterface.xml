@@ -1,0 +1,39 @@
+<UIDescription name="Todo::CopyFlyoutUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="CopyTodoTitleId" defaultLabel="Copy Task" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="copTodo">
+          <Bindings>
+            <Resource target="Text" type="Label" id="copTodoId" defaultLabel="Done" />
+            <Resource target="Icon" type="Image" id="CheckGrey24" defaultImage="light/done_24.png" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="FinishWizard">
+              <Params>
+                <Param name="buttonPressed" value="copyTodo" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="UserLookup">
+          <Lookup name="User">
+            <Bindings>
+              <Resource target="Label" type="Label" id="UserId" defaultLabel="User" />
+              <Binding target="Value" binding="ProcessContext::ValidationBo.luUser.name" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="userLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

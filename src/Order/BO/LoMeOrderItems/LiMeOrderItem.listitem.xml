@@ -1,0 +1,52 @@
+<ListItem name="LiMeOrderItem" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="sdoMainPKey" type="DomPKey" dataSourceProperty="sdoMainPKey" />
+    <SimpleProperty name="sdoItemMetaPKey" type="DomPKey" dataSourceProperty="sdoItemMetaPKey" />
+    <SimpleProperty name="sdoParentItemPKey" type="DomPKey" dataSourceProperty="sdoParentItemPKey" />
+    <SimpleProperty name="parentType" type="DomString" dataSourceProperty="parentType" />
+    <SimpleProperty name="quantity" type="DomDecimal" dataSourceProperty="quantity" />
+    <SimpleProperty name="discount" type="DomPercentage" dataSourceProperty="discount" />
+    <SimpleProperty name="quantityLogisticUnit" type="DomPrdLogisticUnit" dataSourceProperty="quantityLogisticUnit" />
+    <SimpleProperty name="type" type="DomId" dataSourceProperty="type" />
+    <SimpleProperty name="shortType" type="DomId" dataSourceProperty="shortType" />
+    <SimpleProperty name="priceEffect" type="DomSdoItemMetaPriceEffect" dataSourceProperty="priceEffect" />
+    <SimpleProperty name="piecesPerSmallestUnit" type="DomDecimal" dataSourceProperty="piecesPerSmallestUnit" />
+    <SimpleProperty name="saveZeroQuantity" type="DomBool" dataSourceProperty="saveZeroQuantity" />
+    <SimpleProperty name="listed" type="DomBool" dataSourceProperty="listed" />
+    <SimpleProperty name="promoted" type="DomBool" dataSourceProperty="promoted" />
+    <SimpleProperty name="history" type="DomBool" dataSourceProperty="history" />
+    <SimpleProperty name="outOfStock" type="DomBool" dataSourceProperty="outOfStock" />
+    <SimpleProperty name="calculationGroup" type="DomSdoCalculationGroup" dataSourceProperty="calculationGroup" />
+    <SimpleProperty name="price" type="DomMoney" dataSourceProperty="price" />
+    <SimpleProperty name="priceReceipt" type="DomMoney" dataSourceProperty="priceReceipt" />
+    <SimpleProperty name="value" type="DomMoney" dataSourceProperty="value" />
+    <SimpleProperty name="valueReceipt" type="DomMoney" dataSourceProperty="valueReceipt" />
+    <SimpleProperty name="basePrice" type="DomMoney" dataSourceProperty="price" />
+    <SimpleProperty name="basePriceReceipt" type="DomMoney" dataSourceProperty="priceReceipt" />
+    <SimpleProperty name="grossValue" type="DomMoney" dataSourceProperty="grossValue" />
+    <SimpleProperty name="grossValueReceipt" type="DomMoney" dataSourceProperty="grossValueReceipt" />
+    <SimpleProperty name="specialPrice" type="DomMoney" dataSourceProperty="specialPrice" />
+    <SimpleProperty name="specialPriceReceipt" type="DomMoney" dataSourceProperty="specialPriceReceipt" />
+    <SimpleProperty name="erpId" type="DomId" dataSourceProperty="erpId" />
+    <SimpleProperty name="suggestedQuantity" type="DomDecimal" dataSourceProperty="suggestedQuantity" />
+    <SimpleProperty name="freeItemCreationStep" type="DomString" dataSourceProperty="freeItemCreationStep" />
+    <SimpleProperty name="movementDirection" type="DomSdoItemMovementDirection" dataSourceProperty="movementDirection" />
+    <SimpleProperty name="targetQuantity" type="DomDecimal" dataSourceProperty="targetQuantity" />
+    <SimpleProperty name="modReason" type="DomSdoModReason" dataSourceProperty="modReason" />
+    <SimpleProperty name="isPersistedItem" type="DomBool" dataSourceProperty="isPersistedItem" />
+    <SimpleProperty name="allowCriticalStock" type="DomBool" dataSourceProperty="allowCriticalStock" />
+    <SimpleProperty name="splittingGroup" type="DomId" dataSourceProperty="splittingGroup" />
+    <SimpleProperty name="rewardPKey" type="DomPKey" dataSourceProperty="rewardPKey" />
+    <SimpleProperty name="pricingInfo1" type="DomDecimal" dataSourceProperty="pricingInfo1" />
+    <SimpleProperty name="pricingInfo2" type="DomDecimal" dataSourceProperty="pricingInfo2" />
+    <SimpleProperty name="pricingInfo3" type="DomDecimal" dataSourceProperty="pricingInfo3" />
+    <SimpleProperty name="pricingInfo4" type="DomDecimal" dataSourceProperty="pricingInfo4" />
+    <SimpleProperty name="pricingInfo5" type="DomDecimal" dataSourceProperty="pricingInfo5" />
+    <SimpleProperty name="pricingInfo6" type="DomDecimal" dataSourceProperty="pricingInfo6" />
+    <SimpleProperty name="pricingInfo7" type="DomDecimal" dataSourceProperty="pricingInfo7" />
+    <SimpleProperty name="pricingInfo8" type="DomDecimal" dataSourceProperty="pricingInfo8" />
+    <SimpleProperty name="pricingInfo9" type="DomDecimal" dataSourceProperty="pricingInfo9" />
+    <SimpleProperty name="pricingInfo10" type="DomDecimal" dataSourceProperty="pricingInfo10" />
+  </SimpleProperties>
+</ListItem>

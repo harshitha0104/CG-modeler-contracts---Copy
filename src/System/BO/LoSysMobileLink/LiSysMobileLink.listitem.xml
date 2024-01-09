@@ -1,0 +1,18 @@
+<ListItem name="LiSysMobileLink">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="active" type="DomBool" storable="false" dataSourceProperty="active" />
+    <SimpleProperty name="sort" type="DomSort" storable="false" dataSourceProperty="sort" />
+    <SimpleProperty name="dashboardState" type="DomLongText" storable="false" dataSourceProperty="dashboardState" />
+    <SimpleProperty name="description" type="DomText" storable="false" dataSourceProperty="description" />
+    <SimpleProperty name="schemeName" type="DomText" storable="false" dataSourceProperty="schemeName" />
+    <SimpleProperty name="orgId" type="DomText" storable="false" dataSourceProperty="orgId" />
+    <SimpleProperty name="loginHost" type="DomText" storable="false" dataSourceProperty="loginHost" />
+    <SimpleProperty name="assetId" type="DomText" storable="false" dataSourceProperty="assetId" />
+    <SimpleProperty name="assetType" type="DomText" storable="false" dataSourceProperty="assetType" />
+    <SimpleProperty name="displayIn" type="DomText" storable="false" dataSourceProperty="displayIn" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" blobTable="PrmAttachmentBlob" blobPKeyField="attachmentBlobPKey" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+    <SimpleProperty name="url" type="DomLongText" dataSourceProperty="url" />
+  </SimpleProperties>
+</ListItem>

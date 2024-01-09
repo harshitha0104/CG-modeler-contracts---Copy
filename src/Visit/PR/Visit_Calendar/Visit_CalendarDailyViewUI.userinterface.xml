@@ -1,0 +1,223 @@
+<UIDescription name="Visit::CalendarDailyViewUI" schemaVersion="0.0.0.5" simpleEditorOnly="true">
+  <Page pagePattern="SplitScreenPage" leftSectionFlex="1" rightSectionFlex="1" selectFirstItemInList="false">
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::currentDateTitle" />
+        <!-- CW-REQUIRED: remove title binding -->
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="false" itemId="dailyView">
+          <Bindings>
+            <Resource target="Text" type="Label" id="CallCalendarWeeklyView" defaultLabel="Weekly view" />
+            <Resource target="Icon" type="Image" id="CalendarDarkGrey24" defaultImage="CalendarDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="SwitchCalendarView">
+              <Params>
+                <Param name="view" value="DayWithMap" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="allCalls">
+          <Bindings>
+            <Resource target="Text" type="Label" id="AgendaSetFilterAllId" defaultLabel="All visits" />
+            <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="SetVisitFilter">
+              <Params>
+                <Param name="filterValue" value="All" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="planCalls">
+          <Bindings>
+            <Resource target="Text" type="Label" id="OnlyAgendaSetFilterPlannedId" defaultLabel="Only open visits" />
+            <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="SetVisitFilter">
+              <Params>
+                <Param name="filterValue" value="Open" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+      <SplitScreenButtons>
+        <LeftSectionButton directlyVisible="true">
+          <Bindings>
+            <Resource target="Text" type="Label" id="AgendaMapShowId" defaultLabel="Show Map" />
+            <Resource target="Icon" type="Image" id="ShowMap" />
+          </Bindings>
+        </LeftSectionButton>
+        <RightSectionButton directlyVisible="true">
+          <Bindings>
+            <Resource target="Text" type="Label" id="AgendaMapHideId" defaultLabel="Hide Map" />
+            <Resource target="Icon" type="Image" id="ShowFilter" />
+          </Bindings>
+        </RightSectionButton>
+      </SplitScreenButtons>
+    </PageHeader>
+    <Section sectionName="leftSection" sectionPattern="TabbedViewAreaSection" currentTab="View::currentTabName">
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="PlannedVisits">
+              <Bindings>
+                <Resource target="text" type="Label" id="PlannedVisitsId" defaultLabel="Planned Visits" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="tabSelected" storeTabNameIn="currentTabName" />
+          </Events>
+        </TabSelector>
+      </Area>
+      <Area areaName="PlannedVisits" areaPattern="SingleElementArea">
+        <GroupedList name="CallList" hasBorder="true" dataSource="ProcessContext::visitList.Items[]">
+          <Items name="Items" itemPattern="AgendaOverviewItems">
+            <ItemListLayout>
+              <Default>
+                <Col width="2.2em" height="1.6em" layoutType="Image" bindingId="typeWithStatusImage" />
+                <Col width="3.3em" layoutType="itemValue" bindingId="plannedStartTime" />
+                <Col flex="1">
+                  <Row layoutType="itemIdentifier" bindingId="retailStoreName" />
+                  <Row layoutType="itemSecondary" bindingId="combinedAddress" />
+                </Col>
+                <Col width="0.3em" layoutType="itemSecondary" bindingId="Spacer" />
+                <Col width="0.5em" height="0.5em" layoutType="Image" bindingId="mapPinImage" align="right" />
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="typeWithStatusImage" />
+                  <Col width="3.6em" layoutType="itemValue" bindingId="plannedStartTime" />
+                  <Col flex="1">
+                    <Row layoutType="itemIdentifier" bindingId="retailStoreName" />
+                    <Row layoutType="itemSecondary" bindingId="combinedAddress" />
+                  </Col>
+                  <Col width="0.3em" layoutType="itemSecondary" bindingId="Spacer" />
+                  <Col width="0.5em" height="0.5em" layoutType="Image" bindingId="mapPinImage" align="right" />
+                </Default>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col width="2em" height="1.6em" layoutType="Image" bindingId="typeWithStatusImage" />
+                  <Col width="3.3em" layoutType="itemValue" bindingId="plannedStartTime" />
+                  <Col flex="1">
+                    <Row layoutType="itemIdentifier" bindingId="retailStoreName" />
+                    <Row layoutType="itemSecondary" bindingId="combinedAddress" />
+                  </Col>
+                  <Col width="0.3em" layoutType="itemSecondary" bindingId="Spacer" />
+                  <Col width="0.5em" height="0.5em" layoutType="Image" bindingId="mapPinImage" align="right" />
+                </Default>
+                <Apple>
+                  <Col width="2em" height="1.4em" layoutType="Image" bindingId="typeWithStatusImage" />
+                  <Col width="3.3em" layoutType="itemValueVerySmall" bindingId="plannedStartTime" />
+                  <Col flex="1">
+                    <Row layoutType="itemIdentifierSmall" bindingId="retailStoreName" />
+                    <Row layoutType="itemSecondary" bindingId="combinedAddress" />
+                  </Col>
+                  <Col width="0.3em" layoutType="itemSecondary" bindingId="Spacer" />
+                  <Col width="0.5em" height="0.5em" layoutType="Image" bindingId="mapPinImage" align="right" />
+                </Apple>
+              </Phone>
+            </ItemListLayout>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::ContextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+            <Bindings>
+              <Binding target="typeWithStatusImage" type="Image" binding=".visitTypeStatus" bindingMode="ONE_WAY" />
+              <Binding target="plannedStartTime" type="Text" binding=".plannedStartTime" bindingMode="ONE_WAY" />
+              <Binding target="retailStoreName" type="Text" binding=".retailStoreName" bindingMode="ONE_WAY" />
+              <Binding target="combinedAddress" type="Text" binding=".combinedAddress" bindingMode="ONE_WAY" />
+              <Binding target="mapPinId" type="Text" binding=".mapPinId" bindingMode="ONE_WAY" />
+              <Binding target="mapPinImage" type="Image" binding=".mapPinImage" bindingMode="ONE_WAY" />
+              <Resource target="Spacer" type="Label" id="Spacer" defaultLabel="  " />
+            </Bindings>
+          </Items>
+          <Events>
+            <SwipeEvent event="swipeEvent" />
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="id" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+            <ContextOpeningEvent event="contextMenuOpening">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="visitStatus" value=".visitStatus" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="contextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextSelectedEvent>
+          </Events>
+        </GroupedList>
+        <MenuItems>
+          <MenuItem directlyVisible="true" itemId="PrevDayId">
+            <Bindings>
+              <Resource target="Icon" type="Image" id="ChevronLeftGrey24" defaultImage="ChevronLeftGrey24.png" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="movePrevDay" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="NextDayId">
+            <Bindings>
+              <Resource target="Icon" type="Image" id="ChevronRightGrey24" defaultImage="ChevronRightGrey24.png" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="moveNextDay" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+      </Area>
+    </Section>
+    <Section sectionName="rightSection" sectionPattern="SingleAreaSection">
+      <Area areaName="detailArea" areaPattern="SingleElementArea">
+        <GoogleMap dataSource="ProcessContext::visitList.items[]" name="dummyMap" latitudeField="latitude" longitudeField="longitude" idField="mapIcon" toolTipField="toolTipText" visibilityField="visibleInMap">
+          <Bindings>
+            <Binding target="DisplayRoute" binding="ProcessContext::displayRoute" bindingMode="ONE_WAY" />
+            <Binding target="DisplayTraffic" binding="ProcessContext::displayTraffic" bindingMode="ONE_WAY" />
+          </Bindings>
+          <GoogleMapDetails name="VisitsMapDetails">
+            <Bindings>
+              <Binding target="Visible" type="Boolean" binding="ProcessContext::ShowMapDetails" bindingMode="TWO_WAY" />
+            </Bindings>
+            <CockpitSections name="MapDetailsSections">
+              <CockpitSection name="CustomerDetailSection" sectionPattern="3columns" showSeparator="true">
+                <Bindings>
+                  <Binding target="col1row1" type="Blob" binding="ProcessContext::MapDetail.customerProfilePicture" roundedEdge="true" fileTypeBinding="ProcessContext::MapDetail.customerPictureFileType" defaultImage="StoreCockpit" verticalAlignment="Top" defaultImageType=".svg" />
+                  <Binding target="col2row1" type="ItemIdentifier" binding="ProcessContext::MapDetail.name" />
+                  <Binding target="col2row2" type="ItemSecondary" binding="ProcessContext::MapDetail.mainAddress" />
+                  <Binding target="col2row3" type="ItemSecondary" binding="ProcessContext::MapDetail.distance" />
+                </Bindings>
+              </CockpitSection>
+            </CockpitSections>
+          </GoogleMapDetails>
+          <Events>
+            <MapMarkerSelectedEvent event="loadGoogleMapDetails">
+              <Params>
+                <Param name="pkey" value=".pKey" />
+              </Params>
+            </MapMarkerSelectedEvent>
+          </Events>
+        </GoogleMap>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

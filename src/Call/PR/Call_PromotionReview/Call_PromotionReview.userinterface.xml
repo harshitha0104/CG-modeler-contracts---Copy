@@ -1,0 +1,494 @@
+<UIDescription name="Call::PromotionReview" schemaVersion="1.1">
+  <Page pagePattern="MasterDetailSectionPage" masterSectionFlex="40" detailSectionFlex="60">
+    <ViewVariables>
+      <ViewVariable name="currentTabName" value="Info" />
+    </ViewVariables>
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::CustomerName" />
+        <!-- CW-REQUIRED: remove title binding -->
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection" currentTab="View::currentTabName">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="PromotionList" indexBar="false" searchable="false" master="true" dataSource="ProcessContext::PromotionList.Items[]">
+          <Items name="Items" itemPattern="CallPromotions">
+            <Bindings>
+              <Binding target="Slogan" type="Text" binding=".slogan" bindingMode="ONE_WAY" />
+              <Binding target="DateFrom" type="Date" binding=".dateFrom" bindingMode="ONE_WAY" />
+              <Binding target="DateThru" type="Date" binding=".dateThru" bindingMode="ONE_WAY" />
+              <Binding target="Seperator" type="Text" binding=".seperator" bindingMode="ONE_WAY" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col>
+                  <Row>
+                    <Col flex="1" layoutType="itemIdentifier" bindingId="Slogan" />
+                  </Row>
+                  <Row>
+                    <Col width="5.3em" height="1.5em" layoutType="itemSecondary itemRight" bindingId="DateFrom" />
+                    <Col width="0.4em" height="1.5em" layoutType="itemSecondary" bindingId="Seperator" />
+                    <Col width="5.3em" height="1.5em" layoutType="itemSecondary" bindingId="DateThru" />
+                  </Row>
+                </Col>
+              </Default>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="tabName" value="View::currentTabName" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+    <Section sectionName="detailSection" sectionPattern="TabbedViewAreaSection" currentTab="View::currentTabName">
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="Info">
+              <Bindings>
+                <Resource target="image" type="Image" id="Info_T" defaultImage="Info_T" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="infoId" defaultLabel="Info" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Products">
+              <Bindings>
+                <Resource target="image" type="Image" id="ProductsGrey24" defaultImage="ProductsGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="ProductsId" defaultLabel="Products" bindingMode="ONE_TIME" />
+                <Binding target="Info" binding="ProcessContext::luIconsCount.productsCount" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Attachments" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="ClipGrey24" defaultImage="ClipGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="AttachmentsId" defaultLabel="Attachments" bindingMode="ONE_TIME" />
+                <Binding target="Info" binding="ProcessContext::luAttachmentCount.count" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Activities" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="Activities_T" defaultImage="Activities_T" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="ActivitiesId" defaultLabel="Activities" bindingMode="ONE_TIME" />
+                <Binding target="Info" binding="ProcessContext::LuActivitiesCount.activitiesCount" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="SalesFolder" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="SalesFolder_T" defaultImage="SalesFolder_T" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="SalesFoldersId" defaultLabel="Sales Folder" bindingMode="ONE_TIME" />
+                <Binding target="Info" binding="ProcessContext::luSalesFolderCount.salesFolderCallCustomerCount" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="tabSelected" storeTabNameIn="currentTabName" />
+          </Events>
+        </TabSelector>
+      </Area>
+      <Area areaName="Info" areaPattern="GroupedElementsArea">
+        <!-- Promo Infos-->
+        <GroupElement name="PromoInfoGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="PromoInfoTitle" defaultLabel="Promo Info" />
+          </Bindings>
+          <InputArea name="Slogan" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="Slogan" defaultLabel="Slogan" />
+              <Binding target="Value" binding="ProcessContext::PromotionList.Current.slogan" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="Type" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="Type" defaultLabel="Type" />
+              <Binding target="Value" binding="ProcessContext::PromotionList.Current.type" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <Merger name="ValidFromThru" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Valid From / Thru" id="ValidFromThruId" />
+            </Bindings>
+            <DatePickerField name="DateFrom" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="DateFrom" defaultLabel="From" />
+                <Binding target="Value" binding="ProcessContext::PromotionList.Current.dateFrom" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <DatePickerField name="DateThru" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="DateThru" defaultLabel="Thru" />
+                <Binding target="Value" binding="ProcessContext::PromotionList.Current.dateThru" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+          </Merger>
+          <Merger name="OrderDate" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Order Date" id="OrderDate" />
+            </Bindings>
+            <DatePickerField name="OrderDateFrom" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="OrderDateFrom" defaultLabel="Order from" />
+                <Binding target="Value" binding="ProcessContext::PromotionList.Current.orderDateFrom" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <DatePickerField name="OrderDateThru" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="OrderDateThru" defaultLabel="Order thru" />
+                <Binding target="Value" binding="ProcessContext::PromotionList.Current.orderDateThru" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+          </Merger>
+          <Merger name="InStore" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="In Store" id="InStoreId" />
+            </Bindings>
+            <DatePickerField name="PlacementDateFrom" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="PlacementDateFrom" defaultLabel="In Store from" />
+                <Binding target="Value" binding="ProcessContext::PromotionList.Current.placementDateFrom" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <DatePickerField name="PlacementDateThru" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="PlacementDateThru" defaultLabel="In Store thru" />
+                <Binding target="Value" binding="ProcessContext::PromotionList.Current.placementDateThru" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+          </Merger>
+          <InputArea name="Anchor" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="Anchor" defaultLabel="Anchor" />
+              <Binding target="Value" binding="ProcessContext::PromotionList.Current.anchor" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+        <!-- Annotations-->
+        <GroupElement name="AnnotationGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="AnnotationTitle" defaultLabel="Annotations" />
+          </Bindings>
+          <InputAreaMultiLine name="Note" editable="false" noOfRows="8">
+            <Bindings>
+              <Binding target="Value" binding="ProcessContext::PromotionList.Current.note" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+        </GroupElement>
+        <!-- Products-->
+      </Area>
+      <Area areaName="Products" areaPattern="SingleElementArea">
+        <GroupedList name="PromotionProductsList" indexBar="false" searchable="false" hasBorder="false" dataSource="ProcessContext::PromotionProductList.Items[]">
+          <Items name="Items" itemPattern="PromotionProductList">
+            <Bindings>
+              <Binding target="Image" type="Image" binding=".groupFlag" bindingMode="ONE_WAY" />
+              <Binding target="Product" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              <Binding target="Discount" type="Decimal" formatV2="3.1" binding=".discount" bindingMode="ONE_WAY" />
+              <Binding target="Quantity" type="Decimal" formatV2="4.0" binding=".quantity" bindingMode="ONE_WAY" />
+              <Binding target="Price" type="Decimal" formatV2="10.2" binding=".price" bindingMode="ONE_WAY" />
+              <Resource target="QuantityLabel" type="Label" id="QuantityLabel" defaultLabel="Quantity" />
+              <Resource target="DiscountLabel" type="Label" id="DiscountLabel" defaultLabel="Discount" />
+              <Resource target="SpecialPriceLabel" type="Label" id="SpecialPriceLabel" defaultLabel="Price" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Row>
+                  <Col width="2em" height="2em" layoutType="Image" bindingId="Image" />
+                  <Col flex="1" layoutType="itemName" bindingId="Product" />
+                </Row>
+                <Row>
+                  <Col width="4em" layoutType="itemNameSecondary" bindingId="DiscountLabel" />
+                  <Col width="4em" layoutType="itemNameSecondary" bindingId="QuantityLabel" />
+                  <Col width="4em" layoutType="itemNameSecondary" bindingId="SpecialPriceLabel" />
+                </Row>
+                <Row>
+                  <Col width="4em" layoutType="itemNameSecondary" bindingId="Discount" />
+                  <Col width="4em" layoutType="itemNameSecondary" bindingId="Quantity" />
+                  <Col width="4em" layoutType="itemNameSecondary" bindingId="Price" />
+                </Row>
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="2em" height="2em" layoutType="Image" bindingId="Image" />
+                  <Col>
+                    <Row layoutType="itemName" bindingId="Product" />
+                    <Row layoutType="itemPaddingTopSmall">
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="DiscountLabel" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="QuantityLabel" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="SpecialPriceLabel" />
+                    </Row>
+                    <Row layoutType="itemPaddingTopSmall">
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="Discount" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="Quantity" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="Price" />
+                    </Row>
+                  </Col>
+                </Default>
+                <Apple>
+                  <Col width="2em" height="2em" layoutType="Image" bindingId="Image" />
+                  <Col>
+                    <Row layoutType="itemName" bindingId="Product" />
+                    <Row layoutType="itemPaddingTopSmall">
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="DiscountLabel" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="QuantityLabel" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="SpecialPriceLabel" />
+                    </Row>
+                    <Row layoutType="itemPaddingTopSmall">
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="Discount" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="Quantity" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="Price" />
+                    </Row>
+                  </Col>
+                </Apple>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col width="2em" height="2em" layoutType="Image" bindingId="Image" />
+                  <Col>
+                    <Row layoutType="itemName" bindingId="Product" />
+                    <Row layoutType="itemPaddingTopSmall">
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="DiscountLabel" />
+                      <Col width="0.75em" layoutType="itemSecondary" bindingId="Spacer" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="QuantityLabel" />
+                      <Col width="0.75em" layoutType="itemSecondary" bindingId="Spacer" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="SpecialPriceLabel" />
+                    </Row>
+                    <Row layoutType="itemPaddingTopSmall">
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="Discount" />
+                      <Col width="0.75em" layoutType="itemSecondary" bindingId="Spacer" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="Quantity" />
+                      <Col width="0.75em" layoutType="itemSecondary" bindingId="Spacer" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="Price" />
+                    </Row>
+                  </Col>
+                </Default>
+                <Apple>
+                  <Col width="2em" height="2em" layoutType="Image" bindingId="Image" />
+                  <Col>
+                    <Row layoutType="itemName" bindingId="Product" />
+                    <Row layoutType="itemPaddingTopSmall">
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="DiscountLabel" />
+                      <Col width="0.75em" layoutType="itemSecondary" bindingId="Spacer" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="QuantityLabel" />
+                      <Col width="0.75em" layoutType="itemSecondary" bindingId="Spacer" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="SpecialPriceLabel" />
+                    </Row>
+                    <Row layoutType="itemPaddingTopSmall">
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="Discount" />
+                      <Col width="0.75em" layoutType="itemSecondary" bindingId="Spacer" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="Quantity" />
+                      <Col width="0.75em" layoutType="itemSecondary" bindingId="Spacer" />
+                      <Col width="5em" layoutType="itemNameSecondary" bindingId="Price" />
+                    </Row>
+                  </Col>
+                </Apple>
+              </Phone>
+            </ItemListLayout>
+          </Items>
+        </GroupedList>
+      </Area>
+      <Area areaPattern="SingleElementArea" areaName="Attachments">
+        <MediaListControl name="CallPromotionAttachments" dataSource="ProcessContext::PromotionAttachmentList.Items[]">
+          <Bindings>
+            <Binding bindingMode="ONE_WAY" binding=".mediaPath" type="Text" target="MediaPath" />
+            <Binding bindingMode="ONE_WAY" binding=".description" type="Text" target="Description" />
+            <Binding bindingMode="ONE_WAY" binding=".type" type="Text" target="Type" />
+          </Bindings>
+        </MediaListControl>
+      </Area>
+      <Area areaName="Activities" areaPattern="SingleElementArea">
+        <GroupedList name="PromotionActivities" searchable="false" dataSource="ProcessContext::activities">
+          <Items name="Items" itemPattern="ActivitiesPattern">
+            <ItemListLayout>
+              <Default>
+                <Col width="1.7em" height="1.4em" layoutType="Image" bindingId="Icon" />
+                <Col>
+                  <Row layoutType="itemIdentifierSmall" bindingId="Slogan" />
+                  <Row>
+                    <Col layoutType="itemSecondary" bindingId="ValidFrom" />
+                    <Col width="0.4em" height="1.5em" layoutType="itemSecondary" bindingId="Separator" />
+                    <Col layoutType="itemSecondary" bindingId="ValidThru" />
+                  </Row>
+                </Col>
+                <Col>
+                  <Row layoutType="itemLabel itemRight" bindingId="ActivityTemplateLabel" />
+                  <Row layoutType="itemLabel itemRight" bindingId="CallTemplateLabel" />
+                </Col>
+                <Col>
+                  <Row layoutType="itemSecondary" bindingId="ActivityTemplate" />
+                  <Row layoutType="itemSecondary" bindingId="CallType" />
+                </Col>
+                <Col height="16px" width="16px" layoutType="Image" bindingId="AlertIcon" />
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="1.7em" height="1.4em" layoutType="Image" bindingId="Icon" />
+                  <Col>
+                    <Row layoutType="itemIdentifierSmall" bindingId="Slogan" />
+                    <Row>
+                      <Col layoutType="itemSecondary" bindingId="ValidFrom" />
+                      <Col width="0.4em" height="1.5em" layoutType="itemSecondary" bindingId="Separator" />
+                      <Col layoutType="itemSecondary" bindingId="ValidThru" />
+                    </Row>
+                  </Col>
+                  <Col>
+                    <Row layoutType="itemLabel itemRight" bindingId="ActivityTemplateLabel" />
+                    <Row layoutType="itemLabel itemRight" bindingId="CallTemplateLabel" />
+                  </Col>
+                  <Col>
+                    <Row layoutType="itemSecondary" bindingId="ActivityTemplate" />
+                    <Row layoutType="itemSecondary" bindingId="CallType" />
+                  </Col>
+                  <Col height="16px" width="16px" layoutType="Image" bindingId="AlertIcon" />
+                </Default>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col>
+                    <Row>
+                      <Col width="1.7em" height="1.4em" layoutType="Image" bindingId="Icon" />
+                      <Col flex="1">
+                        <Row layoutType="itemIdentifierSmall" bindingId="Slogan" />
+                        <Row>
+                          <Col layoutType="itemSecondary" bindingId="ValidFrom" />
+                          <Col width="0.4em" height="1.5em" layoutType="itemSecondary" bindingId="Separator" />
+                          <Col layoutType="itemSecondary" bindingId="ValidThru" />
+                        </Row>
+                      </Col>
+                      <Col height="16px" width="16px" layoutType="Image" bindingId="AlertIcon" />
+                    </Row>
+                    <Row>
+                      <Col width="1.7em" height="1.4em" layoutType="Text" bindingId="SpaceId" />
+                      <Col flex="1">
+                        <Row layoutType="itemLabel" bindingId="ActivityTemplate" />
+                        <Row layoutType="itemLabel" bindingId="CallType" />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Default>
+              </Phone>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="Icon" type="Image" imageType=".svg" binding=".icon" bindingMode="ONE_WAY" />
+              <Binding target="Slogan" type="Text" binding=".slogan" bindingMode="ONE_WAY" />
+              <Binding target="ValidFrom" type="Date" binding=".validFrom" bindingMode="ONE_WAY" />
+              <Binding target="ValidThru" type="Date" binding=".validThru" bindingMode="ONE_WAY" />
+              <Binding target="ActivityTemplate" type="Text" binding=".activityTemplate" bindingMode="ONE_WAY" />
+              <Binding target="CallType" type="Text" binding=".callType" bindingMode="ONE_WAY" />
+              <Binding target="AlertIcon" type="Image" imageType=".svg" binding=".alertIcon" bindingMode="ONE_WAY" />
+              <Resource target="Separator" type="Label" defaultLabel=" - " id="separatorMinus" />
+              <Resource target="ActivityTemplateLabel" type="Label" defaultLabel="Activity Template" id="ActivityTemplateId" />
+              <Resource target="CallTemplateLabel" type="Label" defaultLabel="Call Template" id="CallTemplateId" />
+            </Bindings>
+          </Items>
+        </GroupedList>
+      </Area>
+      <!--Sales Folders Tab-->
+      <Area areaName="SalesFolder" areaPattern="SingleElementArea">
+        <GroupedList name="PromotionSalesFolders" searchable="false" dataSource="ProcessContext::SalesFolderCallCustomerList">
+          <Items name="Items" itemPattern="SalesFolderListPattern">
+            <ItemListLayout>
+              <Default>
+                <Col width="2em" height="2em" layoutType="Image" bindingId="MediaPath" />
+                <Col width="16em">
+                  <Row layoutType="itemIdentifier" bindingId="SloganText" />
+                  <Row>
+                    <Col width="5.5em" layoutType="itemSecondary" bindingId="DateFrom" />
+                    <Col width="0.8em" layoutType="itemSecondary" bindingId="Hyphen" />
+                    <Col width="6em" layoutType="itemSecondary" bindingId="DateThru" />
+                  </Row>
+                </Col>
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="2em" height="2em" layoutType="Image" bindingId="MediaPath" />
+                  <Col width="16em">
+                    <Row layoutType="itemIdentifier" bindingId="SloganText" />
+                    <Row>
+                      <Col width="5.5em" layoutType="itemSecondary" bindingId="DateFrom" />
+                      <Col width="0.8em" layoutType="itemSecondary" bindingId="Hyphen" />
+                      <Col width="6em" layoutType="itemSecondary" bindingId="DateThru" />
+                    </Row>
+                  </Col>
+                </Default>
+                <Android>
+                  <Col width="2em" height="2em" layoutType="Image" bindingId="MediaPath" />
+                  <Col width="16em">
+                    <Row layoutType="itemIdentifier" bindingId="SloganText" />
+                    <Row>
+                      <Col width="5.5em" layoutType="itemSecondary" bindingId="DateFrom" />
+                      <Col width="0.8em" layoutType="itemSecondary" bindingId="Hyphen" />
+                      <Col width="6em" layoutType="itemSecondary" bindingId="DateThru" />
+                    </Row>
+                  </Col>
+                </Android>
+                <Apple>
+                  <Col width="2em" height="2em" layoutType="Image" bindingId="MediaPath" />
+                  <Col width="16em">
+                    <Row layoutType="itemIdentifier" bindingId="SloganText" />
+                    <Row>
+                      <Col width="5.5em" layoutType="itemSecondary" bindingId="DateFrom" />
+                      <Col width="0.8em" layoutType="itemSecondary" bindingId="Hyphen" />
+                      <Col width="6em" layoutType="itemSecondary" bindingId="DateThru" />
+                    </Row>
+                  </Col>
+                </Apple>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col width="2em" height="2em" layoutType="Image" bindingId="MediaPath" />
+                  <Col width="10.8em">
+                    <Row layoutType="itemIdentifier" bindingId="SloganText" />
+                    <Row>
+                      <Col width="5.1em" layoutType="itemSecondary" bindingId="DateFrom" />
+                      <Col width="0.5em" layoutType="itemSecondary" bindingId="Hyphen" />
+                      <Col width="5.1em" layoutType="itemSecondary" bindingId="DateThru" />
+                    </Row>
+                  </Col>
+                </Default>
+                <Android>
+                  <Col width="2em" height="2em" layoutType="Image" bindingId="MediaPath" />
+                  <Col width="10.8em">
+                    <Row layoutType="itemIdentifier" bindingId="SloganText" />
+                    <Row>
+                      <Col width="5.1em" layoutType="itemSecondary" bindingId="DateFrom" />
+                      <Col width="0.5em" layoutType="itemSecondary" bindingId="Hyphen" />
+                      <Col width="5.1em" layoutType="itemSecondary" bindingId="DateThru" />
+                    </Row>
+                  </Col>
+                </Android>
+                <Apple>
+                  <Col width="2em" height="2em" layoutType="Image" bindingId="MediaPath" />
+                  <Col width="10.8em">
+                    <Row layoutType="itemIdentifier" bindingId="SloganText" />
+                    <Row>
+                      <Col width="5.1em" layoutType="itemSecondary" bindingId="DateFrom" />
+                      <Col width="0.5em" layoutType="itemSecondary" bindingId="Hyphen" />
+                      <Col width="5.1em" layoutType="itemSecondary" bindingId="DateThru" />
+                    </Row>
+                  </Col>
+                </Apple>
+              </Phone>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="MediaPath" type="Blob" binding=".mediaPath" fileTypeBinding=".fileType" />
+              <Binding target="SloganText" type="Text" binding=".sloganText" bindingMode="ONE_WAY" />
+              <Binding target="DateFrom" type="Text" binding=".dateFrom" bindingMode="ONE_WAY" />
+              <Resource target="Hyphen" type="Label" defaultLabel="-" />
+              <Binding target="DateThru" type="Text" binding=".dateThru" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="salesFolderSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="sloganText" value=".sloganText" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

@@ -1,0 +1,30 @@
+<DataSource name="DsLoTmgTourCheckRelations" backendSystem="sf" businessObjectClass="LoTmgTourCheckRelations" readOnly="true" external="false" editableEntity="Tour_Tour_Check__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Tour_Tour_Check__c" column="Id" />
+    <Attribute name="businessModified" table="Tour_Tour_Check__c" column="LastModifiedDate" />
+    <Attribute name="tmgTourPKey" table="Tour_Tour_Check__c" column="Tour__c" />
+    <Attribute name="tmgCheckPKey" table="Tour_Tour_Check__c" column="Tour_Check__c" />
+    <Attribute name="sort" table="Tour_Tour_Check__c" column="Sort__c" />
+    <Attribute name="usage" table="Tour_Tour_Check__c" column="Usage__c" />
+    <Attribute name="text" table="Tour_Check__c" column="Description_#Language#__c" />
+    <Attribute name="value" table="Tour_Tour_Check__c" column="Answer__c" />
+    <DerivedAttribute name="salesOrg" value="'#SalesOrg#'" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tour_Tour_Check__c" alias="" idAttribute="Id" />
+    <Entity name="Tour_Check__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Tour_Tour_Check__c.Tour_Check__c" comparator="eq" rightSideType="Attribute" rightSideValue="Tour_Check__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[       
+        Tour_Check__c.Active__c='1' AND Tour_Tour_Check__c.Tour__c=#tmgMainPKey#
+          ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="tmgMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,39 @@
+<ListItem name="LiAgendaOverview">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="dateFrom" type="DomDate" storable="true" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="timeFrom" type="DomTime" storable="true" dataSourceProperty="timeFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" storable="true" dataSourceProperty="dateThru" />
+    <SimpleProperty name="timeThru" type="DomTime" storable="true" dataSourceProperty="timeThru" />
+    <SimpleProperty name="allDay" type="DomBool" storable="true" dataSourceProperty="allDay" />
+    <SimpleProperty name="name" type="DomBpaName" storable="false" dataSourceProperty="name" />
+    <SimpleProperty name="bpaMainPKey" type="DomPKey" storable="true" dataSourceProperty="bpaMainPKey" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" storable="true" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="responsibleName" type="DomText" storable="false" dataSourceProperty="responsibleName" />
+    <SimpleProperty name="customerOnDevice" type="DomBool" storable="false" dataSourceProperty="customerOnDevice" />
+    <SimpleProperty name="clbMetaType" type="DomClbMetaType" storable="false" dataSourceProperty="clbMetaType" />
+    <SimpleProperty name="subject" type="DomText" storable="true" dataSourceProperty="subject" />
+    <SimpleProperty name="clbStatus" type="DomVisitStatus" storable="false" dataSourceProperty="clbStatus" />
+    <SimpleProperty name="clbTypeStatus" type="DomString" storable="false" dataSourceProperty="clbTypeStatus" />
+    <SimpleProperty name="latitude" type="DomDegree" dataSourceProperty="latitude" />
+    <SimpleProperty name="longitude" type="DomDegree" dataSourceProperty="longitude" />
+    <SimpleProperty name="address" type="DomText" storable="false" dataSourceProperty="address" />
+    <SimpleProperty name="deleteAllowed" type="DomBool" storable="true" dataSourceProperty="deleteAllowed" />
+    <SimpleProperty name="color" type="DomRgbColor" storable="true" dataSourceProperty="color" />
+    <SimpleProperty name="tourContextId" type="DomId" storable="false" dataSourceProperty="tourContextId" />
+    <SimpleProperty name="toolTipText" type="DomText" storable="false" dataSourceProperty="toolTipText" />
+    <SimpleProperty name="mapPinId" type="DomString" storable="false" dataSourceProperty="mapPinId" />
+    <SimpleProperty name="mapPinImage" type="DomString" storable="false" dataSourceProperty="mapPinImage" />
+    <SimpleProperty name="companyRequired" type="DomClbCompanyRequired" storable="false" dataSourceProperty="companyRequired" />
+    <SimpleProperty name="hasOrder" type="DomBool" storable="false" dataSourceProperty="hasOrder" />
+    <SimpleProperty name="clbTypeStatusColored" type="DomText" storable="false" dataSourceProperty="clbTypeStatusColored" />
+    <SimpleProperty name="clbStatusCount" type="DomInteger" storable="false" dataSourceProperty="clbStatusCount" />
+    <SimpleProperty name="clbMetaPKey" type="DomPKey" dataSourceProperty="clbMetaPKey" />
+    <SimpleProperty name="creationMode" type="DomText" dataSourceProperty="creationMode" />
+    <SimpleProperty name="initiatorPKey" type="DomPKey" dataSourceProperty="initiatorPKey" />
+    <SimpleProperty name="mainAddress" type="DomText" storable="false" dataSourceProperty="mainAddress" />
+    <SimpleProperty name="distance" type="DomDecimal" />
+    <SimpleProperty name="visibleInMap" type="DomBool" />
+    <SimpleProperty name="dateFromTimeFrom" type="DomString" />
+  </SimpleProperties>
+</ListItem>

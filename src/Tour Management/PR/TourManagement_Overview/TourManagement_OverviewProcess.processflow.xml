@@ -1,0 +1,104 @@
+<Process name="TourManagement::OverviewProcess" defaultAction="GetOverviewList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OverviewList" type="LoTmgTourOverview" />
+        <Declaration name="CreateNew_TourTemplatePKey" type="DomPKey" />
+        <Declaration name="CreateNew_TourwarehousePKey" type="DomPKey" />
+        <Declaration name="ContextMenuList" type="LoTourOverviewContextMenu" />
+      </Declarations>
+      <Parameters>
+        <Input name="NavigationMode" type="DomString" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="GetOverviewList" actionType="LOAD" type="LoTmgTourOverview">
+        <Parameters>
+          <Input name="asoName" type="Literal" value="AsoTourOverview" />
+        </Parameters>
+        <Return name="ProcessContext::OverviewList" />
+        <TransitionTo action="ShowOverviewList" />
+      </Action>
+      <Action name="ShowOverviewList" actionType="VIEW">
+        <UIDescription>TourManagement::OverviewUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="TourDetail" />
+          <Event name="showAllTours" action="actShowAllTours_Logic" />
+          <Event name="showOpenTours" action="actShowOpenTours_Logic" />
+          <!-- Menu item events -->
+          <Event name="createNewTour" action="CreateNewWizardTour" />
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+        </Events>
+      </Action>
+      <Action name="TourDetail" actionType="PROCESS" process="TourManagement::TourLoadProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+          <Input name="NavigationMode" value="ProcessContext::NavigationMode" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <Action name="actShowAllTours_Logic" actionType="LOGIC" call="ProcessContext::OverviewList.setTourFilter">
+        <Parameters>
+          <Input name="mode" type="Literal" value="reset"></Input>
+        </Parameters>
+        <TransitionTo action="ShowOverviewList" />
+      </Action>
+      <Action name="actShowOpenTours_Logic" actionType="LOGIC" call="ProcessContext::OverviewList.setTourFilter">
+        <Parameters>
+          <Input name="mode" type="Literal" value="open"></Input>
+        </Parameters>
+        <TransitionTo action="ShowOverviewList" />
+      </Action>
+      <!-- WIZARD -->
+      <Action name="CreateNewWizardTour" actionType="PROCESS" process="TourManagement::CreateTourProcess">
+        <ReturnValues>
+          <Return name="ProcessContext::CreateNew_TourTemplatePKey" value="templatePKey" />
+          <Return name="ProcessContext::CreateNew_TourwarehousePKey" value="warehousePKey" />
+        </ReturnValues>
+        <TransitionTo action="CreateNewWizard_Result_Decision" />
+      </Action>
+      <!-- DESICIONS AFTER CREATE WIZARD -->
+      <Action name="CreateNewWizard_Result_Decision" actionType="DECISION" parameter="ProcessContext::CreateNew_TourTemplatePKey">
+        <CaseEmpty action="ShowOverviewList" />
+        <CaseElse action="CreateTourFromTourOverview" />
+      </Action>
+      <!-- CREATE -->
+      <Action actionType="PROCESS" name="CreateTourFromTourOverview" process="TourManagement::CreateNewProcess">
+        <Parameters>
+          <Input name="TourTemplatePKey" value="ProcessContext::CreateNew_TourTemplatePKey" />
+          <Input name="TourwarehousePKey" value="ProcessContext::CreateNew_TourwarehousePKey" />
+          <Input name="NavigationMode" value="ProcessContext::NavigationMode" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <!-- Reschedule -->
+      <Action name="GetContextMenu" actionType="LOAD" type="LoTourOverviewContextMenu">
+        <Parameters>
+          <Input name="tmgStatus" value="Event.tmgStatus" />
+        </Parameters>
+        <Return name="ProcessContext::ContextMenuList" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Reschedule" action="RescheduleTour" />
+        <Case value="Cancel" action="Cancel" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <Action name="RescheduleTour" actionType="PROCESS" process="TourManagement::RescheduleTourProcess">
+        <Parameters>
+          <Input name="TourPKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <Action name="Cancel" actionType="PROCESS" process="TourManagement::CancelWizardProcess">
+        <Parameters>
+          <Input name="TourPKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

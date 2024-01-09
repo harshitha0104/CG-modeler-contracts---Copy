@@ -1,0 +1,77 @@
+<DataSource name="DsLoMeCustomerAssortment" distinct="true" backendSystem="sf" businessObjectClass="LoMeCustomerAssortment" external="false" readOnly="true" editableEntity="AssortmentProduct" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="prdMainPKey" table="AssortmentProduct" column="Product__c" />
+    <DerivedAttribute name="customerAssortment" value="'1'" />
+    <DerivedAttribute name="sdoItemMeta1" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta2" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta3" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta4" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta5" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta6" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta7" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta8" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta9" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta10" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta11" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta12" value="'0'" />
+    <!--Attribute name="sdoItemMeta1" table="PrdProposalCustomerAssortmentPrdRel" column="SdoItemMeta1" />
+    <Attribute name="sdoItemMeta2" table="PrdProposalCustomerAssortmentPrdRel" column="SdoItemMeta2" />
+    <Attribute name="sdoItemMeta3" table="PrdProposalCustomerAssortmentPrdRel" column="SdoItemMeta3" />
+    <Attribute name="sdoItemMeta4" table="PrdProposalCustomerAssortmentPrdRel" column="SdoItemMeta4" />
+    <Attribute name="sdoItemMeta5" table="PrdProposalCustomerAssortmentPrdRel" column="SdoItemMeta5" />
+    <Attribute name="sdoItemMeta6" table="PrdProposalCustomerAssortmentPrdRel" column="SdoItemMeta6" />
+    <Attribute name="sdoItemMeta7" table="PrdProposalCustomerAssortmentPrdRel" column="SdoItemMeta7" />
+    <Attribute name="sdoItemMeta8" table="PrdProposalCustomerAssortmentPrdRel" column="SdoItemMeta8" />
+    <Attribute name="sdoItemMeta9" table="PrdProposalCustomerAssortmentPrdRel" column="SdoItemMeta9" />
+    <Attribute name="sdoItemMeta10" table="PrdProposalCustomerAssortmentPrdRel" column="SdoItemMeta10" />
+    <Attribute name="sdoItemMeta11" table="PrdProposalCustomerAssortmentPrdRel" column="SdoItemMeta11" />
+    <Attribute name="sdoItemMeta12" table="PrdProposalCustomerAssortmentPrdRel" column="SdoItemMeta12" /-->
+  </Attributes>
+  <Entities>
+    <Entity name="AssortmentProduct" alias="" idAttribute="Id" />
+    <Entity name="StoreAssortment" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="AssortmentProduct.AssortmentId" comparator="eq" rightSideType="Attribute" rightSideValue="StoreAssortment.AssortmentId" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Assortment" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Assortment.Id" comparator="eq" rightSideType="Attribute" rightSideValue="StoreAssortment.AssortmentId" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Product_Assortment_Template__c " alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product_Assortment_Template__c .Id" comparator="eq" rightSideType="Attribute" rightSideValue="Assortment.Product_Assortment_Template__c " />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="RecordType" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product_Assortment_Template__c.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+          <Condition leftSideValue="RecordType.DeveloperName" comparator="eq" rightSideType="Parameter" rightSideValue="'Customer_Selling_Assortments'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        StoreAssortment.AccountId = '#customerPKey#'
+		    #addCond_SdoItemMetaRestriction#
+        #addCond_productPKeys#
+		AND AssortmentProduct.Active__c = '1'
+	]]></QueryCondition>
+  <!-- it might be necessary to change the business logic-->
+  <OrderCriteria>
+    <OrderCriterion entity="AssortmentProduct" attribute="ProductId" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="customerPKey" type="TEXT" />
+    <Parameter name="addCond_SdoItemMetaRestriction" treatAs="sqlSnippet" />
+    <Parameter name="addCond_productPKeys" treatAs="sqlSnippet" />
+  </Parameters>
+</DataSource>

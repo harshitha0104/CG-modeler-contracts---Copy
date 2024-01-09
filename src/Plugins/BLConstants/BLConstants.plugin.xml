@@ -1,0 +1,36 @@
+<Plugin name="BLConstants">
+  <Code language="text/javascript"><![CDATA[
+var BLConstants;
+(function (BLConstants) {
+//Order constants
+BLConstants.Order = {};
+
+//Pricing Relevant Constants
+BLConstants.Order.BUTTON_MODE = "4";
+BLConstants.Order.EDIT_MODE = "5";
+BLConstants.Order.CALCULATION_REQUIRED = "3";
+BLConstants.Order.ALWAYS_CALCULATE = "AlwaysCalculate";
+
+//Printout Name Constants
+BLConstants.Order.STANDARD_CASH_ORDER_PDF = "StandardCashOrderPDF";
+BLConstants.Order.DIRECT_CREDIT_ORDER_PDF = "DirectCreditOrderPDF";
+BLConstants.Order.ORDER_CONFIRMATION_PDF = "OrderConfirmationPDF";
+BLConstants.Order.DIRECT_CASH_INVOICE_PDF = "DirectCashInvoicePDF";
+BLConstants.Order.STANDARD_CREDIT_INVOICE_PDF = "StandardCreditInvoicePDF";
+BLConstants.Order.STORE_TRANSFER_PDF = "StoreTransferPDF";
+BLConstants.Order.STANDARD_RETURNS_PDF = "StandardReturnsPDF";
+
+//Order Phase Constants
+BLConstants.Order.PHASE_INITIAL = "Initial";
+BLConstants.Order.PHASE_READY = "Ready";
+BLConstants.Order.PHASE_RELEASED = "Released";
+BLConstants.Order.PHASE_FEEDBACK = "Feedback";
+BLConstants.Order.PHASE_CANCELED = "Canceled";
+BLConstants.Order.PHASE_CLOSED = "Closed";
+BLConstants.Order.PHASE_VOIDED = "Voided";
+
+//Order Sync Constants
+BLConstants.Order.NOT_SYNCABLE = 3 ;
+})(BLConstants || (BLConstants = {}));
+]]></Code>
+</Plugin>

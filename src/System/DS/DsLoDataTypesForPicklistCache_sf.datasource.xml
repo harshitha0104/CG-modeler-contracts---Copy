@@ -1,0 +1,26 @@
+<DataSource name="DsLoDataTypesForPicklistCache" backendSystem="sf" businessObjectClass="LoDataTypesForPicklistCache" external="false" editableEntity="" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="toggleId" table="Data_Type__c" column="Name" />
+    <Attribute name="hasEmpty" table="Data_Type__c" column="Append_Empty_Item__c" />
+    <Attribute name="isDefault" table="Data_Type_Option__c" column="Default_Item__c" />
+    <Attribute name="code" table="Data_Type_Option__c" column="Code__c" />
+    <DerivedAttribute name="text" value="Data_Type_Option__c.Description_#Language#__c" />
+    <DerivedAttribute name="shortText" value="Data_Type_Option__c.Short_Description_#Language#__c" />
+    <Attribute name="imageId" table="Data_Type_Option__c" column="ImageId__c" />
+    <Attribute name="sortOrder" table="Data_Type_Option__c" column="Sort__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Data_Type_Option__c" alias="" idAttribute="Id" />
+    <Entity name="Data_Type__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Data_Type_Option__c.Data_Type__c" comparator="eq" rightSideType="Attribute" rightSideValue="Data_Type__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+      NOT EXISTS (SELECT null FROM Sync_Mobile_App_PL_Repo__c WHERE Mobile_App_Domain__c=toggleId)
+    ]]></QueryCondition>
+  <OrderCriteria />
+</DataSource>

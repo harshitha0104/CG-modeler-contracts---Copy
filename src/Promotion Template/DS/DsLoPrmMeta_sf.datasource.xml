@@ -1,0 +1,29 @@
+<DataSource name="DsLoPrmMeta" backendSystem="sf" businessObjectClass="LoPrmMeta" external="false" distinct="false" readOnly="true" editableEntity="Contract_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contract_Template__c" column="Id" />
+    <Attribute name="active" table="Contract_Template__c" column="Active__c" />
+    <Attribute name="activePolicy" table="Contract_Template__c" column="Active_Policy__c" />
+    <DerivedAttribute name="uiGroup" type="String" value="' '" />
+    <DerivedAttribute name="anchorType" type="String" value="'BusinessPartner'" />
+    <Attribute name="metaId" table="Contract_Template__c" column="Name" />
+    <Attribute name="maxDays" table="Contract_Template__c" column="Max_Days__c" />
+    <Attribute name="minDays" table="Contract_Template__c" column="Min_Days__c" />
+    <Attribute name="metaType" table="Contract_Template__c" column="Meta_Type__c" />
+    <Attribute name="sort" table="Contract_Template__c" column="Sort_Count__c" />
+    <DerivedAttribute name="tacticType" type="String" value="' '" />
+    <Attribute name="wfeWorkflowPKey" table="Contract_Template__c" column=" Workflow__c" />
+    <DerivedAttribute name="displayInCall" type="String" value="'0'" />
+    <Attribute name="text" table="Contract_Template__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contract_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   Contract_Template__c.Meta_Type__c = #metaType#
+   AND Contract_Template__c.Active__c = '1'			
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="metaType" type="TEXT" />
+  </Parameters>
+</DataSource>

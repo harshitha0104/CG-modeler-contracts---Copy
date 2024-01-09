@@ -1,0 +1,7 @@
+<ListItem name="LiMeHistoricProducts" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty id="true" name="prdMainPKey" type="DomPKey" storable="false" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="history" type="DomBool" storable="false" dataSourceProperty="history" />
+  </SimpleProperties>
+</ListItem>

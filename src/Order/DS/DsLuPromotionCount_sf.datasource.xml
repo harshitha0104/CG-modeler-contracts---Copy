@@ -1,0 +1,20 @@
+<DataSource name="DsLuPromotionCount" backendSystem="sf" businessObjectClass="LuPromotionCount" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+      var sqlParams = {};
+      var sqlStmt1 = "SELECT Count(*) AS promotionCount FROM (";
+ 
+	  //LoadSelectablePromotion
+	  var loadSelectablePromotion = Facade.myProxy.getLoadStatement("LoSelectablePromotion", jsonQuery);
+	  
+	  var sqlStmt2 = ")";
+	  var sqlStmt1Result = Utils.replaceMacrosParam(sqlStmt1, sqlParams);
+	  var sqlStmt2Result = Utils.replaceMacrosParam(sqlStmt2, sqlParams);
+
+	  var finalSql = sqlStmt1Result.sql + loadSelectablePromotion.sql + sqlStmt2Result.sql;
+	  var finalParams = sqlStmt1Result.params.concat(loadSelectablePromotion.params).concat(sqlStmt2Result.params);
+
+	  return {sql: finalSql, params: finalParams};
+   ]]></Load>
+  </Database>
+</DataSource>

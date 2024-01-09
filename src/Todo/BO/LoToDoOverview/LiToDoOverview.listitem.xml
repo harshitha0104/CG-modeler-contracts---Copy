@@ -1,0 +1,26 @@
+<ListItem name="LiToDoOverview" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomText" storable="false" dataSourceProperty="text" />
+    <SimpleProperty name="classification" type="DomTaskType" storable="false" dataSourceProperty="classification" />
+    <SimpleProperty name="initiationDate" type="DomDate" storable="false" dataSourceProperty="initiationDate" />
+    <SimpleProperty name="dueDate" type="DomDate" storable="false" dataSourceProperty="dueDate" />
+    <SimpleProperty name="priority" type="DomABC" storable="false" dataSourceProperty="priority" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" storable="false" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="ownerPKey" type="DomPKey" storable="false" dataSourceProperty="ownerPKey" />
+    <SimpleProperty name="initiatorPKey" type="DomPKey" storable="false" dataSourceProperty="initiatorPKey" />
+    <SimpleProperty name="issuePhase" type="DomSvcIssuePhase" storable="false" dataSourceProperty="issuePhase" />
+    <SimpleProperty name="responsibleName" type="DomUsrName" storable="false" dataSourceProperty="responsibleName" />
+    <SimpleProperty name="ownerName" type="DomUsrName" storable="false" dataSourceProperty="ownerName" />
+    <SimpleProperty name="isActive" type="DomBool" storable="false" dataSourceProperty="isActive" />
+    <SimpleProperty name="filterOpen" type="DomBool" storable="false" dataSourceProperty="filterOpen" />
+    <SimpleProperty name="businessModified" type="DomBusinessModified" storable="false" dataSourceProperty="businessModified" />
+    <SimpleProperty name="svcMetaPKey" type="DomPKey" storable="false" dataSourceProperty="svcMetaPKey" />
+    <SimpleProperty name="isPrivate" type="DomBool" storable="false" dataSourceProperty="isPrivate" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" storable="false" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="actualStatePKey" type="DomPKey" storable="false" dataSourceProperty="actualStatePKey" />
+    <SimpleProperty name="initiatorName" type="DomUsrName" storable="false" dataSourceProperty="initiatorName" />
+    <SimpleProperty name="classificationImage" type="DomString" storable="false" dataSourceProperty="classificationImage" />
+    <SimpleProperty name="priorityImage" type="DomString" storable="false" dataSourceProperty="priorityImage" />
+  </SimpleProperties>
+</ListItem>

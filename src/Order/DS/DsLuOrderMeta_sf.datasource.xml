@@ -1,0 +1,16 @@
+<DataSource name="DsLuOrderMeta" backendSystem="sf" businessObjectClass="LuOrderMeta" external="false" readOnly="true" editableEntity="Order_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Order_Template__c" column="Id" />
+    <Attribute name="text" table="Order_Template__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        Order_Template__c.Id = #pKey#
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT"/>
+  </Parameters>
+</DataSource>

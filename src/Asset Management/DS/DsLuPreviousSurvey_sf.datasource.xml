@@ -1,0 +1,78 @@
+<DataSource name="DsLuPreviousSurvey" backendSystem="sf" businessObjectClass="LuPreviousSurvey" external="true" editableEntity="Asset_Audit__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Asset_Audit__c" column="Id" />
+    <Attribute name="creationDate" table="Asset_Audit__c" column="Creation_Date__c" />
+    <Attribute name="presence" table="Asset_Audit__c" column="Sighted__c" />
+    <Attribute name="serialNumber" table="Asset_Audit__c" column="Asset_Tag_Number" />
+    <Attribute name="usage" table="Asset_Audit__c" column="Usage__c" />
+    <Attribute name="location" table="Asset_Audit__c" column="Location__c" />
+    <Attribute name="locationRating" table="Asset_Audit__c" column="Location_Rating__c" />
+    <Attribute name="note" table="Asset_Audit__c" column="Note__c" />
+    <Attribute name="condition" table="Asset_Audit__c" column="Condition__c" />
+    <Attribute name="method" table="Asset_Audit__c" column="Method__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Asset_Audit__c" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+      var astPKey = "";
+	  var bpaPKey = "";
+	  var clbPKey = "";
+      var clbDate = "";
+
+      if (Utils.isDefined(jsonQuery.astPKey)){
+          astPKey = Utils.convertForDBParam(jsonQuery.astPKey, "DomPKey");
+	  }
+	  if (Utils.isDefined(jsonQuery.bpaPKey)){
+          bpaPKey = Utils.convertForDBParam(jsonQuery.bpaPKey, "DomPKey");
+	  }
+	  if (Utils.isDefined(jsonQuery.clbPKey)){
+          clbPKey = Utils.convertForDBParam(jsonQuery.clbPKey, "DomPKey");
+	  }
+	  if (Utils.isDefined(jsonQuery.clbDate)){
+          clbDate = Utils.convertForDBParam(jsonQuery.clbDate, "DomDate");
+	  }
+	  var sqlParams = {astPKey,bpaPKey,clbPKey,clbDate};
+
+      var sqlStmt = "SELECT ";
+      sqlStmt += "ASVY.Id as pKey, ";
+      sqlStmt += "ASVY.Creation_Date__c as creationDate, ";
+          
+      sqlStmt += "ASVY.Asset_Tag_Number__c as serialNumber, ";
+      
+      sqlStmt += "ASVY.Usage__c as usage, ";
+      sqlStmt += "ASVY.Location__c as location, ";
+      sqlStmt += "ASVY.Location_Rating__c as locationRating, ";
+      sqlStmt += "ASVY.Note__c as note, ";
+      sqlStmt += "ASVY.Condition__c as condition, ";
+      sqlStmt += "ASVY.Method__c as method, ";
+      sqlStmt += "ASVY.Sighted__c as presence ";
+      sqlStmt += "FROM Asset_Audit__c as ASVY ";      
+      sqlStmt += "WHERE ASVY.Asset__c = #astPKey# ";
+      sqlStmt += "AND ASVY.Account__c = #bpaPKey# ";
+      sqlStmt += "AND ASVY.Visit__c <> #clbPKey# ";
+      sqlStmt += "AND ASVY.Creation_Date__c <= #clbDate# ";
+      sqlStmt += "AND ASVY.Sales_Org__c = '#SALESORG#' ";
+      sqlStmt += "ORDER BY ASVY.Creation_Date__c DESC ";
+      sqlStmt += ",ASVY.LastModifiedDate DESC ";
+      sqlStmt += "LIMIT 1 ";
+
+      return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+      ]]></Load>
+    <Update><![CDATA[
+      // Intended to be empty
+      return undefined;
+      ]]></Update>
+    <Insert><![CDATA[   
+      // Intended to be empty     
+      return undefined;           
+      ]]></Insert>
+    <Delete><![CDATA[
+      // Intended to be empty
+      return undefined;  
+      ]]></Delete>
+  </Database>
+</DataSource>

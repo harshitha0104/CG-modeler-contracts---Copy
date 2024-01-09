@@ -1,0 +1,27 @@
+<DataSource name="DsLoOrgUnitsOfUser" backendSystem="sf" businessObjectClass="LoOrgUnitsOfUser" external="false" readOnly="true" editableEntity="Org_Unit_User__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Org_Unit_User__c" column="Id" />
+    <Attribute name="etpOrgMainPKey" table="Org_Unit_User__c" column="Org_Unit__c" />
+    <Attribute name="managementType" table="Org_Unit_User__c" column="Management_Type__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Org_Unit_User__c" alias="" idAttribute="Id" />
+    <Entity name="User_Setting__c">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="User_Setting__c.User__c" comparator="eq" rightSideType="Attribute" rightSideValue="Org_Unit_User__c.User__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Org_Unit_User__c.User__c = #usrMainPKey#
+        AND #compareAsDate('Org_Unit_User__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')#
+        AND #compareAsDate('Org_Unit_User__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#
+        AND User_Setting__c.Default_Management_Type__c = Org_Unit_User__c.Management_Type__c
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="usrMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

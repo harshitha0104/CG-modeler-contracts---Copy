@@ -1,0 +1,137 @@
+<Process name="Order::AddProductWizardProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="PrdMainPKey" type="DomPKey" />
+        <Declaration name="UoM" type="DomPrdLogisticUnit" />
+        <Declaration name="ValidationBo" type="BoWizardAddProduct" />
+        <Declaration name="ProductAddUoMList" type="LoLogisticUnit" />
+        <Declaration name="ProductAddDefaultUoM" type="DomPrdLogisticUnit" />
+        <Declaration name="AddProduct_ButtonPressed" type="String" />
+        <Declaration name="piecesPerSmallestUnit_result" type="DomPrdPiecesPerUnit" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoOrder" />
+        <Input name="ProductList" type="LoProductForAdd" />
+        <Input name="FilterByBpaAssortment" type="DomBool" />
+        <Input name="CurrentItemTemplate" type="LiOrderItemMeta" />
+        <Input name="Listing" type="DomString" />
+        <Input name="ListingWithModules" type="DomString" />
+        <Input name="HitClosedListing" type="DomBool" />
+        <Input name="CollectClosedListing" type="DomBool" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateValidationBo" actionType="CREATE" type="BoWizardAddProduct">
+        <Return name="ProcessContext::ValidationBo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Order::AddProductWizardUI</UIDescription>
+        <Events>
+          <Event name="productLookup" action="OpenProductLookup" />
+          <Event name="addProduct" action="setDirty" />
+        </Events>
+      </Action>
+      <!-- Actions for Product Lookup -->
+      <Action actionType="PROCESS" name="OpenProductLookup" process="Order::AddProductProcess">
+        <Parameters>
+          <Input name="ProductList" value="ProcessContext::ProductList" />
+          <Input name="FilterByBpaAssortment" value="ProcessContext::FilterByBpaAssortment" />
+          <Input name="CurrentItemTemplate" value="ProcessContext::CurrentItemTemplate" />
+          <Input name="Listing" value="ProcessContext::Listing" />
+          <Input name="ListingWithModules" value="ProcessContext::ListingWithModules" />
+          <Input name="HitClosedListing" value="ProcessContext::HitClosedListing" />
+          <Input name="CollectClosedListing" value="ProcessContext::CollectClosedListing" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::PrdMainPKey" value="ProductPKey" />
+          <Return name="ProcessContext::AddProduct_ButtonPressed" value="buttonPressed" />
+        </ReturnValues>
+        <TransitionTo action="AddProductViaLookupWizard_Result_Decision" />
+      </Action>
+      <Action name="AddProductViaLookupWizard_Result_Decision" actionType="DECISION" parameter="ProcessContext::AddProduct_ButtonPressed">
+        <Case value="addProduct" action="LoadProductLookup" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action actionType="LOAD" name="LoadProductLookup" type="LuProduct">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::PrdMainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::validationBo.luProduct" />
+        <TransitionTo action="GetUoMListForAdd" />
+      </Action>
+      <Action name="GetUoMListForAdd" actionType="LOGIC" call="ProcessContext::MainBO.boItemTabManager.getAvailableUoMForProduct">
+        <Parameters>
+          <Input name="itemPKey" value="ProcessContext::PrdMainPKey" />
+          <Input name="itemTemplate" value="ProcessContext::MainBO.boItemTabManager.addProduct_ItemMeta" />
+        </Parameters>
+        <Return name="ProcessContext::ProductAddUoMList" />
+        <TransitionTo action="GetUoMListForSelectionBox" />
+      </Action>
+      <Action name="GetUoMListForSelectionBox" actionType="LOGIC" call="ProcessContext::MainBO.boItemTabManager.getAvailableUoMSelectionBox">
+        <Parameters>
+          <Input name="availableUnits" value="ProcessContext::ProductAddUoMList" />
+        </Parameters>
+        <Return name="ProcessContext::ProductAddUoMListForSelectionBox" />
+        <TransitionTo action="GetDefaultUoMForAdd" />
+      </Action>
+      <Action name="GetDefaultUoMForAdd" actionType="LOGIC" call="ProcessContext::MainBO.boItemTabManager.getDefaultUoMForProduct">
+        <Parameters>
+          <Input name="availableUnits" value="ProcessContext::ProductAddUoMList" />
+          <Input name="itemTemplate" value="ProcessContext::MainBO.boItemTabManager.addProduct_ItemMeta" />
+        </Parameters>
+        <Return name="ProcessContext::validationBo.uoM" />
+        <TransitionTo action="SetEARights" />
+      </Action>
+      <Action actionType="LOGIC" name="setEARights" call="ProcessContext::ValidationBo.setEARights">
+        <TransitionTo action="setNew" />
+      </Action>
+      <!-- Validation actions -->
+      <Action actionType="VALIDATION" name="WizardValidations">
+        <Validations>
+          <Validation name="ProcessContext::ValidationBo.validateNotEmpty" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="GetPiecesPerSmallestUnitForResult" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="EndCancel" />
+      </Action>
+      <Action name="GetPiecesPerSmallestUnitForResult" actionType="LOGIC" call="ProcessContext::ProductAddUoMList.getPiecesPerSmallestUnitByUnit">
+        <Parameters>
+          <Input name="unitType" value="ProcessContext::validationBo.uoM" />
+        </Parameters>
+        <Return name="ProcessContext::piecesPerSmallestUnit_result" />
+        <TransitionTo action="EndCreateOrder" />
+      </Action>
+      <!-- Set validation business object dirty on clicking done button-->
+      <Action actionType="LOGIC" name="setDirty" call="ProcessContext::ValidationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="5" />
+        </Parameters>
+        <TransitionTo action="WizardValidations" />
+      </Action>
+      <!-- Set validation business object to new if not the done button has been clicked-->
+      <Action actionType="LOGIC" name="setNew" call="ProcessContext::ValidationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="2" />
+        </Parameters>
+      </Action>
+      <!-- End actions -->
+      <Action actionType="END" name="EndCreateOrder">
+        <ReturnValues>
+          <Return name="ProductPKey" value="ProcessContext::validationBo.luProduct.pKey" />
+          <Return name="UoM" value="ProcessContext::validationBo.uoM" />
+          <Return name="PiecesPerSmallestUnit" value="ProcessContext::piecesPerSmallestUnit_result" />
+          <Return name="buttonPressed" type="Literal" value="addProduct" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndCancel"></Action>
+    </Actions>
+  </Body>
+</Process>

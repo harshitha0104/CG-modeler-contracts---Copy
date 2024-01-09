@@ -1,0 +1,32 @@
+<BusinessObject name="BoOrderPrintTextItems" schemaVersion="1.1">
+  <DataSource name="DsBoOrderPrintTextItems" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="documentStatus" type="DomText" />
+    <SimpleProperty name="endOfPrint" type="DomText" />
+    <SimpleProperty name="printV2GenerateAndSave" type="DomBool" />
+    <SimpleProperty name="blobPKey" type="DomPKey" />
+    
+    <SimpleProperty name="signature1MediaPath" type="DomText" />
+    <SimpleProperty name="signature1sysReleaseStepText" type="DomText" />
+    <SimpleProperty name="signature1Name" type="DomText" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+  </Methods>
+</BusinessObject>

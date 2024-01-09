@@ -1,0 +1,57 @@
+<DataSource name="DsLuUserApprovalCode" businessObjectClass="LuUserApprovalCode" external="false" editableEntity="UsrApproverCode" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="UsrApproverCode" column="PKey" />
+    <Attribute name="usrUserPKey" table="UsrApproverCode" column="UsrUserPKey" />
+    <Attribute name="code" table="UsrApproverCode" column="Code" />
+    <Attribute name="loginName" table="UsrUser" column="LoginName" />
+    <DerivedAttribute name="name" value="UsrUser.LastName || ', ' || UsrUser.FirstName" />
+  </Attributes>
+  <Entities>
+    <Entity name="UsrApproverCode" alias="" idAttribute="PKey" />
+    <Entity name="UsrUser">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="UsrApproverCode.UsrUserPKey" comparator="eq" rightSideType="Attribute" rightSideValue="UsrUser.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="UsrRoleRel">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="UsrUser.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="UsrRoleRel.UsrMainPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="UsrRole">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="UsrRole.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="UsrRoleRel.UsrRolePKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="UsrEtpWarehouseRel">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="UsrUser.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="UsrEtpWarehouseRel.UsrMainPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+		(
+		UsrUser.LoginName = #id# 
+		AND UsrApproverCode.Code = #code# 
+		AND UsrRole.Id = #usrRoleId# 
+		AND UsrRoleRel.Exclude = '0'
+		AND UsrEtpWarehouseRel.EtpWarehousePKey = #etpWarehousePKey#
+		AND UsrEtpWarehouseRel.Active = '1'
+		)
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="id" type="TEXT" />
+    <Parameter name="code" type="TEXT" />
+    <Parameter name="usrRoleId" type="TEXT" />
+    <Parameter name="etpWarehousePKey" type="TEXT" />
+  </Parameters>
+</DataSource>

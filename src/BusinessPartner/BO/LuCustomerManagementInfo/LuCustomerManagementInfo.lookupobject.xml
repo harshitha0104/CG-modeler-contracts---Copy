@@ -1,0 +1,30 @@
+<LookupObject name="LuCustomerManagementInfo" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuCustomerManagementInfo" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="referenceUsrMainPKey" type="DomPKey" dataSourceProperty="referenceUsrMainPKey" />
+    <SimpleProperty name="isManaged" type="DomBool" dataSourceProperty="isManaged" />
+    <SimpleProperty name="isSubstituted" type="DomBool" dataSourceProperty="isSubstituted" />
+    <SimpleProperty name="substitutedUsrMainPKey" type="DomPKey" dataSourceProperty="substitutedUsrMainPKey" />
+    <SimpleProperty name="substitutedSubMainPKey" type="DomPKey" dataSourceProperty="substitutedSubMainPKey" />
+    <SimpleProperty name="substitutedUsrName" type="DomString" dataSourceProperty="substitutedUsrName" />
+    <SimpleProperty name="substitutedFrom" type="DomDate" dataSourceProperty="substitutedFrom" />
+    <SimpleProperty name="substitutedThru" type="DomDate" dataSourceProperty="substitutedThru" />
+    <SimpleProperty name="substitutedInLeadFollowUpTime" type="DomBool" dataSourceProperty="substitutedInLeadFollowUpTime" />
+    <SimpleProperty name="hasSubstitute" type="DomBool" dataSourceProperty="hasSubstitute" />
+    <SimpleProperty name="hasSubstituteUsrMainPKey" type="DomPKey" dataSourceProperty="hasSubstituteUsrMainPKey" />
+    <SimpleProperty name="hasSubstituteSubMainPKey" type="DomPKey" dataSourceProperty="hasSubstituteSubMainPKey" />
+    <SimpleProperty name="hasSubstituteUsrName" type="DomString" dataSourceProperty="hasSubstituteUsrName" />
+    <SimpleProperty name="hasSubstituteFrom" type="DomDate" dataSourceProperty="hasSubstituteFrom" />
+    <SimpleProperty name="hasSubstituteThru" type="DomDate" dataSourceProperty="hasSubstituteThru" />
+    <SimpleProperty name="hasSubstituteInLeadFollowUpTime" type="DomBool" dataSourceProperty="hasSubstituteInLeadFollowUpTime" />
+    <SimpleProperty name="combinedSubstitutedName" type="DomString" dataSourceProperty="combinedSubstitutedName" />
+    <SimpleProperty name="combinedSubstituteName" type="DomString" dataSourceProperty="combinedSubstituteName" />
+    <SimpleProperty name="managementRelationValidFrom" type="DomDate" dataSourceProperty="managementRelationValidFrom" />
+    <SimpleProperty name="managementRelationValidThru" type="DomValidThru" dataSourceProperty="managementRelationValidThru" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

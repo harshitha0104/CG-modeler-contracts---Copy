@@ -1,0 +1,8 @@
+<ListItem name="LiActivitiesOfCall">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomString" storable="false" dataSourceProperty="text" />
+    <SimpleProperty name="validFrom" type="DomDate" storable="false" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomValidThru" storable="false" dataSourceProperty="validThru" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,418 @@
+<Datasource name="DsLoJobProducts" objectClass="LoJobProducts" backendSystem="sf" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+  jsonQuery = Utils.convertDsParamsOldToNew(jsonQuery);
+
+  var posId = "";
+  var clbMetaPKey = "";
+  var bpaMainPKey = "";
+  var validFrom = "";
+  var validThru = "";
+  var responsiblePKey = "";
+  var clbMainPKey = "";
+  var historicalProducts = "";
+  var posPKey = "";
+  var prdPOSContentPKey = "";
+  var isKubsch = "";
+  var considerModule = "";
+
+  if(Utils.isDefined(jsonQuery.posId)) {
+  posId = Utils.convertForDBParam(jsonQuery.posId);
+  }
+  if(Utils.isDefined(jsonQuery.bpaMainPKey)) {
+  bpaMainPKey = Utils.convertForDBParam(jsonQuery.bpaMainPKey, "DomPKey");
+  }
+  if(Utils.isDefined(jsonQuery.clbMetaPKey)) {      		
+  clbMetaPKey = Utils.convertForDBParam(jsonQuery.clbMetaPKey, "DomPKey");
+  }
+  if(Utils.isDefined(jsonQuery.validFrom)) {
+  validFrom = Utils.convertForDBParam(jsonQuery.validFrom, 'DomDate');
+  }
+  if(Utils.isDefined(jsonQuery.validThru)) {
+  validThru = Utils.convertForDBParam(jsonQuery.validThru, 'DomDate');
+  }
+  if(Utils.isDefined(jsonQuery.responsiblePKey)) {
+  responsiblePKey = Utils.convertForDBParam(jsonQuery.responsiblePKey, "DomPKey");
+  }
+  if(Utils.isDefined(jsonQuery.clbMainPKey)) {
+  clbMainPKey = Utils.convertForDBParam(jsonQuery.clbMainPKey, "DomPKey");
+  }
+  if(Utils.isDefined(jsonQuery.historicalProducts)) {
+  historicalProducts = Utils.convertForDBParam(jsonQuery.historicalProducts);
+  }
+  if(Utils.isDefined(jsonQuery.posPKey)) {
+  posPKey = Utils.convertForDBParam(jsonQuery.posPKey, "DomPKey");
+  }
+  if(Utils.isDefined(jsonQuery.isKubsch)) {
+  isKubsch = Utils.convertForDBParam(jsonQuery.isKubsch);
+  }
+  if(Utils.isDefined(jsonQuery.considerModule)) {
+  considerModule = jsonQuery.considerModule;
+  }
+
+  var sqlParams = {posId, bpaMainPKey, clbMetaPKey, validFrom, validThru, responsiblePKey, clbMainPKey, historicalProducts, posPKey, isKubsch};
+
+  var sqlStmt = "";
+  sqlStmt += "SELECT ";
+  sqlStmt += "products.Product__c AS prdMainPKey, ";
+  sqlStmt += "Product2.Short_Description_#Language#__c AS shortText, ";
+  sqlStmt += "Product2.Description_1_#Language#__c AS text1, ";
+  sqlStmt += "PrdGroupText.Short_Description_#Language#__c  as prdGroupText, ";
+  sqlStmt += "PrdGroupText.Consumer_Goods_Product_Code__c as prdGroupId, ";
+  sqlStmt += "GROUP_CONCAT(products.jobdefinitionlistpkey, ',') AS jDLPKeys, ";
+  sqlStmt += "#posId# AS posId, ";
+  sqlStmt += "max(planned) AS planned, ";
+  sqlStmt += "'0' AS hasDiscrepance, ";
+  sqlStmt += "max(fromJobPrdRel) || max(fromListing) AS listedPlanned, ";
+  sqlStmt += "max(fromHistory) AS historical, ";          
+  sqlStmt += "max(Presetting1) AS presetting1, ";
+  sqlStmt += "max(Presetting2) AS presetting2, ";
+  sqlStmt += "max(Presetting3) AS presetting3, ";
+  sqlStmt += "max(Presetting4) AS presetting4, ";
+  sqlStmt += "max(Presetting5) AS presetting5, ";
+  sqlStmt += "max(Presetting6) AS presetting6, ";
+  sqlStmt += "max(Presetting7) AS presetting7, ";
+  sqlStmt += "max(Presetting8) AS presetting8, ";
+  sqlStmt += "max(lastValue)  AS lastValue, ";
+  sqlStmt += "cast(max(dataWareHouseKey) as TEXT) AS dataWareHouseKey, "; 
+  sqlStmt += "cast(max(manualProduct) as TEXT) AS manualProduct, ";
+  sqlStmt += "cast(max(surveysExist) as TEXT) AS surveysExist, ";
+  sqlStmt += "cast(Product2.Competitive_Product__c as TEXT) AS foreignProduct, ";
+  sqlStmt += "Product2.Consumer_Goods_Product_Code__c AS prdId, ";
+  sqlStmt += "Product2.GTIN__c AS eAN, ";
+  sqlStmt += "Product2.Category__c AS category, ";
+  sqlStmt += "'0' AS svyFacings, ";
+  sqlStmt += "'0' AS svyPrice, ";
+  sqlStmt += "'Distributed' AS svyDistributed, ";
+  sqlStmt += "'0' AS svyPosFacings, ";
+  sqlStmt += "'Distributed' AS svyPosDistributed, ";
+  sqlStmt += "'0' AS svyPosPrice, ";
+  sqlStmt += "'0' AS surveysInitialized, ";
+  sqlStmt += "CASE SF_File.Usage__c WHEN 'Icon' THEN SF_File.VersionData ELSE ' ' END as mediaPath, ";
+  sqlStmt += "replace( SF_File.PathOnClient, rtrim(SF_File.PathOnClient,replace(SF_File.PathOnClient, '.', '')),'') as fileType ";
+  sqlStmt += "FROM ";
+  sqlStmt += "	( ";
+  sqlStmt += "			SELECT ";
+  sqlStmt += "				Product__c, ";
+  sqlStmt += "				'1' as storeProduct, '0' as posProduct, ";
+  sqlStmt += "				Job_Definition_List__c AS jobdefinitionlistpkey, ";
+  sqlStmt += "				'' AS fromListing, 'P' AS fromJobPrdRel,'1' AS planned, '0' AS fromHistory, ";
+  sqlStmt += "				0 AS presetting1, ";
+  sqlStmt += "				0 AS presetting2, ";
+  sqlStmt += "				0 AS presetting3, ";
+  sqlStmt += "				0 AS presetting4, ";
+  sqlStmt += "				0 AS presetting5, ";
+  sqlStmt += "				0 AS presetting6, ";
+  sqlStmt += "				0 AS presetting7, ";
+  sqlStmt += "				0 AS presetting8, ";
+  sqlStmt += "				' ' AS lastValue, ";
+  sqlStmt += "				' ' As dataWareHouseKey, ";
+  sqlStmt += "				'0' AS manualProduct, ";
+  sqlStmt += "				'0' AS surveysExist ";
+  sqlStmt += "				FROM Job_Definition_List_Product__c ";
+  sqlStmt += "				WHERE Job_Definition_List_Product__c.Excluded__c='0' ";
+  sqlStmt += "				AND Job_Definition_List_Product__c.Job_Definition_List__c  ";
+  sqlStmt += "				IN ( /* sub query JobDefListPKeys */ ";
+  sqlStmt += "						SELECT Job_Definition_List__c.Id  ";
+  sqlStmt += "					    FROM Job_Definition_List__c  ";
+  sqlStmt += "					    LEFT OUTER JOIN Job_Definition_List_Account__c ON Job_Definition_List__c.Id = Job_Definition_List_Account__c.Job_Definition_List__c ";
+  sqlStmt += "                      LEFT OUTER JOIN Job_Definition_List_Account_Set__c ON Job_Definition_List__c.Id = Job_Definition_List_Account_Set__c.Job_Definition_List__c ";
+  sqlStmt += "                      LEFT OUTER JOIN Account_Set_Account__c ON Job_Definition_List_Account_Set__c.Account_set__c = Account_Set_Account__c.Account_set__c AND Account_set_Account__c.Account_Set_Account__c = #bpaMainPKey# ";
+  sqlStmt += "						WHERE 1=1 AND Job_Definition_List__c.Visit_Template__c = #clbMetaPKey# ";
+  sqlStmt += "						AND Job_Definition_List__c.Approval_State__c <> 'Canceled'  ";
+  sqlStmt += "						AND Job_Definition_List__c.Consider_Products__c='1' ";
+  sqlStmt += "						AND ((Job_Definition_List__c.Standard_Jobs__c='1'  "; 
+  sqlStmt += "						AND Job_Definition_List__c.Active__c = '1'   ";
+                                    //### check Job_Definition_List_Account__c records only for standard job definition lists. In case of non standard JDLs directly check Job_List.Account
+  sqlStmt += "						AND ( ";
+  sqlStmt += "                            Job_Definition_List_Account__c.Account__c = #bpaMainPKey# AND Job_Definition_List_Account__c.Excluded__c = '0' AND Job_Definition_List_Account__c.IsDeleted = '0' ";
+  sqlStmt += "                            OR Job_Definition_List_Account__c.Account__c IS NULL AND Job_Definition_List_Account_Set__c.Account_Set__c IS NULL ";
+  sqlStmt += "                            OR Account_Set_Account__c.Account_Set_Account__c = #bpaMainPKey# AND NOT IFNULL(Job_Definition_List_Account__c.Account__c = #bpaMainPKey# AND Job_Definition_List_Account__c.Excluded__c = '1' AND Job_Definition_List_Account__c.IsDeleted = '0', 0) ";
+  sqlStmt += "                           ) ";
+  sqlStmt += "						AND #compareAsDate('Job_Definition_List__c.Valid_From__c', 'Date','<=' ,#validFrom#, 'Date')# ";
+  sqlStmt += "		          		AND #compareAsDate('Job_Definition_List__c.Valid_Thru__c', 'Date','>=' ,#validThru#, 'Date')# ";
+  sqlStmt += "						OR (Job_Definition_List__c.Standard_Jobs__c='0' ";
+  sqlStmt += "						AND Job_Definition_List__c.Active__c = '1'   ";
+  sqlStmt += "						AND EXISTS (SELECT Id  ";
+  sqlStmt += "							FROM Job_List__c  ";
+  sqlStmt += "							WHERE Job_List__c.Job_Definition_List__c = Job_Definition_List__c.Id  ";
+  sqlStmt += "							AND Job_List__c.Manager__c = #responsiblePKey#  ";
+  sqlStmt += "						    AND #compareAsDate('Job_List__c.Valid_From__c', 'Date','<=' ,#validFrom#, 'Date')# ";
+  sqlStmt += "							AND #compareAsDate('Job_List__c.Valid_Thru__c', 'Date','>=' ,#validThru#, 'Date')# ";
+  sqlStmt += "							AND (Job_List__c.Visit__c = #clbMainPKey# OR Job_List__c.Visit__c = ' ')  ";
+  sqlStmt += "							AND Job_List__c.Account__c = #bpaMainPKey#))))) ";
+
+  /*#################
+    ###  LISTING  ###
+ #################*/
+
+  sqlStmt += "		UNION ALL ";
+
+  sqlStmt += "			Select ";
+  sqlStmt += "				listingProducts.prdmainpkey, ";
+  sqlStmt += "				'1' as storeProduct, "; 
+  sqlStmt += "				'0' as posProduct, ";   
+  sqlStmt += "				relevantJobDefList.pKey AS jobdefinitionlistpkey, ";  
+  sqlStmt += "				'L' AS fromListing, ";  
+  sqlStmt += "				'' AS fromJobPrdRel, ";  
+  sqlStmt += "				'0' AS planned, ";
+  sqlStmt += "				'0' AS fromHistory, ";
+  sqlStmt += "				listingProducts.presetting1 AS presetting1, ";
+  sqlStmt += "				listingProducts.presetting2 AS presetting2, ";
+  sqlStmt += "				listingProducts.presetting3 AS presetting3, ";
+  sqlStmt += "				listingProducts.presetting4 AS presetting4, ";
+  sqlStmt += "				listingProducts.presetting5 AS presetting5, ";
+  sqlStmt += "				listingProducts.presetting6 AS presetting6, ";
+  sqlStmt += "				listingProducts.presetting7 AS presetting7, ";
+  sqlStmt += "				listingProducts.presetting8 AS presetting8, ";
+  sqlStmt += "				' ' AS lastValue, ";
+  sqlStmt += "				' ' As dataWareHouseKey, ";
+  sqlStmt += "				'0' AS manualProduct, ";
+  sqlStmt += "				'0' AS surveysExist "; 
+  sqlStmt += "		      FROM /* sub query JobDefListPKeys */  ";  
+  sqlStmt += "		        (SELECT ";   
+  sqlStmt += "		           Job_Definition_List__c.Id as PKey, "; 
+  sqlStmt += "		           Job_Definition_List__c.Consider_Products__c as ConsiderProducts, "; 
+  sqlStmt += "		           Job_Definition_List__c.Consider_Listing__c as ConsiderListing, "; 
+
+  if(considerModule == "1"){
+    sqlStmt += "		           'None' as Listing, "; 
+    sqlStmt += "		           'Hit' as ListingWithModules, "; 
+  }
+  else {
+    sqlStmt += "		           'Hit' as Listing, "; 
+    sqlStmt += "		           'None' as ListingWithModules, "; 
+  }
+
+  sqlStmt += "		           Job_Definition_List__c.Consider_History__c as ConsiderHistory, "; 
+  sqlStmt += "		           Job_Definition_List__c.Standard_Jobs__c AS standardJobs, "; 
+  sqlStmt += "		           Job_Definition_List__c.Job_Definition_List_Template__c "; 
+  sqlStmt += "		         FROM "; 
+  sqlStmt += "		           Job_Definition_List__c ";
+  sqlStmt += "		           LEFT OUTER JOIN Job_Definition_List_Account__c ON Job_Definition_List__c.Id = Job_Definition_List_Account__c.Job_Definition_List__c "; 
+  sqlStmt += "                 LEFT OUTER JOIN Job_Definition_List_Account_Set__c ON Job_Definition_List__c.Id = Job_Definition_List_Account_Set__c.Job_Definition_List__c ";
+  sqlStmt += "                 LEFT OUTER JOIN Account_Set_Account__c ON Job_Definition_List_Account_Set__c.Account_set__c = Account_Set_Account__c.Account_set__c AND Account_Set_Account__c.Account_Set_Account__c = #bpaMainPKey# ";
+  sqlStmt += "		         WHERE 1 = 1 "; 
+  sqlStmt += "		           AND Job_Definition_List__c.Approval_State__c <> 'Canceled' "; 
+  sqlStmt += "		           AND Job_Definition_List__c.Visit_Template__c  = #clbMetaPKey# "; 
+  sqlStmt += "				   AND ( ";
+  sqlStmt += "                     (Job_Definition_List_Account__c.Account__c = #bpaMainPKey# AND Job_Definition_List_Account__c.Excluded__c = '0' AND Job_Definition_List_Account__c.IsDeleted = '0') ";
+  sqlStmt += "                     OR (Job_Definition_List_Account__c.Account__c IS NULL AND Job_Definition_List_Account_Set__c.Account_Set__c IS NULL AND Job_Definition_List__c.Consider_Account__c = '0') ";
+  sqlStmt += "                     OR (Account_Set_Account__c.Account_Set_Account__c = #bpaMainPKey# AND NOT IFNULL(Job_Definition_List_Account__c.Account__c = #bpaMainPKey# AND Job_Definition_List_Account__c.Excluded__c = '1' AND Job_Definition_List_Account__c.IsDeleted = '0', 0)) ";
+  sqlStmt += "                     ) "; 
+  sqlStmt += "		           AND (( Job_Definition_List__c.Standard_Jobs__c = '1' "; 
+  sqlStmt += "		           AND Job_Definition_List__c.Active__c = '1' ";
+  sqlStmt += "		           AND #compareAsDate('Job_Definition_List__c.Valid_From__c', 'Date','<=' ,#validFrom#, 'Date')# ";
+  sqlStmt += "				   AND #compareAsDate('Job_Definition_List__c.Valid_Thru__c', 'Date','>=' ,#validThru#, 'Date')# ";
+  sqlStmt += "				   OR "; 
+  sqlStmt += "				   (Job_Definition_List__c.Standard_Jobs__c ='0'  "; 
+  sqlStmt += "				   AND Job_Definition_List__c.Active__c = '1'   ";
+  sqlStmt += "				   AND EXISTS (SELECT Id from Job_List__c where (1=1) "; 
+  sqlStmt += "				                 AND Job_List__c.Job_Definition_List__c = Job_Definition_List__c.Id  "; 
+  sqlStmt += "				                 AND Job_List__c.Manager__c = #responsiblePKey# "; 
+  sqlStmt += "						         AND #compareAsDate('Job_List__c.Valid_From__c', 'Date','<=' ,#validFrom#, 'Date')# ";
+  sqlStmt += "						         AND #compareAsDate('Job_List__c.Valid_Thru__c', 'Date','>=' ,#validThru#, 'Date')# ";
+  sqlStmt += "						         AND (Job_List__c.Visit__c = #clbMainPKey# OR Job_List__c.Visit__c = ' ') ";
+  sqlStmt += "						         AND Job_List__c.Account__c = #bpaMainPKey# )";
+  sqlStmt += "				  )";
+  sqlStmt += "				)";
+  sqlStmt += "		    ))relevantJobDefList, ";
+
+/*####################################
+ ###  Handling Duplicate Products  ###
+ #####################################*/
+
+  sqlStmt += "		        (SELECT  prdmainpkey, presetting1, presetting2, presetting3, "; 
+  sqlStmt += "		           ' ' AS presetting4, "; 
+  sqlStmt += "		           ' ' AS presetting5, "; 
+  sqlStmt += "		           ' ' AS presetting6, "; 
+  sqlStmt += "		           ' ' AS presetting7, "; 
+  sqlStmt += "		           ' ' AS presetting8, "; 
+  sqlStmt += "		           Listing, ListingWithModules "; 
+  sqlStmt += "		        FROM ";
+
+      sqlStmt += "		        (SELECT ";  
+      sqlStmt += "		           AssortmentProduct.ProductId as prdmainpkey, "; 
+      sqlStmt += "		           AssortmentProduct.Distribution__c AS presetting3, "; 
+      sqlStmt += "		           AssortmentProduct.Valid_From__c AS validFrom, "; 
+      sqlStmt += "		           AssortmentProduct.Valid_Thru__c AS validThru, "; 
+
+     if(considerModule == "1"){
+         sqlStmt += "		           Product_Listing_Module__c.Facing__c AS presetting1, "; 
+         sqlStmt += "		           Product_Listing_Module__c.Price__c AS presetting2, "; 
+         sqlStmt += "		           'None' as Listing, "; 
+         sqlStmt += "		           'Hit' as ListingWithModules "; 
+         sqlStmt += "		        FROM ";
+         sqlStmt += "		           AssortmentProduct ";  
+         sqlStmt += "		           INNER JOIN Product_Assortment_Store__c ON AssortmentProduct.AssortmentId = Product_Assortment_Store__c.Assortment__c ";
+         sqlStmt += "		           INNER JOIN Product_Listing_Module__c ON AssortmentProduct.Id = Product_Listing_Module__c.Product_Assortment_Product__c ";  
+         sqlStmt += "		           INNER JOIN Listing_Module__c ON Product_Listing_Module__c.Listing_Module_Name__c = Listing_Module__c.Name "; 
+         sqlStmt += "				   AND Listing_Module__c.Product_Assortment__c = Product_Assortment_Store__c.Assortment__c ";
+         sqlStmt += "		           INNER JOIN Listing_Classification__c ON Listing_Module__c.Name = Listing_Classification__c.Listing_Module_Name__c AND Listing_Classification__c.Account__c = #bpaMainPKey# AND Listing_Classification__c.IsDeleted <> '1'  ";
+         sqlStmt += "		           INNER JOIN Product2 ON Product2.Id = AssortmentProduct.ProductId AND Listing_Classification__c.Product_Category__c = Product2.Category__c AND Product2.Sales_Org__c = '#SalesOrg#' "; 
+      }
+      else{
+         sqlStmt += "		           AssortmentProduct.Facings__c AS presetting1, "; 
+         sqlStmt += "		           AssortmentProduct.Price_Survey__c AS presetting2, "; 
+         sqlStmt += "		           'Hit' as Listing, "; 
+         sqlStmt += "		           'None' as ListingWithModules "; 
+         sqlStmt += "		        FROM "; 
+         sqlStmt += "		           Product_Assortment_Store__c JOIN AssortmentProduct ON Product_Assortment_Store__c.Assortment__c = AssortmentProduct.AssortmentId "; 
+      }
+
+    sqlStmt += "		            WHERE "; 
+    sqlStmt += "		           		Store__c = #bpaMainPKey# "; 
+    sqlStmt += "		            	AND AssortmentProduct.Active__c = '1' ";
+
+    sqlStmt += "		        	ORDER BY AssortmentProduct.Id ASC ) ";  
+    sqlStmt += "		            GROUP BY prdmainpkey ";
+    sqlStmt += "		           	HAVING MAX (validThru || 9999999999 - validFrom) ";
+
+  sqlStmt += "		    )listingProducts ";
+  sqlStmt += "		    WHERE (1=1) ";
+  sqlStmt += "		      AND relevantJobDefList.ConsiderListing = '1' ";
+
+
+  /*#############################
+    ###  Historical products  ###
+   #############################*/
+
+  sqlStmt += "		UNION ALL  ";
+
+  sqlStmt += "			SELECT DISTINCT ";
+  sqlStmt += "				Product__c, ";
+  sqlStmt += "				'1' as storeProduct, '1' as posProduct, ";
+  sqlStmt += "				relevantJobDefList.Id AS jobdefinitionlistpkey, ";          
+  sqlStmt += "				'' AS fromListing,'' AS fromJobPrdRel, '0' AS planned, '1' AS fromHistory, ";
+  sqlStmt += "				0 AS presetting1,0 AS presetting2, ";
+  sqlStmt += "				0 AS presetting3,0 AS presetting4, ";
+  sqlStmt += "				0 AS presetting5,0 AS presetting6, ";
+  sqlStmt += "				0 AS presetting7,0 AS presetting8, ";
+  sqlStmt += "				' ' AS lastValue, ";
+  sqlStmt += "				' ' As dataWareHouseKey, ";
+  sqlStmt += "				'0' AS manualProduct, ";
+  sqlStmt += "				'0' AS surveysExist ";
+  sqlStmt += "			FROM Historic_Product__c, ";
+  sqlStmt += "				( ";
+  sqlStmt += "					SELECT ";
+  sqlStmt += "					Job_Definition_List__c.Id ";
+  sqlStmt += "					FROM Job_Definition_List__c  ";
+  sqlStmt += "					left outer join Job_Definition_List_Account__c  ";
+  sqlStmt += "					on Job_Definition_List__c.Id = Job_Definition_List_Account__c.Job_Definition_List__c ";
+  sqlStmt += "					WHERE (1=1) ";
+  sqlStmt += "					AND Job_Definition_List__c.Approval_State__c <> 'Canceled' ";
+  sqlStmt += "					AND Job_Definition_List__c.Visit_Template__c = #clbMetaPKey# ";
+  sqlStmt += "					AND Job_Definition_List__c.Consider_History__c = '1' ";          
+  sqlStmt += "					AND (Job_Definition_List_Account__c.Account__c = #bpaMainPKey#  or Job_Definition_List_Account__c.Account__c is NULL) ";
+  sqlStmt += "					AND  (( Job_Definition_List__c.Standard_Jobs__c='1' AND Job_Definition_List__c.Active__c = '1'  ";
+  sqlStmt += "					AND #compareAsDate('Job_Definition_List__c.Valid_From__c', 'Date','<=' ,#validFrom#, 'Date')# ";
+  sqlStmt += "					AND #compareAsDate('Job_Definition_List__c.Valid_Thru__c', 'Date','>=' ,#validThru#, 'Date')#) OR (Job_Definition_List__c.Standard_Jobs__c='0'  ";
+  sqlStmt += "					AND Job_Definition_List__c.Active__c = '1'   ";  
+  sqlStmt += "					AND EXISTS ( ";
+  sqlStmt += "						SELECT Id from Job_List__c ";
+  sqlStmt += "						where Job_List__c.Job_Definition_List__c = Job_Definition_List__c.Id  ";
+  sqlStmt += "						AND Job_List__c.Manager__c = #responsiblePKey#  ";
+  sqlStmt += "						AND #compareAsDate('Job_List__c.Valid_From__c', 'Date','<=' ,#validFrom#, 'Date')# ";
+  sqlStmt += "						AND #compareAsDate('Job_List__c.Valid_Thru__c', 'Date','>=' ,#validThru#, 'Date')# ";
+  sqlStmt += "						AND (Job_List__c.Visit__c = #clbMainPKey# OR Job_List__c.Visit__c = ' ')  ";
+  sqlStmt += "						AND Job_List__c.Account__c = #bpaMainPKey# )";
+  sqlStmt += "					)) ";
+  sqlStmt += "				) relevantJobDefList ";
+  sqlStmt += "			WHERE ";
+  sqlStmt += "				Historic_Product__c.Account__c = #bpaMainPKey# ";
+  sqlStmt += "				AND #historicalProducts# <> 'No'  ";
+  sqlStmt += "				AND (#historicalProducts# <> 'SameMeta' OR Historic_Product__c.Visit_Template__c = #clbMetaPKey#)  ";
+
+  /*##########################################################
+    ###  Manually added products (from existing JobMains)  ###
+ ##########################################################*/
+
+
+  sqlStmt += "		UNION ALL ";
+
+  sqlStmt += "			SELECT DISTINCT ";
+  sqlStmt += "		 	Product__c, ";
+  sqlStmt += "			'1' as storeProduct, '1' as posProduct, ";
+  sqlStmt += "			' ' AS jobdefinitionlistpkey, ";
+  sqlStmt += "			'' AS fromListing,'' AS fromJobPrdRel, '0' AS planned,'0' AS fromHistory, ";
+  sqlStmt += "			0 AS presetting1,0 AS presetting2, ";
+  sqlStmt += "			0 AS presetting3,0 AS presetting4, ";
+  sqlStmt += "			0 AS presetting5,0 AS presetting6, ";
+  sqlStmt += "			0 AS presetting7,0 AS presetting8, ";
+  sqlStmt += "			Last_Value__c As lastValue , ";
+  sqlStmt += "			' ' As dataWareHouseKey , ";
+  sqlStmt += "			Manually__c AS manualProduct, ";
+  sqlStmt += "			'1' AS surveysExist ";
+  sqlStmt += "			FROM Visit_Job__c  ";
+  sqlStmt += "			LEFT JOIN Job_Definition_Template__c  ";
+  sqlStmt += "			ON Visit_Job__c.Job_Definition_Template__c = Job_Definition_Template__c.Id";
+  sqlStmt += "			WHERE ";
+  sqlStmt += "			Visit__c = #clbMainPKey# ";
+  sqlStmt += "			AND Product__c<>' ' ";
+
+  sqlStmt += "	) products 	LEFT JOIN Product2 ON products.Product__c = Product2.Id AND Product2.Sales_Org__c = '#SalesOrg#' ";
+  sqlStmt += "	LEFT JOIN Product2 AS PrdGroupText ON PrdGroupText.id = Product2.Criterion_3_Product__c AND PrdGroupText.Sales_Org__c = '#SalesOrg#' ";
+  sqlStmt += "	LEFT OUTER JOIN (SF_FileLink ";
+  sqlStmt += "	INNER JOIN SF_File ON SF_FileLink.FileId = SF_File.Id  ";
+  sqlStmt += "  AND SF_File.Usage__c = 'Icon' ";
+  sqlStmt += "  AND SF_File.IsDeleted <> '1' ";
+  sqlStmt += "  AND SF_FileLink.IsDeleted <> '1') ON SF_FileLink.ParentId = products.Product__c ";
+  sqlStmt += "WHERE (1=1) ";
+
+  // product field state
+  sqlStmt += "	AND #compareAsDate('Product2.Field_Valid_From__c', 'Date','<=' ,#validFrom#, 'Date')#";
+  sqlStmt += "	AND #compareAsDate('Product2.Field_Valid_Thru__c', 'Date','>=' ,#validThru#, 'Date')# ";
+
+  // product master state
+  sqlStmt += "	AND Product2.State__c = '4' ";
+
+  sqlStmt += "GROUP BY products.Product__c ";
+  sqlStmt += "HAVING #posPKey# = #bpaMainPKey# OR #isKubsch# ='1' OR (MAX(products.storeProduct)='1') ";
+
+   return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+            ]]></Load>
+    <Update><![CDATA[
+            ]]></Update>
+    <Custom>
+      <JobProductsExisting><![CDATA[
+
+ var clbMainPKey = "";
+
+ if(Utils.isDefined(jsonParams.clbMainPKey)) {      		
+     clbMainPKey = Utils.convertForDBParam(jsonParams.clbMainPKey, "DomPKey");
+ }
+
+ var sqlParams = {clbMainPKey};
+
+ var sqlStmt ="";
+ sqlStmt+= "SELECT Product2.Id AS prdMainPKey ";
+ sqlStmt+= "	,Product2.Short_Description_#Language#__c AS shortText ";
+ sqlStmt+= "	,Product2.Description_1_#Language#__c AS text1 ";
+ sqlStmt+= "    ,PrdGroupText.Short_Description_#Language#__c  as prdGroupText ";
+ sqlStmt+= "	,PrdGroupText.Consumer_Goods_Product_Code__c as prdGroupId ";
+ sqlStmt+= "	,Product2.GTIN__c AS eAN ";
+ sqlStmt+= "	,Product2.Category__c AS category ";
+ sqlStmt+= "	,Product2.Consumer_Goods_Product_Code__c AS prdId ";
+ sqlStmt+= " 	,'1' AS planned ";
+ sqlStmt+= "	,max('P') || max(' ') AS listedPlanned ";
+ sqlStmt+= "	,Visit_Job__c.Last_Value__c AS lastValue ";
+ sqlStmt+= "	,Job_Definition_Template__c.Primary_Survey_Policy__c As dataWareHouseKey ";
+ sqlStmt+= "	,'0' AS historical ";
+ sqlStmt+= "	,'0' AS manualProduct ";
+ sqlStmt+= "	,Visit_Job__c.POS__c AS posId ";
+ sqlStmt+= "	,'0' AS surveysInitialized ";
+ sqlStmt+= "FROM Product2 ";
+ sqlStmt+= "	,Visit_Job__c ";
+ sqlStmt+= "	join Job_Definition_Template__c on Visit_Job__c.Job_Definition_Template__c = Job_Definition_Template__c.Id";
+ sqlStmt+= "	LEFT JOIN Product2 AS PrdGroupText on PrdGroupText.id = Product2.Criterion_3_Product__c AND PrdGroupText.Sales_Org__c = '#SalesOrg#' ";
+ sqlStmt+= "WHERE Visit_Job__c.Product__c = Product2.Id ";
+ sqlStmt+= "AND Visit_Job__c.Visit__c = #clbMainPKey# ";
+ sqlStmt+= "AND Product2.Sales_Org__c = '#SalesOrg#' ";
+ sqlStmt+=" GROUP BY Visit_Job__c.Product__c ";
+
+ return Utils.replaceMacrosParam(sqlStmt, sqlParams);  // <!-- CW-REQUIRED: custom statement parameter format -->
+    ]]></JobProductsExisting>
+    </Custom>
+  </Database>
+</Datasource>

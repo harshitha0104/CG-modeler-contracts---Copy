@@ -1,0 +1,46 @@
+<DataSource name="DsLuUserRelatedDocumentCount" businessObjectClass="LuUserRelatedDocumentCount" readOnly="true" editableEntity="UsrReminderRule" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var documentType;
+			var index = 0;
+
+			for (index in jsonQuery.params) {
+              if(Utils.isDefined(jsonQuery.params[index].value.documentType)) {                     
+                documentType= Utils.convertForDBParam(jsonQuery.params[index].value.documentType, 'DomUsrRelatedDocumentType');
+                break;
+              }
+			}
+			var sqlParams = {documentType};
+
+			var sqlStmt = "SELECT ";
+			sqlStmt += "UsrReminderRule.PKey as pKey, ";
+			sqlStmt += "(SELECT COUNT(*) FROM UsrRelatedDocument WHERE UsrRelatedDocument.UsrUserPKey = '#UserPKey#' AND UsrRelatedDocument.DocumentType = #documentType#) as userRelatedDocsCount ";
+			sqlStmt += "FROM UsrReminderRule ";
+			sqlStmt += "LEFT OUTER JOIN UsrEtpWarehouseRel ON UsrEtpWarehouseRel.UsrMainPKey='#UserPKey#' AND UsrEtpWarehouseRel.SalesOrg= '#SALESORG#'  ";
+			sqlStmt += "AND UsrEtpWarehouseRel.Active='1' LEFT OUTER JOIN EtpWarehouse ON EtpWarehouse.PKey=UsrEtpWarehouseRel.EtpWarehousePKey ";
+			sqlStmt +=" JOIN UsrRelatedDocument ON UsrRelatedDocument.UsrUserPKey = UsrEtpWarehouseRel.UsrMainPKey AND UsrRelatedDocument.DocumentType = #documentType# ";
+			sqlStmt += "WHERE 1=1 ";
+			sqlStmt += "AND UsrReminderRule.SalesOrg = '#SALESORG#' ";
+			sqlStmt += "AND (UsrReminderRule.UsrRolePKey=' ' OR UsrReminderRule.UsrRolePKey IN (SELECT UsrRolePKey FROM UsrRoleRel WHERE UsrRoleRel.UsrMainPKey='#UserPKey#' AND UsrRoleRel.Exclude='0' AND UsrRoleRel.SalesOrg= '#SALESORG#')) ";      
+			sqlStmt += "AND (UsrReminderRule.CountryState = ' ' OR UsrReminderRule.CountryState=EtpWarehouse.CountryState) ";
+			sqlStmt += "AND UsrReminderRule.Active='1' ";
+			sqlStmt += "AND UsrReminderRule.ValidFrom <= '#Today#' ";
+			sqlStmt += "AND UsrReminderRule.ValidThru >= '#Today#' ";     
+			sqlStmt += "AND (UsrEtpWarehouseRel.SalesOrg = '#SALESORG#' OR UsrEtpWarehouseRel.SalesOrg is NULL) ";      
+			sqlStmt += "AND (EtpWarehouse.SalesOrg = '#SALESORG#' OR EtpWarehouse.SalesOrg is NULL) ";
+
+            return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+		]]></Load>
+    <Update><![CDATA[
+			// Intended to be empty
+			return undefined;]]></Update>
+    <Insert><![CDATA[   
+			// Intended to be empty     
+			return undefined;]]></Insert>
+    <Delete><![CDATA[
+			// Intended to be empty
+			return undefined; ]]></Delete>
+  </Database>
+</DataSource>

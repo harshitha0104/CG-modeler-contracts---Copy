@@ -1,0 +1,11 @@
+<ListItem name="LiTripListBpaRel">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="tplMainPKey" type="DomPKey" dataSourceProperty="tplMainPKey" />
+    <SimpleProperty name="dayOfWeek" type="DomTplDayOfWeek" dataSourceProperty="dayOfWeek" />
+    <SimpleProperty name="bpaMainPKey" type="DomPKey" dataSourceProperty="bpaMainPKey" />
+    <SimpleProperty name="validFrom" type="DomDate" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomValidThru" dataSourceProperty="validThru" />
+    <SimpleProperty name="sort" type="DomInteger" dataSourceProperty="sort" />
+  </SimpleProperties>
+</ListItem>

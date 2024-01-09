@@ -1,0 +1,14 @@
+<LookupObject name="LuProductUom" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuProductUom" />
+  <SimpleProperties>
+    <SimpleProperty name="orderQuantityLogisticUnit" type="DomPrdLogisticUnit" storable="false" dataSourceProperty="orderQuantityLogisticUnit" />
+    <SimpleProperty name="consumerQuantityLogisticUnit" type="DomPrdLogisticUnit" storable="false" dataSourceProperty="consumerQuantityLogisticUnit" />
+    <SimpleProperty name="priceQuantityLogisticUnit" type="DomPrdLogisticUnit" storable="false" dataSourceProperty="priceQuantityLogisticUnit" />
+    <SimpleProperty name="piecesPerSmallestUnit" type="DomPrdPiecesPerUnit" storable="false" dataSourceProperty="piecesPerSmallestUnit" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

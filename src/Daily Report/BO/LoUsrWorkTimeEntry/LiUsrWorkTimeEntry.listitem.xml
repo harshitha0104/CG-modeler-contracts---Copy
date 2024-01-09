@@ -1,0 +1,11 @@
+<ListItem name="LiUsrWorkTimeEntry" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" storable="false" />
+    <SimpleProperty name="effectiveUTCTimeFrom" type="DomDateTime" dataSourceProperty="effectiveUTCTimeFrom" storable="false" />
+    <SimpleProperty name="effectiveUTCTimeThru" type="DomDateTime" dataSourceProperty="effectiveUTCTimeThru" storable="false" />
+    <SimpleProperty name="usrDailyReportPKey" type="DomPKey" dataSourceProperty="usrDailyReportPKey" storable="false" />
+    <SimpleProperty name="usrTimeEntryMetaPKey" type="DomPKey" dataSourceProperty="usrTimeEntryMetaPKey" storable="false" />
+    <SimpleProperty name="systemTimeThru" type="DomDateTime" dataSourceProperty="systemTimeThru" storable="false"/>
+    <SimpleProperty name="duration" type="DomDurationUnit" dataSourceProperty="duration" storable="false"/>
+  </SimpleProperties>
+</ListItem>

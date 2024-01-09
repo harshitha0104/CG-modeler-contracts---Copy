@@ -1,0 +1,28 @@
+<Datasource name="DsLoUserDRRecentState" backendSystem="sf" businessObjectClass="LoUserDRRecentState" external="true" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="pKey" value="''" />
+    <DerivedAttribute name="usrDailyReportPKey" value="''" />
+    <DerivedAttribute name="done" value="''" />
+    <DerivedAttribute name="usrMainPKey" value="''" />
+    <DerivedAttribute name="wfeStatePKey" value="''" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+      // Recent State tracking not supported with SF
+      return undefined;
+            ]]></Load>
+    <Update><![CDATA[
+
+      return undefined;
+            ]]></Update>
+    <Insert><![CDATA[
+
+      return undefined;   
+            ]]></Insert>
+    <Delete><![CDATA[
+
+      return undefined;  
+            ]]></Delete>
+  </Database>
+</Datasource>

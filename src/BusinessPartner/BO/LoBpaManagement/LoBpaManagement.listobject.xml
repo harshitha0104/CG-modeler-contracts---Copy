@@ -1,0 +1,8 @@
+<ListObject name="LoBpaManagement" generateLoadMethod="true" >
+  <DataSource name="DsLoBpaManagement" />
+  <Item objectClass="LiBpaManagement" />
+  <Methods>
+    <Method name="addItem" />
+    <Method name="saveAsync" />
+  </Methods>
+</ListObject>

@@ -1,0 +1,11 @@
+<LookupObject name="LuTourCashDocumentsNotRelatedToEOD" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuTourCashDocumentsNotRelatedToEOD" />
+  <SimpleProperties>
+    <SimpleProperty name="openCashDocumentsCount" type="DomInteger" storable="true" dataSourceProperty="openCashDocumentsCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

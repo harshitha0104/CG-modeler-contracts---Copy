@@ -1,0 +1,74 @@
+<Process name="TruckLoad::CreateProcess" defaultAction="CreateTruckLoadDocument" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="TruckLoadBo" type="BoTruckLoad" />
+      </Declarations>
+      <Parameters>
+        <Input name="SdoMetaPKey" type="DomPKey" />
+        <Input name="LuOrderMeta" type="LuOrderMeta" />
+        <Input name="EtpWarehousePKey" type="DomPKey" />
+        <Input name="Mode" type="DomString" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadLuOrderMeta" actionType="LOAD" type="LuOrderMeta">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::SdoMetaPKey" />
+        </Parameters>
+        <Return name="ProcessContext::LuOrderMeta" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="CreateTruckLoadDocument" actionType="CREATE" type="BoTruckLoad">
+        <Parameters>
+          <Input name="sdoMetaPKey" value="ProcessContext::SdoMetaPKey" />
+          <Input name="etpWarehousePKey" value="ProcessContext::EtpWarehousePKey" />
+          <Input name="mode" value="ProcessContext::Mode" />
+        </Parameters>
+        <Return name="ProcessContext::TruckLoadBo" />
+        <TransitionTo action="SkipDocumentTypeDecisionForReviewStock" />
+      </Action>
+       <Action name="SkipDocumentTypeDecisionForReviewStock" actionType="DECISION" parameter="ProcessContext::Mode">
+        <Case value="ReviewStock" action="AddItemsBasedOnInventory" />
+        <CaseElse action="DocumentTypeDecision" />
+        <CaseEmpty action="DocumentTypeDecision" />
+      </Action>
+      <Action name="DocumentTypeDecision" actionType="DECISION" parameter="ProcessContext::LuOrderMeta.sdoSubType">
+        <Case value="ProductCheckIn" action="AddItemsBasedOnInventory" />
+        <Case value="ProductCheckOut" action="InitComplexPricing" />
+        <Case value="TruckAudit" action="AddItemsBasedOnInventory" />
+        <Case value="TruckIvcTransferOutward" action="AddItemsBasedOnInventory" />        
+        <CaseElse action="InitComplexPricing" />
+        <CaseEmpty action="InitComplexPricing" />
+      </Action>
+      <Action name="AddItemsBasedOnInventory" actionType="LOGIC" call="ProcessContext::TruckLoadBo.addItemsBasedOnInventory">
+        <TransitionTo action="PrepopulateQuantity" />
+      </Action>
+      <Action name="PrepopulateQuantity" actionType="LOGIC" call="ProcessContext::TruckLoadBo.prepopulateQuantity">
+        <TransitionTo action="InitComplexPricing" />
+      </Action>
+      <Action name="InitComplexPricing" actionType="LOGIC" call="ProcessContext::TruckLoadBo.cpInitComplexPricing">
+        <TransitionTo action="StartNavigationoDecision" />
+      </Action>
+      <Action name="StartNavigationoDecision" actionType="DECISION" parameter="ProcessContext::Mode">
+        <Case value="ReviewStock" action="OpenReviewStock" />
+        <CaseElse action="StartNavigation" />
+        <CaseEmpty action="StartNavigation" />
+      </Action>
+      <Action name="OpenReviewStock" actionType="PROCESS" process="TruckLoad::ReviewStockProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::TruckLoadBo" />
+          <Input name="Mode" value="ProcessContext::Mode" />
+        </Parameters>
+      </Action>
+      <Action name="StartNavigation" actionType="PROCESS" process="TruckLoad::PreTruckLoadNavigationProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::TruckLoadBo" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

@@ -1,0 +1,341 @@
+<Process name="Visit::CalendarProcess" defaultAction="SelectRightView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="currentDateTitle" type="String" />
+        <Declaration name="visitList" type="LoVisit" />
+        <Declaration name="userSettings" type="LoUserSetting" />
+        <Declaration name="currentWeeklyViewStartDate" type="String" />
+        <Declaration name="currentWeeklyViewEndDate" type="String" />
+        <Declaration name="DisplayCalendarWeek" type="DomBool" />
+        <Declaration name="weeklyHeader" type="String" />
+        <Declaration name="contextMenuList" type="LoVisitOverviewContextMenu" />
+        <Declaration name="currentAgendaView" type="String" />
+        <Declaration name="displayTraffic" type="DomBool" />
+        <Declaration name="displayRoute" type="DomBool" />
+        <Declaration name="CurrentRetailStoreId" type="String" />
+        <Declaration name="currentVisitFilter" type="String" />
+        <Declaration name="ShowMapDetails" type="DomBool" />
+        <Declaration name="MapDetail" type="LuMapDetail" />
+      </Declarations>
+      <Parameters>
+        <Input name="currentDate" type="DomDate" />
+        <Input name="VisitView" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="AssignUserSettings" actionType="LOGIC" call="ApplicationContext::User.getCallCalendarSettings">
+        <Return name="ProcessContext::userSettings" />
+      </Action>
+      <Action name="LoadVisits" actionType="LOAD" type="LoVisit">
+        <Return name="ProcessContext::visitList" />
+      </Action>
+      <Action name="InitializeCWWithUserSetting" actionType="LOGIC" call="ApplicationContext::User.boUserSettings.getClbShowCalendarWeekMobility">
+        <Return name="ProcessContext::DisplayCalendarWeek" />
+      </Action>
+      <Action name="InitializeDisplayTrafficWithUserSetting" actionType="LOGIC" call="ApplicationContext::User.boUserSettings.getClbDisplayTrafficInMapMobility">
+        <Return name="ProcessContext::displayTraffic" />
+      </Action>
+      <Action name="InitializeDisplayRouteWithUserSetting" actionType="LOGIC" call="ApplicationContext::User.boUserSettings.getClbDisplayRouteInMapMobility">
+        <Return name="ProcessContext::displayRoute" />
+      </Action>
+      <Action name="WeeklyViewStartDateDefaultValue" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="view" value="ProcessContext::currentDate" />
+        </Parameters>
+        <Return name="ProcessContext::currentWeeklyViewStartDate" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowAgendaWeeklyView" actionType="VIEW">
+        <UIDescription>Visit::CalendarWeeklyViewUI</UIDescription>
+        <Events>
+          <Event name="DateRangeChanged" action="AssignWeeklyViewStartDate" />
+          <Event name="itemSelected" action="LoadVisit" />
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="SwitchCalendarView" action="GetVisitsByDate" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+          <Event name="SetVisitFilter" action="SetVisitFilter" />
+          <Event name="itemMove" action="RescheduleVisitSilently" />
+        </Events>
+      </Action>
+      <Action name="ShowAgendaDailyView" actionType="VIEW">
+        <UIDescription>Visit::CalendarDailyViewUI</UIDescription>
+        <Events>
+          <Event name="moveNextDay" action="MoveToNextDay" />
+          <Event name="movePrevDay" action="MoveToPrevDay" />
+          <Event name="tabSelected" action="ShowAgendaDailyView" />
+          <Event name="SwitchCalendarView" action="GetVisitsForWeeklyView" />
+          <Event name="itemSelected" action="LoadVisit" />
+          <Event name="swipeEvent" action="Swipe_Decision" />
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+          <Event name="SetVisitFilter" action="SetVisitFilter" />
+          <Event name="loadGoogleMapDetails" action="PrepareMapDetail" />
+        </Events>
+      </Action>
+      <Action name="AssignWeeklyViewStartDate" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="view" value="Event.plannedStartDate" />
+        </Parameters>
+        <Return name="ProcessContext::currentWeeklyViewStartDate" />
+        <TransitionTo action="AssignWeeklyViewEndDate" />
+      </Action>
+      <Action name="AssignWeeklyViewEndDate" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="view" value="Event.plannedEndDate" />
+        </Parameters>
+        <Return name="ProcessContext::currentWeeklyViewEndDate" />
+        <TransitionTo action="AssignWeeklyViewCurrentDate" />
+      </Action>
+      <Action name="AssignWeeklyViewCurrentDate" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="view" value="ProcessContext::currentDate" />
+        </Parameters>
+        <Return name="ProcessContext::currentDate" />
+        <TransitionTo action="GetVisitsByDateRange" />
+      </Action>
+      <Action name="changeWeeklyTitle" actionType="LOGIC" call="ProcessContext::visitList.getCalendarTitle">
+        <Parameters>
+          <Input name="currentDate" value="ProcessContext::currentWeeklyViewStartDate" />
+          <Input name="displayCalendarWeek" value="ProcessContext::DisplayCalendarWeek" />
+        </Parameters>
+        <Return name="ProcessContext::weeklyHeader" />
+        <TransitionTo action="ShowAgendaWeeklyView" />
+      </Action>
+      <Action actionType="LOGIC" name="GetVisitsByDateRange" call="ProcessContext::visitList.getVisitsByDate">
+        <Parameters>
+          <Input name="currentDateStart" value="ProcessContext::currentWeeklyViewStartDate" />
+          <Input name="currentDateEnd" value="ProcessContext::currentWeeklyViewEndDate" />
+          <Input name="dateFunction" value="None" type="Literal" />
+          <Input name="filterVisits" value="ProcessContext::currentVisitFilter" />
+        </Parameters>
+        <Return name="ProcessContext::currentDate" />
+        <TransitionTo action="changeWeeklyTitle" />
+      </Action>
+      <!-- LOAD Visit -->
+      <Action name="LoadVisit" actionType="PROCESS" process="Visit::LoadVisitProcess">
+        <Parameters>
+          <Input name="VisitPKey" value="Event.id" />
+        </Parameters>
+        <TransitionTo action="HideDetailVisibility" />
+      </Action>
+      <!-- LOAD ContextMenu -->
+      <Action name="GetContextMenu" actionType="LOAD" type="LoVisitOverviewContextMenu">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="visitStatus" value="Event.visitStatus" />
+        </Parameters>
+        <Return name="ProcessContext::contextMenuList" />
+      </Action>
+      <!-- View Switch -->
+      <Action name="GetVisitsByDate" actionType="LOGIC" call="ProcessContext::visitList.getVisitsByDate">
+        <Parameters>
+          <Input name="currentDateStart" value="ProcessContext::currentDate" />
+          <Input name="currentDateEnd" value="ProcessContext::currentDate" />
+          <Input name="dateFunction" value="None" type="Literal" />
+          <Input name="filterVisits" value="ProcessContext::currentVisitFilter" />
+        </Parameters>
+        <Return name="ProcessContext::currentDate" />
+        <TransitionTo action="AgendaViewSwitched" />
+      </Action>
+      <Action name="AgendaViewSwitched" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="view" value="DayWithMap" />
+        </Parameters>
+        <Return name="ProcessContext::currentAgendaView" />
+        <TransitionTo action="updateDailyViewTitle" />
+      </Action>
+      <Action name="GetVisitsForWeeklyView" actionType="LOAD" type="LoVisit">
+        <Parameters>
+          <Input name="filterVisits" value="ProcessContext::currentVisitFilter" />
+        </Parameters>
+        <Return name="ProcessContext::visitList" />
+        <TransitionTo action="AgendaViewSwitchedToWeekly" />
+      </Action>
+      <Action name="AgendaViewSwitchedToWeekly" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="view" value="Week" />
+        </Parameters>
+        <Return name="ProcessContext::currentAgendaView" />
+        <TransitionTo action="changeWeeklyTitle" />
+      </Action>
+      <!-- Daily View Day Change -->
+      <Action name="MoveToNextDay" actionType="LOGIC" call="ProcessContext::visitList.getVisitsByDate">
+        <Parameters>
+          <Input name="currentDateStart" value="ProcessContext::currentDate" />
+          <Input name="currentDateEnd" value="ProcessContext::currentDate" />
+          <Input name="dateFunction" value="NextDay" type="Literal" />
+          <Input name="filterVisits" value="ProcessContext::currentVisitFilter" />
+        </Parameters>
+        <Return name="ProcessContext::currentDate" />
+        <TransitionTo action="updateDailyViewTitle" />
+      </Action>
+      <Action name="MoveToPrevDay" actionType="LOGIC" call="ProcessContext::visitList.getVisitsByDate">
+        <Parameters>
+          <Input name="currentDateStart" value="ProcessContext::currentDate" />
+          <Input name="currentDateEnd" value="ProcessContext::currentDate" />
+          <Input name="dateFunction" value="PrevDay" type="Literal" />
+          <Input name="filterVisits" value="ProcessContext::currentVisitFilter" />
+        </Parameters>
+        <Return name="ProcessContext::currentDate" />
+        <TransitionTo action="updateDailyViewTitle" />
+      </Action>
+      <!-- Daily View Update Title -->
+      <Action name="updateDailyViewTitle" actionType="LOGIC" call="ProcessContext::visitList.getDailyViewTitle">
+        <Parameters>
+          <Input name="currentDate" value="ProcessContext::currentDate" />
+        </Parameters>
+        <Return name="ProcessContext::currentDateTitle" />
+        <TransitionTo action="ShowAgendaDailyView" />
+      </Action>
+      <Action name="Swipe_Decision" actionType="DECISION" parameter="Event.direction">
+        <Case value="left" action="MoveToNextDay" />
+        <Case value="right" action="MoveToPrevDay" />
+        <CaseElse action="ShowAgendaDailyView" />
+        <CaseEmpty action="ShowAgendaDailyView" />
+      </Action>
+      <!-- drap and drop in calendar -->
+      <Action name="RescheduleVisitSilently" actionType="PROCESS" process="Visit::RescheduleProcess">
+        <Parameters>
+          <Input name="VisitPKey" value="Event.pKey" />
+          <Input name="dateFrom" value="Event.plannedStartDate" />
+          <Input name="timeFrom" value="Event.plannedStartTime" />
+          <Input name="dateThru" value="Event.plannedEndDate" />
+          <Input name="timeThru" value="Event.plannedEndTime" />
+          <Input name="Silent" value="1" type="Literal" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::RefreshRequired" value="refreshRequired" />
+        </ReturnValues>
+        <TransitionTo action="RefreshRequired_Decision" />
+      </Action>
+      <!-- Common Actions -->
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Execute" action="LoadRetailStoreId" />
+        <Case value="Abandon" action="AbandonVisit" />
+        <Case value="Complete" action="CompleteVisit" />
+        <Case value="Re-Schedule" action="RescheduleVisit" />
+        <Case value="Info" action="LoadVisitInfo" />
+        <Case value="NavigateToCustomer" action="NavigateToCustomer" />
+        <CaseElse action="ShowCalendarView_Decision" />
+        <CaseEmpty action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="ShowCalendarView_Decision" actionType="DECISION" parameter="ProcessContext::currentAgendaView">
+        <Case value="DayWithMap" action="GetVisitsByDate" />
+        <Case value="DayWithoutMap" action="GetVisitsByDate" />
+        <Case value="Week" action="GetVisitsForWeeklyView" />
+        <CaseElse action="GetVisitsForWeeklyView" />
+        <CaseEmpty action="GetVisitsForWeeklyView" />
+      </Action>
+      <Action name="RefreshRequired_Decision" actionType="DECISION" parameter="ProcessContext::RefreshRequired">
+        <Case value="1" action="RefreshCurrentView_Decision" />
+        <CaseElse action="RefreshCurrentView_Decision" />
+        <CaseEmpty action="RefreshCurrentView_Decision" />
+      </Action>
+      <Action name="RefreshCurrentView_Decision" actionType="DECISION" parameter="ProcessContext::currentAgendaView">
+        <Case value="DayWithMap" action="GetVisitsByDate" />
+        <Case value="DayWithoutMap" action="GetVisitsByDate" />
+        <Case value="Week" action="GetVisitsByDateRange" />
+        <CaseElse action="GetVisitsByDateRange" />
+        <CaseEmpty action="GetVisitsByDateRange" />
+      </Action>
+      <Action name="LoadRetailStoreId" actionType="LOGIC" call="ProcessContext::visitList.getRetailStoreId">
+        <Parameters>
+          <Input name="visitId" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentRetailStoreId" />
+        <TransitionTo action="LoadVisitFinal" />
+      </Action>
+      <Action actionType="PROCESS" name="LoadVisitFinal" process="Visit::LoadVisitProcess">
+        <Parameters>
+          <Input name="VisitPKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <Action name="AbandonVisit" actionType="PROCESS" process="Visit::ChangeStatusWizardProcess">
+        <Parameters>
+          <Input name="VisitPKey" value="Event.pKey" />
+          <Input name="targetClbStatus" value="Abandoned" type="Literal" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentUser" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::RefreshRequired" value="refreshRequired" />
+        </ReturnValues>
+        <TransitionTo action="RefreshRequired_Decision" />
+      </Action>
+      <Action name="CompleteVisit" actionType="PROCESS" process="Visit::ChangeStatusWizardProcess">
+        <Parameters>
+          <Input name="VisitPKey" value="Event.pKey" />
+          <Input name="targetClbStatus" value="Completed" type="Literal" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentUser" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::RefreshRequired" value="refreshRequired" />
+        </ReturnValues>
+        <TransitionTo action="RefreshRequired_Decision" />
+      </Action>
+      <Action name="RescheduleVisit" actionType="PROCESS" process="Visit::RescheduleProcess">
+        <Parameters>
+          <Input name="VisitPKey" value="Event.pKey" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentUser" />
+        </Parameters>
+        <TransitionTo action="RefreshRequired_Decision" />
+      </Action>
+      <Action actionType="PROCESS" name="LoadVisitInfo" process="Visit::InfoProcess">
+        <Parameters>
+          <Input name="VisitPKey" value="Event.pKey" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentUser" />
+        </Parameters>
+      </Action>
+      <Action name="SetVisitFilter" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::currentVisitFilter" />
+        <TransitionTo action="RefreshCurrentView_Decision" />
+        <Parameters>
+          <Input name="filterValue" value="Event.filterValue" />
+        </Parameters>
+      </Action>
+      <!-- Navigate to customer actions-->
+      <Action actionType="LOGIC" name="NavigateToCustomer" call="ProcessContext::visitList.navigateToCustomer">
+        <Parameters>
+          <Input name="VisitPKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <Action name="PrepareMapDetail" actionType="LOGIC" call="ProcessContext::visitList.prepareMapDetails">
+        <Parameters>
+          <Input name="visitList" value="ProcessContext::visitList" />
+          <Input name="pKey" value="event.pkey" />
+        </Parameters>
+        <Return name="ProcessContext::MapDetail" />
+        <TransitionTo action="SetDetailVisibile" />
+      </Action>
+      <Action name="SetDetailVisibile" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::ShowMapDetails" />
+        <TransitionTo action="ShowAgendaDailyView" />
+      </Action>
+      <Action name="HideDetailVisibility" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="0" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::ShowMapDetails" />
+      </Action>
+      <!--Switch case to display right Calendar view -->
+      <Action name="SelectRightView" actionType="DECISION" parameter="ProcessContext::VisitView">
+        <CaseEmpty action="ShowCalendarView_Decision" />
+        <CaseElse action="SaveAgendaViewInProcessContext" />
+      </Action>
+      <Action name="SaveAgendaViewInProcessContext" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="VisitView" value="ProcessContext::VisitView" />
+        </Parameters>
+        <Return name="ProcessContext::currentAgendaView" />
+        <TransitionTo action="ShowCalendarView_Decision" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

@@ -1,0 +1,124 @@
+<UIDescription name="Call::ActivitiesListUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionPage" cachable="false">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="ActivitiesId" defaultLabel="Activities" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="MasterList" dataSource="ProcessContext::activities">
+          <Items name="Items" itemPattern="ActivitiesPattern">
+            <ItemListLayout>
+              <Default>
+                <Col width="1.7em" height="1.4em" layoutType="Image" bindingId="Icon" />
+                <Col flex="1">
+                  <Row layoutType="itemIdentifierSmall" bindingId="Slogan" />
+                  <Row>
+                    <Col layoutType="itemSecondary" bindingId="ValidFrom" />
+                    <Col width="0.4em" height="1.5em" layoutType="itemSecondary" bindingId="Separator" />
+                    <Col layoutType="itemSecondary" bindingId="ValidThru" />
+                  </Row>
+                </Col>
+                <Col flex="1">
+                  <Row>
+                    <Col width="10.0em" layoutType="itemLabel itemLeft" bindingId="ActivityTemplateLabel" />
+                    <Col flex="1" layoutType="itemValue" bindingId="ActivityTemplate" />
+                  </Row>
+                  <Row>
+                    <Col width="10.0em" layoutType="itemLabel itemLeft" bindingId="CallTemplateLabel" />
+                    <Col flex="1" layoutType="itemValue" bindingId="CallType" />
+                  </Row>
+                  <Row>
+                    <Col width="10.0em" layoutType="itemLabel itemLeft" bindingId="RelatedPromotion" />
+                    <Col flex="1" layoutType="itemValue" bindingId="PromotionSlogan" />
+                  </Row>
+                  <Row>
+                    <Col width="10.0em" layoutType="itemLabel itemLeft" bindingId="TimeFromThru" />
+                    <Col flex="1" layoutType="itemValue" bindingId="PromotionDate" />
+                  </Row>
+                </Col>
+                <Col height="16px" width="16px" layoutType="Image" bindingId="AlertIcon" />
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="1.7em" height="1.4em" layoutType="Image" bindingId="Icon" />
+                  <Col flex="1">
+                    <Row layoutType="itemIdentifierSmall" bindingId="Slogan" />
+                    <Row>
+                      <Col layoutType="itemSecondary" bindingId="ValidFrom" />
+                      <Col width="0.4em" height="1.5em" layoutType="itemSecondary" bindingId="Separator" />
+                      <Col layoutType="itemSecondary" bindingId="ValidThru" />
+                    </Row>
+                  </Col>
+                  <Col flex="1">
+                    <Row>
+                      <Col width="10.0em" layoutType="itemLabel itemLeft" bindingId="ActivityTemplateLabel" />
+                      <Col flex="1" layoutType="itemValue" bindingId="ActivityTemplate" />
+                    </Row>
+                    <Row>
+                      <Col width="10.0em" layoutType="itemLabel itemLeft" bindingId="CallTemplateLabel" />
+                      <Col flex="1" layoutType="itemValue" bindingId="CallType" />
+                    </Row>
+                    <Row>
+                      <Col width="10.0em" layoutType="itemLabel itemLeft" bindingId="RelatedPromotion" />
+                      <Col flex="1" layoutType="itemValue" bindingId="PromotionSlogan" />
+                    </Row>
+                    <Row>
+                      <Col width="10.0em" layoutType="itemLabel itemLeft" bindingId="TimeFromThru" />
+                      <Col flex="1" layoutType="itemValue" bindingId="PromotionDate" />
+                    </Row>
+                  </Col>
+                  <Col height="16px" width="16px" layoutType="Image" bindingId="AlertIcon" />
+                </Default>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col>
+                    <Row>
+                      <Col width="1.7em" height="1.4em" layoutType="Image" bindingId="Icon" />
+                      <Col flex="1">
+                        <Row layoutType="itemIdentifierSmall" bindingId="Slogan" />
+                        <Row>
+                          <Col layoutType="itemSecondary" bindingId="ValidFrom" />
+                          <Col width="0.4em" height="1.5em" layoutType="itemSecondary" bindingId="Separator" />
+                          <Col layoutType="itemSecondary" bindingId="ValidThru" />
+                        </Row>
+                      </Col>
+                      <Col height="16px" width="16px" layoutType="Image" bindingId="AlertIcon" />
+                    </Row>
+                    <Row>
+                      <Col width="1.7em" height="1.4em" layoutType="Text" bindingId="SpaceId" />
+                      <Col flex="1">
+                        <Row layoutType="itemLabel" bindingId="ActivityTemplate" />
+                        <Row layoutType="itemLabel" bindingId="CallType" />
+                        <Row layoutType="itemLabel" bindingId="PromotionSlogan" />
+                        <Row layoutType="itemLabel" bindingId="PromotionDate" />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Default>
+              </Phone>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="Icon" type="Image" imageType=".svg" binding=".icon" bindingMode="ONE_WAY" />
+              <Binding target="Slogan" type="Text" binding=".slogan" bindingMode="ONE_WAY" />
+              <Binding target="ValidFrom" type="Date" binding=".validFrom" bindingMode="ONE_WAY" />
+              <Binding target="ValidThru" type="Date" binding=".validThru" bindingMode="ONE_WAY" />
+              <Binding target="ActivityTemplate" type="Text" binding=".activityTemplate" bindingMode="ONE_WAY" />
+              <Binding target="PromotionSlogan" type="Text" binding=".promotionSlogan" bindingMode="ONE_WAY" />
+              <Binding target="PromotionDate" type="Text" binding=".dateRange" bindingMode="ONE_WAY" />
+              <Binding target="CallType" type="Text" binding=".callType" bindingMode="ONE_WAY" />
+              <Binding target="AlertIcon" type="Image" imageType=".svg" binding=".alertIcon" bindingMode="ONE_WAY" />
+              <Resource target="Separator" type="Label" defaultLabel=" - " id="separatorMinus" />
+              <Resource target="ActivityTemplateLabel" type="Label" defaultLabel="Activity Template" id="ActivityTemplateId" />
+              <Resource target="CallTemplateLabel" type="Label" defaultLabel="Call Template" id="CallTemplateId" />
+              <Resource target="RelatedPromotion" type="Label" defaultLabel="Related Promotion" id="RelatedPromotion" />
+              <Resource target="TimeFromThru" type="Label" defaultLabel="From/Thru" id="TimeFromThru" />
+            </Bindings>
+          </Items>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

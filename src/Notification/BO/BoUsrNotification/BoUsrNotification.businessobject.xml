@@ -1,0 +1,43 @@
+<BusinessObject name="BoUsrNotification"  generateLoadMethod="true" generateCreateMethod="true" OERReference="UsrNotification" schemaVersion="1.1">
+  <DataSource name="DsBoUsrNotification" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="businessModified" type="DomDate" storable="true" dataSourceProperty="businessModified" />
+    <SimpleProperty name="priority" type="DomABC" storable="true" dataSourceProperty="priority" />
+    <SimpleProperty name="isRead" type="DomBool" storable="true" dataSourceProperty="isRead">
+      <Events>
+        <Event name="onChanged" eventHandler="onReadChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="subject" type="DomLongDescription" storable="true" dataSourceProperty="subject" />
+    <SimpleProperty name="category" type="DomText" storable="true" dataSourceProperty="category" />
+    <SimpleProperty name="dueDate" type="DomDate" storable="true" dataSourceProperty="dueDate" />
+    <SimpleProperty name="usrMainPKey" type="DomPKey" storable="true" dataSourceProperty="usrMainPKey" />
+    <SimpleProperty name="initiatorUsrMainPKey" type="DomPKey" storable="true" dataSourceProperty="initiatorUsrMainPKey" />
+    <SimpleProperty name="usrName" type="DomString" storable="true" dataSourceProperty="usrName" />
+    <SimpleProperty name="objectType" type="DomUsrObjectType" storable="true" dataSourceProperty="objectType" />
+    <SimpleProperty name="isUpdated" type="DomString" />
+    <SimpleProperty name="isReadForSF" type="DomString" storable="false" dataSourceProperty="isReadForSF" />
+    <SimpleProperty name="referencePKey" type="DomPKey" storable="true" dataSourceProperty="referencePKey" />
+    <SimpleProperty name="isPrivate" type="DomBool" storable="true" dataSourceProperty="private" />
+    <SimpleProperty name="usrNotificationMetaPKey" type="DomPKey" storable="true" dataSourceProperty="usrNotificationMetaPKey" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="afterInitialize" />
+    <Method name="beforeInitialize" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="beforeCreateAsync" />
+    <!-- Manually created methods -->
+    <Method name="setNotificationAsRead" />
+    <Method name="onReadChanged" />
+  </Methods>
+</BusinessObject>

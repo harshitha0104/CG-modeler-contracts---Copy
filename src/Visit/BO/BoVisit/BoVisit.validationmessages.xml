@@ -1,0 +1,3 @@
+<ValidationMessages name="BoVisitMessages" businessObject="BoVisit" schemaVersion="0.0.0.5">
+  <ValidationMessage name="VisitInstructionDescriptionMustNotBeEmpty" defaultMessage="Please enter an instruction description." comment="Validates if the instructionDescription is not empty." />
+</ValidationMessages>

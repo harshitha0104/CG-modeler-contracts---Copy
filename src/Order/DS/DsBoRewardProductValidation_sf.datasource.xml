@@ -1,0 +1,20 @@
+<DataSource name="DsBoRewardProductValidation" backendSystem="sf" businessObjectClass="BoRewardProductValidation" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+      // Intended to be empty - Validation BO!
+      return undefined;
+			]]></Load>
+    <Update><![CDATA[
+      // Intended to be empty - Validation BO!
+      return undefined;
+			]]></Update>
+    <Insert><![CDATA[
+      // Intended to be empty - Validation BO!
+      return undefined;
+			]]></Insert>
+    <Delete><![CDATA[
+      // Intended to be empty - Validation BO!
+      return undefined;
+			]]></Delete>
+  </Database>
+</DataSource>

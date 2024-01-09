@@ -1,0 +1,34 @@
+<DataSource name="DsLoOrderNotes" backendSystem="sf" external="false" businessObjectClass="LoOrderNotes" editableEntity="Order__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Order__c" column="Id" />
+    <DerivedAttribute name="type" value="''" />
+    <DerivedAttribute name="text" value="''" />
+    <DerivedAttribute name="sdoMainPKey" value="''" />
+    <PivotItems>
+      <!-- Delivery Notes -->
+      <PivotItem id="deliverynotes">
+        <Attribute name="pKey" table="Order__c" column="Id" />
+        <PivotConstant name="type" value="Delivery" />
+        <Attribute name="text" table="Order__c" column="Delivery_Note__c" />
+        <Attribute name="sdoMainPKey" table="Order__c" column="Id" />
+      </PivotItem>
+      <!-- Invoice Notes -->
+      <PivotItem id="invoicenotes">
+        <Attribute name="pKey" table="Order__c" column="Id" />
+        <PivotConstant name="type" value="Invoice" />
+        <Attribute name="text" table="Order__c" column="Invoice_Note__c" />
+        <Attribute name="sdoMainPKey" table="Order__c" column="Id" />
+      </PivotItem>
+    </PivotItems>
+  </Attributes>
+  <Entities>
+    <Entity name="Order__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   Order__c.Id = #sdoMainPKey#
+  ]]></QueryCondition>
+  <OrderCriteria/>
+  <Parameters>
+    <Parameter name="sdoMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

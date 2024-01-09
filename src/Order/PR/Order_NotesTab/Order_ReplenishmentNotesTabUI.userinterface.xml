@@ -1,0 +1,52 @@
+<UIDescription name="Order::ReplenishmentNotesTabUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::MainBO.boOrderMeta.text"/>
+        <!-- CW-REQUIRED: remove title binding -->
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="invoice">
+          <Bindings>
+            <Resource target="Text" type="Label" id="invoiceNote" defaultLabel="Invoice" />
+            <Resource target="Icon" type="Image" id="InvoiceDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showInvoiceNote">
+              <Params>
+                <Param name="type" value="Invoice" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="true" itemId="delivery">
+          <Bindings>
+            <Resource target="Text" type="Label" id="deliveryNote" defaultLabel="Delivery" />
+            <Resource target="Icon" type="Image" id="DeliveryItemDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showDeliveryNote">
+              <Params>
+                <Param name="type" value="Delivery" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="NoteGroup">
+          <Bindings>
+            <Binding target="Title" binding="ProcessContext::MainBO.loNotes.Current.type.text" bindingMode="ONE_WAY" />
+          </Bindings>
+          <InputAreaMultiLine name="NoteInput" noOfRows="8">
+            <Bindings>
+              <Binding target="Value" binding="ProcessContext::MainBO.loNotes.Current.text" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

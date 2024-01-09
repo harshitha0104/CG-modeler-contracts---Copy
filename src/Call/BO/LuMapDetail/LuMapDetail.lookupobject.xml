@@ -1,0 +1,16 @@
+<LookupObject name="LuMapDetail" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuMapDetail" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" />
+    <SimpleProperty name="name" type="DomText" />
+    <SimpleProperty name="mainAddress" type="DomText" />
+    <SimpleProperty name="distance" type="DomText" />
+    <SimpleProperty name="customerProfilePicture" type="DomBlob" />
+    <SimpleProperty name="customerPictureFileType" type="DomFileType" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

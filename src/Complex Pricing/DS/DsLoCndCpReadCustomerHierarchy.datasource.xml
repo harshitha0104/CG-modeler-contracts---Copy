@@ -1,0 +1,47 @@
+<Datasource name="DsLoCndCpReadCustomerHierarchy" objectClass="LoCndCpReadCustomerHierarchy" businessObjectClass="LoCndCpReadCustomerHierarchy" readOnly="true" external="true" editableEntity="BpaCustomerTradeOrg" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+				var customerPKey = "";
+				var pricingDate = "";
+				if (Utils.isDefined(jsonParams.CustomerPKey)){
+                    customerPKey = Utils.convertForDBParam(jsonParams.CustomerPKey, "DomPKey");
+                }
+				if (Utils.isDefined(jsonParams.pricingDate)){
+                    pricingDate = Utils.convertForDBParam(jsonParams.pricingDate, "DomDate");
+                }
+				var sqlParams = {customerPKey,pricingDate};
+				var sql= "";
+				sql += "SELECT ";
+				sql += "BpaCustomerTradeOrg.PKey as PKey, ";
+				sql += "BpaCustomerTradeOrg.BusinessModified as BusinessModified, ";
+				sql += "BpaCustomerTradeOrg.TradeOrgPKey as FromPKey, ";
+				sql += "BpaCustomerTradeOrg.CustomerPKey as ToPKey, ";
+      			sql += "BpaCustomerTradeOrg.ValidFrom as ValidFrom, ";
+      			sql += "BpaCustomerTradeOrg.ValidThru as ValidThru, ";
+      			sql += "BpaCustomer.OrgLevel as FromOrgLevel ";
+				sql += "FROM ";
+				sql += "BpaCustomerTradeOrg, ";
+                sql += "BpaCustomer ";
+				sql += "WHERE ";
+				sql +=  "BpaCustomerTradeOrg.TradeOrgPKey = BpaCustomer.PKey ";
+				sql += "AND BpaCustomerTradeOrg.SalesOrg = '#SalesOrg#' ";
+				sql += "AND BpaCustomerTradeOrg.CustomerPKey= #customerPKey# ";
+				sql += "AND BpaCustomerTradeOrg.StructureType = 'TradeOrg' ";
+        		sql += "BpaCustomerTradeOrg.ValidFrom<= #pricingDate# ";
+				sql += "AND  #pricingDate# <=BpaIsTradeOrgOfRel.ValidThru ";
+                return Utils.replaceMacrosParam(sql, sqlParams);
+         ]]></Load>
+    <Update><![CDATA[
+            // Intended to be empty
+            return undefined;
+                    ]]></Update>
+    <Insert><![CDATA[   
+                        // Intended to be empty     
+            return undefined;           
+                    ]]></Insert>
+    <Delete><![CDATA[
+              // Intended to be empty
+              return undefined;  
+                    ]]></Delete>
+  </Database>
+</Datasource>

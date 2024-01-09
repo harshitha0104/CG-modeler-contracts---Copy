@@ -1,0 +1,13 @@
+<ListObject name="LoUserByRole" generateLoadMethod="true" >
+  <DataSource name="DsLoUserByRole" />
+  <Item objectClass="LiUserByRole" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</ListObject>

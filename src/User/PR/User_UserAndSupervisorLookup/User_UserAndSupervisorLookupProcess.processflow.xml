@@ -1,0 +1,30 @@
+<Process name="User::UserAndSupervisorLookupProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="UserList" type="LoUserAndSupervisor" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="GetUserList" type="LoUserAndSupervisor">
+        <Return name="ProcessContext::UserList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>User::UserAndSupervisorLookupUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="End" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="userPKey" value="Event.pKey" />
+          <Return name="name" value="Event.userName" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

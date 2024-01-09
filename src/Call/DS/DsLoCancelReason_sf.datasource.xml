@@ -1,0 +1,14 @@
+<DataSource name="DsLoCancelReason" backendSystem="sf" businessObjectClass="LoCancelReason" external="false" editableEntity="Sync_Mobile_App_PL_Repo__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="reasonCode" table="Sync_Mobile_App_PL_Repo__c" column="Text_#Language#__c" />
+    <DerivedAttribute name="sort" value="'1'" />
+    <Attribute name="code" table="Sync_Mobile_App_PL_Repo__c" column="Picklist_Value__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Sync_Mobile_App_PL_Repo__c" alias="" />
+  </Entities>
+  <QueryCondition><![CDATA[
+			 Sync_Mobile_App_PL_Repo__c.Mobile_App_Domain__c = 'DomClbReasonCode'
+		]]></QueryCondition>
+  <Parameters />
+</DataSource>

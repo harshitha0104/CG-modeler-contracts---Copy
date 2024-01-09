@@ -1,0 +1,32 @@
+<UIDescription name="TourManagement::RescheduleTourUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TourReschedule" defaultLabel="Reschedule Tour" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="done">
+          <Bindings>
+            <Resource target="Text" type="Label" id="doneId" defaultLabel="Done" />
+            <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="rescheduleTour"></ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="Date">
+          <DatePickerField name="WorkStartDate">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Work Start Date" id="WorkStartDateId" />
+              <Binding target="Value" binding="ProcessContext::TourBo.tourDate" bindingMode="TWO_WAY" />
+            </Bindings>
+          </DatePickerField>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

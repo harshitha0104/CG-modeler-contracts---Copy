@@ -1,0 +1,220 @@
+<Process name="Application::DSDDashboardProcess" defaultAction="ConfigureStartScreen_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="LuCallCount" type="LuCallCountByDate" />
+        <Declaration name="LuOrderCount" type="LuOrderCount" />
+        <Declaration name="LuDailyReportCount" type="LuUsrDRCount" />
+        <Declaration name="LuNotificationCount" type="LuNotificationCount" />
+        <Declaration name="LuPaymentRequestCount" type="LuPaymentRequestCount" />
+        <Declaration name="LuContractsCount" type="LuContractsCount" />
+        <Declaration name="LuTodoCount" type="LuTodoCount" />
+        <Declaration name="LuIssueCount" type="LuIssueCount" />
+        <Declaration name="LuTourCount" type="LuTourCount" />
+        <Declaration name="LuInventoryDocumentCount" type="LuInventoryDocumentCount" />
+        <Declaration name="LuCashDocumentCount" type="LuCashDocumentCount" />
+        <Declaration name="LuReplenishmentOrderCount" type="LuReplenishmentOrderCount" />
+        <Declaration name="EndOfDayPossible" type="DomBool" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadTeamOfUser" actionType="LOGIC" call="ApplicationContext::User.loadTeamOfUser">
+        <Parameters>
+          <Input name="includeCurrentUser" value="1" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="GetLandingPage" actionType="LOGIC" call="ApplicationContext::User.boUserSettings.getUsrLandingPageMobility">
+        <Return name="ProcessContext::LandingPage" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ConfigureStartScreen_Decision" actionType="DECISION" parameter="ProcessContext::LandingPage">
+        <Case value="MainMenu" action="LoadCallCount" />
+        <Case value="UserCockpit" action="Cockpit" />
+      </Action>
+      <Action name="LoadCallCount" actionType="LOAD" type="LuCallCountByDate">
+        <Return name="ProcessContext::LuCallCount" />
+        <TransitionTo action="LoadOrderCount" />
+      </Action>
+      <Action name="LoadOrderCount" actionType="LOAD" type="LuOrderCount">
+        <Return name="ProcessContext::LuOrderCount" />
+        <TransitionTo action="LoadNotificationCount" />
+      </Action>
+      <Action name="LoadNotificationCount" actionType="LOAD" type="LuNotificationCount">
+        <Return name="ProcessContext::LuNotificationCount" />
+        <TransitionTo action="LoadPaymentRequestCount" />
+      </Action>
+      <Action name="LoadPaymentRequestCount" actionType="LOAD" type="LuPaymentRequestCount">
+        <Return name="ProcessContext::LuPaymentRequestCount" />
+        <TransitionTo action="LoadContractsCount" />
+      </Action>
+      <Action name="LoadContractsCount" actionType="LOAD" type="LuContractsCount">
+        <Return name="ProcessContext::LuContractsCount" />
+        <TransitionTo action="LoadDailyReportCount" />
+      </Action>
+      <Action name="LoadDailyReportCount" actionType="LOAD" type="LuUsrDRCount">
+        <Return name="ProcessContext::LuDailyReportCount" />
+        <TransitionTo action="LoadTodoCount" />
+      </Action>
+      <Action name="LoadTodoCount" actionType="LOAD" type="LuTodoCount">
+        <Return name="ProcessContext::LuTodoCount" />
+        <TransitionTo action="LoadIssueCount" />
+      </Action>
+      <Action name="LoadIssueCount" actionType="LOAD" type="LuIssueCount">
+        <Return name="ProcessContext::LuIssueCount" />
+        <TransitionTo action="LoadTourCount" />
+      </Action>
+      <Action name="LoadTourCount" actionType="LOAD" type="LuTourCount">
+        <Return name="ProcessContext::LuTourCount" />
+        <TransitionTo action="LoadInventoryDocumentCount" />
+      </Action>
+      <Action name="LoadInventoryDocumentCount" actionType="LOAD" type="LuInventoryDocumentCount">
+        <Parameters>
+          <Input name="tmgMainPKey" value="ApplicationContext::currentTourPKey" />
+        </Parameters>
+        <Return name="ProcessContext::LuInventoryDocumentCount" />
+        <TransitionTo action="LoadCashDocumentCount" />
+      </Action>
+      <Action name="LoadCashDocumentCount" actionType="LOAD" type="LuCashDocumentCount">
+        <Parameters>
+          <Input name="tmgMainPKey" value="ApplicationContext::currentTourPKey" />
+        </Parameters>
+        <Return name="ProcessContext::LuCashDocumentCount" />
+        <TransitionTo action="LoadReplenishmentOrderCount" />
+      </Action>
+      <Action name="LoadReplenishmentOrderCount" actionType="LOAD" type="LuReplenishmentOrderCount">
+        <Parameters>
+          <Input name="tmgMainPKey" value="ApplicationContext::currentTourPKey" />
+        </Parameters>
+        <Return name="ProcessContext::LuReplenishmentOrderCount" />
+        <TransitionTo action="ShowMainMenu" />
+      </Action>
+      <Action name="ShowMainMenu" actionType="VIEW">
+        <UIDescription>Application::DSDDashboardUI</UIDescription>
+        <Events>
+          <Event name="openCockpit" action="Cockpit" />
+          <Event name="openAgendaOverview" action="CallAgenda" />
+          <Event name="openCustomerOverview" action="CustomerReviewCapture" />
+          <Event name="openOrderOverview" action="OrderOverview" />
+          <Event name="synchronizeData" action="SyncOverviewProcess" />
+          <Event name="openCustomerContracts" action="CustomerContractsOverview" />
+          <Event name="openDailyReport" action="DailyReportOverview" />
+          <Event name="openAboutScreen" action="OpenAboutScreen" />
+          <Event name="openNotifications" action="NotificationsOverview" />
+          <Event name="openPayments" action="PaymentsOverview" />
+          <Event name="openAdvLoggingPanel" action="OpenAdvLoggingPanel" />
+          <Event name="replicationDone" action="LoadCallCount" />
+          <Event name="myFlushLogs" action="FlushLogs" />
+          <Event name="openTodo" action="TodoOverview" />
+          <Event name="openIssue" action="IssueOverview" />
+          <Event name="openUsrSettings" action="UsrSettings" />
+          <Event name="openProductOverview" action="ProductOverview" />
+          <Event name="openTourOverview" action="TourOverview" />
+          <Event name="openReporting" action="ReportingOverview" />
+          <Event name="openInventoryOverview" action="OpenInventoryOverview" />
+          <Event name="openCashOverview" action="CashOverview" />
+          <Event name="executeEndOfDay" action="EndOfDayAllowed" />
+          <Event name="executeStartOfDay" action="TourOverviewStartOfDay" />
+          <Event name="openReplenishmentOverview" action="ReplenishmentOverview" />
+        </Events>
+      </Action>
+      <Action actionType="PROCESS" name="Cockpit" process="Application::CockpitProcess">
+        <Parameters>
+          <Input name="Mode" type="Literal" value="DSD" />
+        </Parameters>
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="CallAgenda" actionType="PROCESS" process="Call::AgendaProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="CustomerReviewCapture" actionType="PROCESS" process="Customer::ReviewCaptureProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="TourOverview" actionType="PROCESS" process="TourManagement::OverviewProcess">
+        <Parameters>
+          <Input name="NavigationMode" type="Literal" value="Overview" />
+        </Parameters>
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="TourOverviewStartOfDay" actionType="PROCESS" process="TourManagement::OverviewProcess">
+        <Parameters>
+          <Input name="NavigationMode" type="Literal" value="StartOfDay" />
+        </Parameters>
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="EndOfDayAllowed" actionType="DECISION" parameter="ApplicationContext::CurrentTourStatus">
+        <Case value="Running" action="ValidateForOpenDocs" />
+        <CaseElse action="EndOfDayNotAvailable" />
+        <CaseEmpty action="EndOfDayNotAvailable" />
+      </Action>
+      <Action name="ValidateForOpenDocs" actionType="LOGIC" call="ApplicationContext::CurrentTour.endOfDayAllowed">
+        <Return name="ApplicationContext::endOfDayPossible" />
+        <TransitionTo action="OpenEndOfDay" />
+      </Action>
+      <Action name="EndOfDayNotAvailable" actionType="CONFIRM" confirmType="Ok">
+        <Message messageId="EndOfDayNotAllowedMessage" />
+        <Cases>
+          <Case value="Ok" action="LoadCallCount" />
+        </Cases>
+      </Action>
+      <Action name="OpenEndOfDay" actionType="PROCESS" process="TourManagement::TourLoadProcess">
+        <Parameters>
+          <Input name="MainPKey" value="ApplicationContext::currentTourPKey" />
+          <Input name="NavigationMode" type="Literal" value="EndOfDay" />
+        </Parameters>
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="OrderOverview" actionType="PROCESS" process="Order::OverviewProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="SyncOverviewProcess" actionType="PROCESS" process="Sync::OverviewProcess"></Action>
+      <Action name="CustomerContractsOverview" actionType="PROCESS" process="Contract::CustomerContractProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="DailyReportOverview" actionType="PROCESS" process="DailyReport::DailyReportProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="OpenAboutScreen" actionType="PROCESS" process="Application::AboutProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="NotificationsOverview" actionType="PROCESS" process="User::NotificationProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="PaymentsOverview" actionType="PROCESS" process="ContractPayment::PaymentRequestProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="OpenAdvLoggingPanel" actionType="LOGIC" call="window.showFrameworkSettingsPanel"></Action>
+      <Action name="FlushLogs" actionType="LOGIC" call="Log.flush"></Action>
+      <Action name="TodoOverview" actionType="PROCESS" process="Todo::OverviewProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="IssueOverview" actionType="PROCESS" process="Issue::OverviewProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="UsrSettings" actionType="PROCESS" process="User::UsrSettingsProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="ProductOverview" actionType="PROCESS" process="Product::OverviewProcess"></Action>
+      <Action name="ReportingOverview" actionType="PROCESS" process="Reporting::OverviewProcess"></Action>
+      <Action name="OpenInventoryOverview" actionType="PROCESS" process="TruckLoad::OverviewProcess">
+        <Parameters>
+          <Input name="currentTourPKey" value="ApplicationContext::CurrentTourPKey" />
+          <Input name="navigationMode" type="Literal" value="Overview" />
+        </Parameters>
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="CashOverview" actionType="PROCESS" process="Cash::OverviewProcess">
+        <Parameters>
+          <Input name="currentTourPKey" value="ApplicationContext::CurrentTourPKey" />
+          <Input name="navigationMode" type="Literal" value="Overview" />
+        </Parameters>
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action name="ReplenishmentOverview" actionType="PROCESS" process="Replenishment::OverviewProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

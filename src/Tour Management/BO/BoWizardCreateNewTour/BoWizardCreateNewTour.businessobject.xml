@@ -1,0 +1,32 @@
+<BusinessObject name="BoWizardCreateNewTour" schemaVersion="1.1">
+  <DataSource name="DsBoWizardCreateNewTour" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="userPKey" type="DomPKey" />
+    <SimpleProperty name="templateMetaPKey" type="DomPKey" />
+    <SimpleProperty name="warehousePKey" type="DomPKey" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups>
+    <ObjectLookup name="luTemplate" objectClass="LuTourTemplate" dataSourceProperty="templateMetaPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luWarehouse" objectClass="LuEtpWarehouse" dataSourceProperty="warehousePKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+    <Method name="setEARights" />
+    <Method name="validateNotEmpty" />
+  </Methods>
+</BusinessObject>

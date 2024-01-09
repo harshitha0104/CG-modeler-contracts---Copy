@@ -1,0 +1,9 @@
+<ListItem name="LiSysToggleItem">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="code" type="DomTglCode" storable="false" dataSourceProperty="code" />
+    <SimpleProperty name="validationCode" type="DomTglValidationCode" storable="false" dataSourceProperty="validationCode" />
+    <SimpleProperty name="text" type="DomText" storable="false" dataSourceProperty="text" />
+    <SimpleProperty name="sortOrder" type="DomInteger" storable="false" dataSourceProperty="sortOrder" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,21 @@
+<ListObject name="LoProductOverview" generateLoadMethod="true" filter="InDatabase" paging="true" >
+  <DataSource name="DsLoProductOverview" />
+  <Item objectClass="LiProductOverview" />
+  <Methods>
+    <Method name="saveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoProductOverview">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="ProductOverview_prdId" property="id" type="Text" />
+        <AdvancedSearchAttribute label="ProductOverview_text1" property="text1" type="Text" />
+        <AdvancedSearchAttribute label="ProductOverview_category" property="category" toggleId="PrdCategory" type="Selection" />
+        <AdvancedSearchAttribute label="ProductOverview_eAN" property="ean" type="Text" />
+        <AdvancedSearchAttribute label="ProductOverview_prdType" property="prdType" toggleId="PrdType" type="Selection" />
+        <AdvancedSearchAttribute label="ProductOverview_foreignProduct" property="foreignProduct" type="Boolean" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

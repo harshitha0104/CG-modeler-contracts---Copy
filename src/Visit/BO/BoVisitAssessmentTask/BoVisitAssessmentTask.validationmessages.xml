@@ -1,0 +1,4 @@
+<ValidationMessages name="BoVisitAssessmentTaskMessages" businessObject="BoVisitAssessmentTask" schemaVersion="">
+  <ValidationMessage name="BoVisitAssessmentKPIInvalidDateTime" defaultMessage="Use the time format hh:mm [AM/PM] in KPI: #invalidKPI# for #product#" comment="The time format entered in DateTime KPI is wrong" />
+  <ValidationMessage name="BoVisitAssessmentKPIInvalidDateTimeKPI" defaultMessage="Enter date and time for these KPIs:  #invalidKPI#" comment="Missing Date or Time Part of Date Time KPI" />
+</ValidationMessages>

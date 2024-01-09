@@ -1,0 +1,174 @@
+<DataSource name="DsLoSalesFolder" backendSystem="sf" businessObjectClass="LoSalesFolder" external="true" distinct="true" schemaVersion="2.0" editableEntity="SF_File">
+  <Attributes>
+    <DerivedAttribute name="customerName" value="CASE WHEN Account.Name IS NULL THEN '' ELSE Account.Name END" />
+    <Attribute name="customerPKey" table="Sales_Folder__c" column="Account__c" />
+    <Attribute name="mediaPath" table="SF_File" column="VersionData" />
+    <DerivedAttribute name="fileType" value="' '" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+  var addCondSearch = "";
+  var id = "";
+  var customerName = "";
+  var customerPKey = "";
+  var sloganText = "";
+  var dateFrom = "";
+  var dateThru = "";
+
+  if (Utils.isDefined(jsonQuery)) {
+   var newParams = jsonQuery;
+   if (Utils.isOldParamsFormat(newParams)) {
+       newParams = Utils.convertDsParamsOldToNew(newParams);
+   }
+  }
+
+   //############################
+   //## Advanced Search Paging ##
+   //############################  
+
+
+   /**  Sales_Folder__c ID  */
+   if (Utils.isDefined(newParams.id)){
+       id = Utils.convertForDBParam(newParams.id.toLowerCase(), "DomId"); 
+       addCondSearch += " AND Lower(Sales_Folder__c.Name) " + Utils.replaceOperator(newParams.idComp) + " #id# ";
+   } 
+
+   /**  Customer ID */ 
+   if (Utils.isDefined(newParams.customerName)){
+       customerName = Utils.convertForDBParam(newParams.customerName, "DomPKey"); 
+       addCondSearch += " AND Account.Name " + Utils.replaceOperator(newParams.customerNameComp) + " #customerName# ";        
+   } 
+
+   /**  customerPKey  */
+   if (Utils.isDefined(newParams.customerPKey)){
+       customerPKey =  Utils.convertForDBParam(newParams.customerPKey, "DomPKey"); 
+       addCondSearch += " AND Sales_Folder__c.Account__c " + Utils.replaceOperator(newParams.customerPKeyComp) + " #customerPKey# "; 
+   }
+   /**  PrmSalesFolderText Text  */
+   if (Utils.isDefined(newParams.sloganText)){
+       sloganText =  Utils.convertForDBParam(newParams.sloganText.toLowerCase(), "DomText");
+       addCondSearch += " AND  Lower(Sales_Folder__c.Description_#Language#__c) " + Utils.replaceOperator(newParams.sloganTextComp)+ " #sloganText# ";
+   }
+
+   /**  DateFrom  */
+   if (Utils.isDefined(newParams.dateFrom)){
+       dateFrom =  Utils.convertForDBParam(newParams.dateFrom, "DomDate");
+       addCondSearch += " AND Sales_Folder__c.Valid_From__c " + Utils.replaceOperator(newParams.dateFromComp) + " #dateFrom# ";
+   }
+
+   /**  DateThru  */
+   if (Utils.isDefined(newParams.dateThru)){
+       dateThru =  Utils.convertForDBParam(newParams.dateThru, "DomDate");
+       addCondSearch += " AND Sales_Folder__c.Valid_Thru__c " + Utils.replaceOperator(newParams.dateThruComp) + " #dateThru# ";
+   }
+
+  var sqlParams = {id, customerName, customerPKey, sloganText, dateFrom, dateThru};
+
+  //Get all customers within customer hierarchy for managed customers
+  var sqlStmt  =	"WITH RECURSIVE Cte_SalesFolderHierarchy  (BpaMainPKey) AS ( ";
+   sqlStmt +=          "SELECT Distinct( Account.Id) as BpaMainPKey ";
+   sqlStmt +=  		"FROM  Account  ";
+   sqlStmt +=          "INNER JOIN Account_Manager__c ON Account.Id = Account_Manager__c.Account__c "; 
+   sqlStmt +=          "INNER JOIN Account_Extension__c On Account.Id = Account_Extension__c.Account__c ";
+   sqlStmt +=          "AND #compareAsDate('Account_Manager__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+   sqlStmt +=          "AND #compareAsDate('Account_Manager__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+   sqlStmt +=          "WHERE Account_Manager__c.User__c = '#UserPKey#' ";
+
+   sqlStmt +=          "UNION ALL ";
+
+   sqlStmt +=          "SELECT b.Parent_Account__c as BpaMainPKey ";
+   sqlStmt +=          "FROM Account_Trade_Org_Hierarchy__c b,Cte_SalesFolderHierarchy r ";
+   sqlStmt +=          "WHERE b.Child_Account__c = r.BpaMainPKey ";
+   sqlStmt +=          "AND #compareAsDate('b.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+   sqlStmt +=          "AND #compareAsDate('b.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#), ";
+
+   //Get all Orgunits within Orgunit hierarchy for loggedin user's orgunit
+   sqlStmt +=	"Cte_OrgUnit  (OrgPkey) AS ( ";
+   sqlStmt +=          "SELECT Distinct( A.Org_Unit__c) as OrgPkey ";
+   sqlStmt +=          "FROM Org_Unit_User__c as A  ";
+   sqlStmt +=          "INNER JOIN User On A.User__c=User.Id   ";
+   sqlStmt +=          "INNER JOIN Org_Unit__c On A.Org_Unit__c=Org_Unit__c.Id   ";
+   sqlStmt += 			"WHERE User.Id = '#UserPKey#' ";
+   sqlStmt +=          "AND Org_Unit__c.Sales_Org__c = '#SALESORG#' ";
+   sqlStmt +=          "AND #compareAsDate('A.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+   sqlStmt +=          "AND #compareAsDate('A.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+   sqlStmt +=          "AND Org_Unit__c.Org_Type__c = 'Sales' ";       
+
+   sqlStmt +=          "UNION ALL  ";
+
+   sqlStmt +=          "SELECT b.Parent_Org_Unit__c OrgPkey  ";
+   sqlStmt +=          "FROM Org_Unit_Hierarchy__c b,Cte_OrgUnit r ";
+   sqlStmt +=          "WHERE  b.Child_Org_Unit__c = r.OrgPkey  ";
+   sqlStmt +=          "AND #compareAsDate('b.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+   sqlStmt +=          "AND #compareAsDate('b.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#), ";
+
+   //Get all the salesfolders for selected Customer and Orgunit hierarchy
+   sqlStmt +=          "Cte_PrmSalesFolderPKey  (PrmSalesPKey) AS ( ";
+   sqlStmt +=          "SELECT Id  ";
+   sqlStmt +=          "FROM Sales_Folder__c ";
+   sqlStmt +=          "where Account__c IN ( ";
+   sqlStmt +=          "SELECT ";
+   sqlStmt +=          "Distinct(cr.BpaMainPKey) ";
+   sqlStmt +=          "FROM Cte_SalesFolderHierarchy cr) ";
+   sqlStmt +=          "AND Active__c='1'  AND Sales_Org__c = '#SALESORG#' ";
+
+   sqlStmt +=          "UNION ALL ";
+
+   sqlStmt +=          "SELECT Id ";
+   sqlStmt +=          "FROM Sales_Folder__c ";
+   sqlStmt +=          "where Org_Unit__c IN ( ";
+   sqlStmt +=          "SELECT ";
+   sqlStmt +=          "Distinct(cr.OrgPkey) ";
+   sqlStmt +=          "FROM Cte_OrgUnit cr) ";
+   sqlStmt +=          "AND Active__c='1'  AND Sales_Org__c = '#SALESORG#') ";
+
+   //Get salesfolder details for selected salesfolders
+   sqlStmt +=          "SELECT Sales_Folder__c.Id as pKey, Sales_Folder__c.Name as id, CASE WHEN Account.Name IS NULL THEN '' ELSE Account.Name END as customerName, Sales_Folder__c.Org_Unit__c, ";
+   sqlStmt +=          "Sales_Folder__c.Account__c as customerPKey, Sales_Folder__c.Description__c as sloganText,Sales_Folder__c.Org_Unit__c, ";
+   sqlStmt +=          "Sales_Folder__c.Valid_From__c as dateFrom, Sales_Folder__c.Valid_Thru__c as dateThru, Sales_Folder_Template__c.Description__c as metaText, ";
+   sqlStmt +=          "Sales_Folder__c.LastModifiedDate as businessModified, ";
+
+   sqlStmt +=  		"file.VersionData AS mediaPath, ";
+   sqlStmt +=  		"file.Id AS attachmentBlobPKey, ";
+   sqlStmt +=  		"replace(file.PathOnClient, rtrim(file.PathOnClient, replace(file.PathOnClient, '.', '')), '') As fileType ";
+   sqlStmt +=          "FROM Sales_Folder__c ";
+   sqlStmt +=          "Left Outer JOIN ";
+   sqlStmt +=          "Account ON Sales_Folder__c.Account__c=Account.Id AND Sales_Folder__c.Account__c !=' ' ";
+   sqlStmt +=          "Left Outer JOIN Org_Unit__c ON Sales_Folder__c.Org_Unit__c=Org_Unit__c.Id AND Sales_Folder__c.Account__c=' ' ";
+
+   sqlStmt +=          "LEFT OUTER JOIN ";
+   sqlStmt +=          "(SF_FileLink ";
+   sqlStmt +=          "JOIN SF_File as file ON SF_FileLink.FileId = file.Id ";
+   sqlStmt +=          "AND file.Usage__c = 'Icon' ";
+   sqlStmt +=          "AND NOT EXISTS (SELECT file2.Id FROM SF_File as file2, SF_FileLink as filelink2 WHERE filelink2.FileId=file2.Id AND file2.Usage__c = 'Icon' AND file2.CreatedDate > file.CreatedDate AND SF_FileLink.ParentId = filelink2.ParentId) ";
+   sqlStmt +=          ") ON Sales_Folder__c.Id = SF_FileLink.ParentId ";
+
+   sqlStmt +=          "JOIN Sales_Folder_Template__c ON Sales_Folder_Template__c.Id = Sales_Folder__c.Sales_Folder_Template__c ";
+   sqlStmt +=          "WHERE Sales_Folder__c.Sales_Org__c = '#SALESORG#' AND Sales_Folder_Template__c.Sales_Org__c = '#SALESORG#' AND Sales_Folder__c.Active__c='1' ";
+   sqlStmt +=          "AND Sales_Folder__c.Id IN ( Select PrmPkey.PrmSalesPKey  from Cte_PrmSalesFolderPKey  PrmPkey ) ";
+
+
+   sqlStmt += 			addCondSearch;
+   sqlStmt +=          "GROUP BY pKey ";
+   sqlStmt +=          "ORDER BY ";
+   sqlStmt +=          "Sales_Folder_Template__c.Description_#Language#__c ASC, "; 
+   sqlStmt +=          "Sales_Folder__c.Description_#Language#__c ASC ";
+
+   return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+  ]]></Load>
+    <Update><![CDATA[
+   // Read only datasource
+   return undefined;
+  ]]></Update>
+    <Insert><![CDATA[   
+   // Read only datasource
+   return undefined;
+  ]]></Insert>
+    <Delete><![CDATA[
+   // Read only datasource
+   return undefined;
+  ]]></Delete>
+  </Database>
+</DataSource>

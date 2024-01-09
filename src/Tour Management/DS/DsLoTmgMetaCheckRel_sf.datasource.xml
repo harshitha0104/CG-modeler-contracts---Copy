@@ -1,0 +1,28 @@
+<DataSource name="DsLoTmgMetaCheckRel" backendSystem="sf" businessObjectClass="LoTmgMetaCheckRel" external="false" editableEntity="Tour_Template_Tour_Check__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Tour_Template_Tour_Check__c" column="Id" />
+    <Attribute name="businessModified" table="Tour_Template_Tour_Check__c" column="LastModifiedDate" />
+    <DerivedAttribute name="salesOrg" value="'#SalesOrg#'" />
+    <Attribute name="tmgMetaPKey" table="Tour_Template_Tour_Check__c" column="Tour_Template__c" />
+    <Attribute name="tmgCheckPKey" table="Tour_Template_Tour_Check__c" column="Tour_Check__c" />
+    <Attribute name="sort" table="Tour_Template_Tour_Check__c" column="Sort__c" />
+    <Attribute name="usage" table="Tour_Template_Tour_Check__c" column="Usage__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tour_Template_Tour_Check__c" idAttribute="Id" />
+    <Entity name="Tour_Check__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Tour_Template_Tour_Check__c.Tour_Check__c" comparator="eq" rightSideType="Attribute" rightSideValue="Tour_Check__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+ Tour_Check__c.Active__c='1' AND Tour_Template_Tour_Check__c.Tour_Template__c = #tmgMetaPKey#
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="tmgMetaPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

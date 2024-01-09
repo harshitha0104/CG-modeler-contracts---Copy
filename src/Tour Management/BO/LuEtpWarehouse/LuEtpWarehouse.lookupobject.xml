@@ -1,0 +1,13 @@
+<LookupObject name="LuEtpWarehouse" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuEtpWarehouse" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="id" type="DomId" dataSourceProperty="id" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="text" type="DomString" dataSourceProperty="text" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

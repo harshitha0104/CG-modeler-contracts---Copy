@@ -1,0 +1,39 @@
+<UIDescription name="Call::ManagedCustomersSideBarUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="ManagedCustomersSideBarTitle" defaultLabel="Customers" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="ManagedCustomersList" searchable="true" hasBorder="true" dataSource="ProcessContext::ManagedCustomers.Items[]">
+          <Items name="Items" itemPattern="ManagedCustomersTemplate">
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemName" bindingId="customerName" />
+                <Row layoutType="itemNameSecondary" bindingId="customerAddress" />
+              </Col>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="customerName" type="Text" binding=".name" bindingMode="ONE_WAY" />
+              <Binding target="customerAddress" type="Text" binding=".mainAddress" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="ManagedCustomerSelected">
+              <Params>
+                <Param name="customerPKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+          <SearchAttributes>
+            <SearchAttribute name="customerName" />
+            <SearchAttribute name="customerAddress" />
+            <SearchAttribute name="customerId" />
+          </SearchAttributes>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

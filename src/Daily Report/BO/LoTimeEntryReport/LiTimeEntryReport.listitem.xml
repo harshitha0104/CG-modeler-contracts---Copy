@@ -1,0 +1,29 @@
+<ListItem name="LiTimeEntryReport" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <!--<SimpleProperty name="businessModified" type="DomBusinessModified" dataSourceProperty="businessModified" />
+    <SimpleProperty name="tmgTourPKey" type="DomPKey" dataSourceProperty="tmgTourPKey" />
+    <SimpleProperty name="clbMainPKey" type="DomPKey" dataSourceProperty="clbMainPKey" />
+    <SimpleProperty name="description" type="DomText" dataSourceProperty="description" />
+    <SimpleProperty name="duration" type="DomDurationUnit" dataSourceProperty="duration" />
+    <SimpleProperty name="effectiveTimeFrom" type="DomTime" dataSourceProperty="effectiveTimeFrom" />
+    <SimpleProperty name="effectiveTimeThru" type="DomTime" dataSourceProperty="effectiveTimeThru" />
+    <SimpleProperty name="effectiveDateFrom" type="DomDate" dataSourceProperty="effectiveDateFrom" />
+    <SimpleProperty name="effectiveDateThru" type="DomDate" dataSourceProperty="effectiveDateThru" />
+    <SimpleProperty name="note" type="DomLongDescription" dataSourceProperty="note" />
+    <SimpleProperty name="reasonCode" type="DomUsrTimeEntryReasonCode" dataSourceProperty="reasonCode" />    
+    <SimpleProperty name="effectiveUTCTimeFrom" type="DomDateTime" dataSourceProperty="effectiveUTCTimeFrom" />
+    <SimpleProperty name="effectiveUTCTimeThru" type="DomDateTime" dataSourceProperty="effectiveUTCTimeThru" />
+    <SimpleProperty name="usrDailyReportPKey" type="DomPKey" dataSourceProperty="usrDailyReportPKey" />
+    <SimpleProperty name="usrTimeEntryMetaPKey" type="DomPKey" dataSourceProperty="usrTimeEntryMetaPKey" />
+    <SimpleProperty name="usrTimeEntryMetaText" type="DomText" dataSourceProperty="usrTimeEntryMetaText" />
+    <SimpleProperty name="manual" type="DomBool" dataSourceProperty="manual" />
+    <SimpleProperty name="productiveTimeEffect" type="DomUsrTimeEntryEffect" dataSourceProperty="productiveTimeEffect" />
+    <SimpleProperty name="orgPKey" type="DomPKey" />-->
+    <SimpleProperty name="duration" type="DomDurationUnit" dataSourceProperty="duration" />
+    <SimpleProperty name="activityType" type="DomUsrActivityType" dataSourceProperty="activityType" />
+    <SimpleProperty name="activityTypeColor" type="DomText" dataSourceProperty="activityTypeColor" />
+    <SimpleProperty name="systemTimeFrom" type="DomDateTime" dataSourceProperty="systemTimeFrom" />
+    <SimpleProperty name="systemTimeThru" type="DomDateTime" dataSourceProperty="systemTimeThru" />
+  </SimpleProperties>
+</ListItem>

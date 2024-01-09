@@ -1,0 +1,10 @@
+<ListObject name="LoSurveys" generateLoadMethod="true" lightWeight="combined" schemaVersion="1.1">
+  <DataSource name="DsLoSurveys" />
+  <Item objectClass="LiSurvey" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</ListObject>

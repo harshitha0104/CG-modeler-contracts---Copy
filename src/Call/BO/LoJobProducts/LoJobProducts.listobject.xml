@@ -1,0 +1,7 @@
+<ListObject name="LoJobProducts" generateLoadMethod="true" lightWeight="combined">
+  <DataSource name="DsLoJobProducts" />
+  <Item objectClass="LiJobProduct" />
+  <Methods>
+    <Method name="isJDLPKeyMatch" />
+  </Methods>
+</ListObject>

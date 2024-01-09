@@ -1,0 +1,32 @@
+<UIDescription name="Customer::CustomerTradeOrgAdvSearchUI" schemaVersion="0.0.0.5" simpleEditorOnly="true">
+  <Page pagePattern="SingleSectionDialogPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TradeOrgAdvSearchLookupTitleId" defaultLabel="Trade Org" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="BpaPosMetaMetaList" dataSource="ProcessContext::CustomerTradeOrgList.Items[]">
+          <Items name="Items" itemPattern="CustomerTradeOrgs">
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemTitle" bindingId="IdText" />
+              </Col>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="IdText" type="Text" binding=".name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="TradeOrgItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

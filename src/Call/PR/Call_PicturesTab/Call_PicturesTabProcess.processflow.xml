@@ -1,0 +1,19 @@
+<Process name="Call::PicturesTabProcess" defaultAction="ShowPictures" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations></Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoCall" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowPictures">
+        <UIDescription>Call::PicturesTabUI</UIDescription>
+        <Events></Events>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

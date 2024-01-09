@@ -1,0 +1,15 @@
+<ListItem name="LiOrderAttachment">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="type" type="DomFileType" dataSourceProperty="type" />
+    <SimpleProperty name="description" type="DomText" dataSourceProperty="description" />
+    <SimpleProperty name="attachmentTextPKey" type="DomPKey" dataSourceProperty="attachmentTextPKey" />
+    <SimpleProperty name="attachmentBlobPKey" type="DomPKey" dataSourceProperty="attachmentBlobPKey" />
+    <SimpleProperty name="fileName" type="DomText" dataSourceProperty="fileName" />
+    <SimpleProperty name="sdoMainPKey" type="DomPKey" dataSourceProperty="sdoMainPKey" />
+    <SimpleProperty name="mediapath" type="DomBlob" dataSourceProperty="mediapath" blobTable="SdoAttachmentBlob" blobPKeyField="attachmentBlobPKey" />
+    <SimpleProperty name="usage" type="DomAttachUsage" dataSourceProperty="usage" />
+    <SimpleProperty name="creationDate" type="DomDate" dataSourceProperty="creationDate" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+  </SimpleProperties>
+</ListItem>

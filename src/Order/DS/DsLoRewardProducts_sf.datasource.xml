@@ -1,0 +1,128 @@
+<DataSource name="DsLoRewardProducts" backendSystem="sf" businessObjectClass="LoRewardProducts" external="false" editableEntity="Promotion_Reward_Product__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Promotion_Reward_Product__c" column="Id" />
+    <Attribute name="prdId" table="Promotion_Reward_Product__c" column="Product__c" />
+    <Attribute name="promotionReward" table="Promotion_Reward_Product__c" column="Promotion_Reward__c" />
+    <Attribute name="defaultValue" table="Promotion_Reward_Product__c" column="Default_Value__c" />
+    <Attribute name="maxQuantityValue" table="Promotion_Reward_Product__c" column="Max_Value__c" />
+    <Attribute name="rewardType" table="Promotion_Reward_Product__c" column="Reward_Type__c" />
+    <Attribute name="logisticUnit" table="Promotion_Reward_Product__c" column="Logistic_Unit__c" />
+    <Attribute name="productName" table="Product2" column="Description_1_#Language#__c" />
+    <Attribute name="productCode" table="Product2" column="Consumer_Goods_Product_Code__c" />
+    <Attribute name="shortId" table="Product2" column="Product_Short_Code__c" />
+    <Attribute name="eAN" table="Product2" column="GTIN__c" />
+    <Attribute name="prdType" table="Product2" column="Product_Type__c" />
+    <Attribute name="taxClassification" table="Product2" column="Tax_Classification__c" />
+    <Attribute name="category" table="Product2" column="Category__c" />
+    <Attribute name="quantity" table="Promotion_Reward_Product__c" column="Default_Value__c" />
+    <Attribute name="piecesPerSmallestUnitForBasePrice" table="PriceUnit" column="Pieces_per_Smallest_Unit__c" />
+    <Attribute name="orderQuantityLogisticUnit" table="OrderUnit" column="Unit_Type__c" />
+    <Attribute name="orderPiecesPerSmallestUnit" table="OrderUnit" column="Pieces_per_Smallest_Unit__c" />
+    <Attribute name="consumerQuantityLogisticUnit" table="ConsumerUnit" column="Unit_Type__c" />
+    <Attribute name="consumerPiecesPerSmallestUnit" table="ConsumerUnit" column="Pieces_per_Smallest_Unit__c" />
+    <DerivedAttribute name="isOrderUnit" value="CASE WHEN Promotion_Reward_Product__c.Logistic_Unit__c = OrderUnit.Unit_Type__c THEN '1' ELSE '0' END" />
+    <DerivedAttribute name="isValidFreeItem" value="(SELECT count(*) FROM Product2 AS productInfo INNER JOIN Unit_Of_Measure__c ON Unit_Of_Measure__c.Product__c = productInfo.Id INNER JOIN Promotion_Reward_Product__c ON Promotion_Reward_Product__c.Product__c = productInfo.Id AND Promotion_Reward_Product__c.Logistic_Unit__c = Unit_Of_Measure__c.Unit_Type__c AND Unit_Of_Measure__c.Order_Ability__c = '1' AND Promotion_Reward_Product__c.Promotion_Reward__c IN (#rewardIds#) WHERE Product2.Sales_Org__c = '#SalesOrg#' AND State__c = 4 AND #compareAsDate('productinfo.Field_Valid_From__c', 'Date','&lt;=', #TodayAsDate#, 'Date')# AND #compareAsDate('productinfo.Field_Valid_Thru__c', 'Date','&gt;=', #TodayAsDate#, 'Date')# AND productinfo.Product_Type__c &lt;&gt; 'AssetType' #addCondForeignProducts# AND productInfo.Id = Product2.Id) &gt; 0" />
+    <DerivedAttribute name="deliveryState" value="CASE WHEN #compareAsDate('Product2.Delivery_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')# AND  #compareAsDate('Product2.Delivery_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'Available' ELSE 'NotAvailable' END" />
+    <DerivedAttribute name="fieldState" value="CASE WHEN #compareAsDate('Product2.Field_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')# AND  #compareAsDate('Product2.Field_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'Available' ELSE 'NotAvailable' END" />
+    <DerivedAttribute name="newState" value="CASE WHEN #compareAsDate('Product2.New_Item_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')# AND  #compareAsDate('Product2.New_Item_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'Available' ELSE 'NotAvailable' END" />
+    <Attribute name="groupText" table="ProductGroup" column="Description_1_#Language#__c" />
+    <Attribute name="groupId" table="ProductGroup" column="Consumer_Goods_Product_Code__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Promotion_Reward_Product__c" alias="" idAttribute="Id" />
+    <Entity name="Product2" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product2.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Promotion_Reward_Product__c.Product__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Unit_Of_Measure__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Unit_Of_Measure__c.Product__c" comparator="eq" rightSideType="Attribute" rightSideValue="Product2.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Unit_Of_Measure__c" alias="PriceUnit">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product2.Id" comparator="eq" rightSideType="Attribute" rightSideValue="PriceUnit.Product__c" />
+          <Condition leftSideValue="PriceUnit.Is_Price_Unit__c" comparator="eq" rightSideType="Literal" rightSideValue="'1'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Unit_Of_Measure__c" alias="OrderUnit">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product2.Id" comparator="eq" rightSideType="Attribute" rightSideValue="OrderUnit.Product__c" />
+          <Condition leftSideValue="OrderUnit.Is_Order_Unit__c" comparator="eq" rightSideType="Literal" rightSideValue="1" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Unit_Of_Measure__c" alias="ConsumerUnit">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product2.Id" comparator="eq" rightSideType="Attribute" rightSideValue="ConsumerUnit.Product__c" />
+          <Condition leftSideValue="ConsumerUnit.Is_Consumer_Unit__c" comparator="eq" rightSideType="Literal" rightSideValue="1" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Product_Condition__c">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product_Condition__c.Product__c" comparator="eq" rightSideType="Attribute" rightSideValue="Product2.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Condition_Template__c">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Condition_Template__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Product_Condition__c.Condition_Template__c" />
+          <Condition leftSideValue="Condition_Template__c.Value_Type__c" comparator="eq" rightSideType="Literal" rightSideValue="'Amount'" />
+          <Condition leftSideValue="Condition_Template__c.Customer_Reference__c" comparator="eq" rightSideType="Literal" rightSideValue="'0'" />
+          <Condition leftSideValue="Condition_Template__c.Product_Reference__c" comparator="eq" rightSideType="Literal" rightSideValue="'1'" />
+          <Condition leftSideValue="Condition_Template__c.Active__c" comparator="eq" rightSideType="Literal" rightSideValue="'1'" />
+          <Condition leftSideValue="Condition_Template__c.Price_Finding_Id__c" comparator="eq" rightSideType="Literal" rightSideValue="'ProductPrice'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="System_Setting__c" alias="PriceType">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product_Condition__c.Price_Type__c" comparator="eq" rightSideType="Attribute" rightSideValue="PriceType.Value__c" />
+          <Condition leftSideValue="PriceType.Name" comparator="eq" rightSideType="Literal" rightSideValue="'Default_Price_Type'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="System_Setting__c" alias="PriceListType">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product_Condition__c.Price_List_Type__c" comparator="eq" rightSideType="Attribute" rightSideValue="PriceListType.Value__c" />
+          <Condition leftSideValue="PriceListType.Name" comparator="eq" rightSideType="Literal" rightSideValue="'Default_Price_List_Type'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Product2" alias="ProductGroup">
+      <Join Type="left outer">
+        <ComplexJoin><![CDATA[
+            Product2.#criterionAttribute# = ProductGroup.Consumer_Goods_Product_Code__c AND ProductGroup.Sales_Org__c = '#SalesOrg#'
+            ]]></ComplexJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+   Product2.Sales_Org__c = '#SalesOrg#'
+   AND Promotion_Reward_Product__c.Promotion_Reward__c IN (#rewardIds#)
+   AND Promotion_Reward_Product__c.Logistic_Unit__c = Unit_Of_Measure__c.Unit_Type__c
+   AND Promotion_Reward_Product__c.Included__c = '1'
+   AND #compareAsDate('Product_Condition__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')#
+   AND #compareAsDate('Product_Condition__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#
+   ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="rewardIds" type="LIST" />
+    <Parameter name="addCondForeignProducts" treatAs="sqlSnippet" />
+    <Parameter name="criterionAttribute" treatAs="sqlSnippet" />
+  </Parameters>
+</DataSource>

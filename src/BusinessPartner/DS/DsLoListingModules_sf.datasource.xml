@@ -1,0 +1,31 @@
+<DataSource name="DsLoListingModules" backendSystem="sf" businessObjectClass="LoListingModules" external="false" editableEntity="Listing_Module__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Listing_Module__c" column="Id" />
+    <Attribute name="listingModuleName" table="Listing_Module__c" column="Name" />
+    <Attribute name="productAssortmentPKey" table="Listing_Module__c" column="Product_Assortment__c" />
+    <Attribute name="sort" table="Listing_Module__c" column="Sort__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Listing_Module__c" alias="" idAttribute="Id" />
+    <Entity name="Product_Assortment_Store__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Listing_Module__c.Product_Assortment__c" comparator="eq" rightSideType="Attribute" rightSideValue="Product_Assortment_Store__c.Assortment__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Product_Assortment_Store__c.Store__c = #bpaMainPKey#
+    ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Listing_Module__c" attribute="Product_Assortment__c" direction="ASC" />
+    <OrderCriterion entity="Listing_Module__c" attribute="Sort__c" direction="ASC" />
+  </OrderCriteria>
+  <GroupBy>
+    <GroupByCriterion entity="Listing_Module__c" attribute="Name" />
+  </GroupBy>
+  <Parameters>
+    <Parameter name="bpaMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

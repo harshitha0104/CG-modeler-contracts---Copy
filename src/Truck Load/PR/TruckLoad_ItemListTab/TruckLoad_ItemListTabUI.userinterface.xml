@@ -1,0 +1,310 @@
+<UIDescription name="TruckLoad::ItemListTabUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="MasterDetailSectionPage" cachable="false" masterSectionFlex="4.5" detailSectionFlex="3.1">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TruckItemListrTabId" defaultLabel="Inventory" bindingMode="ONE_TIME" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem itemId="addProductViaLookup" directlyVisible="false">
+          <Bindings>
+            <Binding type="Visible" target="Visible" call="ProcessContext::MainBO.getButtonVisibility">
+              <Parameters>
+                <Input name="mode" type="Literal" value="AddProduct" />
+              </Parameters>
+            </Binding>
+            <Resource target="Text" type="Label" id="addProductViaLookup" defaultLabel="Add Product" />
+            <Resource target="Icon" type="Image" id="PlusDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="addProductViaLookup" />
+          </Events>
+        </MenuItem>
+        <MenuItem itemId="ScanProduct" directlyVisible="true">
+          <Bindings>
+            <Binding type="Visible" target="Visible" call="ProcessContext::MainBO.getButtonVisibility">
+              <Parameters>
+                <Input name="mode" type="Literal" value="ScanProduct" />
+              </Parameters>
+            </Binding>
+            <Resource target="Text" type="Label" id="ScanProduct" defaultLabel="Scan Product" />
+            <Resource target="Icon" type="Image" id="BarcodeDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="addProductViaScanner" />
+          </Events>
+        </MenuItem>
+        <MenuItem itemId="Calculate" directlyVisible="true">
+          <Bindings>
+            <Binding type="Visible" target="Visible" call="ProcessContext::MainBO.getButtonVisibility">
+              <Parameters>
+                <Input name="mode" type="Literal" value="Calculate" />
+              </Parameters>
+            </Binding>
+            <Resource target="Text" type="Label" id="Calculate" defaultLabel="Calculate" />
+            <Resource target="Icon" type="Image" id="CalculatorDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="calculate" />
+          </Events>
+        </MenuItem>
+        <MenuItem itemId="SetItemType" directlyVisible="false">
+          <Bindings>
+            <Binding type="Visible" target="Visible" call="ProcessContext::MainBO.getButtonVisibility">
+              <Parameters>
+                <Input name="mode" type="Literal" value="Settings" />
+              </Parameters>
+            </Binding>
+            <Resource target="Text" type="Label" id="SetItemType" defaultLabel="Settings" />
+            <Resource target="Icon" type="Image" id="ItemTypeDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="setItemType" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <!-- MAIN AREA -->
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <MultiSelectionGroupedList name="TruckLoadItemList" searchable="true" dataSource="ProcessContext::MainBO.loItems.Items[]" master="true">
+          <SearchAttributes>
+            <SearchAttribute name="Text1" />
+            <SearchAttribute name="EAN" />
+            <SearchAttribute name="PrdId" />
+          </SearchAttributes>
+          <Items name="Items" itemPattern="TruckLoadItemOverviewItem">
+            <ItemListLayout>
+              <Default>
+                <Col width="1em" height="1.7em" layoutType="Image" bindingId="ModReasonEntered" />
+                <Col flex="1">
+                  <Row layoutType="itemIdentifier" bindingId="ProductName" />
+                  <Row layoutType="itemSecondary itemPaddingTop" bindingId="OrderUnitInfo" />
+                  <Row layoutType="itemValueVerySmall" bindingId="UnitInfo" />
+                </Col>
+                <Col layoutType="Image" width="2em" bindingId="Empty" />
+                <Col layoutType="itemValueVerySmall" width="2em" bindingId="ShortText" />
+                <Col layoutType="Image" width="2em" bindingId="Empty" />
+                <Col layoutType="itemRight" width="7em" bindingId="Quantity" />
+              </Default>
+              <Phone>
+                <Default>
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="ModReasonEntered" />
+                  <Col>
+                    <Row>
+                      <Col flex="1">
+                        <Row layoutType="itemImportantValueSmall" bindingId="ProductName" />
+                        <Row layoutType="itemSecondary itemPaddingTop" bindingId="OrderUnitInfo" />
+                      </Col>
+                      <Col layoutType="itemValueVerySmall" width="2em" bindingId="ShortText" />
+                      <Col width="6em" bindingId="Quantity" />
+                    </Row>
+                    <Row layoutType="itemValueVerySmall" bindingId="UnitInfo" />
+                  </Col>
+                </Default>
+                <Apple>
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="ModReasonEntered" />
+                  <Col>
+                    <Row>
+                      <Col flex="1">
+                        <Row layoutType="itemImportantValueSmall" bindingId="ProductName" />
+                        <Row layoutType="itemSecondary itemPaddingTop" bindingId="OrderUnitInfo" />
+                      </Col>
+                      <Col layoutType="itemValueVerySmall" width="2em" bindingId="ShortText" />
+                      <Col width="6em" bindingId="Quantity" />
+                    </Row>
+                    <Row layoutType="itemValueVerySmall" bindingId="UnitInfo" />
+                  </Col>
+                </Apple>
+              </Phone>
+              <Tablet>
+                <Default>
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="ModReasonEntered" />
+                  <Col flex="1">
+                    <Row layoutType="itemIdentifier" bindingId="ProductName" />
+                    <Row layoutType="itemSecondary itemPaddingTop" bindingId="OrderUnitInfo" />
+                    <Row layoutType="itemValueVerySmall" bindingId="UnitInfo" />
+                  </Col>
+                  <Col layoutType="itemRight" width="3em" bindingId="ShortText" />
+                  <Col layoutType="itemRight" width="9em" bindingId="Quantity" />
+                </Default>
+                <Apple>
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="ModReasonEntered" />
+                  <Col flex="1">
+                    <Row layoutType="itemIdentifier" bindingId="ProductName" />
+                    <Row layoutType="itemSecondary itemPaddingTop" bindingId="OrderUnitInfo" />
+                    <Row layoutType="itemValueVerySmall" bindingId="UnitInfo" />
+                  </Col>
+                  <Col layoutType="itemRight" width="3em" bindingId="ShortText" />
+                  <Col layoutType="itemRight" width="9em" bindingId="Quantity" />
+                </Apple>
+                <Android>
+                  <Col>
+                    <Row>
+                      <Col width="1em" height="1.7em" layoutType="Image" bindingId="ModReasonEntered" />
+                      <Col flex="1">
+                        <Row layoutType="itemImportantValueSmall" bindingId="ProductName" />
+                        <Row layoutType="itemSecondary itemPaddingTop" bindingId="OrderUnitInfo" />
+                        <Row layoutType="itemValueVerySmall" bindingId="UnitInfo" />
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col layoutType="itemRight" width="3em" bindingId="ShortText" />
+                  <Col layoutType="itemRight" width="9em" bindingId="Quantity" />
+                </Android>
+              </Tablet>
+            </ItemListLayout>
+            <Bindings>
+              <Resource target="Empty" type="Label" id="Empty" defaultLabel="" bindingMode="ONE_WAY" />
+              <Binding target="ProductName" type="Text" binding=".text1" bindingMode="ONE_WAY" />
+              <Binding target="OrderUnitInfo" type="Text" binding=".orderUnitInformation" bindingMode="ONE_WAY" />
+              <Binding target="UnitInfo" type="Text" binding=".unitInformation" bindingMode="ONE_WAY" />
+              <Binding target="Quantity" type="Stepper" binding=".quantity" minValue="0" maxValue="9999" bindingMode="TWO_WAY" formatV2="4.0" stepperCorrelationId=".pKey" />
+              <Binding target="ModReasonEntered" type="Image" binding=".modReasonEntered" bindingMode="ONE_WAY" />
+              <Binding target="ShortText" type="Text" binding=".shortText" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="pKeys" value=".__pKeys" />
+                <Param name="startIndex" value=".__startIndexInDatasource" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+          <GroupVisibleElementConfiguration>
+            <GroupElementsBy>
+              <ListItemAttribute name="prdMainPKey" />
+              <ListItemAttribute name="sdoItemMetaPKey" />
+              <ListItemAttribute name="sdoParentItemPKey" />
+            </GroupElementsBy>
+            <PrimaryElementIndicator attributeName="isOrderUnit" />
+          </GroupVisibleElementConfiguration>
+        </MultiSelectionGroupedList>
+      </Area>
+    </Section>
+    <Section sectionName="detailSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="IdentificationGroup">
+          <Bindings>
+            <Binding target="Title" binding="ProcessContext::MainBO.loItems.Current.text1" bindingMode="ONE_WAY" />
+          </Bindings>
+          <!-- Number -->
+          <InputArea name="Id" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Number" id="IdId" />
+              <Binding target="Value" binding="ProcessContext::MainBO.loItems.Current.prdId" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <!-- Description -->
+          <InputArea name="Description" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Description" id="DescriptionId" />
+              <Binding target="Value" binding="ProcessContext::MainBO.loItems.Current.text1" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <!-- Type -->
+          <SelectionBox name="ItemType" disabled="true">
+            <Bindings>
+              <Binding target="Value" binding="ProcessContext::MainBO.loItems.Current.sdoItemMetaPKey" bindingMode="TWO_WAY" />
+              <Binding target="DataSource" binding="ProcessContext::MainBO.boOrderMeta.loOrderItemMetas" bindingMode="TWO_WAY" />
+              <Resource target="Label" type="Label" id="TruckLoadItemListTab_TypeId" defaultLabel="Type" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".pKey" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <!-- Stock -->
+          <Merger name="StockMerger" disabled="true" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="2">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Stock" id="StockId" />
+            </Bindings>
+            <InputArea name="Stock" disabled="true">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::MainBO.LoItems.Current.ivcBalance" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="StockUnit" disabled="true">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::MainBO.LoItems.Current.ivcBalanceUnitType" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </Merger>
+        </GroupElement>
+        <!-- UoM -->
+        <EmbeddedList name="TruckLoadUoM" dataSource="ProcessContext::MainBO.loUnitOfMeasure.Items[]">
+          <Bindings>
+            <Resource target="Title" type="Label" id="UoMId" defaultLabel="Unit of Measures" />
+          </Bindings>
+          <Items name="TruckLoadItemsUoM" itemPattern="TruckLoadUoMPattern">
+            <ItemListLayout>
+              <Tablet>
+                <Default>
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="ModReasonEntered" />
+                  <Col width="5em">
+                    <Row layoutType="itemSecondary itemPaddingTop" bindingId="UoM" />
+                    <Row>
+                      <Col layoutType="itemIdentifierSmall" bindingId="OQty" />
+                    </Row>
+                  </Col>
+                  <Col width="5em">
+                    <Row layoutType="itemRight" bindingId="Quantity" />
+                    <Row>
+                      <Col layoutType="itemIdentifierSmall" bindingId="Difference" />
+                    </Row>
+                  </Col>
+                </Default>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="ModReasonEntered" />
+                  <Col>
+                    <Row>
+                      <Col width="8em">
+                        <Row layoutType="itemIdentifierSmall" bindingId="UoM" />
+                        <Row layoutType="itemIdentifierSmall" bindingId="OQty" />
+                      </Col>
+                      <Col flex="1" bindingId="Quantity" />
+                    </Row>
+                    <Row layoutType="itemPaddingTop">
+                      <Col flex="1" layoutType="itemIdentifierSmall" bindingId="Difference" />
+                    </Row>
+                  </Col>
+                </Default>
+              </Phone>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="UoM" type="Text" binding=".quantityLogisticUnit.text" bindingMode="ONE_WAY" />
+              <Binding target="OQty" type="Text" binding=".oqtyInfo" bindingMode="ONE_WAY" />
+              <Binding target="Difference" type="Text" binding=".differenceInfo" bindingMode="ONE_WAY" />
+              <Binding target="Quantity" type="Stepper" binding=".quantity" minValue="0" maxValue="9999" bindingMode="TWO_WAY" formatV2="4.0" stepperCorrelationId=".pKey" />
+              <Binding target="ModReasonEntered" type="Image" binding=".modReasonEntered" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+        </EmbeddedList>
+        <GroupElement name="AdvancedSettingsGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="AdvSettingsGroupId" defaultLabel="Advanced Settings" />
+          </Bindings>
+          <!-- Reason -->
+          <SelectionBox name="QuantityModificationReason">
+            <Bindings>
+              <Resource target="Label" type="Label" id="TruckItemListTab_ModificationReason" defaultLabel="Reason Code" />
+              <Binding target="DataSource" binding="ProcessContext::MainBO.loItems.Current.availableModReasons" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::MainBO.loUnitOfMeasure.Current.modReason" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".code" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

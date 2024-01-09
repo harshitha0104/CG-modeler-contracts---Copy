@@ -1,0 +1,60 @@
+<DataSource name="DsLoUsrTimeEntry" backendSystem="sf" objectClass="LoUsrTimeEntry" external="true" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="pKey" value="''" />
+    <DerivedAttribute name="businessModified" value="''" />
+    <DerivedAttribute name="tmgTourPKey" value="''" />
+    <DerivedAttribute name="clbMainPKey" value="''" />
+    <DerivedAttribute name="description" value="''" />
+    <DerivedAttribute name="duration" value="''" />
+    <DerivedAttribute name="effectiveDateFrom" value="''" />
+    <DerivedAttribute name="effectiveDateThru" value="''" />
+    <DerivedAttribute name="effectiveTimeFrom" value="''" />
+    <DerivedAttribute name="effectiveTimeThru" value="''" />
+    <DerivedAttribute name="note" value="''" />
+    <DerivedAttribute name="reasonCode" value="''" />
+    <DerivedAttribute name="systemTimeFrom" value="''" />
+    <DerivedAttribute name="systemTimeThru" value="''" />
+    <DerivedAttribute name="effectiveUTCTimeFrom" value="''" />
+    <DerivedAttribute name="effectiveUTCTimeThru" value="''" />
+    <DerivedAttribute name="usrDailyReportPKey" value="''" />
+    <DerivedAttribute name="usrTimeEntryMetaText" value="''" />
+    <DerivedAttribute name="usrTimeEntryMetaPKey" value="''" />
+    <DerivedAttribute name="manual" value="''" />
+    <DerivedAttribute name="productiveTimeEffect" value="''" />
+    <DerivedAttribute name="activityType" value="''" />
+    <DerivedAttribute name="effectiveTimeFromGeoOffset" value="''" />
+    <DerivedAttribute name="effectiveTimeFromDSTOffset" value="''" />
+    <DerivedAttribute name="effectiveTimeThruGeoOffset" value="''" />
+    <DerivedAttribute name="effectiveTimeThruDSTOffset" value="''" />
+    <DerivedAttribute name="systemTimeFromGeoOffset" value="''" />
+    <DerivedAttribute name="systemTimeFromDSTOffset" value="''" />
+    <DerivedAttribute name="systemTimeThruGeoOffset" value="''" />
+    <DerivedAttribute name="systemTimeThruDSTOffset" value="''" />
+    <DerivedAttribute name="orgTimeFrom" value="''" />
+    <DerivedAttribute name="orgTimeThru" value="''" />
+    <DerivedAttribute name="sign" value="''" />
+    <DerivedAttribute name="timeFromThru" value="''" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+      // Intended to be empty 
+      return undefined;
+      ]]></Load>
+    <Update><![CDATA[ 
+
+      // Intended to be empty 
+      return undefined;
+      ]]></Update>
+    <Insert><![CDATA[ 
+
+      // Intended to be empty 
+      return undefined;
+      ]]></Insert>
+    <Delete><![CDATA[ 
+
+      // Intended to be empty 
+      return undefined;
+      ]]></Delete>
+  </Database>
+</DataSource>

@@ -1,0 +1,110 @@
+<ListItem name="LiOrderItem" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="sdoMainPKey" type="DomPKey" storable="true" dataSourceProperty="sdoMainPKey" />
+    <SimpleProperty name="sdoItemMetaPKey" type="DomPKey" storable="true" dataSourceProperty="sdoItemMetaPKey" />
+    <SimpleProperty name="sdoParentItemPKey" type="DomPKey" storable="true" dataSourceProperty="sdoParentItemPKey" />
+    <SimpleProperty name="parentType" type="DomString" dataSourceProperty="parentType" />
+    <SimpleProperty name="quantity" type="DomDecimal" storable="false" dataSourceProperty="quantity" />
+    <SimpleProperty name="discount" type="DomPercentage" storable="true" dataSourceProperty="discount" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" storable="true" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="text1" type="DomText" storable="false" dataSourceProperty="text1" />
+    <SimpleProperty name="prdId" type="DomId" storable="false" dataSourceProperty="prdId" />
+    <SimpleProperty name="erpId" type="DomId" storable="true" dataSourceProperty="erpId" />
+    <SimpleProperty name="shortId" type="DomId" storable="false" dataSourceProperty="shortId" />
+    <SimpleProperty name="taxClassification" type="DomTaxClassification" storable="false" dataSourceProperty="taxClassification" />
+    <SimpleProperty name="quantityLogisticUnit" type="DomPrdLogisticUnit" storable="true" dataSourceProperty="quantityLogisticUnit" />
+    <SimpleProperty name="type" type="DomId" storable="false" dataSourceProperty="type" />
+    <SimpleProperty name="shortType" type="DomId" storable="false" dataSourceProperty="shortType" />
+    <SimpleProperty name="promoted" type="DomBool" storable="true" dataSourceProperty="promoted" />
+    <SimpleProperty name="listed" type="DomBool" storable="true" dataSourceProperty="listed" />
+    <SimpleProperty name="customerAssortment" type="DomBool" storable="false" dataSourceProperty="customerAssortment" />
+    <SimpleProperty name="deliveryState" type="DomPrdState" storable="false" dataSourceProperty="deliveryState" />
+    <SimpleProperty name="fieldState" type="DomPrdState" storable="false" dataSourceProperty="fieldState" />
+    <SimpleProperty name="itemState" type="DomPrdListedPromoted" storable="false" dataSourceProperty="itemState" />
+    <SimpleProperty name="eAN" type="DomPrdNumber" storable="false" dataSourceProperty="eAN" />
+    <SimpleProperty name="newState" type="DomPrdState" storable="false" dataSourceProperty="newState" />
+    <SimpleProperty name="outOfStock" type="DomBool" storable="true" dataSourceProperty="outOfStock" />
+    <SimpleProperty name="piecesPerSmallestUnitForBasePrice" type="DomDecimal" storable="false" dataSourceProperty="piecesPerSmallestUnitForBasePrice" />
+    <SimpleProperty name="priceEffect" type="DomSdoItemMetaPriceEffect" storable="false" dataSourceProperty="priceEffect" />
+    <SimpleProperty name="piecesPerSmallestUnit" type="DomDecimal" storable="false" dataSourceProperty="piecesPerSmallestUnit" />
+    <SimpleProperty name="history" type="DomBool" storable="true" dataSourceProperty="history" />
+    <SimpleProperty name="groupText" type="DomString" storable="false" dataSourceProperty="groupText" />
+    <SimpleProperty name="groupId" type="DomId" storable="false" dataSourceProperty="groupId" />
+    <SimpleProperty name="saveZeroQuantity" type="DomBool" storable="false" dataSourceProperty="saveZeroQuantity" />
+    <SimpleProperty name="calculationGroup" type="DomSdoCalculationGroup" storable="false" dataSourceProperty="calculationGroup" />
+    <SimpleProperty name="price" type="DomMoney" storable="true" dataSourceProperty="price" />
+    <SimpleProperty name="priceReceipt" type="DomMoney" storable="true" dataSourceProperty="priceReceipt" />
+    <SimpleProperty name="value" type="DomMoney" storable="true" dataSourceProperty="value" />
+    <SimpleProperty name="valueReceipt" type="DomMoney" storable="true" dataSourceProperty="valueReceipt" />
+    <SimpleProperty name="simplePricingBasePrice" type="DomMoney" storable="true" dataSourceProperty="simplePricingBasePrice" />
+    <SimpleProperty name="basePrice" type="DomMoney" storable="true" dataSourceProperty="basePrice" />
+    <SimpleProperty name="basePriceReceipt" type="DomMoney" storable="true" dataSourceProperty="basePriceReceipt" />
+    <SimpleProperty name="grossValue" type="DomMoney" storable="true" dataSourceProperty="grossValue" />
+    <SimpleProperty name="grossValueReceipt" type="DomMoney" storable="true" dataSourceProperty="grossValueReceipt" />
+    <SimpleProperty name="specialPrice" type="DomMoney" storable="true" dataSourceProperty="specialPrice" />
+    <SimpleProperty name="specialPriceReceipt" type="DomMoney" storable="true" dataSourceProperty="specialPriceReceipt" />
+    <SimpleProperty name="allowCriticalStock" type="DomBool" storable="false" dataSourceProperty="allowCriticalStock" />
+    <!-- Attributes for inventory handling - Not stored, not loaded - Set by business logic -->
+    <SimpleProperty name="ivcInformationObject" type="Object" storable="false" dataSourceProperty="ivcInformationObject" />
+    <SimpleProperty name="ivcBalance" type="DomDecimal" storable="false" dataSourceProperty="ivcBalance" />
+    <SimpleProperty name="mergeEngine_invalidated" type="DomBool" storable="false" dataSourceProperty="mergeEngine_invalidated" />
+    <SimpleProperty name="deletedFreeItem" type="DomBool" storable="false" />
+    <SimpleProperty name="suggestedQuantity" type="DomDecimal" storable="true" dataSourceProperty="suggestedQuantity" />
+    <SimpleProperty name="editedQty" type="DomDecimal" storable="false" />
+    <SimpleProperty name="freeItemMetaPKey" type="DomPKey" storable="false" />
+    <SimpleProperty name="freeItemUnit" type="DomPrdLogisticUnit" storable="false" />
+    <SimpleProperty name="freeItemCreationStep" type="DomString" storable="true" dataSourceProperty="freeItemCreationStep" />
+    <SimpleProperty name="minStepperValue" type="DomInteger" storable="false" />
+    <SimpleProperty name="prdType" type="DomPrdType" storable="false" dataSourceProperty="prdType" />
+    <SimpleProperty name="movementDirection" type="DomSdoItemMovementDirection" />
+    <SimpleProperty name="targetQuantity" type="DomDecimal" storable="true" dataSourceProperty="targetQuantity" />
+    <SimpleProperty name="modReason" type="DomSdoModReason" storable="true" dataSourceProperty="modReason" />
+    <SimpleProperty name="modReasonEntered" type="DomString" storable="false" />
+    <SimpleProperty name="oQtyString" type="DomString" storable="false" />
+    <SimpleProperty name="refPKey" type="DomText" dataSourceProperty="refPKey" />
+    <!--Attributes for handling of nested Items and displaying-->
+    <SimpleProperty name="currentHandlerParams" type="Object" storable="false" />
+    <SimpleProperty name="orderUnitInformation" type="DomText" storable="false" />
+    <SimpleProperty name="unitInformation" type="DomText" storable="false" />
+    <SimpleProperty name="splittingGroup" type="DomId" storable="true" dataSourceProperty="splittingGroup" />
+    <SimpleProperty name="isOrderUnit" type="DomBool" storable="false" dataSourceProperty="isOrderUnit" />
+    <SimpleProperty name="sort" type="DomInteger" storable="false" dataSourceProperty="sort" />
+    <SimpleProperty name="edited" type="DomBool" storable="false" dataSourceProperty="edited" />
+    <SimpleProperty name="isSuggestedClicked" type="DomBool" storable="false" dataSourceProperty="isSuggestedClicked" />
+    <SimpleProperty name="pricingInformation" type="DomLongText" />
+    <!-- CGCloud only: Holds the SdoCondition records of onPrem as JSON -->
+    <SimpleProperty name="customerProductNumber" type="DomId" storable="false" dataSourceProperty="customerProductNumber" />
+    <SimpleProperty name="focusProductType" type="DomVariant" storable="false" dataSourceProperty="focusProductType" />
+    <SimpleProperty name="focusProductImage" type="DomString" storable="false" dataSourceProperty="focusProductImage" />
+    <SimpleProperty name="promotionPKey" type="DomPKey" storable="false" dataSourceProperty="promotionPKey" />
+    <SimpleProperty name="productClassifications" type="DomText" storable="false" dataSourceProperty="productClassifications" />
+    <SimpleProperty name="specialPromoted" type="DomBool" storable="false" dataSourceProperty="specialPromoted" />
+    <SimpleProperty name="specialQuantity" type="DomDecimal" storable="false" dataSourceProperty="specialQuantity" />
+    <SimpleProperty name="specialPromotionIcon" type="DomString" />
+    <SimpleProperty name="groupName" type="DomText" />
+    <SimpleProperty name="groupSort" type="DomDecimal" />
+    <SimpleProperty name="groupIdSort" type="DomDecimal" />
+    <SimpleProperty name="rewardPKey" type="DomPKey" dataSourceProperty="rewardPKey" />
+    <SimpleProperty name="category" type="DomPrdCategory" />
+    <SimpleProperty name="logicUnitsforDisplay" type="DomString" storable="false" />
+    <SimpleProperty name="pricingInfo1" type="DomDecimal" dataSourceProperty="pricingInfo1" />
+    <SimpleProperty name="pricingInfo2" type="DomDecimal" dataSourceProperty="pricingInfo2" />
+    <SimpleProperty name="pricingInfo3" type="DomDecimal" dataSourceProperty="pricingInfo3" />
+    <SimpleProperty name="pricingInfo4" type="DomDecimal" dataSourceProperty="pricingInfo4" />
+    <SimpleProperty name="pricingInfo5" type="DomDecimal" dataSourceProperty="pricingInfo5" />
+    <SimpleProperty name="pricingInfo6" type="DomDecimal" dataSourceProperty="pricingInfo6" />
+    <SimpleProperty name="pricingInfo7" type="DomDecimal" dataSourceProperty="pricingInfo7" />
+    <SimpleProperty name="pricingInfo8" type="DomDecimal" dataSourceProperty="pricingInfo8" />
+    <SimpleProperty name="pricingInfo9" type="DomDecimal" dataSourceProperty="pricingInfo9" />
+    <SimpleProperty name="pricingInfo10" type="DomDecimal" dataSourceProperty="pricingInfo10" />
+    <SimpleProperty name="promotedPrice" type="DomMoney" />
+    <SimpleProperty name="defaultPiecesPerSmallestUnit" type="DomDecimal" />
+    <SimpleProperty name="defaultQuantityLogisticUnit" type="DomPrdLogisticUnit" />
+    <SimpleProperty name="tacticProductPKey" type="DomPKey" />
+    <SimpleProperty name="defaultValue" type="DomDecimal" />
+    <SimpleProperty name="maxValue" type="DomDecimal" />
+    <SimpleProperty name="percentDiscount" type="DomDecimal" />
+    <SimpleProperty name="showInBasket" type="DomBool" />
+  </SimpleProperties>
+</ListItem>

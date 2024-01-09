@@ -1,0 +1,26 @@
+<BusinessObject name="BoOperatingHour" schemaVersion="1.1">
+  <DataSource name="DsBoOperatingHour" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="timeZone" type="DomOperatingHoursTimeZones" dataSourceProperty="timeZone" />
+    <SimpleProperty name="name" type="DomText" dataSourceProperty="name" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+  </Methods>
+</BusinessObject>

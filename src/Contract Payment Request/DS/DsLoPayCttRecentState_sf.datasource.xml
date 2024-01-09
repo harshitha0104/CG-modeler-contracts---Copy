@@ -1,0 +1,24 @@
+<DataSource name="DsLoPayCttRecentState" objectClass="LoPayCttRecentState" backendSystem="sf" external="true" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="pKey" value="''" />
+    <DerivedAttribute name="payCttPaymentPKey" value="''" />
+    <DerivedAttribute name="usrUserPKey" value="''" />
+    <DerivedAttribute name="wfeStatePKey" value="''" />
+    <DerivedAttribute name="salesOrg" value="''" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+      // Recent State tracking not supported with SF
+      return undefined;
+   ]]></Load>
+    <Update><![CDATA[
+      return undefined;
+   ]]></Update>
+    <Insert><![CDATA[
+      return undefined;   
+   ]]></Insert>
+    <Delete><![CDATA[
+      return undefined;  
+   ]]></Delete>
+  </Database>
+</DataSource>

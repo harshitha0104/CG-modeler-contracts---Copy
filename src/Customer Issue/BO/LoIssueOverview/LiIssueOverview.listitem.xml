@@ -1,0 +1,32 @@
+<ListItem name="LiIssueOverview">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomText" storable="false" dataSourceProperty="text" />
+    <SimpleProperty name="dueDate" type="DomDate" storable="false" dataSourceProperty="dueDate" />
+    <SimpleProperty name="initiationDate" type="DomDate" storable="false" dataSourceProperty="initiationDate" />
+    <SimpleProperty name="priority" type="DomABC" storable="false" dataSourceProperty="priority" />
+    <SimpleProperty name="classification" type="DomSvcClassification" storable="false" dataSourceProperty="classification" />
+    <SimpleProperty name="issuePhase" type="DomSvcIssuePhase" storable="false" dataSourceProperty="issuePhase" />
+    <SimpleProperty name="responsibleName" type="DomUsrName" storable="false" dataSourceProperty="responsibleName" />
+    <SimpleProperty name="ownerName" type="DomUsrName" storable="false" dataSourceProperty="ownerName" />
+    <SimpleProperty name="initiatorPKey" type="DomPKey" storable="false" dataSourceProperty="initiatorPKey" />
+    <SimpleProperty name="ownerPKey" type="DomPKey" storable="false" dataSourceProperty="ownerPKey" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" storable="false" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="customerName" type="DomBpaName" storable="false" dataSourceProperty="customerName" />
+    <SimpleProperty name="ownerBpaMainPKey" type="DomPKey" storable="false" dataSourceProperty="ownerBpaMainPKey" />
+    <SimpleProperty name="isActive" type="DomBool" storable="false" dataSourceProperty="isActive" />
+    <SimpleProperty name="filterOpen" type="DomBool" storable="false" dataSourceProperty="filterOpen" />
+    <SimpleProperty name="businessModified" type="DomBusinessModified" storable="false" dataSourceProperty="businessModified" />
+    <SimpleProperty name="svcMetaPKey" type="DomPKey" storable="false" dataSourceProperty="svcMetaPKey" />
+    <SimpleProperty name="isPrivate" type="DomBool" storable="false" dataSourceProperty="isPrivate" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" storable="false" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="actualStatePKey" type="DomPKey" storable="false" dataSourceProperty="actualStatePKey" />
+    <SimpleProperty name="responsibleIcon" type="DomString" storable="false" dataSourceProperty="responsibleIcon" />
+    <SimpleProperty name="substitutionStatus" type="DomString" storable="false" dataSourceProperty="substitutionStatus" />
+    <SimpleProperty name="substituteUsrPKey" type="DomPKey" storable="false" dataSourceProperty="substituteUsrPKey" />
+    <SimpleProperty name="classificationImage" type="DomString" storable="false" dataSourceProperty="classificationImage" />
+    <SimpleProperty name="priorityImage" type="DomString" storable="false" dataSourceProperty="priorityImage" />
+    <SimpleProperty name="priorityUIText" type="DomString" />
+    <SimpleProperty name="dueDateText" type="DomText" />
+  </SimpleProperties>
+</ListItem>

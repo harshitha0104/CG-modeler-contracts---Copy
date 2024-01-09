@@ -1,0 +1,137 @@
+<Datasource objectClass="LoCallPromotionProducts" backendSystem="sf" businessObjectClass="LoCallPromotionProducts" external="true" distinct="false" readOnly="true" editableEntity="Product2" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="text" table="Product2" column="Description_1_#Language#__c" />
+    <Attribute name="groupText" table="Product2" column="Description_1_#Language#__c" />
+    <Attribute name="groupId" table="Product2" column="Id" />
+    <Attribute name="prmMainPKey" table="Tactic__c" column="Promotion__c" />
+    <Attribute name="discount" table="Tactic__c" column="Amount__c" />
+    <Attribute name="quantity" table="Tactic_Product__c" column="Quantity__c" />
+    <Attribute name="price" table="Tactic_Product__c" column="Promoted_Price__c" />
+    <Attribute name="productId" table="Product2" column="Consumer_Goods_Product_Code__c" />
+    <DerivedAttribute name="groupFlag" value="'DotsSubGrey24'" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+    
+      var prmMainPKey = "";
+   	  if (Utils.isDefined(jsonQuery.prmMainPKey)){
+		 prmMainPKey = Utils.convertForDBParam(jsonQuery.prmMainPKey, 'DomPKey');
+   	  }
+      var sqlParams = {prmMainPKey};
+      var sqlStmt = " SELECT * ";
+      sqlStmt += " FROM ";
+      sqlStmt += " ( ";
+
+      // Product with group and Group with group about
+
+      sqlStmt += " SELECT ";
+      sqlStmt += " CASE WHEN RecordType.DeveloperName='Product_Group' then 'ArrowExpandGrey24' else 'DotsSubGrey24' END as groupFlag,";
+      sqlStmt += " GroupDescription.Id as groupId,";
+      sqlStmt += " GroupDescription.Description_1_#Language#__c as groupText,";
+      sqlStmt += " CASE WHEN RecordType.DeveloperName='Product_Group' then PrdPrdGroup.Consumer_Goods_Product_Code__c else Product2.Consumer_Goods_Product_Code__c END as productId,";
+      sqlStmt += " Product2.Description_1_#Language#__c as text, ";
+      sqlStmt += " Tactic__c.Amount__c as discount,";
+      sqlStmt += " Tactic_Product__c.Promoted_Price__c as price, ";
+      sqlStmt += " Tactic_Product__c.Quantity__c as quantity,";
+      sqlStmt += " Tactic__c.Promotion__c";
+      sqlStmt += " FROM Tactic_Product__c ";
+      sqlStmt += " JOIN Tactic__c ON Tactic_Product__c.Tactic__c=Tactic__c.Id";
+      sqlStmt += " JOIN Product_Hierarchy__c ON Tactic_Product__c.Product__c=Product_Hierarchy__c.Child_Product__c";
+      sqlStmt += " Left OUTER JOIN Product2 ON Product_Hierarchy__c.Child_Product__c=Product2.Id AND Product2.Sales_Org__c = '#SalesOrg#'";
+      sqlStmt += " LEFT OUTER JOIN Product2 as PrdPrdGroup ON Product_Hierarchy__c.Parent_Product__c=PrdPrdGroup.Id AND PrdPrdGroup.Sales_Org__c = '#SalesOrg#' ";
+      sqlStmt += " JOIN Product2 as GroupDescription ON Product_Hierarchy__c.Parent_Product__c=GroupDescription.Id AND GroupDescription.Sales_Org__c = '#SalesOrg#'";
+      sqlStmt += " JOIN Product_Template__c ON Product2.Product_Template__c = Product_Template__c.Id ";
+      sqlStmt += " JOIN RecordType ON Product_Template__c.RecordTypeId = RecordType.Id ";
+      sqlStmt += " WHERE 1=1";
+      sqlStmt += " AND Tactic__c.Promotion__c = #prmMainPKey# ";
+      sqlStmt += " AND Tactic__c.Included__c  = '1' ";
+      sqlStmt += " AND Tactic_Product__c.Included__c = '1' ";
+
+	  sqlStmt += " UNION";
+
+      //KAM related products
+	  sqlStmt += " SELECT";
+      sqlStmt += " 'DotsSubGrey24' as groupFlag,";
+      sqlStmt += " GroupDescription.Id as groupId,";
+      sqlStmt += " GroupDescription.Description_1_#Language#__c as groupText,";
+      sqlStmt += " Product2.Consumer_Goods_Product_Code__c ,";
+      sqlStmt += " Product2.Description_1_#Language#__c as text,";
+      sqlStmt += " CASE WHEN Tactic__c.Amount__c IS NULL THEN '0' ELSE Tactic__c.Amount__c END AS discount,";
+      sqlStmt += " CASE WHEN Tactic_Product__c.Promoted_Price__c IS NULL THEN '0.00' ELSE Tactic_Product__c.Promoted_Price__c END AS price, ";
+      sqlStmt += " CASE WHEN  Tactic_Product__c.Quantity__c  IS NULL THEN '0' ELSE Tactic_Product__c.Quantity__c END AS quantity,";
+      sqlStmt += " Tactic__c.Promotion__c";
+      sqlStmt += " FROM Product2 ";
+      sqlStmt += " LEFT JOIN Tactic_Product__c ON Tactic_Product__c.Product__c=Product2.Id";
+      sqlStmt += " LEFT JOIN Tactic__c ON Tactic_Product__c.Tactic__c=Tactic__c.Id";
+	  sqlStmt += " JOIN Product_Hierarchy__c ON Product2.Id = Product_Hierarchy__c.Child_Product__c";
+	  sqlStmt += " JOIN Product2 as GroupDescription ON Product_Hierarchy__c.Parent_Product__c=GroupDescription.Id AND GroupDescription.Sales_Org__c = '#SalesOrg#'";
+      sqlStmt += " WHERE 1=1  ";     
+      sqlStmt += " AND  Product2.Sales_Org__c = '#SalesOrg#'  ";
+      sqlStmt += " AND Product2.KAM_Product__c in ";
+	  sqlStmt += " (SELECT ";      
+      sqlStmt += " Product2.Id   ";
+      sqlStmt += " FROM Tactic_Product__c ";
+      sqlStmt += " JOIN Tactic__c ON Tactic_Product__c.Tactic__c=Tactic__c.Id";
+	  sqlStmt += " JOIN Product2 ON Tactic_Product__c.Product__c=Product2.Id AND Product2.Sales_Org__c = '#SalesOrg#'";
+      sqlStmt += " JOIN Product_Template__c ON Product2.Product_Template__c = Product_Template__c.Id ";
+      sqlStmt += " JOIN RecordType ON Product_Template__c.RecordTypeId = RecordType.Id ";
+      sqlStmt += " WHERE 1=1";      
+ 	  sqlStmt += " AND Tactic__c.Promotion__c = #prmMainPKey#";
+      sqlStmt += " AND Tactic_Product__c.Included__c = '1' ";
+      sqlStmt += " AND Tactic__c.Included__c  = '1' ";
+	  sqlStmt += " AND RecordType.DeveloperName='Product_Group')";
+
+      sqlStmt += " UNION";
+	
+      //Product without group
+
+      sqlStmt += " SELECT";
+      sqlStmt += " 'DotsSubGrey24' as groupFlag,";
+      sqlStmt += " '999999999999',";
+      sqlStmt += " '...', ";
+      sqlStmt += " Product2.Consumer_Goods_Product_Code__c ,";
+      sqlStmt += " Product2.Description_1_#Language#__c as text,";
+      sqlStmt += " Tactic__c.Amount__c as discount,";
+      sqlStmt += " Tactic_Product__c.Promoted_Price__c as price, ";
+      sqlStmt += " Tactic_Product__c.Quantity__c as quantity ,";
+      sqlStmt += " Tactic__c.Promotion__c";
+      sqlStmt += " FROM Tactic_Product__c ";
+      sqlStmt += " JOIN Product2 ON Tactic_Product__c.Product__c=Product2.Id AND Product2.Sales_Org__c = '#SalesOrg#'";
+      sqlStmt += " JOIN Tactic__c ON Tactic_Product__c.Tactic__c=Tactic__c.Id";
+      sqlStmt += " WHERE 1=1  ";
+      sqlStmt += " AND Tactic__c.Promotion__c = #prmMainPKey#";
+      sqlStmt += " AND Tactic_Product__c.Included__c = '1' ";
+      sqlStmt += " AND Tactic__c.Included__c  = '1' ";
+      sqlStmt += " AND Tactic_Product__c.Product__c not in (Select Child_Product__c from Product_Hierarchy__c where Tactic_Product__c.Product__c=Product_Hierarchy__c.Child_Product__c) ";
+
+      sqlStmt += " UNION";
+
+      // Group without group about
+
+      sqlStmt += " SELECT DISTINCT ";
+      sqlStmt += " 'ArrowExpandGrey24' as groupFlag,";
+      sqlStmt += " '999999999999',";
+      sqlStmt += " '...' ,";
+      sqlStmt += " Product2.Name ,";
+      sqlStmt += " Product2.Description_1_#Language#__c as text, ";
+       sqlStmt += " Tactic__c.Amount__c as discount,";
+      sqlStmt += " Tactic_Product__c.Promoted_Price__c as price, ";
+      sqlStmt += " Tactic_Product__c.Quantity__c as quantity ,";
+      sqlStmt += " Tactic__c.Promotion__c";
+      sqlStmt += " FROM Tactic_Product__c JOIN Product2 ON ";
+      sqlStmt += " Tactic_Product__c.Product__c=Product2.Id AND Product2.Sales_Org__c = '#SalesOrg#' ";
+      sqlStmt += " Join Product_Hierarchy__c on Tactic_Product__c.Product__c=Product_Hierarchy__c.Parent_Product__c";
+      sqlStmt += " JOIN Tactic__c ON Tactic_Product__c.Tactic__c=Tactic__c.Id";
+      sqlStmt += " WHERE 1=1";
+      sqlStmt += " AND Tactic__c.Promotion__c = #prmMainPKey# ";
+      sqlStmt += " AND Tactic_Product__c.Included__c = '1' ";
+      sqlStmt += " AND Tactic__c.Included__c  = '1' ";
+      sqlStmt += " AND Product_Hierarchy__c.Parent_Product__c not in (Select Child_Product__c from Product_Hierarchy__c) ";
+      sqlStmt += " )";
+      sqlStmt += " GROUP BY productId, groupId";
+      sqlStmt += "";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+  </Database>
+</Datasource>

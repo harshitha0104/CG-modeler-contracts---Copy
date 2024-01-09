@@ -1,0 +1,19 @@
+<Datasource name="DsLuTourOpenCalls" objectClass="LuTourOpenCalls" backendSystem="sf" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[      
+      var tmgMainPKey = "";
+      if(Utils.isDefined(jsonQuery.TmgMainPKey)){
+      	tmgMainPKey = Utils.convertForDBParam(jsonQuery.TmgMainPKey, "DomPKey");
+      }
+      var sqlParams = {tmgMainPKey};
+      var sqlStmt = "SELECT COUNT(*) AS openCallsCount FROM Visit";
+      sqlStmt += " INNER JOIN Visit_Template__c ON Visit.Visit_Template__c = Visit_Template__c.Id ";
+      sqlStmt += " WHERE Visit_Template__c.Meta_Type__c != 'IdleTime'";
+      sqlStmt += " AND Visit.Tour__c = #tmgMainPKey# AND Visit.Status NOT IN ('Completed', 'Abandoned') ";
+      sqlStmt += " AND Visit.IsDeleted = '0' ";
+	
+      return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+      
+		]]></Load>
+  </Database>
+</Datasource>

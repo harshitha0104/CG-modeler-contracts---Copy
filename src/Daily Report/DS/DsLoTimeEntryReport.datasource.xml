@@ -1,0 +1,58 @@
+<DataSource name="DsLoTimeEntryReport" businessObjectClass="LoTimeEntryReport" external="false" editableEntity="UsrTimeEntry" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="UsrTimeEntry" column="PKey" />
+    <Attribute name="duration" table="UsrTimeEntry" column="Duration" />
+    <Attribute name="systemTimeFrom" table="UsrTimeEntry" column="SystemTimeFrom" />
+    <Attribute name="systemTimeThru" table="UsrTimeEntry" column="SystemTimeThru" />
+    <Attribute name="activityType" table="UsrTimeEntryMeta" column="ActivityType" />
+    <Attribute name="activityTypeColor" table="SysToggleItem" column="ValidationCode" />
+  </Attributes>
+  <Entities>
+    <Entity name="UsrTimeEntry" alias="" idAttribute="PKey" />
+    <Entity name="UsrDailyReport" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="UsrTimeEntry.UsrDailyReportPKey" comparator="eq" rightSideType="Attribute" rightSideValue="UsrDailyReport.PKey"></Condition>
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="UsrDocMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="UsrDailyReport.UsrDocMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="UsrDocMeta.PKey"></Condition>
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="UsrTimeEntryMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="UsrTimeEntry.UsrTimeEntryMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="UsrTimeEntryMeta.PKey"></Condition>
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="SysToggleItem" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="UsrTimeEntryMeta.ActivityType" comparator="eq" rightSideType="Attribute" rightSideValue="SysToggleItem.Code"></Condition>
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  	UsrDocMeta.UiGroup = 'TimeCard'
+	AND SysToggleItem.SysToggleId = 'UsrActivityType'
+  	AND UsrDailyReport.OwnerUsrMainPKey IN (#userList#)
+	AND UsrDailyReport.DateFrom >= #startDate#
+	AND UsrDailyReport.DateFrom < datetime(#endDate#, '+1 day')
+	AND UsrDailyReport.Phase IN ('Initial', 'Approved', 'Released', 'Rejected')
+	AND UsrTimeEntry.SystemTimeThru <= DateTime('now', 'localtime')
+    ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="UsrTimeEntry" attribute="EffectiveUTCTimeFrom" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="userList" type="LIST" />
+    <Parameter name="startDate" type="TEXT" />
+    <Parameter name="endDate" type="TEXT" />
+  </Parameters>
+</DataSource>

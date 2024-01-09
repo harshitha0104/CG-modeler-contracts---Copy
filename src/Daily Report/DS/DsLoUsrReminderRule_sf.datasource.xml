@@ -1,0 +1,16 @@
+<DataSource name="DsLoUsrReminderRule" backendSystem="sf" objectClass="LoUsrReminderRule" businessObjectClass="LoUsrReminderRule" external="true" distinct="false" readOnly="true" editableEntity="UsrReminderRule" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+		return undefined;
+	]]></Load>
+    <Update><![CDATA[
+		// Intended to be empty
+		return undefined;]]></Update>
+    <Insert><![CDATA[   
+		// Intended to be empty     
+		return undefined;]]></Insert>
+    <Delete><![CDATA[
+		// Intended to be empty
+        return undefined; ]]></Delete>
+  </Database>
+</DataSource>

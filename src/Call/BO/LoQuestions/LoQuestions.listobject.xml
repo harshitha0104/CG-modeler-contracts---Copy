@@ -1,0 +1,8 @@
+<ListObject name="LoQuestions" generateLoadMethod="true">
+  <DataSource name="DsLoQuestions" />
+  <Item objectClass="LiQuestion" />
+  <Methods>
+    <Method name="beforeLoadAsync" />
+    <Method name="setEARights" />
+  </Methods>
+</ListObject>

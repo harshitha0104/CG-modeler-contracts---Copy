@@ -1,0 +1,76 @@
+<UIDescription name="TruckLoad::AddProductWizardUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TruckLoadAddProductId" defaultLabel="Add Product" bindingMode="ONE_TIME" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem itemId="add" directlyVisible="true">
+          <Bindings>
+            <Resource target="Text" type="Label" id="AddId" defaultLabel="Add" />
+            <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="addProduct">
+              <Params>
+                <Param name="buttonPressed" value="addProduct" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="Product">
+          <Lookup name="Product">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Product" id="ProductId" />
+              <Binding target="Value" binding="ProcessContext::AddProductWizardBo.luProduct.text1" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="productLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+        <GroupElement name="ItemTemplate">
+          <SelectionBox name="SdoItemTemplate">
+            <Bindings>
+              <Binding target="Value" binding="ProcessContext::AddProductWizardBo.sdoItemMetaPKey" bindingMode="TWO_WAY" />
+              <Binding target="DataSource" binding="ProcessContext::MainBO.boOrderMeta.loOrderItemMetas" bindingMode="ONE_WAY" />
+              <Resource target="Label" type="Label" id="OrderSelectSdoItemMeta" defaultLabel="Item Template" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".pKey" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+            <Events>
+              <ItemSelectedEvent event="itemTemplateSelected">
+                <Params>
+                  <Param name="pKey" value=".pKey" />
+                </Params>
+              </ItemSelectedEvent>
+            </Events>
+          </SelectionBox>
+        </GroupElement>
+        <GroupElement name="Unit">
+          <SelectionBox name="QuantityLogisticUnit">
+            <Bindings>
+              <Binding target="Value" binding="ProcessContext::AddProductWizardBo.uoM" bindingMode="TWO_WAY" />
+              <Binding target="DataSource" binding="ProcessContext::ProductAddUoMListForSelectionBox" bindingMode="ONE_WAY" />
+              <Resource target="Label" type="Label" id="OrderSelectUomDialog_Unit" defaultLabel="Unit" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

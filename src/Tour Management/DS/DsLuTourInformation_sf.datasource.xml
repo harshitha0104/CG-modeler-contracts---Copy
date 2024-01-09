@@ -1,0 +1,17 @@
+<DataSource name="DsLuTourInformation" backendSystem="sf" businessObjectClass="LuTourInformation" external="false" editableEntity="Tour__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Tour__c" column="Id" />
+    <Attribute name="id" table="Tour__c" column="Name" />
+    <DerivedAttribute name="text" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tour__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+		Tour__c.Id = #pKey#
+		]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

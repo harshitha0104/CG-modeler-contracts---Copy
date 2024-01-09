@@ -1,0 +1,60 @@
+<BusinessObject name="BoCreateNewTimeEntry" schemaVersion="1.1">
+  <DataSource name="DsBoCreateNewTimeEntry" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="timeEntryMetaPKey" type="DomPKey" />
+    <SimpleProperty name="workUsrTimeEntryMetaPKey" type="DomPKey" />
+    <SimpleProperty name="description" type="DomString" />
+    <SimpleProperty name="showDetails" type="DomBool" />
+    <SimpleProperty name="startdate" type="DomDateTime">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="enddate" type="DomDateTime">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="endtime" type="DomTime">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="starttime" type="DomTime">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="note" type="DomLongDescription" />
+    <SimpleProperty name="reasoncodetext" type="DomUsrTimeEntryReasonCode" />
+    <SimpleProperty name="timeEntryValid" type="DomString" />
+    <SimpleProperty name="timeFromGeoOffset" type="DomUsrGeoTimeOffset" />
+    <SimpleProperty name="timeThruGeoOffset" type="DomUsrGeoTimeOffset" />
+    <SimpleProperty name="timeFromDSTOffset" type="DomUsrDSTTimeOffset" />
+    <SimpleProperty name="timeThruDSTOffset" type="DomUsrDSTTimeOffset" />
+    <SimpleProperty name="eventChanged" type="DomBool" />
+  </SimpleProperties>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects>
+    <ListObject name="loUsrTimeEntry" objectClass="LoUsrTimeEntry" dataSourceProperty="pKey" listProperty="UsrDailyReportPKey" loadMode="LoadImmediate" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+    <Method name="validateTimeEntry" />
+    <Method name="onPropertyChanged" />
+    <Method name="setEARights" />
+  </Methods>
+</BusinessObject>

@@ -1,0 +1,17 @@
+<Process name="Sync::OverviewProcess" defaultAction="syncData" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OverviewList" type="LoSync" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions />
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="LOGIC" name="syncData" call="Facade.startBackgroundReplication">
+        <TransitionTo action="end" />
+      </Action>
+	  </Actions>
+  </Body>
+</Process>

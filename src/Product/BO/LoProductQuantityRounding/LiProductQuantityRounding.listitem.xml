@@ -1,0 +1,10 @@
+<ListItem name="LiProductQuantityRounding">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="piecesPerSmallestUnit" type="DomPrdPiecesPerUnit" storable="false" dataSourceProperty="piecesPerSmallestUnit" />
+    <SimpleProperty name="unitType" type="DomPrdLogisticUnit" storable="false" dataSourceProperty="unitType" />
+    <SimpleProperty name="orderAbility" type="DomBool" storable="false" dataSourceProperty="orderAbility" />
+    <SimpleProperty name="roundingTarget" type="DomBool" storable="false" dataSourceProperty="roundingTarget" />
+    <SimpleProperty name="roundingRule" type="DomPrdRoundingRule" storable="false" dataSourceProperty="roundingRule" />
+  </SimpleProperties>
+</ListItem>

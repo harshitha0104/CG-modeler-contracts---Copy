@@ -1,0 +1,261 @@
+<Process name="Call::ChangeStatusWizardProcess" defaultAction="LoadBo_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CallBo" type="BoCall" />
+        <Declaration name="targetClbStatus" type="String" />
+        <Declaration name="CancelReasonList" type="LoCancelReason" />
+        <Declaration name="CancelReasonCode" type="String" />
+        <Declaration name="HasTimeEntry" type="String" />
+        <Declaration name="IsCallValidForDeletion" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainPKey" type="DomPKey" />
+        <Input name="targetClbStatus" type="String" />
+        <Input name="ResponsiblePKey" type="DomPKey" />
+        <Input name="OverviewList" type="LoAgendaOverview" />
+        <Input name="CardVisits_IsCallComplete" type="DomBool" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions />
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="LoadBo_Decision" actionType="DECISION" parameter="ProcessContext::targetClbStatus">
+        <Case value="Abandoned" action="LoadBo" />
+        <Case value="Completed" action="LoadBo" />
+        <Case value="Deleted" action="LoadBo" />
+        <CaseElse action="ClbStatus_Decision" />
+      </Action>
+      <Action name="LoadBo" actionType="LOAD" type="BoCall">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainPKey" />
+          <Input name="referenceUserPKey" value="ProcessContext::ResponsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::CallBo" />
+        <TransitionTo action="ClbStatus_Decision" />
+      </Action>
+      <Action name="ClbStatus_Decision" actionType="DECISION" parameter="ProcessContext::targetClbStatus">
+        <Case value="Abandoned" action="CancelAllowedDecision" />
+        <Case value="Completed" action="CompleteAllowedDecision" />
+        <Case value="Deleted" action="DeletionWithStatusAllowed_Decision" />
+        <Case value="CancelAll" action="CancelAllSetReason" />
+        <CaseElse action="CancelAllowedDecision" />
+      </Action>
+      <!-- Complete Call -->
+      <Action name="CompleteAllowedDecision" actionType="DECISION" parameter="ProcessContext::CallBo.clbStatus">
+        <Case value="Planned" action="GetNonDeliverySalesDocOnComplete_Decision" />
+        <CaseElse action="endWithoutRefresh" />
+      </Action>
+      <Action name="GetNonDeliverySalesDocOnComplete_Decision" actionType="DECISION" parameter="ApplicationContext::currentTourStatus">
+        <Case value="Running" action="UpdateCssBLProcessingScheduleTable" />
+        <CaseElse action="GetOpenNonDeliverySalesDocsOnComplete" />
+        <CaseEmpty action="GetOpenNonDeliverySalesDocsOnComplete" />
+      </Action>
+      <Action name="GetOpenNonDeliverySalesDocsOnComplete" actionType="LOAD" type="LuCallRelatedNonDeliverySalesDoc">
+        <Parameters>
+          <Input name="callPKey" value="ProcessContext::CallBo.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::luNonDeliverySalesDoc" />
+        <TransitionTo action="ValidateForOpenDocsDecisionOnComplete" />
+      </Action>
+      <Action name="ValidateForOpenDocsDecisionOnComplete" actionType="DECISION" parameter="ProcessContext::luNonDeliverySalesDoc.documentsCount">
+        <Case value="0" action="UpdateCssBLProcessingScheduleTable" />
+        <CaseElse action="CancelNonDeliverySalesDocConfirmOnComplete" />
+        <CaseEmpty action="CancelNonDeliverySalesDocConfirmOnComplete" />
+      </Action>
+      <Action name="CancelNonDeliverySalesDocConfirmOnComplete" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmCallNonSalesDocCompleteMsg" />
+        <Cases>
+          <Case value="Yes" action="UpdateCssBLProcessingScheduleTable" />
+          <Case value="No" action="endWithoutRefresh" />
+        </Cases>
+      </Action>
+      <Action name="UpdateCssBLProcessingScheduleTable" actionType="LOGIC" call="ProcessContext::CallBo.updateCssBLProcessingSchedule">
+        <Parameters>
+          <Input name="callPKey" value="ProcessContext::CallBo.pKey" />
+        </Parameters>
+        <TransitionTo action="ValidateBeforeComplete_SaveStatus" />
+      </Action>
+      <Action actionType="LOGIC" name="ValidateBeforeComplete_SaveStatus" call="ProcessContext::CallBo.getClbStatus">
+        <Return name="ProcessContext::SaveClbStatus" />
+        <TransitionTo action="SetCallCompleted" />
+      </Action>
+      <Action name="SetCallCompleted" actionType="LOGIC" call="ProcessContext::CallBo.setClbStatus">
+        <Parameters>
+          <Input name="clbStatus" value="Completed" type="Literal" />
+        </Parameters>
+        <TransitionTo action="CompleteCallViaVisitsCard_Decision" />
+      </Action>
+      <Action name="CompleteCallViaVisitsCard_Decision" actionType="DECISION" parameter="ProcessContext::CardVisits_IsCallComplete">
+        <Case value="1" action="ValidateBeforeComplete" />
+        <CaseElse action="ValidateBeforeExit" />
+      </Action>
+      <Action actionType="LOGIC" name="ValidateBeforeComplete" call="ProcessContext::CallBo.validateMandatoryQuestions">
+        <Return name="ProcessContext::ValidationResult" />
+        <TransitionTo action="ValidateBeforeComplete_Decision" />
+      </Action>
+      <Action name="ValidateBeforeComplete_Decision" actionType="DECISION" parameter="ProcessContext::ValidationResult">
+        <Case value="valid" action="ValidateBeforeExit" />
+        <CaseElse action="ValidateBeforeComplete_ResetStatus" />
+      </Action>
+      <Action name="ValidateBeforeExit" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::CallBo.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidateBeforeExit_Decision" />
+      </Action>
+      <Action name="ValidateBeforeExit_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateBack" action="ValidateBeforeComplete_ResetStatus" />
+        <CaseElse action="end" />
+      </Action>
+      <Action actionType="LOGIC" name="ValidateBeforeComplete_ResetStatus" call="ProcessContext::CallBo.setClbStatus">
+        <Parameters>
+          <Input name="targetClbStatus" value="ProcessContext::SaveClbStatus" />
+        </Parameters>
+        <TransitionTo action="end" />
+      </Action>
+      <!-- Cancel Call -->
+      <Action name="CancelAllowedDecision" actionType="DECISION" parameter="ProcessContext::CallBo.clbStatus">
+        <Case value="Planned" action="GetNonDeliverySalesDoc_Decision" />
+        <CaseElse action="endWithoutRefresh" />
+      </Action>
+      <Action name="GetNonDeliverySalesDoc_Decision" actionType="DECISION" parameter="ApplicationContext::currentTourStatus">
+        <Case value="Running" action="SetCallCanceled" />
+        <CaseElse action="GetOpenNonDeliverySalesDocs" />
+        <CaseEmpty action="GetOpenNonDeliverySalesDocs" />
+      </Action>
+      <Action name="GetOpenNonDeliverySalesDocs" actionType="LOAD" type="LuCallRelatedNonDeliverySalesDoc">
+        <Parameters>
+          <Input name="callPKey" value="ProcessContext::CallBo.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::luNonDeliverySalesDoc" />
+        <TransitionTo action="ValidateForOpenDocsDecision" />
+      </Action>
+      <Action name="ValidateForOpenDocsDecision" actionType="DECISION" parameter="ProcessContext::luNonDeliverySalesDoc.documentsCount">
+        <Case value="0" action="SetCallCanceled" />
+        <CaseElse action="CancelNonDeliverySalesDocConfirm" />
+        <CaseEmpty action="CancelNonDeliverySalesDocConfirm" />
+      </Action>
+      <Action name="CancelNonDeliverySalesDocConfirm" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmCallNonSalesDocCancelMsg" />
+        <Cases>
+          <Case value="Yes" action="SetCallCanceled" />
+          <Case value="No" action="endWithoutRefresh" />
+        </Cases>
+      </Action>
+      <Action name="SetCallCanceled" actionType="LOAD" type="LoCancelReason">
+        <Return name="ProcessContext::CancelReasonList" />
+        <TransitionTo action="DisplayCancelUI_Decision" />
+      </Action>
+      <Action name="DisplayCancelUI_Decision" actionType="DECISION" parameter="ProcessContext::CallBo.luCallMeta.cancelReasonRequired">
+        <Case value="0" action="CancelCallConfirm" />
+        <Case value="1" action="ShowCancelReasons" />
+        <CaseElse action="CancelCallConfirm" />
+      </Action>
+      <Action name="CancelAllSetReason" actionType="LOAD" type="LoCancelReason">
+        <Return name="ProcessContext::CancelReasonList" />
+        <TransitionTo action="ShowCancelReasons" />
+      </Action>
+      <Action actionType="View" name="ShowCancelReasons">
+        <UIDescription>Call::CancelWizardUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="SetCancelReasonCode" />
+        </Events>
+      </Action>
+      <Action name="SetCancelReasonCode" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::CancelReasonCode" />
+        <TransitionTo action="CancelCallConfirm" />
+        <Parameters>
+          <Input name="value" value="Event.reasonCode" />
+        </Parameters>
+      </Action>
+      <Action name="CancelCallConfirm" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmCallCancelMsg" />
+        <Cases>
+          <Case value="Yes" action="CancelAllCall_Decision" />
+          <Case value="No" action="endWithoutRefresh" />
+        </Cases>
+      </Action>
+      <Action name="CancelAllCall_Decision" actionType="DECISION" parameter="ProcessContext::targetClbStatus">
+        <Case value="CancelAll" action="CancelAllCall" />
+        <CaseElse action="CancelCall" />
+      </Action>
+      <Action name="CancelCall" actionType="LOGIC" call="ProcessContext::CallBo.cancel">
+        <Parameters>
+          <Input name="reasonCode" value="ProcessContext::CancelReasonCode" />
+        </Parameters>
+        <TransitionTo action="end" />
+      </Action>
+      <Action name="CancelAllCall" actionType="LOGIC" call="ProcessContext::OverviewList.cancelAllVisit">
+        <Parameters>
+          <Input name="reasonCode" value="ProcessContext::CancelReasonCode" />
+        </Parameters>
+        <TransitionTo action="end" />
+      </Action>
+      <!-- Delete Call -->
+      <Action name="DeletionWithStatusAllowed_Decision" actionType="DECISION" parameter="ProcessContext::CallBo.clbStatus">
+        <Case value="Completed" action="DeleteCompletedNotAllowed" />
+        <CaseElse action="DeletionAllowed_Decision" />
+      </Action>
+      <Action name="DeletionAllowed_Decision" actionType="DECISION" parameter="ProcessContext::CallBo.luCallMeta.deleteAllowed">
+        <Case value="0" action="endWithoutRefresh" />
+        <Case value="1" action="CheckIfCallCanBeDeleted" />
+        <CaseElse action="endWithoutRefresh" />
+      </Action>
+      <Action name="CheckIfCallCanBeDeleted" actionType="LOGIC" call="ProcessContext::CallBo.validateCallDeletion">
+        <Return name="ProcessContext::IsCallValidForDeletion" />
+        <TransitionTo action="IsCallValidForDeletion_Decision" />
+      </Action>
+      <Action name="IsCallValidForDeletion_Decision" actionType="DECISION" parameter="ProcessContext::IsCallValidForDeletion">
+        <Case value="valid" action="HasTimeEntry" />
+        <CaseElse action="endWithoutRefresh" />
+      </Action>
+      <Action actionType="CONFIRM" confirmType="Ok" name="DeleteCompletedNotAllowed">
+        <Message messageId="DeleteCompletedNotAllowedMsg" />
+        <Cases>
+          <Case value="Ok" action="endWithoutRefresh" />
+        </Cases>
+      </Action>
+      <Action name="HasTimeEntry" actionType="LOGIC" call="ProcessContext::CallBo.hasTimeEntries">
+        <Return name="ProcessContext::HasTimeEntry" />
+        <TransitionTo action="IsTimeEntryExisting" />
+      </Action>
+      <Action name="IsTimeEntryExisting" actionType="DECISION" parameter="ProcessContext::HasTimeEntry">
+        <Case value="1" action="ConfirmDeletionWithTimeEntry" />
+        <Case value="0" action="ConfirmDeletion" />
+        <CaseElse action="ConfirmDeletion" />
+      </Action>
+      <Action actionType="CONFIRM" confirmType="YesNo" name="ConfirmDeletion">
+        <Message messageId="CasConfirmDeletionMsg" />
+        <Cases>
+          <Case value="Yes" action="setCallDeleted" />
+          <Case value="No" action="endWithoutRefresh" />
+        </Cases>
+      </Action>
+      <Action actionType="CONFIRM" confirmType="YesNo" name="ConfirmDeletionWithTimeEntry">
+        <Message messageId="CasConfirmDeletionWithTimeEntryMsg" />
+        <Cases>
+          <Case value="Yes" action="setCallDeleted" />
+          <Case value="No" action="endWithoutRefresh" />
+        </Cases>
+      </Action>
+      <Action name="SetCallDeleted" actionType="LOGIC" call="ProcessContext::CallBo.setDeleted">
+        <TransitionTo action="UpdateMagnetization" />
+      </Action>
+      <Action name="UpdateMagnetization" actionType="LOGIC" call="ProcessContext::CallBo.updateJobListMagnetization">
+        <TransitionTo action="end" />
+      </Action>
+      <Action actionType="END" name="end">
+        <ReturnValues>
+          <Return name="refreshRequired" type="Literal" value="1" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="endWithoutRefresh">
+        <ReturnValues>
+          <Return name="refreshRequired" type="Literal" value="0" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

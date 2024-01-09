@@ -1,0 +1,301 @@
+<Datasource name="DsBoSfReplicationCallbacks" backendSystem="sf" objectClass="BoSfReplicationCallbacks" readOnly="true" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Custom>
+      <Account_TradeOrgs><![CDATA[
+					var sqlParams = {};
+                    var sql = "SELECT DISTINCT Account_Trade_Org_Hierarchy__c.Parent_Account__c as AccountID FROM Account_Trade_Org_Hierarchy__c WHERE Account_Trade_Org_Hierarchy__c.Parent_Account__c NOT IN (SELECT Id FROM Account) ";
+                    return Utils.replaceMacrosParam(sql, sqlParams);
+                ]]></Account_TradeOrgs>
+      <DependentCustomers><![CDATA[
+					var sqlParams = {};
+                    var sql = "SELECT DISTINCT(AccountID) FROM (";
+                    sql += "SELECT Related_Account__c AS AccountID FROM Account_Relationship__c WHERE ( Account__c IN (SELECT Account__c FROM Account_Manager__c) ";
+					sql += "OR Account__c IN (SELECT AccountId FROM Visit)) AND Relationship_Type__c in ('BillTo','Payer','DeliveryRecipient','Wholesaler') ";
+					sql += ") AS AccountIDs ";
+                    sql += "WHERE AccountID NOT IN (SELECT Account__c FROM Account_Manager__c) ";
+                    return Utils.replaceMacrosParam(sql, sqlParams);
+                ]]></DependentCustomers>
+      <CustomersWithCallsForSync><![CDATA[					
+					var dateFrom = Utils.convertForDBParam(jsonParams.previousDay, 'DomDate');
+				    var dateThru = Utils.convertForDBParam(jsonParams.nextDay, 'DomDate');
+					var sqlParams = {dateFrom, dateThru};
+                    var sql = "SELECT AccountId AS AccountID, Id AS Id FROM Visit ";
+					sql += "WHERE #compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','>=' , #dateFrom#, 'Date')# ";
+                    sql += "AND #compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','<=' , #dateThru#, 'Date')# ";
+                    return Utils.replaceMacrosParam(sql, sqlParams);
+                ]]></CustomersWithCallsForSync>
+      <CustomerSetsOfCustomers><![CDATA[
+					var accountIds = Utils.getListParams(jsonParams.accountId);
+					var sql = "SELECT Account_Set__c AS AccountSetID FROM Account_Set_Account__c ";
+					sql += "WHERE Account_Set_Account__c IN (" + accountIds.sql + ") ";
+                    return {sql: sql, params: accountIds.params};
+                ]]></CustomerSetsOfCustomers>
+      <ManagedCustomers><![CDATA[
+					var sqlParams = {};
+                    var sql = "SELECT Distinct(Account__c) AS AccountID FROM Account_Manager__c "; 
+                    sql += "WHERE #compareAsDate('Account_Manager__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+					sql += "AND #compareAsDate('Account_Manager__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+                    return Utils.replaceMacrosParam(sql, sqlParams);
+                ]]></ManagedCustomers>
+      <ManagedCustomersFromSubstitution><![CDATA[
+					var sqlParams = {};
+                    var sql =  "SELECT Distinct(Account__c) as AccountID ";
+                    	sql += "FROM Account_Manager__c "; 
+                    	sql += "WHERE #compareAsDate('Account_Manager__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+						sql += "  AND #compareAsDate('Account_Manager__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+						sql += "  AND Account_Manager__c.Management_Type__c = 'Substitution' ";
+                    return Utils.replaceMacrosParam(sql, sqlParams);
+                ]]></ManagedCustomersFromSubstitution>
+      <UnmanagedDeliveryRecipients><![CDATA[
+                    var customerPKey = Utils.convertForDBParam(jsonParams.customerPKey, 'DomPKey');
+					var sqlParams = {customerPKey};
+					var sql = "SELECT Related_Account__c  AS AccountID FROM Account_Relationship__c ";
+					sql += "WHERE Account__c = #customerPKey# ";
+                    sql += "AND Relationship_Type__c ='DeliveryRecipient' ";
+					sql += "AND Related_Account__c NOT IN (SELECT Account__c FROM Account_Manager__c) ";
+					return Utils.replaceMacrosParam(sql, sqlParams);
+     			]]></UnmanagedDeliveryRecipients>
+      <AssignedTours><![CDATA[
+					var sqlParams = {};
+					var sql = "SELECT Id AS TourID FROM Tour__c ";
+					return Utils.replaceMacrosParam(sql, sqlParams);
+     			]]></AssignedTours>
+      <ActiveWorkDays><![CDATA[
+					var sqlParams = {};                    
+                    var sql = "SELECT Sales_Organization_User__c.Works_On_Monday__c AS Mon";
+                    sql += "	,Sales_Organization_User__c.Works_On_Tuesday__c AS Tue";
+                    sql += "	,Sales_Organization_User__c.Works_On_Wednesday__c AS Wed";
+                    sql += "	,Sales_Organization_User__c.Works_On_Thursday__c AS Thu";
+                    sql += "	,Sales_Organization_User__c.Works_On_Friday__c AS Fri";
+                    sql += "	,Sales_Organization_User__c.Works_On_Saturday__c AS Sat";
+                    sql += "	,Sales_Organization_User__c.Works_On_Sunday__c AS Sun";
+                    sql += " FROM Sales_Organization_User__c , User_Setting__c";
+					sql += " WHERE  Sales_Organization_User__c.User__c = User_Setting__c.User__c ";  
+					// User PKey is not in Context in this case thats why this workaround was chosen since User_settings will only be loaded for this one User.
+                    return Utils.replaceMacrosParam(sql, sqlParams);
+     			]]></ActiveWorkDays>
+      <CustomerTaskAttachments><![CDATA[
+					var userId = Utils.convertForDBParam(jsonParams.userId, 'DomPKey');
+					var sqlParams = {userId};
+                    var sql = "SELECT Id AS attachmentId FROM Account_Task__c ";
+					sql += "WHERE Account_Task__c.Responsible__c = #userId# ";
+                    return Utils.replaceMacrosParam(sql, sqlParams);
+     			]]></CustomerTaskAttachments>
+      <AccountsSalesFolderForSync><![CDATA[
+			var userId = Utils.convertForDBParam(jsonParams.userId, 'DomPKey');
+			var sqlParams = {userId};                    
+			var sqlStmt=      "With Cte_SalesFolderHierarchy  (BpaMainPKey) AS ( "; 
+			sqlStmt +=          "SELECT Distinct( Account.Id) as BpaMainPKey ";
+            sqlStmt +=  		"FROM   Account  ";
+            sqlStmt +=          "INNER JOIN Account_Manager__c ON Account.Id = Account_Manager__c.Account__c "; 
+            sqlStmt +=          "INNER JOIN      Account_Extension__c On Account.Id=Account_Extension__c.Account__c ";
+            sqlStmt +=          "AND #compareAsDate('Account_Manager__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+			sqlStmt +=          "AND #compareAsDate('Account_Manager__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+			sqlStmt +=          "WHERE Account_Manager__c.User__c = #userId# ";
+		    
+            sqlStmt +=          "UNION ALL ";
+
+            sqlStmt +=          "SELECT b.Parent_Account__c as BpaMainPKey ";
+            sqlStmt +=          "FROM Account_Trade_Org_Hierarchy__c b,Cte_SalesFolderHierarchy r ";
+            sqlStmt +=          "WHERE b.Child_Account__c=r.BpaMainPKey ";
+			sqlStmt +=          "AND #compareAsDate('b.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+			sqlStmt +=          "AND #compareAsDate('b.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#)  ";
+			sqlStmt +=          "SELECT BpaMainPKey from Cte_SalesFolderHierarchy ";
+
+            return Utils.replaceMacrosParam(sqlStmt, sqlParams);    
+                                                   
+      ]]></AccountsSalesFolderForSync>
+      <OrgUnitSalesFolderForSync><![CDATA[
+			var userId = Utils.convertForDBParam(jsonParams.userId, 'DomPKey');
+			var sqlParams = {userId};           		
+        	var sqlStmt=      "With Cte_SalesFolderOrgUnitHierarchy  (OrgUnitPKey) AS ( "; 
+			sqlStmt +=          "SELECT Distinct( Org_Unit_User__c.Org_Unit__c) as OrgUnitPKey ";
+            sqlStmt +=  		"FROM   Org_Unit_User__c  ";
+			sqlStmt +=          "INNER JOIN Org_Unit__c On Org_Unit__c.Id = Org_Unit_User__c.Org_Unit__c  ";
+			sqlStmt +=          "WHERE Org_Unit_User__c.User__c = #userId# ";
+            sqlStmt +=          "AND #compareAsDate('Org_Unit_User__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+			sqlStmt +=          "AND #compareAsDate('Org_Unit_User__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+		    
+            sqlStmt +=          "UNION ALL ";
+
+            sqlStmt +=          "SELECT b.Parent_Org_Unit__c  as OrgUnitPKey ";
+            sqlStmt +=          "FROM Org_Unit_Hierarchy__c b,Cte_SalesFolderOrgUnitHierarchy r ";
+            sqlStmt +=          "WHERE b.Child_Org_Unit__c = r.OrgUnitPKey ";
+			sqlStmt +=          "AND #compareAsDate('b.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+			sqlStmt +=          "AND #compareAsDate('b.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#)  ";
+			sqlStmt +=          "SELECT OrgUnitPKey from Cte_SalesFolderOrgUnitHierarchy ";
+        
+            return Utils.replaceMacrosParam(sqlStmt, sqlParams);                                             
+      ]]></OrgUnitSalesFolderForSync>
+      <!-- On application start, the below query fetches the attachment Ids for which the attachment needs to be dowloaded mandatorily (attachment header and blob data will be downloaded) -->
+      <AllMandatoryAttachmentsForSync><![CDATA[
+					var sqlParams = {};           			
+                    var sqlStmt = "SELECT SF_File.ContentVersionId As Id, SF_File.LastModifiedDate As LastModifiedDate, SF_File.PathOnClient As Name, ";
+					sqlStmt    += "SF_File.VersionData As Body, SF_File.ContentSize As BodyLength FROM SF_File ";
+                    sqlStmt    += "JOIN SF_FileLink ON SF_FileLink.FileId = SF_File.Id ";
+                    sqlStmt    += "WHERE SF_File.Id In (";
+					sqlStmt    += "SELECT SF_File.Id FROM SF_File ";
+					sqlStmt    += "INNER JOIN SF_FileLink ON SF_FileLink.FileId = SF_File.Id ";
+					sqlStmt    += "INNER JOIN Sell_Sheet__c ON SF_FileLink.ParentId = Sell_Sheet__c.Id ";
+					sqlStmt    += "UNION "; 
+                    sqlStmt    += "SELECT SF_File.Id FROM SF_File ";                    
+                    sqlStmt    += "INNER JOIN SF_FileLink ON SF_FileLink.FileId = SF_File.Id ";
+					sqlStmt    += "INNER JOIN Sales_Folder__c ON SF_FileLink.ParentId = Sales_Folder__c.Id ";
+					sqlStmt    += "UNION "; 
+					sqlStmt    += "SELECT SF_File.Id FROM SF_File ";
+					sqlStmt    += "INNER JOIN SF_FileLink ON SF_FileLink.FileId = SF_File.Id ";
+                    sqlStmt    += "INNER JOIN Promotion__c ON SF_FileLink.ParentId = Promotion__c.Id ";
+					sqlStmt    += "UNION "; 
+					sqlStmt    += "SELECT SF_File.Id FROM SF_File ";                    
+                    sqlStmt    += "INNER JOIN SF_FileLink ON SF_FileLink.FileId = SF_File.Id ";
+					sqlStmt    += "INNER JOIN Contact ON SF_FileLink.ParentId = Contact.Id ";
+                    sqlStmt    += "WHERE SF_File.Usage__c = 'Icon' ";
+					sqlStmt    += "UNION "; 
+					sqlStmt    += "SELECT SF_File.Id FROM SF_File ";                    
+                    sqlStmt    += "INNER JOIN SF_FileLink ON SF_FileLink.FileId = SF_File.Id ";
+					sqlStmt    += "INNER JOIN Mobile_Link__c ON SF_FileLink.ParentId = Mobile_Link__c.Id ";
+                    sqlStmt    += "WHERE SF_File.Usage__c = 'Icon' ";
+                    sqlStmt    += "UNION "; 
+                    sqlStmt    += "SELECT SF_File.Id FROM SF_File ";                    
+                    sqlStmt    += "INNER JOIN SF_FileLink ON SF_FileLink.FileId = SF_File.Id ";
+					sqlStmt    += "INNER JOIN Job_Definition_List__c ON SF_FileLink.ParentId = Job_Definition_List__c.Id ";
+                    sqlStmt    += "WHERE SF_File.Usage__c IN ('InitialBadge', 'FulfilledBadge') ";
+					sqlStmt    += "UNION ";
+                    sqlStmt    += "SELECT SF_File.Id FROM SF_File ";                    
+                    sqlStmt    += "INNER JOIN SF_FileLink ON SF_FileLink.FileId = SF_File.Id ";
+					sqlStmt    += "INNER JOIN Signature__c ON SF_FileLink.ParentId = Signature__c.Id ";
+					sqlStmt    += "UNION ";
+					sqlStmt    += "SELECT SF_File.Id FROM SF_File ";
+					sqlStmt    += "INNER JOIN SF_FileLink ON SF_FileLink.FileId = SF_File.Id ";
+					sqlStmt    += "WHERE SF_FileLink.ParentId in (Select Account_Manager__c.Account__c from Account_Manager__c "; 
+                    sqlStmt	   += "WHERE #compareAsDate('Account_Manager__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+					sqlStmt	   += "AND #compareAsDate('Account_Manager__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ) ";
+					sqlStmt    += ") AND SF_FileLink.ParentId Not In (select id from Sync_Mobile_App_Depl_Pkg__c) ";
+					sqlStmt    += "AND cast(SF_File.ContentSize as int) <=3000000 "; 					
+                    return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+     			]]></AllMandatoryAttachmentsForSync>
+      <VisitAttachments><![CDATA[
+                    
+                    var accountIds = Utils.getListParams(jsonParams.accountId);
+
+                    //#####################################################
+                    //## Visit Jobs (only for visits in the 3 day range) ##
+                    //##################;##################################
+                    var sqlStmt = "SELECT Visit_Job__c.Id as Id FROM Visit_Job__c ";
+                    sqlStmt    += "INNER JOIN Visit ON Visit.Id = Visit_Job__c.Visit__c ";
+                    sqlStmt    += "INNER JOIN Account on Visit.AccountId = Account.Id ";
+                    sqlStmt    += "WHERE Visit.AccountId IN (" + accountIds.sql + ") ";
+
+                    //list is used twice --> IDs must be doubled in the params
+                    return {sql: sqlStmt, params: accountIds.params};
+
+      ]]></VisitAttachments>
+      <!-- On demand data request, the below query fetches the ids for which the attachment header data needs to be downloaded. The attachment blob will be downloaded when the user tries to access the attachment. -->
+      <AllAttachments><![CDATA[
+                   var dateFrom = Utils.convertForDBParam(jsonParams.dateFrom, 'DomDate');
+                   var dateThru = Utils.convertForDBParam(jsonParams.dateThru, 'DomDate');	
+                   var cgVisitDateFrom = Utils.convertForDBParam(jsonParams.cgVisitDateFrom, 'DomDate');	
+                   var cgVisitDateThru = Utils.convertForDBParam(jsonParams.cgVisitDateThru, 'DomDate');	
+                   var sqlParams = {dateFrom,dateThru,cgVisitDateFrom,cgVisitDateThru};  
+                   //#############################################
+                   //## Product (all needed distribute to all)  ##
+                   //#############################################
+                   var sqlStmt = "SELECT Id as parentId FROM Product2 ";
+                   sqlStmt    += "UNION ";
+                   //################################################################
+                   //## Order (should be filtered via distribution relevant flag)  ##
+                   //################################################################
+                   sqlStmt    += "SELECT Id as parentId FROM Order__c ";
+                   sqlStmt    += "UNION ";
+                   //################
+                   //## Signature  ##
+                   //################
+                   sqlStmt    += "SELECT Signature__c.Id as parentId FROM Signature__c ";
+                   sqlStmt    += "UNION ";
+                   //############
+                   //## Visit  ##
+                   //############
+                   sqlStmt    += "SELECT Visit.Id as parentId FROM Visit "; 
+                   sqlStmt    += "INNER JOIN Account on Visit.AccountId = Account.Id ";
+                   sqlStmt    += "UNION ";
+                   //##################
+                   //## Mobile Link  ##
+                   //##################
+                   sqlStmt    += "SELECT Mobile_Link__c.Id as parentId FROM Mobile_Link__c "; 
+                   sqlStmt    += "UNION ";
+                   //#####################################
+                   //## Activity / Job Definition List  ##
+                   //##################;##################
+                   sqlStmt    += "SELECT Job_Definition_List__c.Id as parentId FROM Job_Definition_List__c "; 
+                   sqlStmt    += "UNION ";
+                   //###############################
+                   //## Contacts via Account link ##
+                   //###############################
+                   sqlStmt    += "SELECT Contact.Id as parentId FROM Contact "; 
+                   sqlStmt    += "INNER JOIN Account on Contact.AccountId = Account.Id ";
+                   sqlStmt    += "INNER JOIN Visit on Visit.AccountId = Account.Id ";
+                   sqlStmt    += "WHERE #compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','>=' , #dateFrom#, 'Date')# ";
+                   sqlStmt    += "AND #compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','<=' , #dateThru#, 'Date')# ";
+                   sqlStmt    += "UNION ";
+                   //####################################
+                   //## Contacts via Retail Store link ##
+                   //####################################
+                   sqlStmt    += "SELECT Contact.Id as parentId FROM Contact "; 
+                   sqlStmt    += "INNER JOIN RetailStore on Contact.AccountId = RetailStore.PrimaryContactId ";
+                   sqlStmt    += "INNER JOIN Visit on RetailStore.Id = Visit.RetailStoreId ";
+                   sqlStmt    += "WHERE #compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','>=' , #cgVisitDateFrom#, 'Date')# ";
+                   sqlStmt    += "AND #compareAsDate('Visit.PlannedVisitEndTime', 'DateTime','<=' , #cgVisitDateThru#, 'Date')# ";
+                   sqlStmt    += "UNION ";
+                   //##############################################
+                   //## Retail Store (CG Cloud Basic Data Model) ##
+                   //##############################################
+                   sqlStmt    += "SELECT Id as parentId FROM RetailStore ";
+                   sqlStmt    += "UNION ";
+                   //######################################################
+                   //## RetailVisitKpi Store (CG Cloud Basic Data Model) ##
+                   //######################################################
+                   sqlStmt    += "SELECT Id as parentId FROM RetailVisitKpi ";
+                   sqlStmt    += "UNION ";
+                   //##################################################
+                   //## AssessmentTasks (CG Cloud Basic Data Model) ##
+                   //#################################################
+                   sqlStmt    += "SELECT Id as parentId FROM AssessmentTask WHERE AssessmentTask.TaskType in ('Other','InventoryCheck')";
+                   return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+      ]]></AllAttachments>
+      <RelevantCustomerContracts><![CDATA[
+      				var userId = Utils.convertForDBParam(jsonParams.userId, 'DomPKey');
+					var sqlParams = {userId};           		
+        			var sqlStmt = "SELECT DISTINCT Contract_Payment_Tactic__c.Account__c as AccountId ";
+        			sqlStmt    += "FROM Contract_Payment_Tactic__c ";
+					sqlStmt    += "INNER JOIN Contract_Payment__c ON Contract_Payment_Tactic__c.Contract_Payment__c = Contract_Payment__c.Id ";
+        			sqlStmt    += "WHERE Contract_Payment_Tactic__c.Contract__c NOT IN ( ";
+					sqlStmt    += " SELECT Id ";
+					sqlStmt    += " FROM Contract__c) ";
+					sqlStmt    += "AND Contract_Payment__c.Responsible__c = #userId# ";
+                    return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+      ]]></RelevantCustomerContracts>
+      <ParentAccounts><![CDATA[
+      				var sqlParams = {};           			
+                    var sqlStmt = "SELECT DISTINCT Account_Trade_Org_Hierarchy__c.Parent_Account__c as AccountId ";
+        			sqlStmt    += "FROM Account_Trade_Org_Hierarchy__c ";
+                    return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+      ]]></ParentAccounts>
+      <PromotionsReferencedByOrderItems><![CDATA[
+					var orderPKey = Utils.convertForDBParam(jsonParams.orderPKey, 'DomPKey');
+					var sqlParams = {orderPKey};           			
+                    var sqlStmt = "SELECT DISTINCT Order_Item__c.Promotion__c as PromotionId";
+        			sqlStmt    += " FROM Order_Item__c";
+ 					sqlStmt    += " WHERE Order_Item__c.Order__c = #orderPKey# ";
+ 					sqlStmt    += " AND Order_Item__c.Promotion__c <> ' ' AND Order_Item__c.Promotion__c NOT IN (";
+                    sqlStmt    += " SELECT Id FROM Promotion__c )";
+                    return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+      ]]></PromotionsReferencedByOrderItems>
+      <ContactPartnerIds><![CDATA[
+                    var accountIds = Utils.getListParams(jsonParams.accountId);
+					var sql = "SELECT Id AS Id FROM Contact ";
+					sql += "WHERE AccountId IN (" + accountIds.sql + ") ";
+                    return {sql: sql, params: accountIds.params};
+     			]]></ContactPartnerIds>
+    </Custom>
+  </Database>
+</Datasource>

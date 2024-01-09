@@ -1,0 +1,18 @@
+<ListObject name="LoFastOrderProducts" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoFastOrderProducts" />
+  <Item objectClass="LiFastOrderProducts" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="deleteItem" />
+    <Method name="addOrUpdateItem" />
+    <Method name="checkEmptyList" />
+    <Method name="importProductsFromClipboard" />
+  </Methods>
+</ListObject>

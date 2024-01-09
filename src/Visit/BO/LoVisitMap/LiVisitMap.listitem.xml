@@ -1,0 +1,18 @@
+<ListItem name="LiVisitMap">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="retailStoreCity" type="DomText" storable="false" />
+    <SimpleProperty name="retailStorePostalCode" type="DomText" storable="false" />
+    <SimpleProperty name="retailStoreStreet" type="DomText" storable="false" />
+    <SimpleProperty name="retailStoreLongitude" type="DomDegree" storable="false" />
+    <SimpleProperty name="retailStoreLatitude" type="DomDegree" storable="false" />
+    <SimpleProperty name="visitorCity" type="DomText" storable="false" />
+    <SimpleProperty name="visitorStreet" type="DomText" storable="false" />
+    <SimpleProperty name="visitorPostalCode" type="DomText" storable="false" />
+    <SimpleProperty name="mapPinId" type="DomString" storable="false" />
+    <SimpleProperty name="mapPinImage" type="DomString" storable="false" />
+    <SimpleProperty name="toolTipText" type="DomText" storable="false" />
+    <SimpleProperty name="latitude" type="DomDegree" storable="false" />
+    <SimpleProperty name="longitude" type="DomDegree" storable="false" />
+  </SimpleProperties>
+</ListItem>

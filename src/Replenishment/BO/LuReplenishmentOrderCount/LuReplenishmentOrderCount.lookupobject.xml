@@ -1,0 +1,11 @@
+<LookupObject name="LuReplenishmentOrderCount" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuReplenishmentOrderCount" />
+ <SimpleProperties>
+    <SimpleProperty name="orderCount" type="DomInteger" storable="true" dataSourceProperty="orderCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

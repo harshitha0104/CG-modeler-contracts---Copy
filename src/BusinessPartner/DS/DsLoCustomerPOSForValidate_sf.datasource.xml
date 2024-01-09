@@ -1,0 +1,20 @@
+<Datasource name="DsLoCustomerPOSForValidate" objectClass="LoCustomerPOSForValidate" backendSystem="sf" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+      // Intended to be empty - POS not in scope!
+      return undefined;
+   ]]></Load>
+    <Update><![CDATA[
+      // Intended to be empty - POS not in scope!
+      return undefined;
+   ]]></Update>
+    <Insert><![CDATA[
+      // Intended to be empty - POS not in scope!
+      return undefined;
+   ]]></Insert>
+    <Delete><![CDATA[
+      // Intended to be empty - POS not in scope!
+      return undefined;
+   ]]></Delete>
+  </Database>
+</Datasource>

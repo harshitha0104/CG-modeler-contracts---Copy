@@ -1,0 +1,153 @@
+<DataSource name="DsLoToDoOverview" backendSystem="sf" businessObjectClass="LoToDoOverview" external="false" editableEntity="Task" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Task" column="Id" />
+    <Attribute name="text" table="Task" column="Subject" />
+    <Attribute name="classification" table="Task" column="Type" />
+    <Attribute name="initiationDate" table="Task" column="CreatedDate" />
+    <Attribute name="dueDate" table="Task" column="ActivityDate" />
+    <Attribute name="priority" table="Task" column="Priority" />
+    <Attribute name="responsiblePKey" table="Task" column="OwnerId" />
+    <Attribute name="ownerPKey" table="User_Accountable__c" column="User__c" />
+    <Attribute name="initiatorPKey" table="Task" column="CreatedById" />
+    <Attribute name="issuePhase" table="Task" column="Status" />
+    <Attribute name="businessModified" table="Task" column="LastModifiedDate" />
+    <DerivedAttribute name="svcMetaPKey" value="' '" />
+    <DerivedAttribute name="isPrivate" value="'0'" />
+    <DerivedAttribute name="isActive" value="'1'" />
+    <DerivedAttribute name="responsibleName" value="Responsible.LastName || ', ' || Responsible.FirstName" />
+    <DerivedAttribute name="ownerName" value="Owner.LastName || ', ' || Owner.FirstName" />
+    <DerivedAttribute name="filterOpen" value="CASE  WHEN (Task.Status IN ('In Progress', 'Not Started', 'Waiting on someone else')) THEN 1 ELSE 0 END" />
+    <DerivedAttribute name="wfeWorkflowPKey" value="' '" />
+    <DerivedAttribute name="actualStatePKey" value="' '" />
+    <DerivedAttribute name="initiatorName" value="CASE WHEN (Task.CreatedById = Task.OwnerId AND Task.OwnerId = '#UserPKey#') THEN 'Personal' ELSE CASE WHEN Initiator.LastName IS NULL THEN '' ELSE Initiator.LastName || ', ' || Initiator.FirstName END END" />
+    <DerivedAttribute name="classificationImage" value="CASE WHEN Task.Type = ' ' THEN '' ELSE 'TaskClassification_' || Task.Type END" />
+    <DerivedAttribute name="priorityImage" value="'TaskPriority_' || CASE WHEN Task.Priority = 'High' THEN 'A' WHEN Task.Priority = 'Normal' THEN 'B' WHEN Task.Priority = 'Low' THEN 'C' ELSE 'A' END" />
+  </Attributes>
+  <Entities>
+    <Entity name="Task" alias="" idAttribute="Id" />
+    <Entity name="User" alias="Responsible">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Task.OwnerId" comparator="eq" rightSideType="Attribute" rightSideValue="Responsible.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="User_Accountable__c">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Task.User_Accountable__c" comparator="eq" rightSideType="Attribute" rightSideValue="User_Accountable__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="User" alias="Owner">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="User_Accountable__c.User__c" comparator="eq" rightSideType="Attribute" rightSideValue="Owner.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="User" alias="Initiator">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="Task.CreatedById" comparator="eq" rightSideType="Attribute" rightSideValue="Initiator.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="RecordType" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Task.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+          <Condition leftSideValue="RecordType.DeveloperName" comparator="eq" rightSideType="Literal" rightSideValue="'User_Task'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+    (Task.OwnerId = '#UserPKey#' OR Task.OwnerId IN (#teamList#))
+    AND Task.IsDeleted = '0'
+    #cond#
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Task" attribute="ActivityDate" direction="DESC" />
+    <OrderCriterion entity="Task" attribute="Priority" direction="DESC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="teamList" type="LIST" />
+    <Parameter name="cond" treatAs="sqlSnippet" />
+    <Parameter name="released" type="TEXT" />
+    <Parameter name="initial" type="TEXT" />
+    <Parameter name="minimumDate" type="INTEGER" />
+    <Parameter name="cardDate" type="INTEGER" />
+    <Parameter name="textComp" type="TEXT" />
+    <Parameter name="text" type="TEXT" />
+    <Parameter name="priorityComp" type="TEXT" />
+    <Parameter name="priority" type="TEXT" />
+    <Parameter name="classificationComp" type="TEXT" />
+    <Parameter name="classification" type="TEXT" />
+    <Parameter name="initiationDateComp" type="TEXT" />
+    <Parameter name="initiationDate" type="INTEGER" />
+    <Parameter name="dueDateComp" type="TEXT" />
+    <Parameter name="dueDate" type="INTEGER" />
+    <Parameter name="issuePhaseComp" type="TEXT" />
+    <Parameter name="issuePhase" type="TEXT" />
+    <Parameter name="initiatorPKeyComp" type="TEXT" />
+    <Parameter name="initiatorPKey" type="TEXT" />
+    <Parameter name="ownerPKeyComp" type="TEXT" />
+    <Parameter name="ownerPKey" type="TEXT" />
+    <Parameter name="responsiblePKeyComp" type="TEXT" />
+    <Parameter name="responsiblePKey" type="TEXT" />
+  </Parameters>
+  <QuickSearchParameters>
+    <QuickSearchParameter name="Task.Subject" />
+    <QuickSearchParameter name="Task.ActivityDate" />
+    <QuickSearchParameter name="Task.Status" />
+    <QuickSearchParameter name="responsibleName" />
+  </QuickSearchParameters>
+  <ConditionalParameters>
+    <ConditionalParameter name="text">
+      <SimpleConditions>
+        <Condition leftSideValue="Task.Subject" comparator="#textComp#" rightSideType="Attribute" rightSideValue="'#text#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="priority">
+      <SimpleConditions>
+        <Condition leftSideValue="Task.Priority" comparator="#priorityComp#" rightSideType="Attribute" rightSideValue="'#priority#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="classification">
+      <SimpleConditions>
+        <Condition leftSideValue="Task.Type" comparator="#classificationComp#" rightSideType="Attribute" rightSideValue="'#classification#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="initiationDate">
+      <SimpleConditions>
+        <Condition leftSideValue="Task.CreatedDate" leftSideType="DateTime" comparator="#initiationDateComp#" comparatorType="Date" rightSideValue="#initiationDate#" rightSideType="Date" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="dueDate">
+      <SimpleConditions>
+        <Condition leftSideValue="Task.ActivityDate" leftSideType="Date" comparator="#dueDateComp#" comparatorType="Date" rightSideValue="#dueDate#" rightSideType="Date" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="issuePhase">
+      <SimpleConditions>
+        <Condition leftSideValue="Task.Status" comparator="#issuePhaseComp#" rightSideType="Attribute" rightSideValue="'#issuePhase#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="initiatorPKey">
+      <SimpleConditions>
+        <Condition leftSideValue="Task.CreatedById" comparator="#initiatorPKeyComp#" rightSideType="Attribute" rightSideValue="'#initiatorPKey#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="ownerPKey">
+      <SimpleConditions>
+        <Condition leftSideValue="User_Accountable__c.User__c" comparator="#ownerPKeyComp#" rightSideType="Attribute" rightSideValue="'#ownerPKey#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="responsiblePKey">
+      <SimpleConditions>
+        <Condition leftSideValue="Task.OwnerId" comparator="#responsiblePKeyComp#" rightSideType="Attribute" rightSideValue="'#responsiblePKey#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+  </ConditionalParameters>
+</DataSource>

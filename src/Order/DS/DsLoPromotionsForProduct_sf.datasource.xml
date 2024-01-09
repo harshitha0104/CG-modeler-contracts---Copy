@@ -1,0 +1,74 @@
+<DataSource name="DsLoPromotionsForProduct" backendSystem="sf" businessObjectClass="LoPromotionsForProduct" editableEntity="Promotion__c" external="true" readOnly="true" distinct="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="promotionPKey" table="Promotion__c" column="Id" />
+    <Attribute name="text" table="Promotion__c" column="Slogan__c" />
+    <Attribute name="validFrom" table="Promotion__c" column="Order_Date_From__c" />
+    <Attribute name="validThru" table="Promotion__c" column="Order_Date_Thru__c" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var customerPKey = "";
+			var productPKey = "";
+
+			if(Utils.isDefined(jsonQuery.customerPKey)){
+				customerPKey = Utils.convertForDBParam(jsonQuery.customerPKey, "DomPKey");
+			}
+			if(Utils.isDefined(jsonQuery.productPKey)){
+				productPKey = Utils.convertForDBParam(jsonQuery.productPKey, "DomPKey");
+			}
+
+			var sqlParams = {customerPKey, productPKey};
+
+			var sqlStmt  = "SELECT Promotion__c.Id AS promotionPKey, Promotion__c.Slogan__c AS text, Promotion__c.Order_Date_From__c AS validFrom, Promotion__c.Order_Date_Thru__c AS validThru";
+			sqlStmt += " FROM Promotion__c";
+			sqlStmt += " INNER JOIN Promotion_Store__c ON Promotion_Store__c.Promotion__c = Promotion__c.Id";
+			sqlStmt += " INNER JOIN Tactic__c ON Tactic__c.Promotion__c = Promotion__c.Id";
+			sqlStmt += " INNER JOIN Tactic_Product__c ON Tactic_Product__c.Tactic__c = Tactic__c.Id";
+			sqlStmt += " INNER JOIN Promotion_Template__c ON Promotion_Template__c.Id = Promotion__c.Promotion_Template__c";
+			sqlStmt += " WHERE Promotion_Store__c.Store__c = #customerPKey# ";
+			sqlStmt += " AND Promotion_Template__c.Selectable_Promotion__c = '0'";
+            sqlStmt += " AND Promotion__c.Active__c = '1' ";
+            sqlStmt += " AND Promotion__c.Phase__c = 'Committed' ";
+            sqlStmt += " AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #TodayAsDate# , 'Date')# ";
+            sqlStmt += " AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #TodayAsDate# , 'Date')# ";
+			sqlStmt += " AND Tactic__c.Included__c  = '1' ";
+			sqlStmt += " AND Tactic_Product__c.Included__c = '1' ";
+			sqlStmt += " AND (Tactic_Product__c.Product__c= #productPKey# ";
+			sqlStmt += " OR Tactic_Product__c.Product__c IN (SELECT Parent_Product__c FROM Product_Hierarchy__c WHERE Child_Product__c= #productPKey# ))";
+
+			sqlStmt += " UNION";
+
+			sqlStmt += " SELECT Promotion__c.Id AS promotionPKey, Promotion__c.Slogan__c AS text, Promotion__c.Order_Date_From__c AS validFrom, Promotion__c.Order_Date_Thru__c AS validThru";
+			sqlStmt += " FROM Promotion__c";
+			sqlStmt += " INNER JOIN Tactic__c ON Tactic__c.Promotion__c = Promotion__c.Id";
+			sqlStmt += " INNER JOIN Tactic_Product__c ON Tactic_Product__c.Tactic__c = Tactic__c.Id";
+			sqlStmt += " INNER JOIN Account_Set_Account__c ON Promotion__c.Anchor_Account_Set__c = Account_Set_Account__c.Account_Set__c";
+			sqlStmt += " INNER JOIN Promotion_Template__c ON Promotion_Template__c.Id = Promotion__c.Promotion_Template__c";
+			sqlStmt += " WHERE Account_Set_Account__c.Account_Set_Account__c = #customerPKey# ";
+			sqlStmt += " AND Promotion_Template__c.Selectable_Promotion__c = '0'";
+			sqlStmt += " AND Promotion__c.Active__c = '1' ";
+            sqlStmt += " AND Promotion__c.Phase__c = 'Committed' ";
+            sqlStmt += " AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #TodayAsDate# , 'Date')# ";
+            sqlStmt += " AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #TodayAsDate# , 'Date')# ";
+			sqlStmt += " AND Tactic__c.Included__c  = '1' ";
+			sqlStmt += " AND Tactic_Product__c.Included__c = '1' ";
+			sqlStmt += " AND (Tactic_Product__c.Product__c= #productPKey# ";
+			sqlStmt += " OR Tactic_Product__c.Product__c IN (SELECT Parent_Product__c FROM Product_Hierarchy__c WHERE Child_Product__c= #productPKey# ))";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+    <Update><![CDATA[
+			// Read only datasource
+			return undefined;
+		]]></Update>
+    <Insert><![CDATA[   
+			// Read only datasource
+			return undefined;
+		]]></Insert>
+    <Delete><![CDATA[
+			// Read only datasource
+			return undefined;
+		]]></Delete>
+  </Database>
+</DataSource>

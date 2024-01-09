@@ -1,0 +1,14 @@
+<ListObject name="LoBreadCrumbLevel1" generateLoadMethod="true"  schemaVersion="1.1">
+  <DataSource name="DsLoBreadCrumbLevel1" />
+  <Item objectClass="LiBreadCrumbLevel1" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+  </Methods>
+</ListObject>

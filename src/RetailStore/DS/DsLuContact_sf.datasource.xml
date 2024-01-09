@@ -1,0 +1,44 @@
+<DataSource name="DsLuContact" backendSystem="sf" businessObjectClass="LuContact" external="true" editableEntity="Contact" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="email" table="Contact" column="Email" />
+    <Attribute name="phone" table="Contact" column="Phone" />
+    <Attribute name="fax" table="Contact" column="Fax" />
+    <Attribute name="pKey" table="Contact" column="Id" />
+    <Attribute name="title" table="Contact" column="Title" />
+    <Attribute name="name" table="Contact" column="Name" />
+    <Attribute name="mobilePhone" table="Contact" column="MobilePhone" />
+    <DerivedAttribute name="mediaPath" value="' '" />
+    <DerivedAttribute name="fileType" value="' '" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+     var pKey = "";
+
+    if(Utils.isDefined(jsonQuery.pKey)){
+     pKey =  Utils.convertForDBParam(jsonQuery.pKey, "DomPKey");
+    }
+
+   var sqlParams = {pKey};
+   var sqlStmt = "";
+   sqlStmt += " SELECT Contact.Id as pKey ";
+   sqlStmt += ",Contact.Name as name ";
+   sqlStmt += ",Contact.Title as title";
+   sqlStmt += ",Contact.Phone as phone ";
+   sqlStmt += ",Contact.MobilePhone as mobilePhone ";
+   sqlStmt += ",Contact.Email as email ";
+   sqlStmt += ",Contact.Fax as fax ";
+   sqlStmt += ",replace( SF_File.PathOnClient, rtrim(SF_File.PathOnClient,replace(SF_File.PathOnClient, '.', '')),'') as fileType ";
+   sqlStmt += ",CASE SF_File.Usage__c WHEN 'Icon' THEN SF_File.VersionData ELSE ' ' END as mediaPath ";
+   sqlStmt += "FROM Contact ";
+   sqlStmt += "LEFT OUTER JOIN SF_FileLink ON SF_FileLink.ParentId = Contact.Id ";
+   sqlStmt += "AND SF_FileLink.IsDeleted <> '1' ";
+   sqlStmt += "LEFT OUTER JOIN SF_File ON SF_FileLink.FileId = SF_File.Id ";
+   sqlStmt += "AND SF_File.Usage__c = 'Icon' ";
+   sqlStmt += "AND SF_File.IsDeleted <> '1' ";
+   sqlStmt += "WHERE 1=1 ";
+   sqlStmt += "AND Contact.Id = #pKey# ";
+   sqlStmt += "AND Contact.IsDeleted <> '1' ";
+   return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+  ]]></Load>
+  </Database>
+</DataSource>

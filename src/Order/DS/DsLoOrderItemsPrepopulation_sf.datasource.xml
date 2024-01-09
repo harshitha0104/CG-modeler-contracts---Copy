@@ -1,0 +1,444 @@
+<Datasource name="DsLoOrderItemsPrepopulation" backendSystem="sf" businessObjectClass="LoOrderItemsPrepopulation" external="true" editableEntity="TmpOrderItemMergeResult_T" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Order_Item__c" column="Id" />
+    <Attribute name="sdoMainPKey" table="Order_Item__c" column="Order__c" />
+    <Attribute name="sdoItemMetaPKey" table="Order_Item__c" column="Order_Item_Template__c" />
+    <Attribute name="sdoParentItemPKey" table="Order_Item__c" column="Parent_Order_Item__c" />
+    <Attribute name="quantity" table="Order_Item__c" column="Quantity__c" />
+    <Attribute name="discount" table="Order_Item__c" column="Discount__c" />
+    <Attribute name="specialPrice" table="Order_Item__c" column="Special_Price__c" />
+    <Attribute name="specialPriceReceipt" table="Order_Item__c" column="Special_Price_Receipt__c" />
+    <Attribute name="prdMainPKey" table="TmpOrderItemMergeResult_T" column="PrdMainPKey" />
+    <Attribute name="text1" table="TmpOrderItemMergeResult_T" column="Text1" />
+    <Attribute name="prdId" table="TmpOrderItemMergeResult_T" column="PrdId" />
+    <Attribute name="shortId" table="TmpOrderItemMergeResult_T" column="ShortId" />
+    <Attribute name="value" table="Order_Item__c" column="Value__c" />
+    <Attribute name="valueReceipt" table="Order_Item__c" column="Value_Receipt__c" />
+    <Attribute name="type" table="Order_Item_Template__c" column="Description_#Language#__c" />
+    <Attribute name="shortType" table="Order_Item_Template__c" column="Short_Text__c" />
+    <Attribute name="promoted" table="TmpOrderItemMergeResult_T" column="Promoted" />
+    <Attribute name="listed" table="TmpOrderItemMergeResult_T" column="Listed" />
+    <DerivedAttribute name="customerAssortment" value="'0'" />
+    <Attribute name="deliveryState" table="TmpOrderItemMergeResult_T" column="DeliveryState" />
+    <Attribute name="fieldState" table="TmpOrderItemMergeResult_T" column="FieldState" />
+    <Attribute name="simplePricingBasePrice" table="TmpOrderItemMergeResult_T" column="SimplePricingBasePrice" />
+    <Attribute name="basePrice" table="Order_Item__c" column="Price__c" />
+    <Attribute name="basePriceReceipt" table="Order_Item__c" column="Base_Price__c" />
+    <DerivedAttribute name="itemState" value="'L'" />
+    <Attribute name="eAN" table="TmpOrderItemMergeResult_T" column="EAN" />
+    <Attribute name="newState" table="TmpOrderItemMergeResult_T" column="NewState" />
+    <Attribute name="outOfStock" table="TmpOrderItemMergeResult_T" column="OutOfStock" />
+    <Attribute name="piecesPerSmallestUnitForBasePrice" table="TmpOrderItemMergeResult_T" column="PiecesPerSmallestUnitForBasePrice" />
+    <Attribute name="priceEffect" table="Order_Item_Template__c" column="Price_Effect__c" />
+    <Attribute name="price" table="Order_Item__c" column="Price__c" />
+    <Attribute name="priceReceipt" table="Order_Item__c" column="Price_Receipt__c" />
+    <Attribute name="history" table="TmpOrderItemMergeResult_T" column="History" />
+    <Attribute name="groupText" table="TmpOrderItemMergeResult_T" column="GroupText" />
+    <Attribute name="groupId" table="TmpOrderItemMergeResult_T" column="GroupId" />
+    <Attribute name="saveZeroQuantity" table="Order_Item_Template__c" column="Save_Zero_Quantity__c" />
+    <DerivedAttribute name="mergeEngine_invalidated" value="'0'" />
+    <DerivedAttribute name="grossValue" value="'0'" />
+    <Attribute name="grossValueReceipt" table="Order_Item__c" column="Gross_Value_Receipt__c" />
+    <Attribute name="erpId" table="Order_Item__c" column="Erp_Id__c" />
+    <DerivedAttribute name="modReason" value="''" />
+    <DerivedAttribute name="targetQuantity" value="''" />
+    <Attribute name="prdType" table="TmpOrderItemMergeResult_T" column="PrdType" />
+    <Attribute name="movementDirection" table="Order_Item_Template__c" column="Movement_Direction__c" />
+    <Attribute name="suggestedQuantity" table="TmpOrderItemMergeResult_T" column="SuggestedQuantity" />
+    <Attribute name="freeItemCreationStep" table="Order_Item__c" column="Free_Item_Creation_Step__c" />
+    <Attribute name="taxClassification" table="TmpOrderItemMergeResult_T" column="TaxClassification" />
+    <Attribute name="calculationGroup" table="Order_Item_Template__c" column="Calculation_Group__c" />
+    <DerivedAttribute name="deletedFreeItem" value="'0'" />
+    <Attribute name="isOrderUnit" table="PrdLogistic" column="IsOrderUnit" />
+    <Attribute name="sort" table="PrdLogistic" column="Sort" />
+    <Attribute name="category" table="TmpOrderItemMergeResult_T" column="Category" />
+    <DerivedAttribute name="refPKey" value="''" />
+    <Attribute name="quantityLogisticUnit" table="Unit_Of_Measure__c" column="Unit_Type__c" />
+    <Attribute name="piecesPerSmallestUnit" table="Unit_Of_Measure__c" column="Pieces_Per_Smallest_Unit__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="TmpOrderItemMergeResult_T" alias="" idAttribute="PrdMainPKey" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+var sqlstmt = "";
+var proposedSqlQuery = "";
+var selectAttributes = "";
+var queryCondition = "";
+var isCollection = "";
+var isHit = "";
+var isNone = "";
+var sdoMetaPosition = "";
+var presentDefault = "";
+var criterionFilterAttribute = "";
+var criterionFilterValue = "";
+var jsonQuerySelectPromotion = {};
+var jsonQueryPersisted = {};
+var sdoItemMetaPKey = ""; 
+var type = ""; 
+var shortType = ""; 
+var priceEffect = ""; 
+var saveZeroQuantity = ""; 
+var calculationGroup = ""; 
+var movementDirection = ""; 
+
+if (Utils.isDefined(jsonQuery.queryCondition)) {
+ queryCondition = Utils.convertForDBParam(jsonQuery.queryCondition, "DomText");
+}
+if (Utils.isDefined(jsonQuery.isCollection)) {
+ isCollection = Utils.convertForDBParam(jsonQuery.isCollection, "DomText");
+}
+if (Utils.isDefined(jsonQuery.isHit)) {
+ isHit = Utils.convertForDBParam(jsonQuery.isHit, "DomText");
+}
+if (Utils.isDefined(jsonQuery.sdoMetaPosition)) {
+ sdoMetaPosition = Utils.convertForDBParam(jsonQuery.sdoMetaPosition, "DomText");
+}
+if (Utils.isDefined(jsonQuery.presentDefault)) {
+ presentDefault = Utils.convertForDBParam(jsonQuery.presentDefault, "DomText");
+}
+if (Utils.isDefined(jsonQuery.criterionFilterAttribute)) {
+ criterionFilterAttribute = Utils.convertForDBParam(jsonQuery.criterionFilterAttribute, "DomText");
+}
+if (Utils.isDefined(jsonQuery.criterionFilterValue)) {
+ criterionFilterValue = Utils.convertForDBParam(jsonQuery.criterionFilterValue, "DomText");
+}
+if (Utils.isDefined(jsonQuery.jsonQuerySelectPromotion)) {
+ jsonQuerySelectPromotion = jsonQuery.jsonQuerySelectPromotion;
+}
+if (Utils.isDefined(jsonQuery.jsonQueryPersisted)) {
+ jsonQueryPersisted = jsonQuery.jsonQueryPersisted;
+}
+if (Utils.isDefined(jsonQuery.isNone)) {
+ isNone = Utils.convertForDBParam(jsonQuery.isNone, "DomText");
+}
+
+// From here
+if (Utils.isDefined(jsonQuery.mainItemTemplate.getPKey())) {
+ sdoItemMetaPKey = Utils.convertForDBParam(jsonQuery.mainItemTemplate.getPKey(), "DomPKey");
+}
+if (Utils.isDefined(jsonQuery.mainItemTemplate.getText())) {
+ type = Utils.convertForDBParam(jsonQuery.mainItemTemplate.getText(), "DomText");
+}
+if (Utils.isDefined(jsonQuery.mainItemTemplate.getShortText())) {
+ shortType = Utils.convertForDBParam(jsonQuery.mainItemTemplate.getShortText(), "DomText");
+}
+if (Utils.isDefined(jsonQuery.mainItemTemplate.getPriceEffect())) {
+ priceEffect = Utils.convertForDBParam(jsonQuery.mainItemTemplate.getPriceEffect(), "DomText");
+}
+if (Utils.isDefined(jsonQuery.mainItemTemplate.getSaveZeroQuantity())) {
+ saveZeroQuantity = Utils.convertForDBParam(jsonQuery.mainItemTemplate.getSaveZeroQuantity(), "DomText");
+}
+if (Utils.isDefined(jsonQuery.mainItemTemplate.getCalculationGroup())) {
+ calculationGroup = Utils.convertForDBParam(jsonQuery.mainItemTemplate.getCalculationGroup(), "DomText");
+}
+if (Utils.isDefined(jsonQuery.mainItemTemplate.getMovementDirection())) {
+ movementDirection = Utils.convertForDBParam(jsonQuery.mainItemTemplate.getMovementDirection(), "DomText");
+}
+
+var sqlParams = {isCollection, isHit,sdoMetaPosition,presentDefault,criterionFilterAttribute,criterionFilterValue,isNone,
+                 sdoItemMetaPKey,type,shortType,priceEffect,saveZeroQuantity,calculationGroup,movementDirection};
+var persistedSqlQuery = Facade.myProxy.getLoadStatement("LoMeOrderItems", jsonQueryPersisted);
+var selectPromotionSqlQuery = Facade.myProxy.getLoadStatement("LoMeSelectablePromotions", jsonQuerySelectPromotion);
+
+//Select Order Items
+selectAttributes += " persistedProduct.pKey AS pKey ";
+selectAttributes += "	,IFNULL(proposedProduct.prdMainPKey, persistedProduct.prdMainPKey) AS prdMainPKey ";
+selectAttributes += "	,IFNULL(proposedProduct.Listed, persistedProduct.Listed) AS listed ";
+selectAttributes += "	,proposedProduct.CustomerProductNumber AS customerProductNumber ";
+selectAttributes += "	,proposedProduct.FocusProductType AS focusProductType ";
+selectAttributes += "	,CASE WHEN proposedProduct.FocusProductType IS NULL THEN 'EmptyImage' WHEN proposedProduct.FocusProductType = ' ' THEN 'EmptyImage' ELSE 'FocusIcon' END AS focusProductImage ";
+selectAttributes += "	,IFNULL(proposedProduct.OutOfStock, persistedProduct.OutOfStock) AS outOfStock ";
+selectAttributes += "	,IFNULL(proposedProduct.History, persistedProduct.History) AS history ";
+selectAttributes += "	,IFNULL(proposedProduct.Promoted, persistedProduct.Promoted) AS promoted ";
+selectAttributes += "	,CASE WHEN proposedProduct.SdoAssortment = '1' THEN  '1' ELSE '0' END AS sdoAssortment ";
+selectAttributes += "	,CASE WHEN persistedProduct.IsPersistedItem = '1' THEN  '1' ELSE '0' END AS isPersistedItem ";
+selectAttributes += "	,CASE WHEN proposedProduct.Listing = 'Hit' THEN 'Hit' WHEN proposedProduct.Listing = 'None' THEN 'None' ELSE ' ' END AS listing ";
+selectAttributes += "	,CASE WHEN proposedProduct.ListingWithModules = 'Hit' THEN 'Hit' WHEN proposedProduct.ListingWithModules  = 'None' THEN 'None' ELSE ' ' END AS listingWithModules ";
+selectAttributes += "	,IFNULL(proposedProduct.piecesPerSmallestUnit, persistedProduct.piecesPerSmallestUnit) AS piecesPerSmallestUnit ";
+selectAttributes += "	,IFNULL(proposedProduct.promotionPKey, persistedProduct.promotionPKey) AS promotionPKey ";
+selectAttributes += "	,IFNULL(proposedProduct.ProductClassifications, '') AS productClassifications ";
+selectAttributes += "	,IFNULL(proposedProduct.SpecialPromoted, '') AS specialPromoted ";
+selectAttributes += "	,IFNULL(proposedProduct.SpecialQuantity, '') AS specialQuantity ";
+selectAttributes += "	,IFNULL(proposedProduct.GroupName, '') AS groupName ";
+selectAttributes += "	,IFNULL(proposedProduct.GroupSort, '') AS groupSort ";
+selectAttributes += "	,IFNULL(proposedProduct.GroupIdSort, '') AS groupIdSort ";
+selectAttributes += "	,IFNULL(proposedProduct.TacticProductPKey, '') AS tacticProductPKey ";
+selectAttributes += "	,IFNULL(proposedProduct.sort, persistedProduct.sort) AS sort ";
+selectAttributes += "	,proposedProduct.isOrderUnit AS isOrderUnit ";
+selectAttributes += "	,proposedProduct.IsConsumerUnit AS isConsumerUnit ";
+selectAttributes += "	,proposedProduct.IsPriceUnit AS isPriceUnit ";
+selectAttributes += "	,proposedProduct.UnitType AS unitType ";
+selectAttributes += "	,IFNULL(proposedProduct.quantityLogisticUnit, persistedProduct.quantityLogisticUnit) AS quantityLogisticUnit ";
+selectAttributes += "	,proposedProduct.DefaultQuantityLogisticUnit AS defaultQuantityLogisticUnit ";
+selectAttributes += "	,proposedProduct.DefaultPiecesPerSmallestUnit AS defaultPiecesPerSmallestUnit ";
+selectAttributes += "	,proposedProduct.Text1 AS text1 ";
+selectAttributes += "	,proposedProduct.Text2 AS text2 ";
+selectAttributes += "	,proposedProduct.PrdId AS prdId ";
+selectAttributes += "	,proposedProduct.ShortId AS shortId ";
+selectAttributes += "	,proposedProduct.TaxClassification AS taxClassification ";
+selectAttributes += "	,proposedProduct.SimplePricingBasePrice AS simplePricingBasePrice ";
+selectAttributes += "	,proposedProduct.DeliveryState AS deliveryState ";
+selectAttributes += "	,proposedProduct.FieldState AS fieldState ";
+selectAttributes += "	,proposedProduct.ForeignProduct AS foreignProduct ";
+selectAttributes += "	,proposedProduct.EAN AS eAN ";
+selectAttributes += "	,proposedProduct.NewState AS newState ";
+selectAttributes += "	,proposedProduct.PiecesPerSmallestUnitForBasePrice AS piecesPerSmallestUnitForBasePrice ";
+selectAttributes += "	,proposedProduct.GroupId AS groupId ";
+selectAttributes += "	,proposedProduct.GroupText AS groupText ";
+selectAttributes += "	,proposedProduct.Category AS category ";
+selectAttributes += "	,proposedProduct.PrdType AS prdType ";
+selectAttributes += "	,IFNULL(proposedProduct.PromotedPrice, 0) AS promotedPrice ";
+selectAttributes += "	,IFNULL(proposedProduct.DefaultValue, '') AS defaultValue ";
+selectAttributes += "	,IFNULL(proposedProduct.MaxValue, '') AS maxValue ";
+selectAttributes += "	,CASE  ";
+selectAttributes += "		WHEN (proposedProduct.Promoted = '1' OR persistedProduct.Promoted = '1') ";
+selectAttributes += "			AND (proposedProduct.Listed = '1' OR persistedProduct.Listed = '1') ";
+selectAttributes += "			THEN 'PL' ";
+selectAttributes += "		WHEN (proposedProduct.Promoted = '1' OR persistedProduct.Promoted = '1')";
+selectAttributes += "			AND (proposedProduct.Listed = '0' OR persistedProduct.Listed = '0') ";
+selectAttributes += "			THEN 'P' ";
+selectAttributes += "		WHEN (proposedProduct.Promoted = '0' OR persistedProduct.Promoted = '0') ";
+selectAttributes += "			AND (proposedProduct.Listed = '1' OR persistedProduct.Listed = '1') ";
+selectAttributes += "			THEN 'L' ";
+selectAttributes += "		ELSE ' ' ";
+selectAttributes += "		END AS itemState ";
+selectAttributes += "	,CASE WHEN proposedProduct.prdMainPKey IS NULL THEN '1' ELSE '0' END AS mergeEngine_invalidated ";
+selectAttributes += "	,0 AS minStepperValue ";
+selectAttributes += "	,'0' AS deletedFreeItem ";
+selectAttributes += "	,IFNULL(persistedProduct.sdoParentItemPKey, ' ') AS sdoParentItemPKey ";
+selectAttributes += "	,persistedProduct.parentType AS parentType ";
+selectAttributes += "	,persistedProduct.quantity AS quantity ";
+selectAttributes += "	,persistedProduct.discount AS discount ";
+selectAttributes += "	,persistedProduct.price AS price ";
+selectAttributes += "	,persistedProduct.priceReceipt AS priceReceipt ";
+selectAttributes += "	,persistedProduct.value AS value ";
+selectAttributes += "	,persistedProduct.valueReceipt AS valueReceipt ";
+selectAttributes += "	,persistedProduct.basePriceReceipt AS basePriceReceipt ";
+selectAttributes += "	,persistedProduct.grossValueReceipt AS grossValueReceipt ";
+selectAttributes += "	,persistedProduct.basePrice AS basePrice ";
+selectAttributes += "	,persistedProduct.specialPrice AS specialPrice ";
+selectAttributes += "	,persistedProduct.specialPriceReceipt AS specialPriceReceipt ";
+selectAttributes += "	,persistedProduct.erpId AS erpId ";
+selectAttributes += "	,IFNULL(proposedProduct.suggestedQuantity, persistedProduct.suggestedQuantity) AS suggestedQuantity ";
+selectAttributes += "	,persistedProduct.freeItemCreationStep AS freeItemCreationStep ";
+selectAttributes += "	,persistedProduct.pricingInformation AS pricingInformation ";
+selectAttributes += "	,persistedProduct.sdoMainPKey AS sdoMainPKey ";
+selectAttributes += "	,IFNULL(persistedProduct.sdoItemMetaPKey, #sdoItemMetaPKey#) AS sdoItemMetaPKey ";
+selectAttributes += "	,IFNULL(persistedProduct.priceEffect, #priceEffect#) AS priceEffect ";
+selectAttributes += "	,IFNULL(persistedProduct.saveZeroQuantity, #saveZeroQuantity#) AS saveZeroQuantity ";
+selectAttributes += "	,IFNULL(persistedProduct.shortType, #shortType#) AS shortType ";
+selectAttributes += "	,IFNULL(persistedProduct.type, #type#) AS type ";
+selectAttributes += "	,IFNULL(persistedProduct.calculationGroup, #calculationGroup#) AS calculationGroup ";
+selectAttributes += "	,IFNULL(persistedProduct.movementDirection, #movementDirection#) AS movementDirection ";
+selectAttributes += "	,IFNULL(persistedProduct.rewardPKey, ' ') AS rewardPKey ";
+selectAttributes += "	,persistedProduct.pricingInfo1 AS pricingInfo1 ";
+selectAttributes += "	,persistedProduct.pricingInfo2 AS pricingInfo2 ";
+selectAttributes += "	,persistedProduct.pricingInfo3 AS pricingInfo3 ";
+selectAttributes += "	,persistedProduct.pricingInfo4 AS pricingInfo4 ";
+selectAttributes += "	,persistedProduct.pricingInfo5 AS pricingInfo5 ";
+selectAttributes += "	,persistedProduct.pricingInfo6 AS pricingInfo6 ";
+selectAttributes += "	,persistedProduct.pricingInfo7 AS pricingInfo7 ";
+selectAttributes += "	,persistedProduct.pricingInfo8 AS pricingInfo8 ";
+selectAttributes += "	,persistedProduct.pricingInfo9 AS pricingInfo9 ";
+selectAttributes += "	,persistedProduct.pricingInfo10 AS pricingInfo10 ";
+selectAttributes += "	,IFNULL(persistedProduct.refPKey, proposedProduct.prdMainPKey || #sdoItemMetaPKey# || proposedProduct.promotionPKey || ' ') AS refPKey ";
+
+//Select relevant data from UoM table
+proposedSqlQuery += "SELECT proposedProductWithoutUoM.PrdMainPKey AS prdMainPKey ";
+proposedSqlQuery += "	,CASE WHEN proposedProductWithoutUoM.Listed = '1' THEN  '1' ELSE '0' END AS listed ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.CustomerProductNumber AS customerProductNumber ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.FocusProductType AS focusProductType ";
+proposedSqlQuery += "	,CASE WHEN proposedProductWithoutUoM.FocusProductType IS NULL THEN 'EmptyImage' WHEN proposedProductWithoutUoM.FocusProductType = ' ' THEN 'EmptyImage' ELSE 'FocusIcon' END AS focusProductImage ";
+proposedSqlQuery += "	,CASE WHEN proposedProductWithoutUoM.OutOfStock = '1' THEN  '1' ELSE '0' END AS outOfStock ";
+proposedSqlQuery += "	,CASE WHEN proposedProductWithoutUoM.History = '1' THEN  '1' ELSE '0' END AS history ";
+proposedSqlQuery += "	,CASE WHEN proposedProductWithoutUoM.Promoted = '1' THEN  '1' ELSE '0' END AS promoted ";
+proposedSqlQuery += "	,CASE WHEN proposedProductWithoutUoM.SdoAssortment = '1' THEN  '1' ELSE '0' END AS sdoAssortment ";
+proposedSqlQuery += "	,UnitOfMeasure.Pieces_Per_Smallest_Unit__c AS piecesPerSmallestUnit ";
+proposedSqlQuery += "	,IFNULL(proposedProductWithoutUoM.PromotionPKey, ' ') AS promotionPKey ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.ProductClassifications AS productClassifications ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.SpecialPromoted AS specialPromoted ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.SpecialQuantity AS specialQuantity ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.SuggestedQuantity AS suggestedQuantity ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.GroupName AS groupName ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.GroupSort AS groupSort ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.GroupIdSort AS groupIdSort ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.TacticProductPKey AS tacticProductPKey ";
+proposedSqlQuery += "	,UnitOfMeasure.Sort__c AS sort ";
+proposedSqlQuery += "	,UnitOfMeasure.Is_Order_Unit__c AS isOrderUnit ";
+proposedSqlQuery += "	,UnitOfMeasure.Is_Consumer_Unit__c AS isConsumerUnit ";
+proposedSqlQuery += "	,UnitOfMeasure.Is_Price_Unit__c AS isPriceUnit ";
+proposedSqlQuery += "	,UnitOfMeasure.Unit_Type__c AS unitType ";
+proposedSqlQuery += "	,UnitOfMeasure.Unit_Type__c AS quantityLogisticUnit ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.DefaultQuantityLogisticUnit AS defaultQuantityLogisticUnit ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.DefaultPiecesPerSmallestUnit AS defaultPiecesPerSmallestUnit ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.Text1 AS text1 ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.Text2 AS text2 ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.PrdId AS prdId ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.ShortId AS shortId ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.TaxClassification AS taxClassification ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.SimplePricingBasePrice AS simplePricingBasePrice ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.DeliveryState AS deliveryState ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.FieldState AS fieldState ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.ForeignProduct AS foreignProduct ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.EAN AS eAN ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.NewState AS newState ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.PiecesPerSmallestUnitForBasePrice AS piecesPerSmallestUnitForBasePrice ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.GroupId AS groupId ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.GroupText AS groupText ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.Category AS category ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.PrdType AS prdType ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.PromotedPrice AS promotedPrice ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.DefaultValue AS defaultValue ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.MaxValue AS maxValue ";
+proposedSqlQuery += "	,CASE WHEN proposedProductWithoutUoM.Listing = 'Hit' THEN 'Hit' WHEN proposedProductWithoutUoM.Listing = 'None' THEN 'None' ELSE ' ' END AS listing ";
+proposedSqlQuery += "	,CASE WHEN proposedProductWithoutUoM.ListingWithModules = 'Hit' THEN 'Hit' WHEN proposedProductWithoutUoM.ListingWithModules  = 'None' THEN 'None' ELSE ' ' END AS listingWithModules ";
+proposedSqlQuery += "	,proposedProductWithoutUoM.selectablePromoted as selectablePromoted ";
+proposedSqlQuery += "	,' ' as sdoParentItemPKey ";
+
+proposedSqlQuery += " FROM ( ";
+
+//Select data from Temporary Table
+proposedSqlQuery += "SELECT TmpOrderItemMergeResult_T.PrdMainPKey AS prdMainPKey ";
+proposedSqlQuery += "	,CASE WHEN TmpOrderItemMergeResult_T.Listed = '1' THEN  '1' ELSE '0' END AS listed ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.CustomerProductNumber AS customerProductNumber ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.FocusProductType AS focusProductType ";
+proposedSqlQuery += "	,CASE WHEN TmpOrderItemMergeResult_T.FocusProductType IS NULL THEN 'EmptyImage' WHEN TmpOrderItemMergeResult_T.FocusProductType = ' ' THEN 'EmptyImage' ELSE 'FocusIcon' END AS focusProductImage ";
+proposedSqlQuery += "	,CASE WHEN TmpOrderItemMergeResult_T.OutOfStock = '1' THEN  '1' ELSE '0' END AS outOfStock ";
+proposedSqlQuery += "	,CASE WHEN TmpOrderItemMergeResult_T.History = '1' THEN  '1' ELSE '0' END AS history ";
+proposedSqlQuery += "	,CASE WHEN TmpOrderItemMergeResult_T.Promoted = '1' THEN  '1' ELSE '0' END AS promoted ";
+proposedSqlQuery += "	,'0' AS selectablePromoted ";
+proposedSqlQuery += "	,CASE WHEN TmpOrderItemMergeResult_T.SdoAssortment = '1' THEN  '1' ELSE '0' END AS sdoAssortment ";
+proposedSqlQuery += "	,IFNULL(TmpOrderItemMergeResult_T.PromotionPKey, ' ') AS promotionPKey ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.ProductClassifications AS productClassifications ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.SpecialPromoted AS specialPromoted ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.SpecialQuantity AS specialQuantity ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.SuggestedQuantity AS suggestedQuantity ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.GroupName AS groupName ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.GroupSort AS groupSort ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.GroupIdSort AS groupIdSort ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.TacticProductPKey AS tacticProductPKey ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.DefaultQuantityLogisticUnit AS defaultQuantityLogisticUnit ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.DefaultPiecesPerSmallestUnit AS defaultPiecesPerSmallestUnit ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.Text1 AS text1 ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.Text2 AS text2 ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.PrdId AS prdId ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.ShortId AS shortId ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.TaxClassification AS taxClassification ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.SimplePricingBasePrice AS simplePricingBasePrice ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.DeliveryState AS deliveryState ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.FieldState AS fieldState ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.ForeignProduct AS foreignProduct ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.EAN AS eAN ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.NewState AS newState ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.PiecesPerSmallestUnitForBasePrice AS piecesPerSmallestUnitForBasePrice ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.GroupId AS groupId ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.GroupText AS groupText ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.Category AS category ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.PrdType AS prdType ";
+proposedSqlQuery += "	,CASE WHEN TmpOrderItemMergeResult_T.Listing = 'Hit' THEN 'Hit' WHEN TmpOrderItemMergeResult_T.Listing = 'None' THEN 'None' ELSE ' ' END AS listing ";
+proposedSqlQuery += "	,CASE WHEN TmpOrderItemMergeResult_T.ListingWithModules = 'Hit' THEN 'Hit' WHEN TmpOrderItemMergeResult_T.ListingWithModules  = 'None' THEN 'None' ELSE ' ' END AS listingWithModules ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.PromotedPrice AS promotedPrice ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.DefaultValue AS defaultValue ";
+proposedSqlQuery += "	,TmpOrderItemMergeResult_T.MaxValue AS maxValue ";
+proposedSqlQuery += "	FROM TmpOrderItemMergeResult_T ";
+
+if(jsonQuerySelectPromotion.considerSelectablePromotion == "1"){
+  proposedSqlQuery += "	UNION ALL ";
+
+  //Select data from Selectable Promotions
+  proposedSqlQuery += "SELECT selectablePromotion.prdMainPKey AS prdMainPKey ";
+  proposedSqlQuery += "	,CASE WHEN TmpOrderItemMergeResult_T.Listed = '1' THEN  '1' ELSE '0' END AS listed ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.CustomerProductNumber AS customerProductNumber ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.FocusProductType AS focusProductType ";
+  proposedSqlQuery += "	,CASE WHEN TmpOrderItemMergeResult_T.FocusProductType IS NULL THEN 'EmptyImage' WHEN TmpOrderItemMergeResult_T.FocusProductType = ' ' THEN 'EmptyImage' ELSE 'FocusIcon' END AS focusProductImage ";
+  proposedSqlQuery += "	,CASE WHEN TmpOrderItemMergeResult_T.OutOfStock = '1' THEN  '1' ELSE '0' END AS outOfStock ";
+  proposedSqlQuery += "	,CASE WHEN TmpOrderItemMergeResult_T.History = '1' THEN  '1' ELSE '0' END AS history ";
+  proposedSqlQuery += "	,'1' AS promoted ";
+  proposedSqlQuery += "	,'1' AS selectablePromoted ";
+  proposedSqlQuery += "	,CASE WHEN TmpOrderItemMergeResult_T.SdoAssortment = '1' THEN  '1' ELSE '0' END AS sdoAssortment ";
+  proposedSqlQuery += "	,IFNULL(selectablePromotion.promotionPKey, ' ') AS promotionPKey ";
+  proposedSqlQuery += "	,selectablePromotion.productClassifications AS productClassifications ";
+  proposedSqlQuery += "	,selectablePromotion.specialPromoted AS specialPromoted ";
+  proposedSqlQuery += "	,selectablePromotion.specialQuantity AS specialQuantity ";
+  proposedSqlQuery += "	,selectablePromotion.suggestedQuantity AS suggestedQuantity ";
+  proposedSqlQuery += "	,selectablePromotion.groupName AS groupName ";
+  proposedSqlQuery += "	,selectablePromotion.groupSort AS groupSort ";
+  proposedSqlQuery += "	,selectablePromotion.groupIdSort AS groupIdSort ";
+  proposedSqlQuery += "	,selectablePromotion.tacticProductPKey AS tacticProductPKey ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.DefaultQuantityLogisticUnit AS defaultQuantityLogisticUnit ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.DefaultPiecesPerSmallestUnit AS defaultPiecesPerSmallestUnit ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.Text1 AS text1 ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.Text2 AS text2 ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.PrdId AS prdId ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.ShortId AS shortId ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.TaxClassification AS taxClassification ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.SimplePricingBasePrice AS simplePricingBasePrice ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.DeliveryState AS deliveryState ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.FieldState AS fieldState ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.ForeignProduct AS foreignProduct ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.EAN AS eAN ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.NewState AS newState ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.PiecesPerSmallestUnitForBasePrice AS piecesPerSmallestUnitForBasePrice ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.GroupId AS groupId ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.GroupText AS groupText ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.Category AS category ";
+  proposedSqlQuery += "	,TmpOrderItemMergeResult_T.PrdType AS prdType ";
+  proposedSqlQuery += "	,CASE WHEN TmpOrderItemMergeResult_T.Listing = 'Hit' THEN 'Hit' WHEN TmpOrderItemMergeResult_T.Listing = 'None' THEN 'None' ELSE ' ' END AS listing ";
+  proposedSqlQuery += "	,CASE WHEN TmpOrderItemMergeResult_T.ListingWithModules = 'Hit' THEN 'Hit' WHEN TmpOrderItemMergeResult_T.ListingWithModules  = 'None' THEN 'None' ELSE ' ' END AS listingWithModules ";
+  proposedSqlQuery += "	,selectablePromotion.promotedPrice AS promotedPrice ";
+  proposedSqlQuery += "	,selectablePromotion.defaultValue AS defaultValue ";
+  proposedSqlQuery += "	,selectablePromotion.maxValue AS maxValue ";
+  proposedSqlQuery += " FROM ( ";
+  proposedSqlQuery += 		selectPromotionSqlQuery.sql;
+  proposedSqlQuery += "    ) AS selectablePromotion INNER JOIN TmpOrderItemMergeResult_T ON selectablePromotion.prdMainPKey = TmpOrderItemMergeResult_T.PrdMainPKey ";
+}
+proposedSqlQuery += " ) AS proposedProductWithoutUoM ";
+proposedSqlQuery += " INNER JOIN Unit_Of_Measure__c AS UnitOfMeasure ON proposedProductWithoutUOM.prdMainPKey = UnitOfMeasure.Product__c AND UnitOfMeasure.Order_Ability__c = '1' ";
+
+
+sqlstmt += " WITH proposedProduct AS ( ";
+sqlstmt += proposedSqlQuery;
+sqlstmt += " ), ";
+sqlstmt += " persistedProduct AS ( ";
+sqlstmt += persistedSqlQuery.sql;
+sqlstmt += " ) ";
+sqlstmt += " SELECT ";
+sqlstmt += selectAttributes;
+sqlstmt += " FROM proposedProduct ";
+sqlstmt += " LEFT OUTER JOIN persistedProduct ON ";
+sqlstmt += " proposedProduct.prdMainPKey = persistedProduct.prdMainPKey ";
+sqlstmt += " AND proposedProduct.promotionPKey = persistedProduct.promotionPKey ";
+sqlstmt += " AND proposedProduct.quantityLogisticUnit = persistedProduct.quantityLogisticUnit ";
+sqlstmt += " AND persistedProduct.sdoItemMetaPKey = #sdoItemMetaPKey# ";
+sqlstmt += " WHERE ";
+sqlstmt += queryCondition;
+sqlstmt += " UNION ALL ";
+sqlstmt += " SELECT ";
+sqlstmt += selectAttributes;
+sqlstmt += " FROM persistedProduct ";
+sqlstmt += " LEFT OUTER JOIN proposedProduct ON ";
+sqlstmt += " proposedProduct.prdMainPKey = persistedProduct.prdMainPKey ";
+sqlstmt += " AND proposedProduct.promotionPKey = persistedProduct.promotionPKey ";
+sqlstmt += " AND proposedProduct.quantityLogisticUnit = persistedProduct.quantityLogisticUnit ";
+sqlstmt += " WHERE proposedProduct.prdMainPKey IS NULL ";
+sqlstmt += " OR persistedProduct.sdoItemMetaPKey <> #sdoItemMetaPKey# ";
+sqlstmt += " ORDER BY refPKey ASC, ";
+sqlstmt += " sdoParentItemPKey ASC, ";
+sqlstmt += " isOrderUnit DESC, ";
+sqlstmt += " sort ASC ";
+
+			var sqlStmtResult = Utils.replaceMacrosParam(sqlstmt, sqlParams);
+			//var finalParams = persistedSqlQuery.params.concat(sqlStmtResult.params);
+
+			var finalParams; 
+			if(jsonQuerySelectPromotion.considerSelectablePromotion == "1"){
+				finalParams=selectPromotionSqlQuery.params.concat(persistedSqlQuery.params).concat(sqlStmtResult.params);
+			}else{
+				finalParams=persistedSqlQuery.params.concat(sqlStmtResult.params);
+			}
+
+			return {sql: sqlStmtResult.sql, params: finalParams};
+     ]]></Load>
+  </Database>
+</Datasource>

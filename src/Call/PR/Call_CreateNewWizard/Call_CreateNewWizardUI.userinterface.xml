@@ -1,0 +1,110 @@
+<UIDescription name="Call::CreateNewWizardUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="CallCreateNewTitleId" defaultLabel="New Call" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="createCall">
+          <Bindings>
+            <Resource target="Text" type="Label" id="createNewCallId" defaultLabel="Create" />
+            <Resource target="Icon" type="Image" id="CheckGrey24" defaultImage="light/done_24.png" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="FinishWizard">
+              <Params>
+                <Param name="buttonPressed" value="createCall" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="CallTemplate">
+          <Lookup name="CallTemplateInput">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Call Type" id="callTypeId" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.callMetaLookup.text" bindingMode="ONE_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="OpenCallMetaLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+        <GroupElement name="DateTime">
+          <DatePickerField name="VisitDate">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Date" id="VisitDateId" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.dateFrom" bindingMode="TWO_WAY" />
+            </Bindings>
+          </DatePickerField>
+          <TimePickerField name="VisitTime">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Time" id="TimeFrom" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.timeFrom" bindingMode="TWO_WAY" />
+            </Bindings>
+          </TimePickerField>
+          <CheckBox name="AllDay">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="All Day" id="AllDay" />
+              <Binding target="checkedValue" binding="ProcessContext::WizardBO.allDay" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Events>
+              <ValueChangedEvent event="AllDayChanged" />
+            </Events>
+          </CheckBox>
+        </GroupElement>
+        <GroupElement name="Customer">
+          <Lookup name="CustomerName">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Customer" id="CustomerName" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.customerLookup.name" bindingMode="ONE_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="OpenCustomerNameLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+        <GroupElement name="TripListInfo">
+          <Lookup name="TripListName">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Trip List" id="TripListName" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.tripListName" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Lookup>
+        </GroupElement>
+        <GroupElement name="JobListInfo">
+          <Bindings>
+            <Resource target="Title" type="Label" id="JobListInfo" defaultLabel="Job List Information" />
+          </Bindings>
+          <Lookup name="JobListName" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Job List" id="JobListName" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.jobListLookup.jobDefListText" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Lookup>
+          <InputArea name="JobListCustomer" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Customer" id="JobListCustomer" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.jobListLookup.customerName" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <DatePickerField name="JobListValidFrom" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Valid From" id="JobListValidFrom" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.jobListLookup.validFrom" bindingMode="ONE_WAY" />
+            </Bindings>
+          </DatePickerField>
+          <DatePickerField name="JobListValidThru" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Valid Thru" id="JobListValidThru" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.jobListLookup.validThru" bindingMode="ONE_WAY" />
+            </Bindings>
+          </DatePickerField>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

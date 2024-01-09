@@ -1,0 +1,60 @@
+<Process name="Call::SetDateProcess" defaultAction="Show" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="currentDate" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="currentDate" type="String" />
+        <Input name="returnDate" type="String" />
+        <Input name="returnDateAnsi" type="String" />
+        <Input name="AgendaOverview" type="LoAgendaOverview" />
+        <!--<Input name="lastDate" type="String"/>-->
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="VIEW" name="Show">
+        <UIDescription>Call::SetDateUI</UIDescription>
+        <Events>
+          <Event name="TodayButtonPressed" action="GetCurrentDate" />
+          <Event name="setDate" action="NotEmptyDecision" />
+        </Events>
+      </Action>
+      <Action actionType="LOGIC" name="GetCurrentDate" call="ProcessContext::AgendaOverview.GetCurrentDate">
+        <Return name="ProcessContext::currentDate" />
+      </Action>
+      <Action name="NotEmptyDecision" actionType="DECISION" parameter="ProcessContext::currentDate">
+        <CaseEmpty action="DisplayMessage" />
+        <CaseElse action="AssignReturnValue" />
+      </Action>
+      <Action actionType="CONFIRM" confirmType="Ok" name="DisplayMessage">
+        <Message messageId="PleaseFillInAllValues" />
+        <Cases>
+          <Case value="Ok" action="Show" />
+        </Cases>
+      </Action>
+      <Action actionType="LOGIC" name="AssignReturnValue" call="Utils.convertDate2Ansi">
+        <Parameters>
+          <Input name="date" value="ProcessContext::currentDate" />
+        </Parameters>
+        <Return name="ProcessContext::returnDateAnsi" />
+        <TransitionTo action="ConvertToDate" />
+      </Action>
+      <Action actionType="LOGIC" name="ConvertToDate" call="Utils.convertDate2Ansi">
+        <Parameters>
+          <Input name="date" value="ProcessContext::returnDateAnsi" />
+        </Parameters>
+        <Return name="ProcessContext::returnDate" />
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="currentDate" value="ProcessContext::returnDate" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

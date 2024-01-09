@@ -1,0 +1,7 @@
+<ListObject name="LoAttachmentsContextMenu" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoAttachmentsContextMenu"/>
+  <Item objectClass="LiAttachmentsContextMenu"/>
+  <Methods>
+    <Method name="loadAsync"/>
+  </Methods>
+</ListObject>

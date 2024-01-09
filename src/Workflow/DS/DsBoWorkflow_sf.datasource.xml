@@ -1,0 +1,16 @@
+<DataSource name="DsBoWorkflow" backendSystem="sf" businessObjectClass="BoWorkflow" external="false" editableEntity="Workflow__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Workflow__c" column="Id" />
+    <Attribute name="recentStatePolicy" table="Workflow__c" column="Recent_State_Policy__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Workflow__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+    Workflow__c.Id = #pKey#
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

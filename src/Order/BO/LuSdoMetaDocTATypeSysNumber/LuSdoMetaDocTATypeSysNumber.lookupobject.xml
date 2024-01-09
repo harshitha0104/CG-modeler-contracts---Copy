@@ -1,0 +1,8 @@
+<LookupObject name="LuSdoMetaDocTATypeSysNumber">
+  <DataSource name="DsLuSdoMetaDocTATypeSysNumber" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />    
+    <SimpleProperty name="sysNumberPKey" type="DomPKey" dataSourceProperty="sysNumberPKey" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>

@@ -1,0 +1,53 @@
+<DataSource name="DsLoMeProducts" backendSystem="sf" businessObjectClass="LoMeProducts" external="false" readOnly="true" editableEntity="Product2" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Product2" column="Id" />
+    <Attribute name="prdMainPKey" table="Product2" column="Id" />
+    <Attribute name="text1" table="Product2" column="Description_1_#Language#__c" />
+    <Attribute name="text2" table="Product2" column="Description_2_#Language#__c" />
+    <Attribute name="prdId" table="Product2" column="Consumer_Goods_Product_Code__c" />
+    <Attribute name="shortId" table="Product2" column="Product_Short_Code__c" />
+    <DerivedAttribute name="deliveryState" value="CASE WHEN #compareAsDate('Product2.Delivery_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')# AND  #compareAsDate('Product2.Delivery_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'Available' ELSE 'NotAvailable' END" />
+    <DerivedAttribute name="fieldState" value="CASE WHEN #compareAsDate('Product2.Field_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')# AND  #compareAsDate('Product2.Field_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'Available' ELSE 'NotAvailable' END" />
+    <DerivedAttribute name="newState" value="CASE WHEN #compareAsDate('Product2.New_Item_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')# AND  #compareAsDate('Product2.New_Item_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'Available' ELSE 'NotAvailable' END" />
+    <Attribute name="eAN" table="Product2" column="GTIN__c" />
+    <Attribute name="foreignProduct" table="Product2" column="Competitive_Product__c" />
+    <Attribute name="category" table="Product2" column="Category__c" />
+    <Attribute name="prdType" table="Product2" column="Product_Type__c" />
+    <DerivedAttribute name="groupingAttribute" value="SUBSTR(Product2.Description_1_#Language#__c,1,1)" />
+    <Attribute name="productGroup" table="Product2" column="Description_1_#Language#__c" />
+    <Attribute name="groupText" table="ProductGroup" column="Description_1_#Language#__c" />
+    <Attribute name="groupId" table="ProductGroup" column="Consumer_Goods_Product_Code__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Product2" alias="" idAttribute="Id" />
+    <Entity name="Product2" alias="ProductGroup">
+      <Join Type="inner">
+        <ComplexJoin><![CDATA[
+            Product2.#criterionAttribute# = ProductGroup.Consumer_Goods_Product_Code__c AND ProductGroup.Sales_Org__c = '#SalesOrg#'
+            ]]></ComplexJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Product2.State__c='4'
+  AND Product2.Sales_Org__c = '#SalesOrg#'
+        AND EXISTS (Select NULL from Unit_of_Measure__c 
+     where Unit_of_Measure__c.Product__c = Product2.Id
+     and Unit_of_Measure__c.Order_Ability__c = '1' 
+    )
+  #addCond_FieldState#
+     #addCond_NewState#
+  #addCond_ForeignProduct#
+        #addCond_productPKeys#
+    ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Product2" attribute="Id" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="addCond_FieldState" treatAs="sqlSnippet" />
+    <Parameter name="addCond_NewState" treatAs="sqlSnippet" />
+    <Parameter name="addCond_ForeignProduct" treatAs="sqlSnippet" />
+    <Parameter name="addCond_productPKeys" treatAs="sqlSnippet" />
+    <Parameter name="criterionAttribute" treatAs="sqlSnippet" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,461 @@
+<UIDescription name="AssetManagement::CallAssetOverviewUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="MasterDetailSectionPage" selectFirstItemInList="true" masterSectionFlex="4.6" detailSectionFlex="2.7">
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::ClbBO.luCustomer.name" />
+        <!-- CW-REQUIRED: remove title binding -->
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="false" itemId="AllAssets">
+          <Bindings>
+            <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+            <Resource target="Text" type="Label" id="AllAssets" defaultLabel="All Assets" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showAllAssets" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="NotSightedAssets">
+          <Bindings>
+            <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+            <Resource target="Text" type="Label" id="OnlyNotSighted" defaultLabel="Only Not Sighted" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showNotSightedAssets" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="SightedAssets">
+          <Bindings>
+            <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+            <Resource target="Text" type="Label" id="OnlySighted" defaultLabel="Only Sighted" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showSightedAssets" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="RegisterNewAsset">
+          <Bindings>
+            <Resource target="Text" type="Label" id="RegisterNewAsset" defaultLabel="Register" />
+            <Resource target="Icon" type="Image" id="PlusDarkGrey24" />
+            <Binding type="Visible" target="Visible" call="ProcessContext::ClbBO.getButtonVisibility">
+              <Parameters>
+                <Input name="token" type="Literal" value="btnRegisterUnknownAsset" />
+              </Parameters>
+            </Binding>
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="registerNewAsset" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <!-- Master Section -->
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <MenuItems>
+          <MenuItem directlyVisible="true" itemId="ScanBarcode">
+            <Bindings>
+              <Resource target="Text" type="Label" id="ScanBarcode" defaultLabel="Scan Barcode" />
+              <Resource target="Icon" type="Image" id="Barcode" />
+              <Binding type="Visible" target="Visible" call="ProcessContext::ClbBO.getButtonVisibility">
+                <Parameters>
+                  <Input name="token" type="Literal" value="btnScanBarcode" />
+                </Parameters>
+              </Binding>
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="startBarcodeScanning" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <GroupedList name="AssetSurveyList" master="true" indexBar="false" searchable="false" dataSource="ProcessContext::ClbBO.loCallAssetOverview.Items[]">
+          <Items name="Items" itemPattern="AssetSurveyListItem">
+            <Bindings>
+              <Binding target="AssetNameShort" type="Text" binding=".assetNameShort" bindingMode="ONE_WAY" />
+              <Binding target="AssetType" type="Text" binding=".assetType" bindingMode="ONE_WAY" />
+              <Binding target="Brand" type="Text" binding=".brand" bindingMode="ONE_WAY" />
+              <Binding target="BpaDate" type="Text" binding=".formattedDate" bindingMode="ONE_WAY" />
+              <Binding target="PosName" type="Text" binding=".posName" bindingMode="ONE_WAY" />
+              <Binding target="SerialNumber" type="Text" binding=".serialNumber" bindingMode="ONE_WAY" />
+              <Binding target="LatestSurveyDate" type="Date" binding=".latestSurveyDate" bindingMode="ONE_WAY" />
+              <Binding target="ApproveIcon" type="Combo" binding=".presence" toggleId="AstPresence" bindingMode="TWO_WAY" />
+              <Resource target="Empty" type="Label" id="Empty" defaultLabel="" bindingMode="ONE_WAY" />
+              <Resource target="EyeIcon" type="Image" id="EyeGrey24" defaultImage="EyeGrey24" bindingMode="ONE_WAY" />
+              <Resource target="BrandIcon" type="Image" id="Products_F" defaultImage="Products_F" bindingMode="ONE_WAY" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col width="24.5em">
+                  <Row>
+                    <Col width="17.5em">
+                      <Row>
+                        <Col height="2em" layoutType="itemTitle" bindingId="AssetNameShort" />
+                      </Row>
+                    </Col>
+                    <Col width="7em">
+                      <Row>
+                        <Col width="1.5em" height="2em" layoutType="Image" bindingId="EyeIcon" />
+                        <Col height="2em" layoutType="itemNameSecondary" bindingId="LatestSurveyDate" />
+                      </Row>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col width="7.5em">
+                      <Row>
+                        <Col height="1.5em" layoutType="itemSecondary" bindingId="AssetType" />
+                      </Row>
+                      <Row>
+                        <Col height="1.5em" layoutType="itemSecondary" bindingId="PosName" />
+                      </Row>
+                    </Col>
+                    <Col width="10em">
+                      <Row>
+                        <Col height="1.5em" layoutType="itemSecondary" bindingId="SerialNumber" />
+                      </Row>
+                      <Row>
+                        <Col height="1.5em" layoutType="itemSecondary" bindingId="BpaDate" />
+                      </Row>
+                    </Col>
+                    <Col width="7em">
+                      <Row>
+                        <Col width="1.7em" height="1.5em" layoutType="Image" bindingId="BrandIcon" />
+                        <Col height="1.5em" layoutType="itemSecondary" bindingId="Brand" />
+                      </Row>
+                      <Row>
+                        <Col height="1.5em" layoutType="itemSecondary" bindingId="Empty" />
+                      </Row>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col width="3.2em">
+                  <Row>
+                    <Col height="1.4em" layoutType="itemSecondary" bindingId="Empty" />
+                  </Row>
+                  <Row>
+                    <Col height="2em" layoutType="itemNameSecondary" bindingId="ApproveIcon" />
+                  </Row>
+                  <Row>
+                    <Col height="1.8em" layoutType="itemSecondary" bindingId="Empty" />
+                  </Row>
+                </Col>
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="22em">
+                    <Row>
+                      <Col width="15em">
+                        <Row>
+                          <Col height="2em" layoutType="itemTitle" bindingId="AssetNameShort" />
+                        </Row>
+                      </Col>
+                      <Col width="7em">
+                        <Row>
+                          <Col width="1.5em" height="2em" layoutType="Image" bindingId="EyeIcon" />
+                          <Col height="2em" layoutType="itemNameSecondary" bindingId="LatestSurveyDate" />
+                        </Row>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col width="7em">
+                        <Row>
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="AssetType" />
+                        </Row>
+                        <Row>
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="PosName" />
+                        </Row>
+                      </Col>
+                      <Col width="8em">
+                        <Row>
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="SerialNumber" />
+                        </Row>
+                        <Row>
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="BpaDate" />
+                        </Row>
+                      </Col>
+                      <Col width="7em">
+                        <Row>
+                          <Col width="1.7em" height="1.5em" layoutType="Image" bindingId="BrandIcon" />
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="Brand" />
+                        </Row>
+                        <Row>
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="Empty" />
+                        </Row>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col width="3.2em">
+                    <Row>
+                      <Col height="1.4em" layoutType="itemSecondary" bindingId="Empty" />
+                    </Row>
+                    <Row>
+                      <Col height="2em" layoutType="itemNameSecondary" bindingId="ApproveIcon" />
+                    </Row>
+                    <Row>
+                      <Col height="1.8em" layoutType="itemSecondary" bindingId="Empty" />
+                    </Row>
+                  </Col>
+                </Default>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col width="20em">
+                    <Row>
+                      <Col width="18em" height="2em" layoutType="itemTitle" bindingId="AssetNameShort" />
+                      <Col width="10em" height="2em" layoutType="itemNameSecondary" bindingId="ApproveIcon" />
+                    </Row>
+                    <Row>
+                      <Col width="14em">
+                        <Row>
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="SerialNumber" />
+                        </Row>
+                        <Row>
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="AssetType" />
+                        </Row>
+                        <Row>
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="PosName" />
+                        </Row>
+                        <Row>
+                          <Col height="1em" layoutType="itemSecondary" bindingId="BpaDate" />
+                        </Row>
+                      </Col>
+                      <Col width="12em">
+                        <Row>
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="Empty" />
+                        </Row>
+                        <Row>
+                          <Col width="1.7em" height="1.7em" layoutType="Image" bindingId="EyeIcon" />
+                          <Col height="1.5em" layoutType="itemNameSecondary" bindingId="LatestSurveyDate" />
+                        </Row>
+                        <Row>
+                          <Col width="1.7em" height="1.5em" layoutType="Image" bindingId="BrandIcon" />
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="Brand" />
+                        </Row>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Default>
+                <Apple>
+                  <Col width="17.4em">
+                    <Row>
+                      <Col width="13.4em" height="2em" layoutType="itemTitle" bindingId="AssetNameShort" />
+                      <Col width="4em" height="2em" layoutType="itemNameSecondary" bindingId="ApproveIcon" />
+                    </Row>
+                    <Row>
+                      <Col width="9.4em">
+                        <Row>
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="SerialNumber" />
+                        </Row>
+                        <Row>
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="AssetType" />
+                        </Row>
+                        <Row>
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="PosName" />
+                        </Row>
+                        <Row>
+                          <Col height="1em" layoutType="itemSecondary" bindingId="BpaDate" />
+                        </Row>
+                      </Col>
+                      <Col width="8em">
+                        <Row>
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="Empty" />
+                        </Row>
+                        <Row>
+                          <Col width="1.7em" height="1.5em" layoutType="Image" bindingId="EyeIcon" />
+                          <Col height="1.5em" layoutType="itemNameSecondary" bindingId="LatestSurveyDate" />
+                        </Row>
+                        <Row>
+                          <Col width="1.7em" height="1.5em" layoutType="Image" bindingId="BrandIcon" />
+                          <Col height="1.5em" layoutType="itemSecondary" bindingId="Brand" />
+                        </Row>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Apple>
+              </Phone>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected" resetMultiAreas="true">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="tabName" value="View::currentTabName" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+    <Section sectionName="detailSection" sectionPattern="TabbedViewAreaSection" currentTab="View::currentTabName">
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="Main">
+              <Bindings>
+                <Resource target="image" type="Image" id="MainGrey24" defaultImage="MainGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="MainId" defaultLabel="Main" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Attachments">
+              <Bindings>
+                <Resource target="image" type="Image" id="ClipGrey24" defaultImage="ClipGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="AttachmentId" defaultLabel="Attachments" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="tabSelected" storeTabNameIn="currentTabName" />
+          </Events>
+        </TabSelector>
+      </Area>
+      <Area areaPattern="MultiArea" areaName="Main">
+        <Area areaName="Main" areaPattern="GroupedElementsArea">
+          <GroupElement name="HeadQuarterNote ">
+            <Bindings>
+              <Resource target="Title" type="Label" id="HQNote" defaultLabel="Headquarter Note" />
+            </Bindings>
+            <InputAreaMultiLine name="HeadQuarterNote" editable="false">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::ClbBO.loCallAssetOverview.Current.annotation" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputAreaMultiLine>
+          </GroupElement>
+          <GroupElement name="Audit Details">
+            <Bindings>
+              <Resource target="Title" type="Label" id="AssetDetails" defaultLabel="Asset Details" />
+            </Bindings>
+            <SelectionBox name="Condition">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Condition" defaultLabel="Condition" />
+                <Binding target="DataSource" toggleId="AstCondition" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::ClbBO.loCallAssetOverview.Current.condition" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="ConditionHist" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="ConditionHistorical" defaultLabel=" " />
+                <Binding target="DataSource" toggleId="AstCondition" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::ClbBO.loCallAssetOverview.Current.conditionHist" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="Location">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Location" defaultLabel="Location" />
+                <Binding target="DataSource" toggleId="AstLocation" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::ClbBO.loCallAssetOverview.Current.location" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="LocationHist" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="LocationHistorical" defaultLabel=" " />
+                <Binding target="DataSource" toggleId="AstLocation" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::ClbBO.loCallAssetOverview.Current.locationHist" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="LocationRating">
+              <Bindings>
+                <Resource target="Label" type="Label" id="LocationRating" defaultLabel="Rating" />
+                <Binding target="DataSource" toggleId="AstLocationRating" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::ClbBO.loCallAssetOverview.Current.locationRating" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="LocationRatingHist" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="LocationRatingHist" defaultLabel=" " />
+                <Binding target="DataSource" toggleId="AstLocationRating" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::ClbBO.loCallAssetOverview.Current.locationRatingHist" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="Usage">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Usage" defaultLabel="Usage" />
+                <Binding target="DataSource" toggleId="AstUsage" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::ClbBO.loCallAssetOverview.Current.usage" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="UsageHist" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="UsageHist" defaultLabel=" " />
+                <Binding target="DataSource" toggleId="AstUsage" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::ClbBO.loCallAssetOverview.Current.usageHist" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </GroupElement>
+          <GroupElement name="SurveyNote">
+            <Bindings>
+              <Resource target="Title" type="Label" id="Note" defaultLabel="Note" />
+            </Bindings>
+            <InputAreaMultiLine name="Note">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::ClbBO.loCallAssetOverview.Current.note" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputAreaMultiLine>
+          </GroupElement>
+          <GroupElement name="SurveyNoteHist">
+            <InputAreaMultiLine name="NoteHist" editable="false">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::ClbBO.loCallAssetOverview.Current.noteHist" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputAreaMultiLine>
+          </GroupElement>
+        </Area>
+      </Area>
+      <Area areaName="Attachments" areaPattern="SingleElementArea">
+        <MediaListControl name="AstAttachments" dataSource="ProcessContext::AssetAttachments.Items[]">
+          <Bindings>
+            <Binding bindingMode="ONE_WAY" binding=".mediaPath" type="Text" target="MediaPath" />
+            <Binding bindingMode="ONE_WAY" binding=".description" type="Text" target="Description" />
+            <Binding bindingMode="ONE_WAY" binding=".type" type="Text" target="Type" />
+          </Bindings>
+        </MediaListControl>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

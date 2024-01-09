@@ -1,0 +1,115 @@
+<Process name="Order::CreateNewWithCustomerProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="ValidationBo" type="BoWizardCreateNewWithCustomer" />
+        <Declaration name="OrderMetaList" type="LoOrderMeta" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateValidationBo" actionType="CREATE" type="BoWizardCreateNewWithCustomer">
+        <Parameters>
+          <Input name="ordererPKey" type="Literal" value="" />
+          <Input name="orderMetaPKey" type="Literal" value="" />
+        </Parameters>
+        <Return name="ProcessContext::ValidationBo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Order::CreateNewWithCustomer</UIDescription>
+        <Events>
+          <Event name="orderMetaLookup" action="OpenOrderMetaLookup" />
+          <Event name="customerLookup" action="OpenCustomerLookup" />
+          <Event name="createOrder" action="setDirty" />
+        </Events>
+      </Action>
+      <!-- Actions for Order Template Lookup -->
+      <Action actionType="PROCESS" name="OpenOrderMetaLookup" process="Order::OrderMetaLookupProcess">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::validationBo.luOrderer.pKey" />
+          <Input name="orderMetaPKey" value="ProcessContext::validationBo.luOrderMeta.pKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::validationBo.orderMetaPKey" value="orderMetaPKey" />
+        </ReturnValues>
+        <TransitionTo action="LoadOrderMetaLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadOrderMetaLookup" type="LuOrderMeta">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::validationBo.orderMetaPKey" />
+        </Parameters>
+        <Return name="ProcessContext::validationBo.luOrderMeta" />
+        <TransitionTo action="setEARights" />
+      </Action>
+      <Action actionType="LOGIC" name="setEARights" call="ProcessContext::ValidationBo.setEARights">
+        <TransitionTo action="setNew" />
+      </Action>
+      <!-- Actions for Customer Lookup -->
+      <Action actionType="PROCESS" name="OpenCustomerLookup" process="Customer::OrderLookupProcess">
+        <Parameters>
+          <Input name="ordererPKey" value="ProcessContext::validationBo.luOrderer.pKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::validationBo.ordererPKey" value="pKey" />
+        </ReturnValues>
+        <TransitionTo action="LoadCustomerLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadCustomerLookup" type="LuOrderer">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::validationBo.ordererPKey" />
+        </Parameters>
+        <Return name="ProcessContext::validationBo.luOrderer" />
+        <TransitionTo action="GetOrderTemplateList" />
+      </Action>
+      <!-- Load order template list after a customer has been selected to preset default (first) order template -->
+      <Action name="GetOrderTemplateList" actionType="LOAD" type="LoOrderMeta">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::validationBo.ordererPKey" />
+        </Parameters>
+        <Return name="ProcessContext::OrderMetaList" />
+        <TransitionTo action="SetOrderMetaPKey_DefaultTemplate" />
+      </Action>
+      <Action name="SetOrderMetaPKey_DefaultTemplate" actionType="LOGIC" call="ProcessContext::OrderMetaList.getFirstEntry">
+        <Return name="ProcessContext::validationBo.orderMetaPKey" />
+        <TransitionTo action="LoadOrderMetaLookup" />
+      </Action>
+      <!-- Validation actions -->
+      <Action actionType="VALIDATION" name="WizardValidations">
+        <Validations>
+          <Validation name="ProcessContext::ValidationBo.validateNotEmpty" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="EndCreateOrder" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <!-- Set validation business object dirty on clicking done button-->
+      <Action actionType="LOGIC" name="setDirty" call="ProcessContext::ValidationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="5" />
+        </Parameters>
+        <TransitionTo action="WizardValidations" />
+      </Action>
+      <!-- Set validation business object to new if not the done button has been clicked-->
+      <Action actionType="LOGIC" name="setNew" call="ProcessContext::ValidationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="2" />
+        </Parameters>
+      </Action>
+      <!-- End actions -->
+      <Action actionType="END" name="EndCreateOrder">
+        <ReturnValues>
+          <Return name="orderMetaPKey" value="ProcessContext::validationBo.orderMetaPKey" />
+          <Return name="ordererPKey" value="ProcessContext::validationBo.ordererPKey" />
+          <Return name="buttonPressed" value="Event.buttonPressed" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndCancel"></Action>
+    </Actions>
+  </Body>
+</Process>

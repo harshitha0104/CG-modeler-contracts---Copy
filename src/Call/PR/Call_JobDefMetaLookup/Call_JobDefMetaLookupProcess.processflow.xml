@@ -1,0 +1,51 @@
+<Process name="Call::JobDefMetaLookupProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="JobDefinitionMetas" type="LoJobDefinitionMetas" />
+      </Declarations>
+      <Parameters>
+        <Input name="posId" type="String" />
+        <Input name="JobMetaId" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetJobDefMetas" actionType="LOAD" type="LoJobDefinitionMetas">
+        <Parameters>
+          <Input name="posId" value="ProcessContext::posId" />
+          <Input name="jobMetaId" value="ProcessContext::JobMetaId" />
+        </Parameters>
+        <Return name="ProcessContext::JobDefinitionMetas" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Call::JobDefMetaLookupUI</UIDescription>
+        <Events>
+          <Event name="JobDefMetaItemSelected" action="End" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="jobDefMetaPKey" value="Event.pKey" />
+          <Return name="jobDefMetaText" value="Event.text" />
+          <Return name="dataLength" value="Event.dataLength" />
+          <Return name="dataType" value="Event.dataType" />
+          <Return name="toggleId" value="Event.toggleId" />
+          <Return name="pOS" value="Event.pOS" />
+          <Return name="jobMetaPKey" value="Event.jobMetaPKey" />
+          <Return name="considerMinValue" value="Event.considerMinValue" />
+          <Return name="minValue" value="Event.minValue" />
+          <Return name="considerMaxValue" value="Event.considerMaxValue" />
+          <Return name="maxValue" value="Event.maxValue" />
+          <Return name="stepSize" value="Event.stepSize" />
+          <Return name="defaultValue" value="Event.defaultValue" />
+          <Return name="useStepper" value="Event.useStepper" />
+          <Return name="pictureTaking" value="Event.pictureTaking" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

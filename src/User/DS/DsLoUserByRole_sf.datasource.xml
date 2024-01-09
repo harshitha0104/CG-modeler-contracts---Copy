@@ -1,0 +1,30 @@
+<DataSource name="DsLoUserByRole" backendSystem="sf" businessObjectClass="LoUserByRole" external="false" distinct="true" editableEntity="PermissionSetAssignment" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="PermissionSetAssignment" column="AssigneeId" />
+    <DerivedAttribute name="name" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="PermissionSetAssignment" alias="" idAttribute="Id" />
+    <Entity name="SetupEntityAccess">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="PermissionSetAssignment.PermissionSetId" comparator="eq" rightSideType="Attribute" rightSideValue="SetupEntityAccess.ParentId" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Custom_Permission_User_Role_Mapping__c">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Custom_Permission_User_Role_Mapping__c.Custom_Permission__c" comparator="eq" rightSideType="Attribute" rightSideValue="SetupEntityAccess.SetupEntityId" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Custom_Permission_User_Role_Mapping__c.User_Role_Name__c = #usrRoleId#
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="usrRoleId" type="TEXT" />
+  </Parameters>
+</DataSource>

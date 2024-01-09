@@ -1,0 +1,52 @@
+<Process name="Order::RewardsProcess" defaultAction="generateCountersForRewards" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations />
+      <Parameters>
+        <Input name="hurdleEvaluationHelper" type="BoHurdleEvaluationHelper" />
+        <Input name="PromotionSlogan" type="DomText" />
+        <Input name="selectedPromotionPKey" type="DomPKey" />
+        <Input name="boHelperHurdleExpressionFunctions" type="BoHelperHurdleExpressionFunctions" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="displayOfRewardGroups" actionType="LOGIC" call="ProcessContext::hurdleEvaluationHelper.filterRewardSpecificHurdle">
+        <Parameters>
+          <Input name="reset" type="Literal" value="0" />
+          <Input name="selectedPromotionPKey" value="ProcessContext::selectedPromotionPKey" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="showView">
+        <UIDescription>Order::RewardsUI</UIDescription>
+        <Events>
+          <Event name="onButtonPressedEvent" action="openRewardProducts" />
+          <Event name="onRewardSelectionChangedEvent" action="onRewardSelectionChanged" />
+        </Events>
+      </Action>
+      <Action name="openRewardProducts" actionType="PROCESS" process="Order::RewardProductsProcess">
+        <Parameters>
+          <Input name="hurdleEvaluationHelper" value="ProcessContext::hurdleEvaluationHelper" />
+          <Input name="rewardId" value="Event.pKey" />
+          <Input name="boHelperHurdleExpressionFunctions" value="ProcessContext::boHelperHurdleExpressionFunctions" />
+        </Parameters>
+        <TransitionTo action="generateCountersForRewards" />
+      </Action>
+      <Action name="generateCountersForRewards" actionType="LOGIC" call="ProcessContext::hurdleEvaluationHelper.loRewards.generateProductsCounterStringForReward">
+        <Parameters>
+          <Input name="loRewardProducts" value="ProcessContext::hurdleEvaluationHelper.loRewardProducts" />
+        </Parameters>
+        <TransitionTo action="showView" />
+      </Action>
+      <Action name="onRewardSelectionChanged" actionType="LOGIC" call="ProcessContext::hurdleEvaluationHelper.onRewardSelectionChanged">
+        <Parameters>
+          <Input name="rewardPKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="showView" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

@@ -1,0 +1,37 @@
+<Process name="Order::CreateNewAdhocWizardProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="DeliveryDocumentMetaList" type="LoDeliveryDocumentMeta" />
+      </Declarations>
+      <Parameters>
+        <Input name="OrdererPKey" type="DomPKey" />
+        <Input name="TmgTourPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetTemplateList" actionType="LOAD" type="LoDeliveryDocumentMeta">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::OrdererPKey" />
+          <Input name="tmgTourPKey" value="ProcessContext::TmgTourPKey" />          
+        </Parameters>
+        <Return name="ProcessContext::DeliveryDocumentMetaList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Order::CreateNewAdhocWizardUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="End" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="orderMetaPKey" value="Event.pKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

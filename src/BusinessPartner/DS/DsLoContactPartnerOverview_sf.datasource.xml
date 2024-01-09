@@ -1,0 +1,71 @@
+<DataSource name="DsLoContactPartnerOverview" backendSystem="sf" businessObjectClass="LoContactPartnerOverview" external="false" editableEntity="Contact" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contact" column="Id" />
+    <Attribute name="salutation" table="Contact" column="Salutation" />
+    <Attribute name="name" table="Contact" column="Name" />
+    <Attribute name="firstName" table="Contact" column="FirstName" />
+    <Attribute name="lastName" table="Contact" column="LastName" />
+    <Attribute name="jobTitle" table="Contact" column="Job_Title__c" />
+    <Attribute name="mainFunction" table="Contact" column="Main_Function__c" />
+    <Attribute name="phone1" table="Contact" column="Phone" />
+    <Attribute name="phone2" table="Contact" column="MobilePhone" />
+    <Attribute name="email1" table="Contact" column="Email" />
+    <Attribute name="fax1" table="Contact" column="Fax" />
+    <DerivedAttribute name="bpaMetaPKey" type="String" value="' '" />
+    <DerivedAttribute name="mainAddress" type="String" value="Contact.Mailing_Street__c || ', ' || Contact.Mailing_Postal_Code__c || ' ' || Contact.Mailing_City__c || ', ' || Contact.Mailing_State__c" />
+    <DerivedAttribute name="grouping1" value="substr(Contact.Name,1,1)" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contact" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition />
+  <OrderCriteria>
+    <OrderCriterion entity="Contact" attribute="Name" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="lastNameComp" type="TEXT" />
+    <Parameter name="lastName" type="TEXT" />
+    <Parameter name="firstNameComp" type="TEXT" />
+    <Parameter name="firstName" type="TEXT" />
+    <Parameter name="cpStreetComp" type="TEXT" />
+    <Parameter name="cpStreet" type="TEXT" />
+    <Parameter name="cpZIPComp" type="TEXT" />
+    <Parameter name="cpZIP" type="TEXT" />
+    <Parameter name="cpCityComp" type="TEXT" />
+    <Parameter name="cpCity" type="TEXT" />
+    <Parameter name="cpStateComp" type="TEXT" />
+    <Parameter name="cpState" type="TEXT" />
+  </Parameters>
+  <ConditionalParameters>
+    <ConditionalParameter name="lastName">
+      <SimpleConditions>
+        <Condition leftSideValue="Contact.LastName" comparator="#lastNameComp#" rightSideType="Attribute" rightSideValue="'#lastName#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="firstName">
+      <SimpleConditions>
+        <Condition leftSideValue="Contact.FirstName" comparator="#firstNameComp#" rightSideType="Attribute" rightSideValue="'#firstName#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="cpStreet">
+      <SimpleConditions>
+        <Condition leftSideValue="Contact.Mailing_Street__c" comparator="#cpStreetComp#" rightSideType="Attribute" rightSideValue="'#cpStreet#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="cpZIP">
+      <SimpleConditions>
+        <Condition leftSideValue="Contact.Mailing_Postal_Code__c" comparator="#cpZIPComp#" rightSideType="Attribute" rightSideValue="'#cpZIP#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="cpCity">
+      <SimpleConditions>
+        <Condition leftSideValue="Contact.Mailing_City__c" comparator="#cpCityComp#" rightSideType="Attribute" rightSideValue="'#cpCity#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="cpState">
+      <SimpleConditions>
+        <Condition leftSideValue="Contact.Mailing_State__c" comparator="#cpStateComp#" rightSideType="Attribute" rightSideValue="'#cpState#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+  </ConditionalParameters>
+</DataSource>

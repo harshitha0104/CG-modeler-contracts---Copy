@@ -1,0 +1,23 @@
+<ListObject name="LoOrderer" generateLoadMethod="false" >
+  <DataSource name="DsLoOrderer" />
+  <Item objectClass="LiOrderer" />
+  <Methods>
+    <Method name="loadAsync" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoOrdererOverview">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="Orderer_Id" property="customerId" type="Text" />
+        <AdvancedSearchAttribute label="Orderer_Name" property="name" type="Text" />
+        <AdvancedSearchAttribute label="Orderer_Street" property="customerStreet" type="Text" />
+        <AdvancedSearchAttribute label="Orderer_ZipCode" property="zipCode" type="Text" />
+        <AdvancedSearchAttribute label="Orderer_City" property="city" type="Text" />
+        <AdvancedSearchAttribute label="Orderer_State" property="state" type="Text" />
+        <AdvancedSearchAttribute label="Orderer_Prio" property="priority" type="Selection" toggleId="ABC" editable="true" />
+        <AdvancedSearchAttribute label="Orderer_ClassOfTrade" property="classOfTrade" type="Selection" toggleId="BpaClassOfTrade" editable="true" />
+        <AdvancedSearchAttribute label="Orderer_Substitution" property="substituted" type="Boolean" />
+        <AdvancedSearchAttribute label="Orderer_TradeOrg" property="tradeOrg" lookupProcess="Customer::CustomerTradeOrgLookupProcess" lookupProcessReturnValue="pKey" lookupObject="LuCustomerTradeOrgAdvSearch" lookupObjectDisplayValue="name" type="Lookup" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

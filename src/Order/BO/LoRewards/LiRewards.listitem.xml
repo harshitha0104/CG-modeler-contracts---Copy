@@ -1,0 +1,34 @@
+<ListItem name="LiRewards">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="rewardTitle" type="DomText" dataSourceProperty="rewardTitle" />
+    <SimpleProperty name="rewardType" type="DomString" dataSourceProperty="rewardType" />
+    <SimpleProperty name="pricingConditionTemplate" type="DomId" dataSourceProperty="pricingConditionTemplate" />
+    <SimpleProperty name="defaultValue" type="DomDecimal" dataSourceProperty="defaultValue" />
+    <SimpleProperty name="promotionPKey" type="DomPKey" dataSourceProperty="promotionPKey" />
+    <SimpleProperty name="rewardGroupId" type="DomPKey" dataSourceProperty="rewardGroupId" />
+    <SimpleProperty name="selected" type="DomBool" />
+    <SimpleProperty name="isApplicable" type="DomBool" dataSourceProperty="isApplicable" />
+    <SimpleProperty name="counterString" type="DomString" dataSourceProperty="counterString" />
+    <SimpleProperty name="sort" type="DomSort" storable="true" dataSourceProperty="sort" />
+    <SimpleProperty name="promotionRewardGroupTitle" type="DomText" dataSourceProperty="promotionRewardGroupTitle" />
+    <SimpleProperty name="automaticallyGranted" type="DomBool" dataSourceProperty="automaticallyGranted" />
+    <SimpleProperty name="subGroup" type="DomText" dataSourceProperty="subGroup" />
+    <SimpleProperty name="hurdlePKey" type="DomPKey" dataSourceProperty="hurdlePKey" />
+    <SimpleProperty name="userExit" type="DomString" dataSourceProperty="userExit" />
+    <SimpleProperty name="userExitResult" type="DomString" />
+    <SimpleProperty name="numericValue" type="DomInteger" dataSourceProperty="numericValue" />
+    <SimpleProperty name="booleanValue" type="DomBool" dataSourceProperty="booleanValue" />
+    <SimpleProperty name="textValue" type="DomString" dataSourceProperty="textValue" />
+    <SimpleProperty name="dateValue" type="DomDate" dataSourceProperty="dateValue" />
+    <SimpleProperty name="targetValue" type="DomText" />
+    <SimpleProperty name="perFactor" type="DomInteger" dataSourceProperty="perFactor" />
+    <SimpleProperty name="calculatedValue" type="DomText" />
+    <SimpleProperty name="isReadyToBeApplicable" type="DomBool" dataSourceProperty="isReadyToBeApplicable" />
+    <SimpleProperty name="showButton" type="DomBool" dataSourceProperty="showButton" />
+    <SimpleProperty name="buttonText" type="DomString" dataSourceProperty="buttonText" />
+    <SimpleProperty name="editable" type="DomBool" dataSourceProperty="editable" />
+    <SimpleProperty name="isSelectedOnUI" type="DomBool" dataSourceProperty="isSelectedOnUI" />
+    <SimpleProperty name="classification" type="DomString" dataSourceProperty="classification" />
+  </SimpleProperties>
+</ListItem>

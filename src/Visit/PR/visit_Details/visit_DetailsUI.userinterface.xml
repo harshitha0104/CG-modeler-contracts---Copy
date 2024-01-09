@@ -1,0 +1,111 @@
+<UIDescription name="Visit::DetailsUI" schemaVersion="0.0.0.5" simpleEditorOnly="true">
+  <Page pagePattern="SingleSectionDialogPage" selectFirstItemInList="true" masterSectionFlex="40" detailSectionFlex="60">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="VisitDetail" defaultLabel="Visit Details" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="VisitDetails">
+          <InputArea name="AccountId" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Account" id="AccountId" />
+              <Binding target="Value" type="Text" binding="ProcessContext::Account.name" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <Merger name="Actual Start Time" pattern="twoInputControls" labelHandling="Combined">
+            <DatePickerField name="TimeFrom" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Actual Visit Start Time" id="ActualStartTimeId" />
+                <Binding target="Value" binding="ProcessContext::BoVisit.actualStartDate" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <TimePickerField name="TimeThru" disabled="true">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::BoVisit.actualStartTimeUI" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+          <Merger name="Actual End Time" pattern="twoInputControls" labelHandling="Combined">
+            <DatePickerField name="TimeFrom" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Actual Visit End Time" id="ActualEndTimeId" />
+                <Binding target="Value" binding="ProcessContext::BoVisit.actualEndDate" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <TimePickerField name="TimeThru" disabled="true">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::BoVisit.actualEndTimeUI" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+          <InputAreaMultiLine name="Description" noOfRows="3">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Instruction Description" id="DescriptionId" />
+              <Binding target="Value" type="Text" binding="ProcessContext::BoVisit.instructionDescription" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+          <Merger name="Planned Start Time" pattern="twoInputControls" labelHandling="Combined">
+            <DatePickerField name="TimeFrom" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Planned Visit Start Time" id="PlannedStartTimeId" />
+                <Binding target="Value" binding="ProcessContext::BoVisit.plannedStartDate" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <TimePickerField name="TimeThru" disabled="true">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::BoVisit.plannedStartTime" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+          <Merger name="Planned End Time" pattern="twoInputControls" labelHandling="Combined">
+            <DatePickerField name="TimeFrom" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Planned Visit End Time" id="PlannedEndTimeId" />
+                <Binding target="Value" binding="ProcessContext::BoVisit.plannedEndDate" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <TimePickerField name="TimeThru" disabled="true">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::BoVisit.plannedEndTime" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+          <InputArea name="RetailStoreId" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Retail Store" id="RetailStoreId" />
+              <Binding target="Value" type="Text" binding="ProcessContext::RetailStoreDetail.name" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <SelectionBox name="Status" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Status" id="StatusId" />
+              <Binding target="DataSource" toggleId="VisitStatus" bindingMode="ONE_WAY" />
+              <Binding target="Value" type="Text" binding="ProcessContext::BoVisit.status" bindingMode="ONE_WAY" />
+            </Bindings>
+          </SelectionBox>
+          <InputAreaMultiLine name="StatusRemarks" noOfRows="3">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Status Remarks" id="StatusRemarksId" />
+              <Binding target="Value" type="Text" binding="ProcessContext::BoVisit.statusRemarks" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+          <SelectionBox name="VisitPriority">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Visit Priority" id="VisitPriorityId" />
+              <Binding target="DataSource" toggleId="VisitPriority" bindingMode="TWO_WAY" />
+              <Binding target="Value" type="Text" binding="ProcessContext::BoVisit.visitPriority" bindingMode="TWO_WAY" />
+            </Bindings>
+          </SelectionBox>
+          <InputArea name="Visitor" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="User" id="UserId" />
+              <Binding target="Value" type="Text" binding="ProcessContext::BoVisit.visitor" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

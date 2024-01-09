@@ -1,0 +1,9 @@
+<ListItem name="LiBpaPOSMetaRel" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+    <SimpleProperty name="mandatory" type="DomBool" dataSourceProperty="mandatory" />
+    <SimpleProperty name="bpaRelMetaPKey" type="DomPKey" dataSourceProperty="bpaRelMetaPKey" />
+    <SimpleProperty name="bpaPosMetaPKey" type="DomPKey" dataSourceProperty="bpaPosMetaPKey" />
+  </SimpleProperties>
+</ListItem>

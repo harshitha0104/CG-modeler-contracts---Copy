@@ -1,0 +1,13 @@
+<ListItem name="LiSalesFolderPromotion">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="prmPKey" type="DomPKey" storable="false" dataSourceProperty="prmPKey" />
+    <SimpleProperty name="sloganText" type="DomText" storable="false" dataSourceProperty="sloganText" />
+    <SimpleProperty name="dateFrom" type="DomDate" storable="false" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" storable="false" dataSourceProperty="dateThru" />
+    <SimpleProperty name="groupText" type="DomText" storable="false" dataSourceProperty="groupText" />
+    <SimpleProperty name="annotationText" type="DomText" storable="false" dataSourceProperty="annotationText" />
+    <SimpleProperty name="dateFromText" type="DomText"/>
+    <SimpleProperty name="dateThruText" type="DomText"/>
+  </SimpleProperties>
+</ListItem>

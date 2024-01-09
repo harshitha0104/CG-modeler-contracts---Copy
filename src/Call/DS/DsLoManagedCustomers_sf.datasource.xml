@@ -1,0 +1,32 @@
+<DataSource name="DsLoManagedCustomers" backendSystem="sf" distinct="true" businessObjectClass="LoManagedCustomers" external="false" editableEntity="Account" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="customerPKey" table="Account" column="Id" />
+    <Attribute name="customerId" table="Account" column="Account_Number__c" />
+    <Attribute name="customerName" table="Account" column="Name" />
+    <DerivedAttribute name="firstLetterOfName" value="substr(Account.Name, 1, 1)" />
+    <DerivedAttribute name="customerAddress" value="trim(Account.ShippingStreet) || ' '  || Account.ShippingCity)" />
+    <DerivedAttribute name="isSubstituted" value="'0'" />
+    <DerivedAttribute name="isManager" value="'1'" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account" alias="" idAttribute="Id" />
+    <Entity name="Account_Manager__c" alias="">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="Account_Manager__c.User__c" comparator="eq" rightSideType="Attribute" rightSideValue="'#responsiblePKey#'" />
+          <Condition leftSideValue="Account.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Account_Manager__c.Account__c" />
+          <Condition leftSideValue="#Account_Manager__c.Valid_From__c" leftSideType="Date" comparator="le" rightSideValue="#TodayAsDate#" rightSideType="Date" />
+          <Condition leftSideValue="#Account_Manager__c.Valid_Thru__c" leftSideType="Date" comparator="ge" rightSideValue="#TodayAsDate#" rightSideType="Date" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[  
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Account" attribute="Name" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="responsiblePKey" type="TEXT" />
+  </Parameters>
+</DataSource>

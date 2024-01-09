@@ -1,0 +1,112 @@
+<Process name="Call::CreateNewCallViaTripListProcess" defaultAction="Mode_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="WizardBO" type="BoWizardCreateCallViaTpl" />
+        <Declaration name="TripListBO" type="BoTripList" />
+        <Declaration name="CallMetaPKey" type="String" />
+        <Declaration name="LocationsList" type="LoLocations" />
+      </Declarations>
+      <Parameters>
+        <Input name="CurrentDate" type="String" />
+        <Input name="ResponsiblePKey" type="String" />
+        <Input name="TripListPKey" type="DomPKey" />
+        <Input name="AllDay" type="DomString" />
+        <Input name="Mode" type="DomString" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateWizardBO" actionType="CREATE" type="BoWizardCreateCallViaTpl">
+        <Parameters>
+          <Input name="mode" value="ProcessContext::Mode" />
+          <Input name="selectedDate" value="ProcessContext::CurrentDate" />
+          <Input name="tplMainPKey" value="ProcessContext::TripListPKey" />
+          <Input name="responsiblePKey" value="ProcessContext::ResponsiblePKey" />
+          <Input name="allDay" value="ProcessContext::AllDay" />
+          <Input name="callMetaPKey" type="Literal" value="" />
+        </Parameters>
+        <Return name="ProcessContext::WizardBO" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="Mode_Decision" actionType="DECISION" parameter="ProcessContext::WizardBO.mode">
+        <Case value="DragAndDrop" action="DragAndDrop_Result_Decision" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action name="DragAndDrop_Result_Decision" actionType="DECISION" parameter="ProcessContext::WizardBO.tplMainPKey">
+        <CaseEmpty action="TripListNotValidWarning" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action actionType="CONFIRM" confirmType="Ok" name="TripListNotValidWarning">
+        <Message messageId="TripListNotValid"></Message>
+        <Cases>
+          <Case value="Ok" action="End" />
+        </Cases>
+      </Action>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Call::CreateNewCallViaTripListUI</UIDescription>
+        <Events>
+          <Event name="OpenCallMetaLookup" action="OpenCallMetaLookup" />
+          <Event name="FinishWizard" action="SetDirty" />
+        </Events>
+      </Action>
+      <Action actionType="PROCESS" name="OpenCallMetaLookup" process="Call::MetaLookupProcess">
+        <Parameters>
+          <Input name="CompanyRequired" type="Literal" value="1" />
+          <Input name="CallMetaPKey" value="ProcessContext::WizardBO.callMetaPKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CallMetaPKey" value="callMetaPKey" />
+        </ReturnValues>
+        <TransitionTo action="LoadCallMetaLookup" />
+      </Action>
+      <Action actionType="LOGIC" name="LoadCallMetaLookup" call="ProcessContext::WizardBO.loadCallMetaLookup">
+        <Parameters>
+          <Input name="callMetapKey" value="ProcessContext::CallMetaPKey" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="SetDirty" call="ProcessContext::WizardBO.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="5" />
+        </Parameters>
+        <TransitionTo action="createCallsValidation" />
+      </Action>
+      <Action name="createCallsValidation" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::WizardBO.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="LoadTripListBO" />
+        <Case value="validateDiscard" action="End" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action name="LoadTripListBO" actionType="LOAD" type="BoTripList">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::WizardBO.tplMainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::TripListBO" />
+        <TransitionTo action="loadLocations" />
+      </Action>
+      <Action name="loadLocations" actionType="LOAD" type="LoLocations">
+        <Return name="ProcessContext::LocationsList" />
+        <TransitionTo action="createCalls" />
+      </Action>
+      <Action name="createCalls" actionType="LOGIC" call="ProcessContext::TripListBO.createCalls">
+        <Parameters>
+          <Input name="responsiblePKey" value="ProcessContext::WizardBO.responsiblePKey" />
+          <Input name="referenceDate" value="ProcessContext::WizardBO.selectedDate" />
+          <Input name="clbMetaPKey" value="ProcessContext::WizardBO.callMetaLookup.pKey" />
+          <Input name="defaultDuration" value="ProcessContext::WizardBO.callMetaLookup.defaultDuration" />
+          <Input name="allDay" value="ProcessContext::WizardBO.allDay" />
+          <Input name="workBegins" value="ProcessContext::WizardBO.workBegins" />
+          <Input name="LocationsList" value="ProcessContext::LocationsList" />
+        </Parameters>
+        <TransitionTo action="End" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

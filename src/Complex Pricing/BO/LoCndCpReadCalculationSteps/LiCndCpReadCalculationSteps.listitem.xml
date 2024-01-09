@@ -1,0 +1,32 @@
+<ListItem name="LiCndCpReadCalculationSteps">
+  <SimpleProperties>
+    <SimpleProperty name="Position" type="DomInteger" storable="false" dataSourceProperty="Position" />
+    <SimpleProperty name="StepReference" type="DomVariant" storable="false" dataSourceProperty="StepReference" />
+    <SimpleProperty name="CndCpMetaPKey" type="DomPKey" storable="false" dataSourceProperty="CndCpMetaPKey" />
+    <SimpleProperty name="CndCpMetaMetaId" type="DomCndCpCalculationType" storable="false" dataSourceProperty="CndCpMetaMetaId" />
+    <SimpleProperty name="ConditionMetaId" type="DomId" storable="false" dataSourceProperty="ConditionMetaId" />
+    <SimpleProperty name="ConditionLevel" type="DomCndCpConditionLevel" storable="false" dataSourceProperty="ConditionLevel" />
+    <SimpleProperty name="Base" type="DomCndCpBase" storable="false" dataSourceProperty="Base" />
+    <SimpleProperty name="ScaleType" type="DomCndCpScaleType" storable="false" dataSourceProperty="displayOnHierarchyLevel" />
+    <SimpleProperty name="DistributeToItem" type="DomBool" storable="false" dataSourceProperty="sortOrder" />
+    <SimpleProperty name="ItemGrouping" type="DomBool" storable="false" dataSourceProperty="ItemGrouping" />
+    <SimpleProperty name="Manual" type="DomBool" storable="false" dataSourceProperty="Manual" />
+    <SimpleProperty name="Subtotal" type="DomBool" storable="false" dataSourceProperty="Subtotal" />
+    <SimpleProperty name="Statistical" type="DomBool" storable="false" dataSourceProperty="Statistical" />
+    <SimpleProperty name="PrintRelevant" type="DomBool" storable="false" dataSourceProperty="PrintRelevant" />
+    <SimpleProperty name="CalcVariable" type="DomCndCpCalcVariable" storable="false" dataSourceProperty="CalcVariable" />
+    <SimpleProperty name="TargetAttributeCondition" type="DomCndCpTargetAttribute" storable="false" dataSourceProperty="TargetAttributeCondition" />
+    <SimpleProperty name="TargetAttributeResult" type="DomCndCpTargetAttribute" storable="false" dataSourceProperty="TargetAttributeResult" />
+    <SimpleProperty name="ConstraintUserExitId" type="DomId" storable="false" dataSourceProperty="ConstraintUserExitId" />
+    <SimpleProperty name="BaseUserExitId" type="DomId" storable="false" dataSourceProperty="BaseUserExitId" />
+    <SimpleProperty name="UserExitId" type="DomId" storable="false" dataSourceProperty="UserExitId" />
+    <SimpleProperty name="CalculationGroups" type="DomLongDescription" storable="false" dataSourceProperty="CalculationGroups" />
+    <SimpleProperty name="CndCpItemMetaRulePKey" type="DomPKey" storable="false" dataSourceProperty="CndCpItemMetaRulePKey" />
+    <SimpleProperty name="Accrual" type="DomBool" storable="false" dataSourceProperty="Accrual" />
+    <SimpleProperty name="CndCpSearchStrategyPKey" type="DomPKey" storable="false" dataSourceProperty="CndCpSearchStrategyPKey" />
+    <SimpleProperty name="DecimalPlaces" type="DomCndCpDecimalPlaces" storable="false" dataSourceProperty="DecimalPlaces" />
+    <SimpleProperty name="Rounding" type="DomCndCpRoundingBehaviour" storable="false" dataSourceProperty="Rounding" />
+    <SimpleProperty name="IsMandatory" type="DomBool" storable="false" dataSourceProperty="IsMandatory" />
+    <SimpleProperty name="PDARelevant" type="DomBool" storable="false" dataSourceProperty="PDARelevant" />
+  </SimpleProperties>
+</ListItem>

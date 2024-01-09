@@ -1,0 +1,63 @@
+<Process name="Cash::CancelWizardProcess" defaultAction="ReasonRequired_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CancelReasons" type="LoOrderMetaCancelReason" />
+        <Declaration name="CashBo" type="BoCash" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadCashBo" actionType="LOAD" type="BoCash">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::CashBo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ReasonRequired_Decision" actionType="DECISION" parameter="ProcessContext::CashBo.cancelReasonRequired">
+        <Case value="0" action="ConfirmCancel" />
+        <Case value="1" action="LoadCancelReasons" />
+        <CaseElse action="ConfirmCancel" />
+      </Action>
+      <Action name="LoadCancelReasons" actionType="LOAD" type="LoOrderMetaCancelReason">
+        <Parameters>
+          <Input name="sdoMetaPKey" value="ProcessContext::CashBo.sdoMetaPKey" />
+        </Parameters>
+        <Return name="ProcessContext::CancelReasons" />
+        <TransitionTo action="ShowCancelReasonSelectionView" />
+      </Action>
+      <Action actionType="View" name="ShowCancelReasonSelectionView">
+        <UIDescription>Cash::CancelWizardUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="CancelCash" />
+        </Events>
+      </Action>
+      <Action actionType="CONFIRM" confirmType="YesNoCancel" name="ConfirmCancel">
+        <Message messageId="CasConfirmCancelMsg"></Message>
+        <Cases>
+          <Case value="Yes" action="Cancel" />
+          <Case value="No" action="End" />
+        </Cases>
+      </Action>
+      <Action name="Cancel" actionType="LOGIC" call="ProcessContext::CashBo.cancel">
+        <Parameters>
+          <Input name="reasonCode" value="undefined" />
+        </Parameters>
+        <TransitionTo action="End" />
+      </Action>
+      <Action name="CancelCash" actionType="LOGIC" call="ProcessContext::CashBo.cancel">
+        <Parameters>
+          <Input name="reasonCode" value="Event.reasonCode" />
+        </Parameters>
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="END" name="End"></Action>
+    </Actions>
+  </Body>
+</Process>

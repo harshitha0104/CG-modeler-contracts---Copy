@@ -1,0 +1,52 @@
+<DataSource name="DsLoDeliveryDocumentMeta" backendSystem="sf" businessObjectClass="LoDeliveryDocumentMeta" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+			
+jsonQuery = Utils.convertDsParamsOldToNew(jsonQuery);
+
+var tmgMainPKey = "";
+var sqlStmt = "";
+
+//get Tour from Context
+if (Utils.isDefined(ApplicationContext.get('currentTourPKey')))
+	tmgMainPKey = ApplicationContext.get('currentTourPKey');
+//Tour in context
+
+var sqlParams = {tmgMainPKey};
+
+if (!Utils.isEmptyString(tmgMainPKey)){
+sqlStmt+= " ";
+sqlStmt+= "SELECT DISTINCT Order_Template__c.Id AS pKey ";
+sqlStmt+= "	,Order_Template__c.Description_#Language#__c AS text ";
+sqlStmt+= "FROM Order_Template__c ";
+sqlStmt+= "INNER JOIN Tour_Object_Reference__c ON Order_Template__c.Id = Tour_Object_Reference__c.Order_Template__c AND Tour_Object_Reference__c.Tour__c= #tmgMainPKey# ";
+sqlStmt+= "WHERE (1 = 1) ";
+sqlStmt+= "	AND Order_Template__c.Active__c = '1' ";
+sqlStmt+= "	AND Order_Template__c.Creation_Platform__c IN ('Both', 'Mobility') ";
+sqlStmt+= "	AND #compareAsDate('Order_Template__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+sqlStmt+= "	AND #compareAsDate('Order_Template__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+sqlStmt+= "	AND Order_Template__c.Document_Type__c = 'Delivery' ";
+sqlStmt+= "	AND Tour_Object_Reference__c.Usage__c = 'SdoMeta.Order'  ";
+sqlStmt+= " ORDER BY Order_Template__c.Sort__c = '0' ASC,Order_Template__c.Sort__c ASC ";
+}else{
+//Tour not in context
+sqlStmt+= " ";
+sqlStmt+= "SELECT DISTINCT Order_Template__c.Id AS pKey ";
+sqlStmt+= "	,Order_Template__c.Description_#Language#__c AS text ";
+sqlStmt+= "FROM Order_Template__c ";
+sqlStmt+= "WHERE (1 = 1) ";
+sqlStmt+= "	AND Order_Template__c.Active__c = '1' ";
+sqlStmt+= "	AND Order_Template__c.Creation_Platform__c IN ('Both', 'Mobility') ";
+sqlStmt+= "	AND #compareAsDate('Order_Template__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+sqlStmt+= "	AND #compareAsDate('Order_Template__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+sqlStmt+= "	AND Order_Template__c.Document_Type__c = 'Delivery' ";
+sqlStmt+= " ORDER BY Order_Template__c.Sort__c = '0' ASC,Order_Template__c.Sort__c ASC ";
+}
+
+return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+    <Update><![CDATA[
+		
+		]]></Update>
+  </Database>
+</DataSource>

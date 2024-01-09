@@ -1,0 +1,30 @@
+<UIDescription name="ServiceRequest::MetaLookupForASOUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionDialogPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="SvcRequestMetaLookupId" defaultLabel="Issue Types" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="SvcRequestMetaList" dataSource="ProcessContext::SvcRequestMetaList.Items[]">
+          <Items name="Items" itemPattern="SvcRequestMetaForASOItemPattern">
+            <ItemListLayout>
+              <Col layoutType="itemTitle" bindingId="Text" />
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="Text" type="Text" binding=".text" bindingMode="ONE_TIME" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

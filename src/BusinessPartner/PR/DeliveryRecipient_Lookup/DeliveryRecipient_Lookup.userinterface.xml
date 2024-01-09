@@ -1,0 +1,35 @@
+<UIDescription name="DeliveryRecipient::Lookup" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionDialogPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="DeliveryRecipientLookupTitleId" defaultLabel="Customers" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="DeliveryRecipientList" searchable="true" dataSource="ProcessContext::DeliveryRecipientList.Items[]" indexBar="false">
+          <SearchAttributes>
+            <SearchAttribute name="Name" />
+          </SearchAttributes>
+          <Items name="Items" itemPattern="DeliveryRecipientLookupItem">
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemTitle" bindingId="Name" />
+              </Col>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="Name" type="Text" binding=".name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".fromPKey" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

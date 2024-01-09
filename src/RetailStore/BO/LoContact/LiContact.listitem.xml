@@ -1,0 +1,12 @@
+<ListItem name="LiContact">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="name" type="DomText" dataSourceProperty="contactName" />
+    <SimpleProperty name="title" type="DomText" dataSourceProperty="title" />
+    <SimpleProperty name="department" type="DomText" dataSourceProperty="department" />
+    <SimpleProperty name="phone" type="DomDial" dataSourceProperty="phone" />
+    <SimpleProperty name="mobilePhone" type="DomDial" dataSourceProperty="mobilePhone" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,126 @@
+<Process name="Customer::AssignNewPOSWizardProcess" defaultAction="CreateValidationBo" schemaVersion="0.0.0.5">
+  <!-- SF/CASDIF: ‘POS Geometry’ is currently not provided as an attribute by the backend -->
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CustomerPosMetaTypeList" type="LoCustomerPOSMetaTypes" />
+        <Declaration name="PosName" type="String" />
+        <Declaration name="PosMetaPKey" type="String" />
+        <Declaration name="POSGeometryList" type="LoBpaPOSGeometry" />
+        <Declaration name="POSGeometryPKey" type="String" />
+        <Declaration name="ValidationBo" type="BoAssignNewPOSWizard" />
+        <Declaration name="IsSfBackend" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="loCustomerPOSRelation" type="LoCustomerPOSRelation" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetCustomerPOSMetaTypes" actionType="LOAD" type="LoCustomerPOSMetaTypes">
+        <Return name="ProcessContext::CustomerPosMetaTypeList" />
+      </Action>
+      <Action name="GetFirstType" actionType="LOGIC" call="ProcessContext::CustomerPosMetaTypeList.getFirst">
+        <Return name="ProcessContext::PosMetaPKey" />
+      </Action>
+      <Action name="GetPOSGeometryList" actionType="LOAD" type="LoBpaPOSGeometry">
+        <Return name="ProcessContext::POSGeometryList" />
+      </Action>
+      <Action name="SetGeometryFilter" actionType="LOGIC" call="ProcessContext::POSGeometryList.setFilter">
+        <Parameters>
+          <Input name="fieldName" type="Literal" value="bpaPOSMetaPKey" />
+          <Input name="value" value="ProcessContext::PosMetaPKey" />
+          <Input name="op" type="Literal" value="EQ" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="SetIsSfBackend" call="Utils.isSfBackend">
+        <Return name="ProcessContext::IsSfBackend" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="SetFirstGeometry" actionType="LOGIC" call="ProcessContext::POSGeometryList.getFirst">
+        <Return name="ProcessContext::POSGeometryPKey" />
+        <TransitionTo action="CreateValidationBo" />
+      </Action>
+      <Action name="CreateValidationBo" actionType="CREATE" type="BoAssignNewPOSWizard">
+        <Return name="ProcessContext::ValidationBo" />
+        <TransitionTo action="ShowView" />
+      </Action>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Customer::AssignNewPOSWizardUI</UIDescription>
+        <Events>
+          <Event name="createPOS" action="setDirty" />
+          <!-- Handle PosType Selected Events -->
+          <Event name="POSMetaTypeSelected" action="setUnmodifiedAndFilterPOSGeometryList" />
+        </Events>
+      </Action>
+      <!-- Set Unmodified -->
+      <Action actionType="LOGIC" name="setUnmodifiedAndFilterPOSGeometryList" call="ProcessContext::ValidationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="0" />
+        </Parameters>
+        <TransitionTo action="SfBackend_Decision" />
+      </Action>
+      <Action name="SfBackend_Decision" actionType="DECISION" parameter="ProcessContext::IsSfBackend">
+        <Case value="true" action="CreateValidationBo" />
+        <CaseElse action="FilterPOSGeometryList" />
+      </Action>
+      <Action name="FilterPOSGeometryList" actionType="LOGIC" call="ProcessContext::POSGeometryList.setFilter">
+        <Parameters>
+          <Input name="fieldName" type="Literal" value="bpaPOSMetaPKey" />
+          <Input name="value" value="Event.pKey" />
+          <Input name="op" type="Literal" value="EQ" />
+        </Parameters>
+        <TransitionTo action="SetFirstGeometry" />
+      </Action>
+      <!-- Set validation business object dirty on clicking done button-->
+      <Action actionType="LOGIC" name="setDirty" call="ProcessContext::ValidationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="5" />
+        </Parameters>
+        <TransitionTo action="SetPOSName" />
+      </Action>
+      <Action name="SetPOSName" actionType="LOGIC" call="ProcessContext::ValidationBo.setName">
+        <Parameters>
+          <Input name="name" value="ProcessContext::PosName" />
+        </Parameters>
+        <TransitionTo action="SetPosMetaPKey" />
+      </Action>
+      <Action name="SetPosMetaPKey" actionType="LOGIC" call="ProcessContext::ValidationBo.setBpaPosMetaPKey">
+        <Parameters>
+          <Input name="posMetaPKey" value="ProcessContext::PosMetaPKey" />
+        </Parameters>
+        <TransitionTo action="SetPosRelations" />
+      </Action>
+      <Action name="SetPosRelations" actionType="LOGIC" call="ProcessContext::ValidationBo.setLoCustomerPOSRelation">
+        <Parameters>
+          <Input name="loCustomerPOSRelation" value="ProcessContext::loCustomerPOSRelation" />
+        </Parameters>
+        <TransitionTo action="WizardValidations" />
+      </Action>
+      <!-- Validation actions -->
+      <Action actionType="VALIDATION" name="WizardValidations">
+        <Validations>
+          <Validation name="ProcessContext::ValidationBo.validateName" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="EndCreate" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action actionType="END" name="EndCancel" />
+      <Action actionType="END" name="End" />
+      <Action actionType="END" name="EndCreate">
+        <ReturnValues>
+          <Return name="posName" value="ProcessContext::PosName" />
+          <Return name="posMetaPKey" value="ProcessContext::PosMetaPKey" />
+          <Return name="posGeometryPKey" value="ProcessContext::POSGeometryPKey" />
+          <Return name="buttonPressed" value="Event.buttonPressed" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

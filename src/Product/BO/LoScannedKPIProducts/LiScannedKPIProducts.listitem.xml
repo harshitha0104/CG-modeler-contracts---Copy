@@ -1,0 +1,10 @@
+<ListItem name="LiScannedKPIProducts">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="productPKey" type="DomPKey" dataSourceProperty="productPKey" />
+    <SimpleProperty name="productName" type="DomText" dataSourceProperty="productName" />
+    <SimpleProperty name="productCode" type="DomText" dataSourceProperty="productCode" />
+    <SimpleProperty name="gtin" type="DomText" dataSourceProperty="gtin" />
+    <SimpleProperty name="grouping1" type="DomText" storable="false" dataSourceProperty="grouping1" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,17 @@
+<DataSource name="DsLoUserOverview" backendSystem="sf" businessObjectClass="LoUserOverview" external="false" readOnly="true" editableEntity="User" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="User" column="Id" />
+    <DerivedAttribute name="name" value="User.LastName || ', ' || User.FirstName" />
+    <DerivedAttribute name="grouping1" value="substr(User.LastName || ', ' || User.FirstName,1,1)" />
+  </Attributes>
+  <Entities>
+    <Entity name="User" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+
+		]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="User" attribute="LastName" direction="asc" />
+  </OrderCriteria>
+  <Parameters></Parameters>
+</DataSource>

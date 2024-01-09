@@ -1,0 +1,50 @@
+<Process name="User::TeamLookupProcess" defaultAction="AccountableMandatory" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="TeamUserList" type="LoTeamUserOverview" />
+      </Declarations>
+      <Parameters>
+        <Input name="Mode" type="DomString" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="DECISION" name="AccountableMandatory" parameter="ProcessContext::Mode">
+        <Case value="AccountableMandatory" action="GetTeamUserListWithAccountable" />
+        <CaseElse action="GetTeamUserList" />
+        <CaseEmpty action="GetTeamUserList" />
+      </Action>
+      <Action actionType="LOAD" name="GetTeamUserList" type="LoTeamUserOverview">
+        <Parameters>
+          <Input name="teamList" value="ApplicationContext::User.teamList" />
+        </Parameters>
+        <Return name="ProcessContext::TeamUserList" />
+        <TransitionTo action="ShowView" />
+      </Action>
+      <Action actionType="LOAD" name="GetTeamUserListWithAccountable" type="LoTeamUserOverview">
+        <Parameters>
+          <Input name="teamList" value="ApplicationContext::User.teamList" />
+          <Input name="accountableMandatory" type="Literal" value="yes"></Input>
+        </Parameters>
+        <Return name="ProcessContext::TeamUserList" />
+        <TransitionTo action="ShowView" />
+      </Action>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>User::TeamLookupUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="End" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="userPKey" value="Event.pKey" />
+          <Return name="name" value="Event.userName" />
+          <Return name="userAccountableId" value="Event.userAccountableId" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

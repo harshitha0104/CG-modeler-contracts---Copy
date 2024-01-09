@@ -1,0 +1,176 @@
+<DataSource name="DsLoPayCttPayment" backendSystem="sf" objectClass="LoPayCttPayment" businessObjectClass="LoPayCttPayment" readOnly="true" external="true" editableEntity="Contract_Payment__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="payText" table="Contract_Payment_Template__c" column="Description_#Language#__c" />
+    <Attribute name="customerName" table="Account" column="Name" />
+    <Attribute name="customerPKey" table="Account" column="Id" />
+    <Attribute name="reqinitiatorName" table="User" column="LastName" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+	 
+		if (Utils.isDefined(jsonQuery)){
+			var newParams = jsonQuery;
+			if (Utils.isOldParamsFormat(newParams)){
+			newParams = Utils.convertDsParamsOldToNew(newParams);
+			}
+		}
+	 
+		var userPKeys = Utils.isDefined(newParams.referenceUserPKey) ? "'" + newParams.referenceUserPKey + "'" : ApplicationContext.get('user').getTeamList();
+        var addCondSearch = "";
+
+        var paymentType = "";
+		var customerName = "";
+		var customerPKey = "";
+		var phase = "";
+		var dateInitiation = "";
+		var ownerPKey = "";
+		var responsiblePKey = "";
+         
+        //############################
+        //## Advanced Search Paging ##
+        //############################
+
+        /**  paymentType  */
+        if (Utils.isDefined(newParams.paymentType)){
+          paymentType = Utils.convertForDBParam(newParams.paymentType, "DomPKey");
+          addCondSearch += " AND Contract_Payment__c.Contract_Payment_Template__c " + Utils.replaceOperator(newParams.paymentTypeComp) + " #paymentType# ";
+        } 
+        
+        /**  customerName  */
+        if (Utils.isDefined(newParams.customerName)){
+          customerName = Utils.convertForDBParam(newParams.customerName, "DomBpaName");
+          addCondSearch += " AND customers.Name " + Utils.replaceOperator(newParams.customerNameComp) + " #customerName# ";
+        } 
+        
+        /**  customerPKey  */
+        if (Utils.isDefined(newParams.customerPKey)){
+          customerPKey = Utils.convertForDBParam(newParams.customerPKey, "DomPKey");
+          addCondSearch += " AND customers.PKey " + Utils.replaceOperator(newParams.customerPKeyComp) + " #customerPKey# "; 
+        }
+
+        /**  phase  */
+        if (Utils.isDefined(newParams.phase)){
+          phase = Utils.convertForDBParam(newParams.phase, "DomPayPhase");
+          addCondSearch += " AND Contract_Payment__c.Phase__c " + Utils.replaceOperator(newParams.phaseComp) + " #phase# ";
+        }
+
+        /**  dateInitiation  */
+        if (Utils.isDefined(newParams.dateInitiation)){
+          dateInitiation = Utils.convertForDBParam(newParams.dateInitiation, "DomDate");
+          addCondSearch += " AND #compareAsDate('Contract_Payment__c.Initiation_Date__c', 'Date','"+  Utils.replaceOperator(newParams.dateInitiationComp) +"', #dateInitiation# , 'Date')# ";
+        }
+
+        /**  ownerPKey  */
+        if (Utils.isDefined(newParams.ownerPKey)){
+          ownerPKey = Utils.convertForDBParam(newParams.ownerPKey, "DomPKey");
+          addCondSearch += " AND Contract_Payment__c.Accountable__c " + Utils.replaceOperator(newParams.ownerPKeyComp) + " #ownerPKey# ";
+        }
+
+        /**  responsiblePKey  */
+        if (Utils.isDefined(newParams.responsiblePKey)){
+          responsiblePKey = Utils.convertForDBParam(newParams.responsiblePKey, "DomPKey");
+          addCondSearch += " AND Contract_Payment__c.Responsible__c " + Utils.replaceOperator(newParams.responsiblePKeyComp)  + " #responsiblePKey# ";
+        }
+
+        var sqlParams1 = {};
+        var sqlParams2 = {paymentType, customerName, customerPKey, phase, dateInitiation, ownerPKey, responsiblePKey};
+
+		var sqlStmt1 = "";
+		sqlStmt1 += "SELECT Contract_Payment__c.Id as pKey, ";
+		sqlStmt1 += "        Contract_Payment_Template__c.Description_#Language#__c as payText, ";
+		sqlStmt1 += "        customers.Name as customerName, ";
+		sqlStmt1 += "        customers.PKey as customerPKey, ";
+		sqlStmt1 += "        Contract_Payment__c.Initiation_Date__c as dateInitiation, ";
+		sqlStmt1 += "        Contract_Payment__c.Contract_Payment_Template__c as paymentType, ";
+		sqlStmt1 += "        Contract_Payment__c.Responsible__c as responsiblePKey, ";
+		sqlStmt1 += "        Contract_Payment__c.Accountable__c as ownerPKey, ";
+		sqlStmt1 += "        User.LastName || ', ' || User.FirstName as reqinitiatorName, ";
+		sqlStmt1 += "        responsibleUser.LastName || ', ' || responsibleUser.FirstName as responsibleUserName, ";
+		sqlStmt1 += "        Contract_Payment__c.Phase__c  as phase ";
+		sqlStmt1 += "  FROM Contract_Payment__c  ";
+		sqlStmt1 += "  LEFT OUTER JOIN User ON Contract_Payment__c.Accountable__c=User.Id ";
+		sqlStmt1 += "  LEFT OUTER JOIN User as responsibleUser ON Contract_Payment__c.Responsible__c=responsibleUser.Id ";
+		sqlStmt1 += "  LEFT OUTER JOIN Contract_Payment_Template__c ON Contract_Payment__c.Contract_Payment_Template__c=Contract_Payment_Template__c.Id AND Contract_Payment_Template__c.Sales_Org__c = '#SALESORG#'  ";
+		sqlStmt1 += "  JOIN   ";
+		sqlStmt1 += "  ( ";
+		sqlStmt1 += "   SELECT  ";
+		sqlStmt1 += "        C.Id AS pKey , ";
+		sqlStmt1 += "        C.Name as name, ";
+		sqlStmt1 += "        CASE WHEN Account_Manager__c.Id IS NULL AND NOT SubMain.Id IS NULL THEN '1' else '0' END AS fromSubstitution, ";
+		sqlStmt1 += "        SubMain.Valid_From__c AS customersSubMainValidFrom, ";
+		sqlStmt1 += "        SubMain.Valid_Thru__c AS customersSubMainValidThru, ";
+		sqlStmt1 += "        SubBpaRel.Valid_From__c AS customersSubBpaRelValidFrom, ";
+		sqlStmt1 += "        SubBpaRel.Valid_Thru__c AS customersSubBpaRelValidThru ";
+		sqlStmt1 += "              FROM  ";
+		sqlStmt1 += "                  Account C ";
+		sqlStmt1 +=      "JOIN ";
+        sqlStmt1 +=          "User U ";     
+        sqlStmt1 +=              "ON (U.Id in ("; 
+
+        //userPKeys
+        var userPKeyObj = Utils.getListParams(userPKeys);
+
+        var sqlStmt2 =                             ")"; 
+        sqlStmt2 +=                 ")"; 
+		sqlStmt2 += "              LEFT OUTER JOIN ";
+		sqlStmt2 += "                  Account_Manager__c ";
+		sqlStmt2 += "                      ON Account_Manager__c.User__c = U.Id ";
+		sqlStmt2 += "                      AND Account_Manager__c.Account__c = C.Id   ";
+		sqlStmt2 += "                      AND #compareAsDate('Account_Manager__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')#   ";
+		sqlStmt2 += "                      AND #compareAsDate('Account_Manager__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#   ";
+		sqlStmt2 += "                      AND Account_Manager__c.Management_Type__c <> 'Substitution' "; 
+		sqlStmt2 += "              LEFT OUTER JOIN ";
+		sqlStmt2 += "                  Substitution__c SubBpaRel ";
+		sqlStmt2 += "                      ON SubBpaRel.Account__c = C.Id ";
+		sqlStmt2 += "                      AND SubBpaRel.Substitute__c = U.Id ";
+        sqlStmt2 += "                      AND SubBpaRel.Active__c = '1' ";
+		sqlStmt2 += "              LEFT OUTER JOIN ";
+		sqlStmt2 += "                  Substitution__c SubMain";
+		sqlStmt2 += "                      ON SubMain.Id = SubBpaRel.Substitution__c ";
+		sqlStmt2 += "                      AND SubMain.Sales_Org__c = '#SALESORG#' ";   
+		sqlStmt2 += "                      AND SubMain.Active__c = '1' ";
+		sqlStmt2 += "            WHERE ";
+		sqlStmt2 += "              (   ";        
+		sqlStmt2 += "                  (NOT Account_Manager__c.Id is NULL)  ";
+		sqlStmt2 += "                   OR SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #TodayAsDate# ";
+		sqlStmt2 += "                   AND SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #TodayAsDate# ";
+		sqlStmt2 += "                   AND SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #TodayAsDate# ";
+		sqlStmt2 += "                   AND SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #TodayAsDate# ";
+		sqlStmt2 += "                 )       ";
+		sqlStmt2 += "            Group by C.Id ";
+		sqlStmt2 += "        ) customers ";
+		sqlStmt2 += "  WHERE 1=1 ";
+		sqlStmt2 += "  AND Contract_Payment_Template__c.Sales_Org__c = '#SALESORG#' ";
+		sqlStmt2 += "  AND Contract_Payment__c.Account__c = customers.pKey ";
+		sqlStmt2 += "  AND (customers.fromSubstitution = '0' ";
+		sqlStmt2 += "       OR customersSubMainValidFrom <= Contract_Payment__c.Reference_Date__c ";
+		sqlStmt2 += "       AND customersSubMainValidThru >= Contract_Payment__c.Reference_Date__c ";
+		sqlStmt2 += "       AND customersSubBpaRelValidFrom <= Contract_Payment__c.Reference_Date__c ";
+		sqlStmt2 += "       AND customersSubBpaRelValidThru >= Contract_Payment__c.Reference_Date__c) ";
+
+		sqlStmt2 += addCondSearch;
+
+		var sqlStmt1Result = Utils.replaceMacrosParam(sqlStmt1, sqlParams1);
+		var sqlStmt2Result = Utils.replaceMacrosParam(sqlStmt2, sqlParams2);
+
+		
+		var finalSql = sqlStmt1Result.sql + userPKeyObj.sql + sqlStmt2Result.sql;
+        var finalParams = sqlStmt1Result.params.concat(userPKeyObj.params).concat(sqlStmt2Result.params);
+
+		return {sql: finalSql, params: finalParams};
+
+       ]]></Load>
+    <Update><![CDATA[
+            // Intended to be empty
+            return undefined;
+                    ]]></Update>
+    <Insert><![CDATA[   
+                        // Intended to be empty     
+            return undefined;           
+                    ]]></Insert>
+    <Delete><![CDATA[
+              // Intended to be empty
+              return undefined;  
+                    ]]></Delete>
+  </Database>
+</DataSource>

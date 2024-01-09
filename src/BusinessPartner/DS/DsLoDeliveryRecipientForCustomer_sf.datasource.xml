@@ -1,0 +1,62 @@
+<DataSource name="DsLoDeliveryRecipientForCustomer" backendSystem="sf" businessObjectClass="LoDeliveryRecipientForCustomer" external="true" editableEntity="Account_Relationship__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Relationship__c" column="Id" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Relationship__c" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+        var toPKey = "";
+
+        if(Utils.isDefined(jsonQuery.toPKey)) {
+               toPKey = Utils.convertForDBParam(jsonQuery.toPKey, "DomPKey");
+        }
+
+        var sqlParams = {toPKey};
+
+		var sqlStmt =  "SELECT  ";
+		sqlStmt += " Account_Relationship__c.Id as pKey ";
+		sqlStmt += ",'#SalesOrg#' as salesOrg ";
+		sqlStmt += ",Account_Relationship__c.Account__c as toPKey ";
+		sqlStmt += ",Account_Relationship__c.Related_Account__c as fromPKey ";
+		sqlStmt += ",Account_Relationship__c.Is_Primary_Relationship__c as main ";
+		sqlStmt += ",Account_Relationship__c.Start_Date__c as validFrom ";
+		sqlStmt += ",Account_Relationship__c.End_Date__c as validThru ";
+		sqlStmt += ",Account.Name as name ";
+		sqlStmt += "FROM Account_Relationship__c, Account, Account_Extension__c ";
+		sqlStmt += "WHERE Account_Relationship__c.Related_Account__c = Account.Id ";
+		sqlStmt += "AND Account_Relationship__c.Relationship_Type__c = 'DeliveryRecipient' ";
+		sqlStmt += "AND Account_Extension__c.Account__c = Account.Id ";
+		sqlStmt += "AND #compareAsDate('Account_Extension__c.Delivery_Role_Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+    	sqlStmt += "AND #compareAsDate('Account_Extension__c.Delivery_Role_Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+		sqlStmt += "AND	#compareAsDate('Account_Relationship__c.Start_Date__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+		sqlStmt += "AND #compareAsDate('Account_Relationship__c.End_Date__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+		sqlStmt += "AND Account_Relationship__c.Account__c = #toPKey# ";
+
+
+		sqlStmt += " UNION ALL "
+
+  		sqlStmt +=  "SELECT  ";
+		sqlStmt += " Account.Id as pKey ";
+		sqlStmt += ",'#SalesOrg#' as salesOrg ";
+		sqlStmt += ",null as toPKey ";
+		sqlStmt += ",Account.Id as fromPKey ";
+		sqlStmt += ",'0' as main ";
+		sqlStmt += ",Account_Extension__c.Delivery_Role_Valid_From__c as validFrom ";
+		sqlStmt += ",Account_Extension__c.Delivery_Role_Valid_Thru__c as validThru ";
+		sqlStmt += ",Account.Name as name ";
+		sqlStmt += "FROM Account, Account_Extension__c ";
+		sqlStmt += "WHERE Account_Extension__c.Account__c = Account.Id ";
+		sqlStmt += "AND #compareAsDate('Account_Extension__c.Delivery_Role_Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+    	sqlStmt += "AND #compareAsDate('Account_Extension__c.Delivery_Role_Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+		sqlStmt += "AND Account.Id = #toPKey# ";
+
+		sqlStmt += "ORDER BY Account.Name ";
+  
+  		 return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+  
+  ]]></Load>
+  </Database>
+</DataSource>

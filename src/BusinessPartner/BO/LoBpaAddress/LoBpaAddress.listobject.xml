@@ -1,0 +1,10 @@
+<ListObject name="LoBpaAddress" generateLoadMethod="true" >
+  <DataSource name="DsLoBpaAddress" />
+  <Item objectClass="LiBpaAddress" />
+  <Methods>
+    <Method name="saveAsync" />
+    <Method name="addItem" />
+    <Method name="deleteItem" />
+    <Method name="getMainAddress" />
+  </Methods>
+</ListObject>

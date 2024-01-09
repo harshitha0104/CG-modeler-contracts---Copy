@@ -1,0 +1,12 @@
+<ListItem name="LiMagnetizedJobList"  >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="clbMainPKey" type="DomPKey" storable="false" dataSourceProperty="clbMainPKey" />
+    <SimpleProperty name="validFrom" type="DomDate" storable="true" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomValidThru" storable="true" dataSourceProperty="validThru" />
+    <SimpleProperty name="magnetizeOnSave" type="DomBool" storable="false" dataSourceProperty="magnetizeOnSave" />
+    <SimpleProperty name="demagnetizeOnSave" type="DomBool" storable="false" dataSourceProperty="demagnetizeOnSave" />
+    <SimpleProperty name="done" type="DomBool" storable="false" dataSourceProperty="done" />
+    <SimpleProperty name="jobExists" type="DomBool" storable="false" dataSourceProperty="jobExists" />
+  </SimpleProperties>
+</ListItem>

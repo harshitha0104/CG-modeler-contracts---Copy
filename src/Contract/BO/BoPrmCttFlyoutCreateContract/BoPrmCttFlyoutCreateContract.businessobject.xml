@@ -1,0 +1,40 @@
+<BusinessObject name="BoPrmCttFlyoutCreateContract" schemaVersion="1.1">
+  <DataSource name="DsBoPrmCttFlyoutCreateContract" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="prmMetaPKey" type="DomPKey" dataSourceProperty="prmMetaPKey" />
+    <SimpleProperty name="customerPKey" type="DomPKey" dataSourceProperty="customerPKey" />
+    <SimpleProperty name="contractName" type="DomText" dataSourceProperty="contractName" />
+    <SimpleProperty name="dateFrom" type="DomDate" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" dataSourceProperty="dateThru" />
+    <SimpleProperty name="hasSubstitute" type="DomBool" dataSourceProperty="hasSubstitute" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups>
+    <ObjectLookup name="luCustomer" objectClass="LuCustomer" dataSourceProperty="customerPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luPrmMeta" objectClass="LuPrmMeta" dataSourceProperty="prmMetaPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <ListObjects />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterInitialize" />
+    <Method name="beforeInitialize" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="createAsync" />
+    <Method name="loadCustomerLookup" />
+    <Method name="loadPrmMetaLookup" />
+    <Method name="loadManagementInformation" />
+  </Methods>
+  <Validations>
+    <Validation name="validateNotEmpty" />
+    <Validation name="validateDate" />
+    <Validation name="validateSub" />
+  </Validations>
+</BusinessObject>

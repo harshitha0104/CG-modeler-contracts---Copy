@@ -1,0 +1,33 @@
+<DataSource name="DsLoOrderPayments" backendSystem="sf" external="false" businessObjectClass="LoOrderPayments" editableEntity="Order_Payment__c" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="modReason" value="''" />
+    <DerivedAttribute name="calcAmount" value="''" />
+    <DerivedAttribute name="expenseType" value="''" />
+    <DerivedAttribute name="absoluteAmount" value="''" />
+    <Attribute name="pKey" table="Order_Payment__c" column="Id" />
+    <Attribute name="sdoMainPKey" table="Order_Payment__c" column="Order__c" />
+    <Attribute name="sdoPaymentMetaPKey" table="Order_Payment__c" column="Payment_Template__c" />
+    <Attribute name="paymentMethod" table="Order_Payment__c" column="Payment_Type__c" />
+    <Attribute name="initiationDate" table="Order_Payment__c" column="Initiation_Date__c" />
+    <Attribute name="amountReceipt" table="Order_Payment__c" column="Amount_RC__c" />
+    <Attribute name="amount" table="Order_Payment__c" column="Amount_DC__c" />
+    <Attribute name="currency" table="Order_Payment__c" column="Currency_RC__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order_Payment__c" idAttribute="Id" />
+    <Entity name="Order_Payment_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Order_Payment__c.Payment_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="Order_Payment_Template__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Order_Payment__c.Order__c = #sdoMainPKey#
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="sdoMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

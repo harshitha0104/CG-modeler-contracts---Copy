@@ -1,0 +1,17 @@
+<DataSource name="DsLuCallRelatedNonDeliverySalesDoc" backendSystem="sf" businessObjectClass="LuCallRelatedNonDeliverySalesDoc" external="false" editableEntity="Order__c" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="documentsCount" value="COUNT(*)" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order__c" alias="" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        Order__c.Visit__c = #callPKey#
+        AND Order__c.Phase__c = 'Initial'
+        AND Order__c.Document_Type__c = 'OrderEntry'
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="callPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BusinessObject name="BoWizardRescheduleVisit" schemaVersion="1.1">
+  <DataSource name="DsBoVisit" />
+  <SimpleProperties>
+    <SimpleProperty name="dateFrom" type="DomNullableDate" dataSourceProperty="plannedStartDate" blobPKeyField="" blobTable="">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="dateThru" type="DomNullableDate" dataSourceProperty="plannedEndDate" blobPKeyField="" blobTable="">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="duration" type="DomInteger" />
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="timeFrom" type="DomString" dataSourceProperty="plannedStartTime" blobPKeyField="" blobTable="">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="timeThru" type="DomString" storable="true" dataSourceProperty="plannedEndTime" blobPKeyField="" blobTable="">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="visitBo" type="Object" />
+  </SimpleProperties>
+  <ObjectLookups />
+  <NestedObjects>
+    <NestedObject name="boVisit" objectClass="BoVisit" dataSourceProperty="pKey" nestingProperty="pKey" />
+  </NestedObjects>
+  <ListObjects />
+  <Methods>
+    <Method name="afterCreateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="afterInitialize" />
+    <Method name="afterLoadAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="beforeLoadAsync" />
+    <Method name="beforeSaveAsync" />
+    <Method name="createAsync" />
+    <Method name="loadAsync" />
+    <Method name="onPropertyChanged" />
+    <Method name="reschedule" />
+    <Method name="saveAsync" />
+  </Methods>
+  <Validations>
+    <Validation name="validateRescheduleVisit" />
+  </Validations>
+</BusinessObject>

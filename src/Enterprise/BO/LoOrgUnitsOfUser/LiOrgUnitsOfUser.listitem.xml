@@ -1,0 +1,7 @@
+<ListItem name="LiOrgUnitsOfUser">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty id="true" name="etpOrgMainPKey" type="DomPKey" dataSourceProperty="etpOrgMainPKey" />
+    <SimpleProperty name="managementType" type="DomBpaManagementType" dataSourceProperty="managementType" />
+  </SimpleProperties>
+</ListItem>

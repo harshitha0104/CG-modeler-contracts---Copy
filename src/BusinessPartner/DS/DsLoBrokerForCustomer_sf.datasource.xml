@@ -1,0 +1,43 @@
+<DataSource name="DsLoBrokerForCustomer" backendSystem="sf" businessObjectClass="LoBrokerForCustomer" external="false" editableEntity="Account_Relationship__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Relationship__c" column="Id" />
+    <DerivedAttribute name="salesOrg" value="'#SalesOrg#'" />
+    <Attribute name="toPKey" table="Account_Relationship__c" column="Account__c" />
+    <Attribute name="fromPKey" table="Account_Relationship__c" column="Related_Account__c" />
+    <Attribute name="main" table="Account_Relationship__c" column="Is_Primary_Relationship__c" />
+    <Attribute name="validFrom" table="Account_Relationship__c" column="Start_Date__c" />
+    <Attribute name="validThru" table="Account_Relationship__c" column="End_Date__c" />
+    <Attribute name="name" table="Account" column="Name" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Relationship__c" alias="" idAttribute="Id" />
+    <Entity name="Account" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Account.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Account_Relationship__c.Related_Account__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Account_Extension__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Account_Extension__c.Account__c" comparator="eq" rightSideType="Attribute" rightSideValue="Account.Id" />
+          <Condition leftSideValue="Account_Extension__c.Broker_Role_Valid_From__c" comparator="le" rightSideType="Attribute" rightSideValue="'#TodayAsDate#'" />
+          <Condition leftSideValue="Account_Extension__c.Broker_Role_Valid_Thru__c" comparator="ge" rightSideType="Attribute" rightSideValue="'#TodayAsDate#'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+   Account_Relationship__c.Account__c = #toPKey# 
+   AND Account_Relationship__c.Relationship_Type__c = 'Wholesaler'
+   AND #compareAsDate('Account_Relationship__c.Start_Date__c', 'Date','<=',#TodayAsDate#, 'Date')#
+   AND #compareAsDate('Account_Relationship__c.End_Date__c', 'Date','>=',#TodayAsDate#, 'Date')#
+        ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Account" attribute="Name" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="toPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

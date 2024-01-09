@@ -1,0 +1,12 @@
+<ListItem name="LiCallNote">
+  <SimpleProperties>
+    <!-- clbMainPKey-->
+    <SimpleProperty name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="bpaMainPKey" type="DomPKey" storable="true" dataSourceProperty="bpaMainPKey" />
+    <SimpleProperty name="noteDate" type="DomDateTime" storable="true" dataSourceProperty="noteDate" />
+    <SimpleProperty name="text" type="DomText" storable="true" dataSourceProperty="text" />
+    <SimpleProperty name="shortText" type="DomText" />
+    <SimpleProperty name="responsibleName" type="DomString" storable="true" dataSourceProperty="responsibleName" />
+    <SimpleProperty name="noteSubText" type="DomText" />
+  </SimpleProperties>
+</ListItem>

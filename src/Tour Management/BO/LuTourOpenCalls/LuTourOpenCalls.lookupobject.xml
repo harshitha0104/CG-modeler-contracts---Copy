@@ -1,0 +1,11 @@
+<LookupObject name="LuTourOpenCalls" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuTourOpenCalls" />
+  <SimpleProperties>
+    <SimpleProperty name="openCallsCount" type="DomInteger" storable="true" dataSourceProperty="openCallsCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

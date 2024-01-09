@@ -1,0 +1,17 @@
+<ListObject name="LoVisitMap" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoVisitMap" />
+  <Item objectClass="LiVisitMap" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="addRelevantItem" />
+    <Method name="navigate" />
+    <Method name="navigateToButtonVisibility"/>
+  </Methods>
+</ListObject>

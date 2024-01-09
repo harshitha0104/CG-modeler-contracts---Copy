@@ -1,0 +1,7 @@
+<ListObject name="LoCallPromotionProducts" generateLoadMethod="false" >
+  <DataSource name="DsLoCallPromotionProducts" />
+  <Item objectClass="LiCallPromotionProducts" />
+  <Methods>
+    <Method name="loadAsync" />
+  </Methods>
+</ListObject>

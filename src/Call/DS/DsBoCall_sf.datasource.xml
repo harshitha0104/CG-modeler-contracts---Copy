@@ -1,0 +1,224 @@
+<Datasource name="DsBoCall" backendSystem="sf" objectClass="BoCall" businessObjectClass="BoCall" readOnly="false" external="true" editableEntity="Visit" schemaVersion="2.0">
+  <Attributes>
+    <!-- this is handled in the safe async because call is a special case, the object needs to be split into two objects-->
+    <Attribute name="pKey" table="Visit" column="Id" />
+    <Attribute name="bpaMainPKey" table="Visit" column="AccountId" />
+    <Attribute name="beginTime" table="Visit" column="PlannedVisitStartTime" />
+    <Attribute name="finishTime" table="Visit" column="PlannedVisitEndTime" />
+    <Attribute name="creationDateTime" table="Visit" column="Creation_Date_and_Time__c" />
+    <Attribute name="completedDate" table="Visit" column="Completed_Date__c" />
+    <Attribute name="clbMetaPKey" table="Visit" column="Visit_Template__c" />
+    <Attribute name="subject" table="Visit" column="Subject__c" />
+    <Attribute name="clbStatus" table="Visit" column="Status" />
+    <DateTimeAttribute dateName="dateFrom" timeName="timeFrom" table="Visit" column="PlannedVisitStartTime" />
+    <DateTimeAttribute dateName="dateThru" timeName="timeThru" table="Visit" column="PlannedVisitEndTime" />
+    <Attribute name="allDay" table="Visit" column="IsAllDayEvent__c" />
+    <Attribute name="placeId" table="Visit" column="PlaceId" />
+    <Attribute name="isPrivate" table="Event" column="IsPrivate" />
+    <Attribute name="duration" table="Visit" column="Duration_In_Minutes__c" />
+    <Attribute name="fixed" table="Visit" column="Fixed_Visit_Date__c" />
+    <Attribute name="responsiblePKey" table="Visit" column="Responsible__c" />
+    <Attribute name="initiatorPKey" table="Visit" column="CreatedById" />
+    <Attribute name="note" table="Visit" column="Note__c" />
+    <Attribute name="reasonCode" table="Visit" column="Reason_Code__c" />
+    <Attribute name="ownerPKey" table="Visit" column="Accountable__c" />
+    <Attribute name="week" table="Visit" column="Week__c" />
+    <Attribute name="startTimeEffective" table="Visit" column="ActualVisitStartTime" />
+    <Attribute name="stopTimeEffective" table="Visit" column="ActualVisitEndTime" />
+    <Attribute name="geolocationLatitude" table="Visit" column="Geolocation__Latitude__s" />
+    <Attribute name="geolocationLongitude" table="Visit" column="Geolocation__Longitude__s" />
+    <Attribute name="tmgMainPKey" table="Visit" column="Tour__c" />
+    <Attribute name="durationEffective" table="Visit" column="Duration_Effective__c" />
+    <Attribute name="considerModule" table="Account_Extension__c" column="Consider_Modules__c" />
+    <Attribute name="creationMode" table="Visit" column="Creation_Mode__c" />
+    <Attribute name="subMainPKey" table="Substitution__c" column="Substituted__c" />
+    <Attribute name="tmgMainId" table="Tour__c" column="Name" />
+    <DerivedAttribute name="noteInitialized" value="'0'" />
+    <DerivedAttribute name="substitution" value="'0'" />
+    <DerivedAttribute name="usrTimeEntryMetaPKey" value="' '" />
+    <DerivedAttribute name="timeEntryPKey" value="''" />
+    <DerivedAttribute name="cancelSalesDocuments" value="''" />
+    <DerivedAttribute name="originalClbStatus" value="'Planned'" />
+    <DerivedAttribute name="startTimeEffectiveUI" value="''" />
+    <DerivedAttribute name="stopTimeEffectiveUI" value="''" />
+    <Attribute name="distributionRate" table="Visit" column="Distribution_Rate_All__c" />
+    <Attribute name="distributionIssue" table="Visit" column="Distribution_Issues__c" />
+    <Attribute name="outOfStockRate" table="Visit" column="OOS_Rate_All__c" />
+    <Attribute name="outOfStockIssue" table="Visit" column="OOS_Issues__c" />
+    <Attribute name="kpiRelevant" table="Visit_Template__c" column="KPI_Relevant__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Visit" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+	    var pKey = "";
+		var addCondCallPKey = "";
+		var addCondEventPKey = "";
+        if (Utils.isDefined(jsonQuery.pKey)){
+  		pKey = Utils.convertForDBParam(jsonQuery.pKey, "DomPKey");
+		addCondCallPKey = "AND Visit.Id = #pKey# ";
+		addCondEventPKey = "AND Event.Id = #pKey# ";
+		}
+		var sqlParams = {pKey};
+
+     /*********************************
+     ** Read customer related calls  **
+     **********************************/
+        var sqlStmt = "SELECT Visit.Id AS pKey ";
+        sqlStmt += ",Visit.AccountId AS bpaMainPKey ";
+        sqlStmt += ",Visit.PlannedVisitStartTime AS beginTime	";
+        sqlStmt += ",Visit.PlannedVisitEndTime AS finishTime ";
+        sqlStmt += ",Visit.Creation_Date_and_Time__c AS creationDateTime ";
+        sqlStmt += ",Visit.Completed_Date__c AS completedDate ";
+        sqlStmt += ",Visit.Visit_Template__c AS clbMetaPKey ";
+        sqlStmt += ",Visit.Subject__c AS subject	";
+        sqlStmt += ",Visit.Status AS clbStatus	";
+        sqlStmt += ",#dateAsUnixepochLocaltime('Visit.PlannedVisitStartTime')# AS dateFrom	";
+        sqlStmt += ",#dateAsUnixepochLocaltime('Visit.PlannedVisitEndTime')# AS dateThru	";
+        sqlStmt += ",Visit.PlannedVisitStartTime AS timeFrom	";
+        sqlStmt += ",Visit.PlannedVisitEndTime AS timeThru ";
+        sqlStmt += ",Visit.IsAllDayEvent__c AS allDay	";
+        sqlStmt += ",Event.IsPrivate AS isPrivate ";
+        sqlStmt += ", Visit.Duration_In_Minutes__c AS duration ";
+        sqlStmt += ",Visit.Fixed_Visit_Date__c AS fixed	, ";
+        sqlStmt += "Visit.Responsible__c AS responsiblePKey	";
+        sqlStmt += ", Visit.CreatedById AS initiatorPKey";
+        sqlStmt += ",Visit.Note__c AS note	";
+        sqlStmt += " ,'0' AS noteInitialized ,";
+        sqlStmt += "Visit.Reason_Code__c AS reasonCode ,";
+        sqlStmt += "Visit.Accountable__c AS ownerPKey ,";
+        sqlStmt += "Visit.Status AS originalClbStatus,  ";
+        sqlStmt += " Visit.Week__c as week, ";
+        sqlStmt += "CASE WHEN SubMain.Id IS NULL THEN '0' ELSE '1' END AS substitution, ";
+        sqlStmt += "CASE WHEN SubMain.Substituted__c IS NULL THEN ' ' ELSE SubMain.Substituted__c END AS subMainPKey, ";
+        sqlStmt += "Visit.ActualVisitStartTime AS startTimeEffective, ";
+        sqlStmt += "Visit.ActualVisitEndTime AS stopTimeEffective, ";
+        sqlStmt += "Visit.ActualVisitStartTime AS startTimeEffectiveUI, ";
+        sqlStmt += "Visit.ActualVisitEndTime AS stopTimeEffectiveUI, ";
+        sqlStmt += "Visit.Duration_Effective__c AS durationEffective, ";
+        sqlStmt += "Visit.Tour__c AS tmgMainPKey, ";
+        sqlStmt += "CASE WHEN Visit.Tour__c <> ' ' THEN Tour__c.Name ELSE ' ' END as tmgMainId, ";
+        sqlStmt += "CASE WHEN Visit.Tour__c <> ' ' THEN '1' ELSE '0' END as tourRelated, ";
+        sqlStmt += "' ' AS usrTimeEntryMetaPKey, ";
+        sqlStmt += "'' AS timeEntryPKey, ";
+        sqlStmt += "Event.Id AS eventId, ";
+        sqlStmt += "Account_Extension__c.Consider_Modules__c AS considerModule, ";
+        sqlStmt += "Visit.Geolocation__Longitude__s AS geolocationLongitude, ";
+        sqlStmt += "Visit.Geolocation__Latitude__s AS geolocationLatitude, ";
+        sqlStmt += "Visit.Creation_Mode__c AS creationMode, ";
+		sqlStmt += "Visit.Distribution_Rate_All__c AS distributionRate, ";
+        sqlStmt += "Visit.Distribution_Issues__c AS distributionIssue, ";
+        sqlStmt += "Visit.OOS_Rate_All__c AS outOfStockRate, ";
+        sqlStmt += "Visit.OOS_Issues__c AS outOfStockIssue, ";
+        sqlStmt += "Visit_Template__c.KPI_Relevant__c AS kpiRelevant, ";
+        sqlStmt += "Visit.PlaceId AS placeId ";
+        sqlStmt += "FROM Visit ";
+        sqlStmt += "LEFT JOIN Visit_Template__c ";
+        sqlStmt += "on Visit_Template__c.Id = Visit.Visit_Template__c ";
+        sqlStmt += "LEFT JOIN Event ";
+        sqlStmt += "on Event.WhatId = Visit.Id ";
+        sqlStmt += "LEFT JOIN Account_Extension__c ON Visit.AccountId = Account_Extension__c.Account__c ";
+        sqlStmt += "LEFT JOIN Tour__c on Tour__c.Id = Visit.Tour__c ";
+        sqlStmt += "LEFT OUTER JOIN Substitution__c SubBpaRel ON ";
+        sqlStmt += "Visit.AccountId = SubBpaRel.Account__c ";
+        sqlStmt += "AND SubBpaRel.Substitute__c = '#UserPKey#' ";
+        sqlStmt += "LEFT OUTER JOIN Substitution__c SubMain ";
+        sqlStmt += "ON SubMain.Id = SubBpaRel.Substitution__c ";
+        sqlStmt += "AND SubMain.Sales_Org__c = '#SALESORG#' ";
+        sqlStmt += "AND SubMain.Active__c = '1' ";
+        sqlStmt += "AND SubBpaRel.Active__c = '1' ";
+        sqlStmt += "AND SubMain.Substituted__c = Visit.Responsible__c ";
+        sqlStmt += "AND SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #TodayAsDate# ";
+        sqlStmt += "AND SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #TodayAsDate# ";
+        sqlStmt += "AND SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400 <= Visit.PlannedVisitStartTime ";
+        sqlStmt += "AND SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= Visit.PlannedVisitStartTime ";
+        sqlStmt += "AND SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #TodayAsDate# ";
+        sqlStmt += "AND SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #TodayAsDate# ";
+        sqlStmt += "AND SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400 <= Visit.PlannedVisitStartTime ";
+        sqlStmt += "AND SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= Visit.PlannedVisitStartTime ";
+        sqlStmt += "WHERE (1 = 1) ";
+		sqlStmt += addCondCallPKey;
+		
+     sqlStmt += "UNION ";
+
+     /*************************************
+     ** Read non-customer related calls  **
+     **************************************/
+        sqlStmt += "SELECT Event.Id AS pKey ";
+        sqlStmt += ",' ' AS bpaMainPKey ";
+        sqlStmt += ",Event.StartDateTime AS beginTime	";
+        sqlStmt += ",Event.EndDateTime AS finishTime ";
+        sqlStmt += ",Event.CreatedDate AS creationDateTime ";
+        sqlStmt += ",#MinDate# AS completedDate ";
+        sqlStmt += ",Visit_Template__c.Id AS clbMetaPKey ";
+        sqlStmt += ",Event.Subject AS subject	";
+        sqlStmt += ",'Planned' AS clbStatus	";
+        sqlStmt += ",#dateAsUnixepochLocaltime('Event.StartDateTime')# AS dateFrom	";
+        sqlStmt += ",#dateAsUnixepochLocaltime('Event.EndDateTime')# AS dateThru	";
+        sqlStmt += ",Event.StartDateTime AS timeFrom	";
+        sqlStmt += ",Event.EndDateTime AS timeThru ";
+        sqlStmt += ",Event.IsAllDayEvent AS allDay	";
+        sqlStmt += ",Event.IsPrivate AS isPrivate ";
+        sqlStmt += ",Event.DurationInMinutes AS duration ";
+        sqlStmt += ",0 AS fixed ";
+        sqlStmt += ",Event.OwnerId AS responsiblePKey ";
+        sqlStmt += ",Event.CreatedById AS initiatorPKey ";
+        sqlStmt += ",Event.Description AS note	";
+        sqlStmt += " ,'0' AS noteInitialized ,";
+        sqlStmt += "' ' reasonCode , ";
+        sqlStmt += "Event.OwnerId AS ownerPKey ,";
+        sqlStmt += "'Planned' AS originalClbStatus,  ";
+        sqlStmt += " ' ' as week, ";
+        sqlStmt += "CASE WHEN SubMain.Id IS NULL THEN '0' ELSE '1' END AS substitution, ";
+        sqlStmt += "CASE WHEN SubMain.Substituted__c IS NULL THEN ' ' ELSE SubMain.Substituted__c END AS subMainPKey, ";
+        sqlStmt += "#MinDate# AS startTimeEffective, ";
+        sqlStmt += "#MinDate# AS stopTimeEffective, ";
+        sqlStmt += "#MinDate# AS startTimeEffectiveUI, ";
+        sqlStmt += "#MinDate# AS stopTimeEffectiveUI, ";
+        sqlStmt += "0 AS durationEffective, ";
+        sqlStmt += "' ' AS tmgMainPKey, ";
+        sqlStmt += "' ' as tmgMainId, ";
+        sqlStmt += "'0' as tourRelated, ";
+        sqlStmt += "' ' AS usrTimeEntryMetaPKey, ";
+        sqlStmt += "'' AS timeEntryPKey, ";
+        sqlStmt += "Event.Id AS eventId, ";
+  		sqlStmt += "'0' As considerModule, ";
+        sqlStmt += "0 AS geolocationLongitude, ";
+        sqlStmt += "0 AS geolocationLatitude, ";
+        sqlStmt += "'' AS creationMode, ";
+		sqlStmt += "0 AS distributionRate, ";
+        sqlStmt += "'0' AS distributionIssue, ";
+        sqlStmt += "0 AS outOfStockRate, ";
+        sqlStmt += "'0' AS outOfStockIssue, ";
+        sqlStmt += "' ' AS kpiRelevant, ";
+        sqlStmt += "' ' AS placeId ";
+        sqlStmt += "FROM Event ";
+        sqlStmt += "LEFT JOIN Visit_Template__c " ;
+        sqlStmt += "ON Event.Type = Visit_Template__c.Name ";
+        sqlStmt += "LEFT JOIN Substitution__c SubBpaRel ON ";
+        sqlStmt += "SubBpaRel.Account__c = ' '";
+        sqlStmt += "AND SubBpaRel.Substitute__c = '#UserPKey#' ";
+        sqlStmt += "LEFT JOIN Substitution__c SubMain ";
+        sqlStmt += "ON SubMain.Id = SubBpaRel.Substitution__c ";
+        sqlStmt += "AND SubMain.Active__c = '1' ";
+        sqlStmt += "AND SubBpaRel.Active__c = '1' ";
+        sqlStmt += "AND SubMain.Sales_Org__c = '#SALESORG#' ";
+        sqlStmt += "AND SubMain.Substituted__c = Event.OwnerId ";
+        sqlStmt += "AND SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #TodayAsDate# ";
+        sqlStmt += "AND SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #TodayAsDate# ";
+        sqlStmt += "AND SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400 <= Event.StartDateTime ";
+        sqlStmt += "AND SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= Event.StartDateTime ";
+        sqlStmt += "AND SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #TodayAsDate# ";
+        sqlStmt += "AND SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #TodayAsDate# ";
+        sqlStmt += "AND SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400 <= Event.StartDateTime ";
+        sqlStmt += "AND SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= Event.StartDateTime ";
+        sqlStmt += "WHERE (1 = 1) ";
+		sqlStmt += addCondEventPKey;
+
+       return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+      ]]></Load>
+  </Database>
+</Datasource>

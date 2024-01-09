@@ -1,0 +1,373 @@
+<Process name="Call::SurveyTabProcess" defaultAction="Backend_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="ProductPKey" type="String" />
+        <Declaration name="ProductId" type="String" />
+        <Declaration name="JobDefMetaPKey" type="String" />
+        <Declaration name="JobDefMetaText" type="String" />
+        <Declaration name="DataLength" type="String" />
+        <Declaration name="DataType" type="String" />
+        <Declaration name="ToggleId" type="String" />
+        <Declaration name="POS" type="String" />
+        <Declaration name="posId" type="String" />
+        <Declaration name="ContextMenuList" type="LoJobProductsContextMenu" />
+        <Declaration name="FirstSurveyProduct" type="LiJobProduct" />
+        <Declaration name="isPromotionFilterSet" type="String" />
+        <Declaration name="isDiscrepanciesFilterSet" type="String" />
+        <Declaration name="ScanProcessCompleted" type="String" />
+        <Declaration name="isSfBackend" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoCall" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <!-- sf/casdif -->
+      <Action actionType="LOGIC" name="SetIsSfBackend" call="Utils.isSfBackend">
+        <Return name="ProcessContext::isSfBackend" />
+      </Action>
+      <Action name="loadAndSetPrerequisites" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.loadAndSetPrerequisites">
+        <Parameters>
+          <Input name="loadType" value="Surveys" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="SetScanProcess_Initial" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::ScanProcessCompleted" />
+      </Action>
+      <Action name="presetPosId" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.determinePosId">
+        <Return name="ProcessContext::posId" />
+      </Action>
+      <Action name="ResetCategoryQuickFilterAndCache" actionType="LOGIC" call="ProcessContext::MainBO.prepareCategoryQuickFilterList">
+        <Parameters>
+          <Input name="load" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="DECISION" name="Backend_Decision" parameter="ProcessContext::isSfBackend">
+        <Case value="false" action="ShowSurvey" />
+        <CaseElse action="SetScanProcessCompletedInitial" />
+      </Action>
+      <Action actionType="LOGIC" name="SetScanProcessCompletedInitial" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::ScanProcessCompleted" />
+        <TransitionTo action="FilterPOSAndShowSurvey" />
+      </Action>
+      <Action name="FilterPOSAndShowSurvey" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.filterPOS">
+        <Parameters>
+          <Input name="loadType" type="Literal" value="surveys" />
+        </Parameters>
+        <TransitionTo action="ShowSurvey" />
+      </Action>
+      <Action actionType="View" name="ShowSurvey">
+        <UIDescription>Call::SurveyTabUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="GetSurveysForProduct_Decision" />
+          <Event name="posSelected" action="FilterSurveyByPOS" />
+          <Event name="addProduct" action="AddProductLookup" />
+          <Event name="scanProduct" action="ScanAndAddProduct" />
+          <Event name="previousProduct" action="previousProductAction" />
+          <Event name="nextProduct" action="nextProductAction" />
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+          <Event name="showAllPromotedProducts" action="ShowAllPromotedProducts" />
+          <Event name="showProductDiscrepancies" action="ShowProductDiscrepancies" />
+          <Event name="showAllProducts" action="ShowAllProducts" />
+          <Event name="quickFilterOpeningEvent" action="PrepareCategoryQuickFilterList" />
+          <Event name="quickFilterSelectedEvent" action="FilterByCategory" />
+        </Events>
+      </Action>
+      <Action name="PrepareCategoryQuickFilterList" actionType="LOGIC" call="ProcessContext::MainBO.prepareCategoryQuickFilterList">
+        <Parameters>
+          <Input name="load" type="Literal" value="0" />
+          <Input name="isPromotionFilterSet" value="ProcessContext::isPromotionFilterSet" />
+          <Input name="isDiscrepanciesFilterSet" value="ProcessContext::isDiscrepanciesFilterSet" />
+        </Parameters>
+        <TransitionTo action="SetDropdownOpening" />
+      </Action>
+      <Action actionType="LOGIC" name="SetDropdownOpening" call="Utils.identity">
+        <Parameters>
+          <Input name="dropdownOpeningEvent" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+      <Action name="FilterByCategory" actionType="LOGIC" call="ProcessContext::MainBO.filterProductsByQuickFilter">
+        <Parameters>
+          <Input name="items" value="Event.items" />
+          <Input name="isPromotionFilterSet" value="ProcessContext::isPromotionFilterSet" />
+          <Input name="isDiscrepanciesFilterSet" value="ProcessContext::isDiscrepanciesFilterSet" />
+        </Parameters>
+      </Action>
+      <Action name="GetContextMenu" actionType="LOAD" type="LoJobProductsContextMenu">
+        <Return name="ProcessContext::ContextMenuList" />
+        <Parameters>
+          <Input name="boClbMain" value="ProcessContext::MainBO" />
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="posId" value="Event.posId" />
+          <Input name="historical" value="Event.historical" />
+        </Parameters>
+      </Action>
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="AddToHistory" action="AddProductToHistory" />
+        <Case value="DeleteFromHistory" action="DeleteProductFromHistory" />
+        <Case value="DeleteFromPOSHistory" action="DeleteProductFromPOSHistory" />
+        <CaseElse action="ShowSurvey" />
+      </Action>
+      <Action name="AddProductToHistory" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.updateHistoricalProductsAsync">
+        <Parameters>
+          <Input name="action" value="add" type="Literal" />
+          <Input name="prdMainPKey" value="Event.prdMainPKey" />
+          <Input name="posId" value="ProcessContext::posId" />
+        </Parameters>
+      </Action>
+      <Action name="DeleteProductFromHistory" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.updateHistoricalProductsAsync">
+        <Parameters>
+          <Input name="action" value="delete" type="Literal" />
+          <Input name="prdMainPKey" value="Event.prdMainPKey" />
+          <Input name="posId" value="ProcessContext::posId" />
+        </Parameters>
+      </Action>
+      <Action name="DeleteProductFromPOSHistory" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.updateHistoricalProductsAsync">
+        <Parameters>
+          <Input name="action" value="delete" type="Literal" />
+          <Input name="prdMainPKey" value="Event.prdMainPKey" />
+          <Input name="posId" value="ProcessContext::posId" />
+        </Parameters>
+      </Action>
+      <Action name="AddProductLookup" actionType="PROCESS" process="Product::LookupProcess">
+        <Parameters>
+          <Input name="filterOnlyProducts" type="Literal" value="true" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::ProductPKey" value="ProductPKey" />
+          <Return name="ProcessContext::ProductId" value="ProductId" />
+        </ReturnValues>
+        <TransitionTo action="AddProduct_Result_Decision" />
+      </Action>
+      <Action name="AddProduct_Result_Decision" actionType="DECISION" parameter="ProcessContext::ProductPKey">
+        <CaseEmpty action="ShowSurvey" />
+        <CaseElse action="AddProductLogic" />
+      </Action>
+      <Action name="AddProductLogic" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.addProduct">
+        <Parameters>
+          <Input name="productPKey" value="ProcessContext::ProductPKey" />
+          <Input name="productId" value="ProcessContext::ProductId" />
+          <Input name="posId" value="ProcessContext::posId" />
+        </Parameters>
+      </Action>
+      <Action name="FilterSurveyByProduct" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.filterSurveysByProduct">
+        <Parameters>
+          <Input name="prdMainPKey" value="Event.prdMainPKey" />
+          <Input name="posId" value="ProcessContext::posId" />
+        </Parameters>
+      </Action>
+      <Action name="GetProductSurveyMatrix" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.getJobProducts">
+        <TransitionTo action="GetFirstVisibleItem" />
+        <Parameters>
+          <Input name="posId" value="ProcessContext::posId" />
+        </Parameters>
+      </Action>
+      <Action name="GetFirstVisibleItem" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.loCurrentSurveyProducts.getFirstItem">
+        <Return name="ProcessContext::FirstSurveyProduct" />
+        <TransitionTo action="SetFirstProductAsCurrent" />
+      </Action>
+      <Action name="SetFirstProductAsCurrent" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.loCurrentSurveyProducts.setCurrent">
+        <Parameters>
+          <Input name="listItem" value="ProcessContext::FirstSurveyProduct" />
+        </Parameters>
+        <TransitionTo action="SetSurveysFilter" />
+      </Action>
+      <Action name="GetSurveysForProduct_Decision" actionType="DECISION" parameter="ProcessContext::MainBO.clbStatus">
+        <Case value="Planned" action="GetSurveysForProduct" />
+        <CaseElse action="GetSurveysForProductExisting" />
+      </Action>
+      <Action name="GetSurveysForProductExisting" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.getSurveysExisting">
+        <Parameters>
+          <Input name="posId" value="Event.posId" />
+          <Input name="prdMainPKey" value="Event.prdMainPKey" />
+          <Input name="jobProductPKey" value="Event.jobProductPKey" />
+        </Parameters>
+        <TransitionTo action="FilterSurveyByProduct" />
+      </Action>
+      <Action name="GetSurveysForProduct" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.getSurveys">
+        <TransitionTo action="FilterSurveyByProduct" />
+        <Parameters>
+          <Input name="posId" value="Event.posId" />
+          <Input name="prdMainPKey" value="Event.prdMainPKey" />
+          <Input name="jobProductPKey" value="Event.jobProductPKey" />
+        </Parameters>
+      </Action>
+      <Action name="FilterSurveyByPOS" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.filterSurveysByPos">
+        <Return name="ProcessContext::posId" />
+        <TransitionTo action="SetEmptySurveysFilter" />
+        <Parameters>
+          <Input name="posId" value="Event.posId" />
+          <Input name="isPromotionFilterSet" value="ProcessContext::isPromotionFilterSet" />
+          <Input name="isDiscrepanciesFilterSet" value="ProcessContext::isDiscrepanciesFilterSet" />
+          <Input name="boCall" value="ProcessContext::MainBO" />
+        </Parameters>
+      </Action>
+      <Action name="SetEmptySurveysFilter" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.filterSurveysByProduct">
+        <TransitionTo action="LoadExistingSurveys_Decision" />
+        <Parameters>
+          <Input name="prdMainPKey" value=" " type="Literal" />
+          <Input name="posId" value="ProcessContext::posId" />
+        </Parameters>
+      </Action>
+      <Action name="SetSurveysFilter" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.filterSurveysByProduct">
+        <Parameters>
+          <Input name="prdMainPKey" value="ProcessContext::FirstSurveyProduct.prdMainPKey" />
+          <Input name="posId" value="ProcessContext::posId" />
+          <Input name="isPromotionFilterSet" value="ProcessContext::isPromotionFilterSet" />
+          <Input name="isDiscrepanciesFilterSet" value="ProcessContext::isDiscrepanciesFilterSet" />
+          <Input name="loProductQuickFilter" value="ProcessContext::MainBO.loProductQuickFilter" />
+        </Parameters>
+      </Action>
+      <Action name="GetProductSurveyExistingMatrix" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.getJobProductsExisting">
+        <Parameters>
+          <Input name="posId" value="ProcessContext::posId" />
+        </Parameters>
+        <TransitionTo action="GetFirstVisibleItem" />
+      </Action>
+      <Action name="LoadExistingSurveys_Decision" actionType="DECISION" parameter="ProcessContext::MainBO.boJobManager.loPOS.Current.surveys">
+        <CaseElse action="GetJobProducts_Decision" />
+        <CaseEmpty action="LoadExistingSurveysForPOS" />
+      </Action>
+      <Action name="LoadExistingSurveysForPOS" actionType="LOAD" type="LoSurveys">
+        <Return name="ProcessContext::MainBO.boJobManager.loPOS.Current.surveys" />
+        <TransitionTo action="GetJobProducts_Decision" />
+        <Parameters>
+          <Input name="posId" value="ProcessContext::posId" />
+          <Input name="boJobManager" value="ProcessContext::MainBO.boJobManager" />
+        </Parameters>
+      </Action>
+      <Action name="GetJobProducts_Decision" actionType="DECISION" parameter="ProcessContext::MainBO.clbStatus">
+        <Case value="Planned" action="GetProductSurveyMatrix" />
+        <CaseElse action="GetProductSurveyExistingMatrix" />
+      </Action>
+      <Action name="nextProductAction" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.setNextProduct">
+        <Parameters>
+          <Input name="direction" value="next" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="previousProductAction" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.setNextProduct">
+        <Parameters>
+          <Input name="direction" value="previous" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="ScanAndAddProduct" actionType="PROCESS" process="Product::ScanProductProcess">
+        <Parameters>
+          <Input name="fieldStateFilter" value="1" type="Literal" />
+          <Input name="allowForeignProducts" value="0" type="Literal" />
+          <Input name="processType" type="Literal" value="Survey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::ProductPKey" value="ProductPKey" />
+          <Return name="ProcessContext::ProductId" value="ProductId" />
+        </ReturnValues>
+        <TransitionTo action="AddProduct_Result_Decision" />
+      </Action>
+      <Action name="ScanAndAddProduct_External_StatusDecision" actionType="DECISION" parameter="ProcessContext::ScanProcessCompleted">
+        <Case value="1" action="SetScanProcess_InProgress" />
+        <CaseElse action="ResetScanProcess_Initial" />
+      </Action>
+      <Action actionType="LOGIC" name="ResetScanProcess_Initial" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::ScanProcessCompleted" />
+      </Action>
+      <Action actionType="LOGIC" name="SetScanProcess_InProgress" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="0" />
+        </Parameters>
+        <Return name="ProcessContext::ScanProcessCompleted" />
+        <TransitionTo action="ScanAndAddProduct_External" />
+      </Action>
+      <Action name="ScanAndAddProduct_External" actionType="PROCESS" process="Product::ScanProductProcess">
+        <Parameters>
+          <Input name="fieldStateFilter" value="1" type="Literal" />
+          <Input name="allowForeignProducts" value="0" type="Literal" />
+          <Input name="externalEAN" value="event.code" />
+          <Input name="processType" type="Literal" value="Survey" />
+        </Parameters>
+        <TransitionTo action="SetScanProcess_Completed" />
+        <ReturnValues>
+          <Return name="ProcessContext::ProductPKey" value="ProductPKey" />
+          <Return name="ProcessContext::ProductId" value="ProductId" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="LOGIC" name="SetScanProcess_Completed" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::ScanProcessCompleted" />
+        <TransitionTo action="AddProduct_Result_Decision" />
+      </Action>
+      <Action name="ShowAllPromotedProducts" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.filterPromotedProducts">
+        <TransitionTo action="SetPromotionFilter" />
+        <Parameters>
+          <Input name="posId" value="ProcessContext::posId" />
+          <Input name="boCall" value="ProcessContext::MainBO" />
+        </Parameters>
+      </Action>
+      <Action name="SetPromotionFilter" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::isPromotionFilterSet" />
+        <TransitionTo action="ResetDiscrepanciesFilter" />
+        <Parameters>
+          <Input name="isPromotionFilterSet" value="1" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="ShowProductDiscrepancies" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.filterProductDiscrepancies">
+        <TransitionTo action="SetDiscrepanciesFilter" />
+        <Parameters>
+          <Input name="posId" value="ProcessContext::posId" />
+          <Input name="boCall" value="ProcessContext::MainBO" />
+        </Parameters>
+      </Action>
+      <Action name="SetDiscrepanciesFilter" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::isDiscrepanciesFilterSet" />
+        <TransitionTo action="ResetPromotionFilter" />
+        <Parameters>
+          <Input name="isDiscrepanciesFilterSet" value="1" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="ShowAllProducts" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.showAllSurveyProducts">
+        <TransitionTo action="ResetAllFilters" />
+        <Parameters>
+          <Input name="posId" value="ProcessContext::posId" />
+          <Input name="boCall" value="ProcessContext::MainBO" />
+        </Parameters>
+      </Action>
+      <Action name="ResetAllFilters" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::isPromotionFilterSet" />
+        <TransitionTo action="ResetDiscrepanciesFilter" />
+        <Parameters>
+          <Input name="isPromotionFilterSet" value="0" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="ResetPromotionFilter" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::isPromotionFilterSet" />
+        <Parameters>
+          <Input name="isPromotionFilterSet" value="0" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="ResetDiscrepanciesFilter" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::isDiscrepanciesFilterSet" />
+        <Parameters>
+          <Input name="isDiscrepanciesFilterSet" value="0" type="Literal" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+  <ExternalEvents>
+    <Event name="barcodeEvent" action="ScanAndAddProduct_External_StatusDecision" />
+  </ExternalEvents>
+</Process>

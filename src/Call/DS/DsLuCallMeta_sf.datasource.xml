@@ -1,0 +1,38 @@
+<DataSource name="DsLuCallMeta" backendSystem="sf" businessObjectClass="LuCallMeta" external="false" distinct="false" readOnly="true" editableEntity="Visit_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Visit_Template__c" column="Id" />
+    <Attribute name="metaType" table="Visit_Template__c" column="Meta_Type__c" />
+    <Attribute name="id" table="Visit_Template__c" column="Name" />
+    <Attribute name="deleteAllowed" table="Visit_Template__c" column="Delete_Allowed__c" />
+    <Attribute name="cancelReasonRequired" table="Visit_Template__c" column="Cancel_Reason_Required__c" />
+    <Attribute name="locCaptureDuringCancel" table="Visit_Template__c" column="Loc_Capture_During_Cancel__c" />
+    <Attribute name="locCaptureDuringComplete" table="Visit_Template__c" column="Loc_Capture_During_Complete__c" />
+    <Attribute name="captureProceedingTime" table="Visit_Template__c" column="Capture_Proceeding_Time__c" />
+    <Attribute name="defaultDuration" table="Visit_Template__c" column="Default_Duration__c" />
+    <Attribute name="text" table="Visit_Template__c" column="Description_#Language#__c" />
+    <Attribute name="considerPOSCheck" table="Visit_Template__c" column="Consider_POS_Check__c" />
+    <DerivedAttribute name="considerTargetValues" value="'1'" />
+    <Attribute name="mobilityRelevant" table="Visit_Template__c" column="Mobility_Relevant__c" />
+    <Attribute name="companyRequired" table="Visit_Template__c" column="Company_Required__c" />
+    <Attribute name="syncOptions" table="Visit_Template__c" column="Sync_Options__c" />
+    <Attribute name="prmFindingLeadTime" table="Visit_Template__c" column="Promotion_Finding_Lead_Time__c" />
+    <Attribute name="updatePlannedTimes" table="Visit_Template__c" column="Update_Planned_Times__c" />
+    <Attribute name="historicalProducts" table="Visit_Template__c" column="Historical_Products__c" />
+    <Attribute name="tagMediaDateTime" table="Visit_Template__c" column="Tag_Media_Date_Time__c" />
+    <Attribute name="tagMediaGeoLocation" table="Visit_Template__c" column="Tag_Media_Geo_Location__c" />
+    <Attribute name="deviationThreshold" table="Visit_Template__c" column="Derivation_Threshold__c" />
+    <Attribute name="maxPictures" table="Visit_Template__c" column="Max_Pictures__c" />
+    <Attribute name="mobilityUserGuidance" table="Visit_Template__c" column="Mobility_User_Guidance__c" />
+    <DerivedAttribute name="usrTimeEntryMetaPKey" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="Visit_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   Visit_Template__c.Id = #pKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

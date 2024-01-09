@@ -1,0 +1,11 @@
+<LookupObject name="LuContractsCount">
+  <DataSource name="DsLuContractsCount" />
+  <SimpleProperties>
+    <SimpleProperty name="contractsCount" type="DomInteger" storable="true" dataSourceProperty="contractsCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

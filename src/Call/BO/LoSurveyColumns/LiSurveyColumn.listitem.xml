@@ -1,0 +1,30 @@
+<ListItem name="LiSurveyColumn">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="displayColumnIndex" type="DomJobMatrixColumn" storable="false" dataSourceProperty="displayColumnIndex" />
+    <SimpleProperty name="displayColumnName" type="DomString" storable="false" dataSourceProperty="displayColumnName" />
+    <SimpleProperty name="displayColumnNameCapitalized" type="DomString" storable="false" dataSourceProperty="displayColumnNameCapitalized" />
+    <SimpleProperty name="jobDefinitionMetaPKey" type="DomPKey" storable="false" dataSourceProperty="jobDefinitionMetaPKey" />
+    <SimpleProperty name="jobDefinitionMetaText" type="DomString" storable="false" dataSourceProperty="jobDefinitionMetaText" />
+    <SimpleProperty name="jobMetaId" type="DomId" storable="false" dataSourceProperty="jobMetaId" />
+    <SimpleProperty name="jobMetaPKey" type="DomPKey" storable="false" dataSourceProperty="jobMetaPKey" />
+    <SimpleProperty name="measureType" type="DomJobMeasureType" storable="false" dataSourceProperty="measureType" />
+    <SimpleProperty name="presetting" type="DomJobDefMetaPresetting" storable="false" dataSourceProperty="presetting" />
+    <SimpleProperty name="targetValueColumn" type="DomJobTargetValueColumn" storable="false" dataSourceProperty="targetValueColumn" />
+    <SimpleProperty name="dataType" type="DomString" storable="false" dataSourceProperty="dataType" />
+    <SimpleProperty name="dataLength" type="DomVariant" storable="false" dataSourceProperty="dataLength" />
+    <SimpleProperty name="toggleId" type="DomId" storable="false" dataSourceProperty="toggleId" />
+    <SimpleProperty name="dataWareHouseKey" type="DomJobDatawareHouseKey" storable="false" dataSourceProperty="dataWareHouseKey" />
+    <SimpleProperty name="jobDefListPKeys" type="DomString" storable="false" dataSourceProperty="jobDefListPKeys" />
+    <SimpleProperty name="mandatory" type="DomBool" storable="false" dataSourceProperty="mandatory" />
+    <SimpleProperty name="useStepper" type="DomBool" storable="false" dataSourceProperty="useStepper" />
+    <SimpleProperty name="stepSize" type="DomDecimal" storable="false" dataSourceProperty="stepSize" />
+    <SimpleProperty name="considerMinValue" type="DomBool" storable="false" dataSourceProperty="considerMinValue" />
+    <SimpleProperty name="minValue" type="DomString" storable="false" dataSourceProperty="minValue" />
+    <SimpleProperty name="minDatePolicy" type="DomJobDatePolicy" storable="false" dataSourceProperty="minDatePolicy" />
+    <SimpleProperty name="considerMaxValue" type="DomBool" storable="false" dataSourceProperty="considerMaxValue" />
+    <SimpleProperty name="maxValue" type="DomString" storable="false" dataSourceProperty="maxValue" />
+    <SimpleProperty name="decimalPlaces" type="DomSmallInteger" storable="false" dataSourceProperty="decimalPlaces" />
+    <SimpleProperty name="maxDatePolicy" type="DomJobDatePolicy" storable="false" dataSourceProperty="maxDatePolicy" />
+  </SimpleProperties>
+</ListItem>

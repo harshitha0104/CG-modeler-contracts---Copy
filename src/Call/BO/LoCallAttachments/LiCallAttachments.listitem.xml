@@ -1,0 +1,23 @@
+<ListItem name="LiCallAttachments">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="clbMainPKey" type="DomPKey" dataSourceProperty="clbMainPKey" />
+    <SimpleProperty name="creationDate" type="DomDate" dataSourceProperty="creationDate" />
+    <SimpleProperty name="creationTime" type="DomTime" dataSourceProperty="creationTime" />
+    <SimpleProperty name="fileName" type="DomFileName" dataSourceProperty="fileName" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+    <SimpleProperty name="fileSize" type="DomCssFileSize" dataSourceProperty="fileSize" />
+    <SimpleProperty name="latitude" type="DomDegree" dataSourceProperty="latitude" />
+    <SimpleProperty name="longitude" type="DomDegree" dataSourceProperty="longitude" />
+    <SimpleProperty name="attachmentTextPKey" type="DomPKey" dataSourceProperty="attachmentTextPKey" />
+    <SimpleProperty name="attachmentText" type="DomText" dataSourceProperty="attachmentText" />
+    <SimpleProperty name="attachmentBlobPKey" type="DomPKey" dataSourceProperty="attachmentBlobPKey" />
+    <SimpleProperty name="attachmentBlob" type="DomBlob" dataSourceProperty="attachmentBlob" blobTable="ClbAttachmentBlob" blobPKeyField="attachmentBlobPKey" />
+    <SimpleProperty name="subjectTag" type="DomText" dataSourceProperty="subjectTag" />
+    <SimpleProperty name="typeTag" type="DomClbTypeTag" dataSourceProperty="typeTag" />
+    <SimpleProperty name="areaTag" type="DomClbAreaTag" dataSourceProperty="areaTag" />
+    <SimpleProperty name="competitorTag" type="DomBool" dataSourceProperty="competitorTag" />
+    <SimpleProperty name="isTagged" type="DomBool" dataSourceProperty="isTagged" />
+    <SimpleProperty name="locationDeviation" type="DomClbLocationDeviation" dataSourceProperty="locationDeviation" />
+  </SimpleProperties>
+</ListItem>

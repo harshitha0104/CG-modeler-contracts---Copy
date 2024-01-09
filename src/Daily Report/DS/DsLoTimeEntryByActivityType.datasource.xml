@@ -1,0 +1,26 @@
+<DataSource name="DsLoTimeEntryByActivityType" businessObjectClass="LoTimeEntryByActivityType" external="false" editableEntity="UsrTimeEntry" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="UsrTimeEntry" column="PKey" />
+    <Attribute name="duration" table="UsrTimeEntry" column="Duration" />
+    <Attribute name="effectiveUTCTimeFrom" table="UsrTimeEntry" column="EffectiveUTCTimeFrom" />
+    <Attribute name="effectiveUTCTimeThru" table="UsrTimeEntry" column="EffectiveUTCTimeThru" />
+  </Attributes>
+  <Entities>
+    <Entity name="UsrTimeEntry" />
+    <Entity name="UsrTimeEntryMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="UsrTimeEntryMeta.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="UsrTimeEntry.UsrTimeEntryMetaPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+       UsrTimeEntryMeta.ActivityType= #activityType# AND UsrTimeEntry.UsrDailyReportPKey=#timeCardPKey# AND UsrTimeEntry.EffectiveUTCTimeFrom < DATETIME('now')
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="activityType" type="TEXT" />
+    <Parameter name="timeCardPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

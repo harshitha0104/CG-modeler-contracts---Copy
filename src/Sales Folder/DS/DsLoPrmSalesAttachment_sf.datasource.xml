@@ -1,0 +1,31 @@
+<DataSource name="DsLoPrmSalesAttachment" backendSystem="sf" businessObjectClass="LoPrmSalesAttachment" external="false" editableEntity="SF_File" schemaVersion="2.0" readOnly="true">
+  <Attributes>
+    <Attribute name="attachmentBlobPKey" table="SF_File" column="Id" />
+    <Attribute name="pKey" table="SF_FileLink" column="Id" />
+    <Attribute name="mediaPath" table="SF_File" column="VersionData" />
+    <Attribute name="description" table="SF_File" column="Description" />
+    <DerivedAttribute name="type" value="replace(SF_File.PathOnClient, rtrim(SF_File.PathOnClient, replace(SF_File.PathOnClient, '.', '')), '')" />
+    <DerivedAttribute name="fileType" value="replace(PathOnClient, rtrim(PathOnClient, replace(PathOnClient, '.', '')), '')" />
+    <Attribute name="fileName" table="SF_File" column="PathOnClient" />
+  </Attributes>
+  <Entities>
+    <Entity name="SF_File" alias="" idAttribute="Id" />
+    <Entity name="SF_FileLink" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SF_FileLink.FileId" comparator="eq" rightSideType="Attribute" rightSideValue="SF_File.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  SF_FileLink.ParentId = #prmPromotionPKey#
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="SF_File" attribute="Relative_Position__c &lt;&gt; 0" direction="DESC" />
+    <OrderCriterion entity="SF_File" attribute="Relative_Position__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="prmPromotionPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

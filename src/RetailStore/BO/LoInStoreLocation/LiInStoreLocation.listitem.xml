@@ -1,0 +1,11 @@
+<ListItem name="LiInStoreLocation">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" id="true" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="name" type="DomText" dataSourceProperty="name" />
+    <SimpleProperty name="retailStoreId" type="DomPKey" dataSourceProperty="retailStoreId" />
+    <SimpleProperty name="description" type="DomText" dataSourceProperty="description" />
+    <SimpleProperty name="category" type="DomText" dataSourceProperty="category" />
+    <SimpleProperty name="sort" type="DomText" dataSourceProperty="sort" />
+    <SimpleProperty name="image" type="DomBlob" />
+  </SimpleProperties>
+</ListItem>

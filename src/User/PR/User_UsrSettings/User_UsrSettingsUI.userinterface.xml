@@ -1,0 +1,194 @@
+<UIDescription name="User::UsrSettingsUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionDialogPage">
+    <ViewVariables>
+      <ViewVariable name="currentTabName" value="Calendar" />
+    </ViewVariables>
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="PersonalSettingsId" defaultLabel="My Settings" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="TabbedViewAreaSection" currentTab="View::currentTabName">
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="General">
+              <Bindings>
+                <Resource target="image" type="Image" id="MainGrey24" defaultImage="MainGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="GeneralId" defaultLabel="General" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Calendar">
+              <Bindings>
+                <Resource target="image" type="Image" id="CalendarMonth_T" defaultImage="CalendarMonth_T" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="CalendarId" defaultLabel="Calendar" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Theme">
+              <Bindings>
+                <Resource target="image" type="Image" id="Theme_T" defaultImage="Theme_T" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="Theme" defaultLabel="Theme" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="tabSelected" storeTabNameIn="currentTabName" />
+          </Events>
+        </TabSelector>
+      </Area>
+      <Area areaName="General" areaPattern="GroupedElementsArea">
+        <GroupElement name="Start Screen Configuration">
+          <Bindings>
+            <Resource target="Title" type="Label" id="StartScreenConfigurationTitle" defaultLabel="Start Screen Configuration" />
+          </Bindings>
+          <SelectionBox name="StartScreenConfigurationView">
+            <Bindings>
+              <Resource target="Label" type="Label" id="LandingPageId" defaultLabel="Landing Page" />
+              <Binding target="DataSource" toggleId="UsrLandingPageMobility" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ApplicationContext::User.boUserSettings.usrLandingPageMobility" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+        </GroupElement>
+      </Area>
+      <Area areaName="Calendar" areaPattern="GroupedElementsArea">
+        <GroupElement name="VisitType">
+          <Bindings>
+            <Resource target="Title" type="Label" id="VisitTypeTitle" defaultLabel="Visit type" />
+          </Bindings>
+          <Lookup name="DefaultVisitType">
+            <Bindings>
+              <Resource target="Label" type="Label" id="DefaultVisitTypeId" defaultLabel="Default visit type" />
+              <Binding target="Value" binding="ProcessContext::callMetaLookup.text" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="OpenCallMetaLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+        <GroupElement name="CallCalendar">
+          <Bindings>
+            <Resource target="Title" type="Label" id="CallCalendarTitle" defaultLabel="Call Calendar" />
+          </Bindings>
+          <TimePickerField name="CalendarInitialTime">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Initial Time" id="CalendarInitialTimeId" />
+              <Binding target="Value" binding="ApplicationContext::User.boUserSettings.clbCalendarInitialTime" bindingMode="TWO_WAY" />
+            </Bindings>
+          </TimePickerField>
+          <SelectionBox name="CallCalendarInitialView">
+            <Bindings>
+              <Resource target="Label" type="Label" id="CallCalendarInitialViewId" defaultLabel="Standard Layout" />
+              <Binding target="DataSource" toggleId="UsrClbCalendarIVMobility" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ApplicationContext::User.boUserSettings.clbCalendarInitialViewMobility" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <SelectionBox name="DefaultCallStatusView">
+            <Bindings>
+              <Resource target="Label" type="Label" id="DefaultCallStatusViewId" defaultLabel="Call filter" />
+              <Binding target="DataSource" toggleId="UsrClbCalendarDefaultCallStatusView" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ApplicationContext::User.boUserSettings.clbCalendarDefaultCallStatus" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <CheckBox name="ShowAgendaTime" disabled="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="showAgendaTimeId" defaultLabel="Show Agenda Time" />
+              <Binding target="checkedValue" binding="ApplicationContext::User.boUserSettings.clbAgendaDisplayTimeMobility" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+          <CheckBox name="ShowCalendarWeek" disabled="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="showCalendarWeekId" defaultLabel="Show Calendar Week" />
+              <Binding target="checkedValue" binding="ApplicationContext::User.boUserSettings.clbShowCalendarWeekMobility" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+          <CheckBox name="DisplayWeekend" disabled="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="displayWeekendId" defaultLabel="Display Weekend" />
+              <Binding target="checkedValue" binding="ApplicationContext::User.boUserSettings.displayWeekend" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+        </GroupElement>
+        <GroupElement name="CallCalendarMapSettings">
+          <Bindings>
+            <Resource target="Title" type="Label" id="CalendarMapSettings" defaultLabel="Calendar map settings" />
+          </Bindings>
+          <CheckBox name="displayTraffic" disabled="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="displayTrafficId" defaultLabel="Display traffic" />
+              <Binding target="checkedValue" binding="ApplicationContext::User.boUserSettings.clbDisplayTrafficInMapMobility" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+          <CheckBox name="displayRoute" disabled="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="displayRouteId" defaultLabel="Display route" />
+              <Binding target="checkedValue" binding="ApplicationContext::User.boUserSettings.clbDisplayRouteInMapMobility" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+        </GroupElement>
+        <GroupElement name="CameraSettings">
+          <Bindings>
+            <Resource target="Title" type="Label" id="CameraSettingsTitle" defaultLabel="Camera settings" />
+          </Bindings>
+          <SelectionBox name="PictureProfile">
+            <Bindings>
+              <Resource target="Label" type="Label" id="PictureProfileId" defaultLabel="Picture profile" />
+              <Binding target="DataSource" toggleId="RpsPictureQuality" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ApplicationContext::User.boUserSettings.pictureQuality" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+        </GroupElement>
+      </Area>
+      <Area areaName="Sync" areaPattern="GroupedElementsArea">
+        <GroupElement name="Synchronization">
+          <Bindings>
+            <Resource target="Title" type="Label" id="SynchronizationTitle" defaultLabel="Timer Based Synchronization" />
+          </Bindings>
+          <CheckBox name="enableSync" disabled="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="enableSynchronizationId" defaultLabel="Enable" />
+              <Binding target="checkedValue" binding="ApplicationContext::User.boUserSettings.enableSync" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+          <Stepper name="TimeInterval" minValue="0" maxValue="999">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Time Interval (min)" id="TimeIntervallId" />
+              <Binding target="Value" type="SmallInteger" binding="ApplicationContext::User.boUserSettings.syncTimeIntervall" bindingMode="TWO_WAY" formatV2="3.0" />
+              <Binding target="StepSize" value="1.0" />
+            </Bindings>
+          </Stepper>
+        </GroupElement>
+      </Area>
+      <Area areaName="Theme" areaPattern="SingleElementArea">
+        <ThemeSelection name="ThemeSelector">
+          <Bindings>
+            <Binding target="languageSpoken" binding="ApplicationContext::User.languageSpoken" />
+          </Bindings>
+        </ThemeSelection>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

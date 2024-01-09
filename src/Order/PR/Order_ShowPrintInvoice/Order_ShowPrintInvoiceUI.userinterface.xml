@@ -1,0 +1,20 @@
+<UIDescription name="Order::ShowPrintInvoiceUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="PrintDocumentId" defaultLabel="Print Document" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="Attachments" areaPattern="SingleElementArea">
+        <MediaListControl name="PrintInvoiceAttachment" dataSource="ProcessContext::loOrderAttachment.Items[]">
+          <Bindings>
+            <Binding bindingMode="ONE_WAY" binding=".mediapath" type="Text" target="MediaPath" />
+            <Binding bindingMode="ONE_WAY" binding=".fileName" type="Text" target="Description" />
+            <Binding bindingMode="ONE_WAY" binding=".fileType" type="Text" target="Type" />
+          </Bindings>
+        </MediaListControl>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

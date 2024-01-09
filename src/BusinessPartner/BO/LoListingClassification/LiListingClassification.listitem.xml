@@ -1,0 +1,12 @@
+<ListItem name="LiListingClassification" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="listingClassificationPKey" type="DomPKey" dataSourceProperty="listingClassificationPKey" />
+    <SimpleProperty name="customerPKey" type="DomPKey" dataSourceProperty="customerPKey" />
+    <SimpleProperty name="listingModuleName" type="DomText" dataSourceProperty="listingModuleName" />
+    <SimpleProperty name="productCategory" type="DomText" dataSourceProperty="productCategory" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+    <SimpleProperty name="value" type="DomText" dataSourceProperty="value" />
+    <SimpleProperty name="warningIcon" type="DomString"/>
+  </SimpleProperties>
+</ListItem>

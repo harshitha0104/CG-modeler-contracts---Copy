@@ -1,0 +1,41 @@
+<DataSource name="DsBoPrmContract" backendSystem="sf" businessObjectClass="BoPrmContract" distinct="false" readonly="false" external="false" editableEntity="Contract__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contract__c" column="Id" />
+    <Attribute name="prmId" table="Contract__c" column="Name" />
+    <Attribute name="bpaCustomerPKey" table="Contract__c" column="Account__c" />
+    <Attribute name="dateFrom" table="Contract__c" column="Valid_From__c" />
+    <Attribute name="dateThru" table="Contract__c" column="Valid_Thru__c" />
+    <Attribute name="dateInitiation" table="Contract__c" column="Initiation_Date__c" />
+    <DerivedAttribute name="actualStatePKey" value="Contract__c.Phase__c" />
+    <DerivedAttribute name="nextStatePKey" value="' '" />
+    <Attribute name="wfeWorkflowPKey" table="Contract_Template__c" column="Workflow__c" />
+    <Attribute name="initiatorPKey" table="Contract__c" column="CreatedById" />
+    <Attribute name="responsiblePKey" table="Contract__c" column="Responsible__c" />
+    <DerivedAttribute name="metaId" value="' '" />
+    <Attribute name="prmMetaPKey" table="Contract__c" column="Account_Contract_Template__c" />
+    <Attribute name="commitDate" table="Contract__c" column="Commit_Date__c" />
+    <Attribute name="ownerPKey" table="Contract__c" column="Accountable__c" />
+    <Attribute name="salesOrg" table="Contract__c" column="Sales_Org__c" />
+    <DerivedAttribute name="managementType" value="'Sales'" />
+    <DerivedAttribute name="phaseType" value="Contract__c.Phase__c" />
+    <DerivedAttribute name="wfeStateText" value="Contract__c.Phase__c" />
+    <Attribute name="phase" table="Contract__c" column="Phase__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contract__c" alias="" idAttribute="Id" />
+    <Entity name="Contract_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Contract__c.Account_Contract_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="Contract_Template__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+   Contract__c.Id = #pKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

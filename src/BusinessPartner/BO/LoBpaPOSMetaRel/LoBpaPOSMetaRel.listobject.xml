@@ -1,0 +1,7 @@
+<ListObject name="LoBpaPOSMetaRel" generateLoadMethod="true" >
+  <DataSource name="DsLoBpaPOSMetaRel" />
+  <Item objectClass="LiBpaPOSMetaRel" />
+  <Methods>
+    <Method name="saveAsync" />
+  </Methods>
+</ListObject>

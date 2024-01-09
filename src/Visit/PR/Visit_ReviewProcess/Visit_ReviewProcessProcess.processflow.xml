@@ -1,0 +1,54 @@
+<Process name="Visit::ReviewImageProcess" defaultAction="ShowUI" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="attachments" type="LoRetailVisitKPIAttachment" />
+        <Declaration name="contextMenuList" type="LoAttachmentsContextMenu" />
+      </Declarations>
+      <Parameters>
+        <Input name="parentId" type="DomPKey" />
+        <Input name="retailStoreName" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="loadAttchments" actionType="LOAD" type="LoRetailVisitKPIAttachment">
+        <Parameters>
+          <Input name="parentId" value="ProcessContext::parentId" />
+        </Parameters>
+        <Return name="ProcessContext::attachments" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowUI" actionType="VIEW">
+        <UIDescription>Visit::ReviewImageUI</UIDescription>
+        <Events>
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+        </Events>
+      </Action>
+      <Action name="GetContextMenu" actionType="LOAD" type="LoAttachmentsContextMenu">
+        <Return name="ProcessContext::contextMenuList" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Delete" action="DeleteImageConfirm" />
+        <CaseElse action="ShowUI" />
+        <CaseEmpty action="ShowUI" />
+      </Action>
+      <Action name="DeleteImageConfirm" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="VisitConfirmImageDeletionMsg" />
+        <Cases>
+          <Case value="Yes" action="DeleteImage" />
+          <Case value="No" action="ShowUI" />
+        </Cases>
+      </Action>
+      <Action name="DeleteImage" actionType="LOGIC" call="ProcessContext::attachments.removeImage">
+        <Parameters>
+          <Input name="imageId" value="Event.pKey"></Input>
+        </Parameters>
+        <TransitionTo action="ShowUI" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

@@ -1,0 +1,461 @@
+<UIDescription name="DailyReport::TimeCardDetailUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionPage" cachable="false">
+    <ViewVariables>
+      <ViewVariable name="currentTabName" value="Main" />
+    </ViewVariables>
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TimeCardDetailUITitleId" defaultLabel="Time Card" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="TabbedViewAreaSection" currentTab="View::currentTabName">
+      <!-- Tab Pane -->
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="Main">
+              <Bindings>
+                <Resource target="image" type="Image" id="MainGrey24" defaultImage="MainGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="MainId" defaultLabel="Main" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="TimeEntries">
+              <Bindings>
+                <Binding type="Visible" target="Visible" call="ProcessContext::CurrrentTimeCard.checkTimeEntryTabVisibility" />
+                <Resource target="image" type="Image" id="UserGrey24" defaultImage="RecipientsDarkGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="RecipientsId" defaultLabel="Time Entries" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="tabSelected" storeTabNameIn="currentTabName" />
+          </Events>
+        </TabSelector>
+      </Area>
+      <Area areaName="Main" areaPattern="MultiArea">
+        <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+          <MenuItems>
+            <MenuItem itemId="ExecuteBreak" directlyVisible="true">
+              <Bindings>
+                <Binding type="Visible" target="Visible" call="ProcessContext::CurrentTimeCard.checkButtonVisibility">
+                  <Parameters>
+                    <Input name="mode" type="Literal" value="break" />
+                  </Parameters>
+                </Binding>
+                <Resource target="Text" type="Label" id="Break" defaultLabel="Break" />
+                <Resource target="Icon" type="Image" id="ClockGrey24" defaultImage="ClockGrey24" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="executeBreak" />
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <!-- Identification -->
+          <GroupElement name="IdentificationGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="IdentificationTitle" defaultLabel="Identification" />
+            </Bindings>
+            <InputArea name="Id" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Id" defaultLabel="Id" />
+                <Binding target="Value" binding="ProcessContext::CurrentTimeCard.id" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="Type" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Type" defaultLabel="Type" />
+                <Binding target="Value" binding="ProcessContext::CurrentTimeCard.type" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="TourID" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="TourID" defaultLabel="Tour ID" />
+                <Binding target="Value" binding="ProcessContext::CurrentTimeCard.tourId" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <DatePickerField name="InitiationDate">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Date" defaultLabel="Date" />
+                <Binding target="Value" binding="ProcessContext::CurrentTimeCard.dateFrom" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <Merger name="TimeFromThru" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Time From / Thru" id="TimeFromThruId" />
+              </Bindings>
+              <TimePickerField name="FromTime">
+                <Bindings>
+                  <Resource target="Label" type="Label" defaultLabel="Time From" id="TimeFrom" />
+                  <Binding target="Value" binding="ProcessContext::CurrentTimeCard.workTimeFrom" bindingMode="TWO_WAY" />
+                </Bindings>
+              </TimePickerField>
+              <TimePickerField name="ThruTime">
+                <Bindings>
+                  <Resource target="Label" type="Label" defaultLabel="Time Thru" id="TimeThru" />
+                  <Binding target="Value" binding="ProcessContext::CurrentTimeCard.workTimeThru" bindingMode="TWO_WAY" />
+                </Bindings>
+              </TimePickerField>
+            </Merger>
+          </GroupElement>
+          <!-- Status -->
+          <GroupElement name="StatusGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="StatusTitle" defaultLabel="Status" />
+            </Bindings>
+            <SelectionBox name="Phase" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Phase" defaultLabel="Phase" />
+                <Binding target="DataSource" toggleId="UsrDocPhase" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::CurrentTimeCard.phase" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <InputArea name="Owner" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Owner" defaultLabel="Owner" />
+                <Binding target="Value" binding="ProcessContext::CurrentTimeCard.user" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="Responsible" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Responsible" defaultLabel="Responsible" />
+                <Binding target="Value" binding="ProcessContext::CurrentTimeCard.responsible" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </GroupElement>
+          <!-- Activities -->
+          <EmbeddedList name="Activities" dataSource="ProcessContext::CurrentTimeCard.loUsrDRActivity.Items[]">
+            <Bindings>
+              <Resource target="Title" type="Label" id="ActivitiesTitle" defaultLabel="Activities" />
+            </Bindings>
+            <Items name="Items" itemPattern="TimeCardActivitiesList">
+              <Bindings>
+                <Binding target="Duration" type="Text" binding=".duration" bindingMode="ONE_WAY" />
+                <!--  <Binding target="Hours" type="Text" binding=".hours" bindingMode="TWO_WAY" />-->
+                <Binding target="Hours" type="Stepper" minValue="0" maxValue="23" binding=".hours" bindingMode="TWO_WAY" />
+                <!-- <Binding target="Minutes" type="Text" binding=".minutes" bindingMode="TWO_WAY" />-->
+                <Binding target="Minutes" type="Stepper" minValue="0" maxValue="59" binding=".minutes" bindingMode="TWO_WAY" />
+                <Binding target="VisitType" type="Text" binding=".clbText" bindingMode="ONE_WAY" />
+                <Binding target="ClbStatusImage" type="Image" binding=".callType.ImageId" bindingMode="ONE_WAY" />
+                <Resource target="VisitTypeLabel" type="Label" id="VisitTypeLabel" defaultLabel="Visit Type" />
+                <Resource target="DurationLabel" type="Label" id="DurationLabelItem" defaultLabel="Duration" />
+                <Resource target="HoursLabel" type="Label" id="HoursLabelItem" defaultLabel="Hours" />
+                <Resource target="MinutesLabel" type="Label" id="MinutesLabelItem" defaultLabel="Minutes" />
+                <Resource target="Spacer" type="Label" id="Spacer" defaultLabel="  " />
+              </Bindings>
+              <ItemListLayout>
+                <Default></Default>
+                <Tablet>
+                  <Default>
+                    <Col width="2em" height="1.4em" layoutType="Image" bindingId="ClbStatusImage" />
+                    <Col>
+                      <Row>
+                        <Col width="0.5em" bindingId="Spacer" />
+                        <Col height="1.5em" layoutType="itemIdentifier" bindingId="VisitType" />
+                      </Row>
+                      <Row>
+                        <Col width="2.5em" bindingId="Spacer" />
+                        <Col layoutType="itemSecondary" width="16.5em" bindingId="HoursLabel" />
+                        <Col layoutType="itemSecondary" width="14.5em" bindingId="MinutesLabel" />
+                        <Col layoutType="itemSecondary" width="12em" bindingId="DurationLabel" />
+                      </Row>
+                      <Row>
+                        <Col width="9.5em" bindingId="Hours" />
+                        <Col width="3em" bindingId="Spacer" />
+                        <Col width="9.5em" bindingId="Minutes" />
+                        <Col width="4em" bindingId="Spacer" />
+                        <Col width="2.5em" bindingId="Duration" />
+                      </Row>
+                    </Col>
+                  </Default>
+                </Tablet>
+                <Phone>
+                  <Default>
+                    <Col width="2.1em" height="1.4em" layoutType="Image" bindingId="ClbStatusImage" />
+                    <Col>
+                      <Row>
+                        <Col width="0.5em" bindingId="Spacer" />
+                        <Col height="1.5em" layoutType="itemIdentifier" bindingId="VisitType" />
+                      </Row>
+                      <Row>
+                        <Col width="0.5em" bindingId="Spacer" />
+                        <Col layoutType="itemSecondary" width="4em" bindingId="HoursLabel" />
+                        <Col width="8em" bindingId="Hours" />
+                      </Row>
+                      <Row>
+                        <Col width="0.5em" bindingId="Spacer" />
+                        <Col layoutType="itemSecondary" width="4em" bindingId="MinutesLabel" />
+                        <Col width="8em" bindingId="Minutes" />
+                      </Row>
+                      <Row>
+                        <Col width="0.5em" bindingId="Spacer" />
+                        <Col layoutType="itemSecondary" width="4em" bindingId="DurationLabel" />
+                        <Col width="0.5em" bindingId="Spacer" />
+                        <Col width="8em" bindingId="Duration" />
+                      </Row>
+                    </Col>
+                  </Default>
+                  <Android>
+                    <Col width="2.1em" height="1.4em" layoutType="Image" bindingId="ClbStatusImage" />
+                    <Col>
+                      <Row>
+                        <Col width="0.5em" bindingId="Spacer" />
+                        <Col height="1.5em" layoutType="itemIdentifier" bindingId="VisitType" />
+                      </Row>
+                      <Row>
+                        <Col width="0.5em" bindingId="Spacer" />
+                        <Col layoutType="itemSecondary" width="4em" bindingId="HoursLabel" />
+                        <Col width="9em" bindingId="Hours" />
+                        <Col width="1.0em" bindingId="Spacer" />
+                        <Col layoutType="itemSecondary" width="4em" bindingId="DurationLabel" />
+                        <Col width="0.5em" bindingId="Spacer" />
+                        <Col width="2.5em" bindingId="Duration" />
+                      </Row>
+                      <Row>
+                        <Col width="0.5em" bindingId="Spacer" />
+                        <Col layoutType="itemSecondary" width="4em" bindingId="MinutesLabel" />
+                        <Col width="9em" bindingId="Minutes" />
+                      </Row>
+                    </Col>
+                  </Android>
+                </Phone>
+              </ItemListLayout>
+            </Items>
+          </EmbeddedList>
+          <GroupElement name="Total">
+            <Bindings>
+              <Resource target="Title" type="Label" id="TotalActivityDuration" defaultLabel="Total Activity Duration" />
+            </Bindings>
+            <InputArea name="TotalTime" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Hours" defaultLabel="Hours / Minutes" />
+                <Binding target="Value" binding="ProcessContext::CurrentTimeCard.totalLineString" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </GroupElement>
+          <!-- Total Working time START -->
+          <GroupElement name="TotalWorkingTime">
+            <Bindings>
+              <Resource target="Title" type="Label" id="TotalWorkingTimeId" defaultLabel="Total Working Time" />
+            </Bindings>
+            <InputArea name="TotalWorkingTime" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="TotalDurationId" defaultLabel="Total Duration" />
+                <Binding target="Value" binding="ProcessContext::CurrentTimeCard.totalWorkingTime" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="ProdTime" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="ProdTimeId" defaultLabel="Productive Time" />
+                <Binding target="Value" binding="ProcessContext::CurrentTimeCard.productiveTime" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="NonProdTime" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="NonProdTimeId" defaultLabel="Non-Productive Time" />
+                <Binding target="Value" binding="ProcessContext::CurrentTimeCard.nonProductiveTime" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </GroupElement>
+          <!-- Total Working time END -->
+          <!-- Total Durations -->
+          <EmbeddedList name="TotalDurations" dataSource="ProcessContext::CurrentTimeCard.loUsrTimeEntryByVisitType.Items[]">
+            <Bindings>
+              <Resource target="Title" type="Label" id="DurationsTitleId" defaultLabel="Durations" />
+            </Bindings>
+            <Items name="Items" itemPattern="TimeCardDurationsList">
+              <Bindings>
+                <Binding target="TEText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                <Binding target="Duration" type="Text" binding=".duration" bindingMode="ONE_WAY" />
+                <Resource target="Spacer1" type="Label" id="Spacer1" defaultLabel="  " />
+                <Resource target="Spacer2" type="Label" id="Spacer2" defaultLabel="  " />
+              </Bindings>
+              <ItemListLayout>
+                <Default></Default>
+                <Tablet>
+                  <Default>
+                    <Col width="0.5em" bindingId="Spacer2" />
+                    <Col width="10em" layoutType="itemSecondary" bindingId="TEText" />
+                    <Col width="4em" bindingId="Spacer1" />
+                    <Col width="10em" layoutType="itemSecondary" bindingId="Duration" />
+                  </Default>
+                </Tablet>
+                <Phone>
+                  <Default>
+                    <Col width="4em" layoutType="itemIdentifier" bindingId="TEText" />
+                    <Col width="1em" bindingId="Spacer1" />
+                    <Col width="4em" bindingId="Duration" />
+                  </Default>
+                  <Android>
+                    <Col width="3em" layoutType="itemIdentifier" bindingId="TEText" />
+                    <Col width="0.5em" bindingId="Spacer1" />
+                    <Col width="3em" bindingId="Duration" />
+                  </Android>
+                </Phone>
+              </ItemListLayout>
+            </Items>
+          </EmbeddedList>
+          <!-- Total Durations END -->
+          <!-- Comment -->
+          <GroupElement name="CommentTextGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="CommentId" defaultLabel="Comment" />
+            </Bindings>
+            <InputAreaMultiLine name="Comment">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::CurrentTimeCard.boUserDRAnnotation.text" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputAreaMultiLine>
+          </GroupElement>
+        </Area>
+      </Area>
+      <Area areaName="TimeEntries" areaPattern="MultiArea">
+        <Area areaName="TimeEntriesView" areaPattern="GroupedElementsArea">
+          <MenuItems>
+            <MenuItem itemId="CreateTimeEntry" directlyVisible="true">
+              <Bindings>
+                <Binding type="Visible" target="Visible" call="ProcessContext::CurrentTimeCard.checkNewTimeEntryButtonVisibility" />
+                <Resource target="Text" type="Label" id="NewTimeEntryBtnId" defaultLabel="New Entry" />
+                <Resource target="Icon" type="Image" id="PlusDarkGrey24" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="createNewTimeEntry" />
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <EmbeddedList name="TotalDurations" dataSource="ProcessContext::CurrentTimeCard.loUsrTimeEntry.Items[]">
+            <Bindings>
+              <Resource target="Title" type="Label" id="TimeEntriesTitle" defaultLabel="Time Entries" />
+            </Bindings>
+            <Items name="Items" itemPattern="TimeCardDetail_TimeEntriesList">
+              <Bindings>
+                <Binding target="Description" type="Text" binding=".description" bindingMode="ONE_WAY" />
+                <Binding target="Type" type="Text" binding=".usrTimeEntryMetaText" bindingMode="ONE_WAY" />
+                <Binding target="Duration" type="Text" binding=".duration" bindingMode="ONE_WAY" />
+                <Binding target="StartDate" type="Date" binding=".effectiveDateFrom" bindingMode="ONE_WAY" />
+                <Binding target="StartTime" type="Text" binding=".effectiveTimeFrom" bindingMode="ONE_WAY" />
+                <Binding target="FromThru" type="Text" binding=".timeFromThru" bindingMode="ONE_WAY" />
+                <Binding target="EndDate" type="Date" binding=".effectiveDateThru" bindingMode="ONE_WAY" />
+                <Binding target="EndTime" type="Text" binding=".effectiveTimeThru" bindingMode="ONE_WAY" />
+                <Binding target="Sign" type="Image" binding=".signImage" bindingMode="ONE_WAY" />
+                <Resource target="Spacer1" type="Label" id="Spacer1" defaultLabel="  " />
+                <Resource target="DescriptionLabel" type="Label" id="DescriptionLabel" defaultLabel="Description" />
+                <Resource target="TypeLabel" type="Label" id="TypeLabel" defaultLabel="Type" />
+                <Resource target="StartLabel" type="Label" id="StartLabel" defaultLabel="Start" />
+                <Resource target="EndLabel" type="Label" id="EndLabel" defaultLabel="End" />
+                <Resource target="FromThruLabel" type="Label" id="FromThruLabel" defaultLabel="Time" />
+                <Resource target="DurationTimeLabel" type="Label" id="DurationTimeLabel" defaultLabel="min" />
+              </Bindings>
+              <ItemListLayout>
+                <Default />
+                <Tablet>
+                  <Default>
+                    <Header>
+                      <Col bindingId="Spacer1" align="left" />
+                      <Col bindingId="DescriptionLabel" align="left" />
+                      <Col bindingId="TypeLabel" align="left" />
+                      <Col bindingId="StartLabel" align="left" />
+                      <Col bindingId="EndLabel" align="left" />
+                      <Col bindingId="DurationTimeLabel" align="right" />
+                    </Header>
+                    <Col width="1.5em" height="1.4em" layoutType="Image" bindingId="Sign" align="left" />
+                    <Col width="7em" layoutType="itemSecondary" bindingId="Description" />
+                    <Col width="4em" layoutType="itemSecondary" bindingId="Type" />
+                    <Col width="7em">
+                      <Row>
+                        <Col width="7em" layoutType="itemSecondary" bindingId="StartTime" />
+                      </Row>
+                      <Row>
+                        <Col width="7em" layoutType="itemSecondary" bindingId="StartDate" />
+                      </Row>
+                    </Col>
+                    <Col width="7em">
+                      <Row>
+                        <Col width="7em" layoutType="itemSecondary" bindingId="EndTime" />
+                      </Row>
+                      <Row>
+                        <Col width="7em" layoutType="itemSecondary" bindingId="EndDate" />
+                      </Row>
+                    </Col>
+                    <Col width="2.5em" layoutType="itemSecondary itemRight" bindingId="Duration" />
+                  </Default>
+                </Tablet>
+                <Phone>
+                  <Default>
+                    <Header>
+                      <Col bindingId="Spacer1" align="left" />
+                      <Col bindingId="DescriptionLabel" align="left" />
+                      <Col bindingId="Spacer1" align="left" />
+                      <Col bindingId="TypeLabel" align="left" />
+                      <Col bindingId="FromThruLabel" align="left" />
+                      <Col bindingId="DurationTimeLabel" align="right" />
+                    </Header>
+                    <Col width="1.0em" height="1.4em" layoutType="Image" bindingId="Sign" align="left" />
+                    <Col width="5.3em" layoutType="itemSecondary" bindingId="Description" />
+                    <Col width="0.3em" layoutType="itemSecondary" bindingId="Spacer1" />
+                    <Col width="3.2em" layoutType="itemSecondary" bindingId="Type" />
+                    <Col width="3.0em" layoutType="itemSecondary" bindingId="FromThru" />
+                    <Col width="1.5em" layoutType="itemSecondary itemRight" bindingId="Duration" />
+                  </Default>
+                  <Android>
+                    <Header>
+                      <Col bindingId="Spacer1" align="left" />
+                      <Col bindingId="DescriptionLabel" align="left" />
+                      <Col bindingId="Spacer1" align="left" />
+                      <Col bindingId="TypeLabel" align="left" />
+                      <Col bindingId="FromThruLabel" align="left" />
+                      <Col bindingId="DurationTimeLabel" align="right" />
+                    </Header>
+                    <Col width="1.0em" height="1.4em" layoutType="Image" bindingId="Sign" align="left" />
+                    <Col width="5.3em" layoutType="itemSecondary" bindingId="Description" />
+                    <Col width="0.3em" layoutType="itemSecondary" bindingId="Spacer1" />
+                    <Col width="3.5em" layoutType="itemSecondary" bindingId="Type" />
+                    <Col width="3.0em" layoutType="itemSecondary" bindingId="FromThru" />
+                    <Col width="1.5em" layoutType="itemSecondary itemRight" bindingId="Duration" />
+                  </Android>
+                </Phone>
+              </ItemListLayout>
+              <ContextMenu>
+                <Bindings>
+                  <Binding target="DataSource" binding="ProcessContext::TEContextMenuList.Items[]" bindingMode="ONE_WAY" />
+                </Bindings>
+                <Items name="ContextMenuItems">
+                  <Bindings>
+                    <Binding target="Icon" type="Image" binding=".actionImg" />
+                    <Binding target="Text" type="Label" binding=".actionId" />
+                    <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                    <Binding type="Visible" target="Visible" binding=".actionVisible" />
+                  </Bindings>
+                </Items>
+              </ContextMenu>
+            </Items>
+            <Events>
+              <ItemSelectedEvent event="listTimeItemSelected">
+                <Params>
+                  <Param name="pKey" value=".pKey" />
+                </Params>
+              </ItemSelectedEvent>
+              <ContextOpeningEvent event="teContextMenuOpening">
+                <Params>
+                  <Param name="pKey" value=".pKey" />
+                  <Param name="manual" value=".manual" />
+                </Params>
+              </ContextOpeningEvent>
+              <ContextSelectedEvent event="teContextMenuItemSelected">
+                <Params>
+                  <Param name="pKey" value=".pKey" />
+                  <Param name="manual" value=".manual" />
+                </Params>
+              </ContextSelectedEvent>
+            </Events>
+          </EmbeddedList>
+        </Area>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

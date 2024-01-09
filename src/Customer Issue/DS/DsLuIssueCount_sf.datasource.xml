@@ -1,0 +1,96 @@
+<DataSource name="DsLuIssueCount" backendSystem="sf" objectClass="LuIssueCount" businessObjectClass="LuIssueCount" readOnly="true" external="true" editableEntity="Account_Task__c" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[     
+
+			var currentDate = Utils.convertForDBParam(Utils.convertDate2Ansi(Utils.createDateToday()), 'DomDate');
+
+			if (Utils.isDefined(jsonQuery.cardDate)){
+				currentDate = Utils.convertForDBParam(jsonQuery.cardDate, 'DomDate');
+			}
+
+			var jsonQueryCustomerOverview = {};
+			var params = [];
+
+			jsonQueryCustomerOverview.params = params;
+			jsonQueryCustomerOverview.addCond_LeadTimeFollowUpTime= " ((SubBpaRelValidFrom <= #currentDate# AND SubBpaRelValidThru >= #currentDate#) OR Account_Manager__c.Id IS NOT NULL ) AND ";
+			jsonQueryCustomerOverview.params.push({"field" : "currentDate", "value" : currentDate}); 
+
+			var sqlParams = {currentDate};
+
+			var sqlStmt1 = "SELECT COUNT(*) AS issueCount ";
+			sqlStmt1 += "FROM (SELECT ";
+
+			sqlStmt1 += "1 ";
+			sqlStmt1 += "FROM ";
+			sqlStmt1 += "Account_Task__c ";
+			sqlStmt1 += "JOIN User as UsrResp ON ";
+			sqlStmt1 += "UsrResp.Id=Account_Task__c.Responsible__c ";
+			sqlStmt1 += "JOIN User as UsrOwner ON ";
+			sqlStmt1 += "UsrOwner.Id=Account_Task__c.Accountable__c ";
+			sqlStmt1 += "JOIN Account ON ";
+			sqlStmt1 += "Account.Id=Account_Task__c.Account__c ";
+			sqlStmt1 += "JOIN Account_Task_Template__c ON ";
+			sqlStmt1 += "Account_Task__c.Account_Task_Template__c=Account_Task_Template__c.Id ";
+
+			sqlStmt1 += "LEFT OUTER JOIN (";
+			sqlStmt1 += "SELECT ";
+			sqlStmt1 += "SubBpaRel.Substitute__c AS SubBpaRelUsrMainPKey, ";
+			sqlStmt1 += "SubBpaRel.Account__c AS SubBpaRelBpaMainPKey, ";
+			sqlStmt1 += "SubMain.Substituted__c AS SubMainUsrMainPKey, ";
+			sqlStmt1 += "CASE WHEN (SubBpaRel.Valid_From__c > #currentDate# OR SubBpaRel.Valid_Thru__c < #currentDate#) THEN '1' ELSE '0' END AS SubIsLeadFollowUpTime ";
+			sqlStmt1 += "FROM Substitution__c AS SubMain, Substitution__c AS SubBpaRel ";
+			sqlStmt1 += "WHERE SubMain.Id = SubBpaRel.Substitution__c ";
+			sqlStmt1 += "AND SubMain.Active__c = '1' ";
+			sqlStmt1 += "AND SubBpaRel.Active__c = '1' ";
+			sqlStmt1 += "AND SubMain.Sales_Org__c = '#SalesOrg#' ";
+			sqlStmt1 += "AND #compareAsDate('SubBpaRel.Valid_From__c', 'Date', '<=',#currentDate#, 'Date')# ";
+			sqlStmt1 += "AND #compareAsDate('SubBpaRel.Valid_Thru__c', 'Date', '>=',#currentDate#, 'Date')# ";
+			sqlStmt1 += "AND #compareAsDate('SubMain.Valid_From__c', 'Date', '<=',#currentDate#, 'Date')# ";
+			sqlStmt1 += "AND #compareAsDate('SubMain.Valid_Thru__c', 'Date', '>=',#currentDate#, 'Date')# ";
+			sqlStmt1 += ") Sub ON ";
+			sqlStmt1 += "Account_Task__c.Account__c = Sub.SubBpaRelBpaMainPKey AND Account_Task__c.Responsible__c = Sub.SubMainUsrMainPKey ";
+			sqlStmt1 += "AND (Account_Task__c.Phase__c <> 'initial' ";
+			sqlStmt1 += "OR (Account_Task__c.Phase__c = 'initial'  AND Account_Task__c.CreatedById <> '#UserPKey#') OR (Account_Task__c.CreatedById = '#UserPKey#')) ";
+
+			sqlStmt1 += "WHERE ";
+			sqlStmt1 += "Account_Task__c.Account__c IN ( ";
+			sqlStmt1 += "SELECT pKey FROM ( ";
+
+			//loadLoCustomerOverview
+			var loadLoCustomerOverview = Facade.myProxy.getLoadStatement("LoCustomerOverview", jsonQueryCustomerOverview);
+
+			var sqlStmt2 = " ) ) ";
+			sqlStmt2 += "AND Account_Task__c.Sales_Org__c = '#SALESORG#' ";
+			sqlStmt2 += "AND Account_Task__c.IsDeleted <> 1 ";
+			sqlStmt2 += "AND Account_Task_Template__c.Sales_Org__c = '#SALESORG#' ";
+
+			sqlStmt2 += "AND #toggleMapping('Account_Task__c', 'Phase__c')# IN ('initial', 'Released') ";
+			sqlStmt2 += "AND Account_Task__c.Due_Date__c <> '#MinDate#' "; 
+			sqlStmt2 += "AND Account_Task__c.Due_Date__c <= #currentDate# ";
+			sqlStmt2 += "AND ((Account_Task__c.Responsible__c = '#UserPKey#' AND (Sub.SubMainUsrMainPKey IS NULL OR Sub.SubIsLeadFollowUpTime = '1')) OR Sub.SubBpaRelUsrMainPKey = '#UserPKey#') ";
+			sqlStmt2 += " ) ";
+
+
+			var sqlStmt1Result = Utils.replaceMacrosParam(sqlStmt1, sqlParams);
+			var sqlStmt2Result = Utils.replaceMacrosParam(sqlStmt2, sqlParams);
+
+
+			var finalSql = sqlStmt1Result.sql + loadLoCustomerOverview.sql + sqlStmt2Result.sql;
+			var finalParams = sqlStmt1Result.params.concat(loadLoCustomerOverview.params).concat(sqlStmt2Result.params);
+
+			return {sql: finalSql, params: finalParams};
+		]]></Load>
+    <Update><![CDATA[ 
+			// Intended to be empty     
+			return undefined;     
+		]]></Update>
+    <Insert><![CDATA[     
+			// Intended to be empty     
+			return undefined;     
+		]]></Insert>
+    <Delete><![CDATA[      
+			// Intended to be empty     
+			return undefined;     
+		]]></Delete>
+  </Database>
+</DataSource>

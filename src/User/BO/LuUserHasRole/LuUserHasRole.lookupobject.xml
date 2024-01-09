@@ -1,0 +1,9 @@
+<LookupObject name="LuUserHasRole">
+  <DataSource name="DsLuUserHasRole" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="usrMainPKey" type="DomPKey" dataSourceProperty="usrMainPKey" />
+    <SimpleProperty name="usrRolePKey" type="DomPKey" dataSourceProperty="usrRolePKey" />
+  </SimpleProperties>
+  <Methods />
+</LookupObject>

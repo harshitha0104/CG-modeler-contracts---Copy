@@ -1,0 +1,63 @@
+<DataSource name="DsLoPrmKPIs" businessObjectClass="LoPrmKPIs" external="False" distinct="false" readOnly="true" editableEntity="PrmBplData" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="PrmBplData" column="PKey" />
+    <Attribute name="text" table="BplDataMetaText" column="Text" />
+    <Attribute name="type" table="BplDataMeta" column="ValueType" />
+    <Attribute name="total" table="PrmBplData" column="Total" />
+    <Attribute name="prmPromotionPKey" table="PrmPromotion" column="PKey" />
+  </Attributes>
+  <Entities>
+    <Entity name="PrmBplData" alias="" idAttribute="PKey" />
+    <Entity name="BplDataMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="BplDataMeta.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="PrmBplData.BplDataMetaPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="BplDataMetaText" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="BplDataMeta.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="BplDataMetaText.BplDataMetaPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="PrmPromotion" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="PrmPromotion.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="PrmBplData.PrmPromotionPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="PrmMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="PrmMeta.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="PrmPromotion.PrmMetaPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="PrmMetaBplDataMetaRel" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="BplDataMeta.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="PrmMetaBplDataMetaRel.BplDataMetaPKey" />
+          <Condition leftSideValue="PrmMeta.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="PrmMetaBplDataMetaRel.PrmMetaPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+   PrmPromotion.PKey = #prmPromotionPKey#
+   AND BplDataMeta.Sheet ='PromotionSummary'
+   AND BplDataMeta.Formula <>'Seperator'
+   AND PrmMetaBplDataMetaRel.Active = '1'
+   AND PrmMetaBplDataMetaRel.Visible = '1'      
+   AND PrmMetaBplDataMetaRel.DisplayInApproverApp = '1'
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="PrmMetaBplDataMetaRel" attribute="Sort" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="prmPromotionPKey" type="TEXT" />
+  </Parameters>
+  <ConditionalParameters></ConditionalParameters>
+</DataSource>

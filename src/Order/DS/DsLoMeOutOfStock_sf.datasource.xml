@@ -1,0 +1,30 @@
+<DataSource name="DsLoMeOutOfStock" backendSystem="sf" businessObjectClass="LoMeOutOfStock" external="false" readOnly="true" editableEntity="Visit_Job__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="prdMainPKey" table="Visit_Job__c" column="Product__c" />
+    <DerivedAttribute name="outOfStock" value="'1'" />
+  </Attributes>
+  <Entities>
+    <Entity name="Visit_Job__c" alias="" idAttribute="Id" />
+    <Entity name="Job_Definition_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Visit_Job__c.Job_Definition_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="Job_Definition_Template__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Visit_Job__c.Done__c = '1'
+        AND ((Job_Definition_Template__c.Primary_Survey_Policy__c='OutOfStock' AND Visit_Job__c.Value__c='1') OR (Job_Definition_Template__c.Primary_Survey_Policy__c='Distribution' AND Visit_Job__c.Value__c='OutOfStock'))
+        AND Visit_Job__c.Visit__c = '#clbMainPKey#'
+    ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Visit_Job__c" attribute="Product__c" direction="ASC" />
+  </OrderCriteria>
+  <GroupBy>
+    <GroupByCriterion entity="Visit_Job__c" attribute="Product__c" />
+  </GroupBy>
+  <Parameters>
+    <Parameter name="clbMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

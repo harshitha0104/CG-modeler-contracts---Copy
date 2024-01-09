@@ -1,0 +1,189 @@
+<Process name="Call::TripListWizardProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="WizardBO" type="BoWizardTripList" />
+        <Declaration name="ResponsibleUser" type="LuUser" />
+        <Declaration name="TripListBo" type="BoTripList" />
+        <Declaration name="Title" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="referenceUserPKey" type="DomPKey" />
+        <Input name="overviewList" type="LoAgendaOverview" />
+        <Input name="referenceDateFrom" type="String" />
+        <Input name="referenceDateThru" type="String" />
+        <Input name="tripListMode" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="LoadResponsibleUserLookup" type="LuUser">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::referenceUserPKey" />
+        </Parameters>
+        <Return name="ProcessContext::ResponsibleUser" />
+      </Action>
+      <Action name="CreateTripListWizardBO" actionType="CREATE" type="BoWizardTripList">
+        <Parameters>
+          <Input name="responsibleUser" value="ProcessContext::ResponsibleUser.name" />
+          <Input name="tripListMode" value="ProcessContext::tripListMode" />
+        </Parameters>
+        <Return name="ProcessContext::WizardBO" />
+      </Action>
+      <Action name="SetEARights" actionType="LOGIC" call="ProcessContext::WizardBO.setEARights">
+        <Parameters>
+          <Input name="tripListMode" value="ProcessContext::tripListMode" />
+        </Parameters>
+      </Action>
+      <Action name="GetTripListTitleInfo" actionType="LOGIC" call="ProcessContext::WizardBO.setTripListWizardTitle">
+        <Parameters>
+          <Input name="tripListMode" value="ProcessContext::tripListMode" />
+        </Parameters>
+        <Return name="ProcessContext::Title" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Call::TripListWizardUI</UIDescription>
+        <Events>
+          <Event name="FinishWizard" action="SetDirty" />
+          <Event name="FinishDeleteWizard" action="ConfirmDeleteTripList" />
+          <Event name="OpenTripListLookup" action="OpenTripListLookup" />
+        </Events>
+      </Action>
+      <Action actionType="LOGIC" name="SetDirty" call="ProcessContext::WizardBO.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="5" />
+        </Parameters>
+        <TransitionTo action="WizardValidation" />
+      </Action>
+      <Action actionType="VALIDATION" name="WizardValidation">
+        <Validations>
+          <Validation name="ProcessContext::WizardBO.validateNotEmpty" />
+          <Validation name="ProcessContext::WizardBO.validateDateRange" />
+          <Validation name="ProcessContext::WizardBO.validateDayValue" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="CheckTripListMode_Decision" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action actionType="END" name="EndCancel" />
+      <Action name="CheckTripListMode_Decision" actionType="DECISION" parameter="ProcessContext::tripListMode">
+        <Case value="CreateTripList" action="CreateTripList" />
+        <Case value="UpdateTripList" action="LoadBoTripList" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action name="CreateTripList" actionType="CREATE" type="BoTripList">
+        <Parameters>
+          <Input name="description" value="ProcessContext::WizardBO.description" />
+          <Input name="type" value="ProcessContext::WizardBO.type" />
+          <Input name="validFrom" value="ProcessContext::WizardBO.validFrom" />
+          <Input name="validThru" value="ProcessContext::WizardBO.validThru" />
+          <Input name="dayOfWeek" value="ProcessContext::WizardBO.dayOfWeek" />
+          <Input name="responsiblePKey" value="ProcessContext::referenceUserPKey" />
+          <Input name="agendaOverviewList" value="ProcessContext::overviewList" />
+        </Parameters>
+        <Return name="ProcessContext::TripListDetail" />
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="LOAD" name="LoadBoTripList" type="BoTripList">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::TripListPKey" />
+        </Parameters>
+        <Return name="ProcessContext::TripListBo" />
+        <TransitionTo action="TripListDecision" />
+      </Action>
+      <Action name="TripListDecision" actionType="DECISION" parameter="ProcessContext::tripListMode">
+        <Case value="UpdateTripList" action="UpdateTripList" />
+        <Case value="DeleteTripList" action="DeleteTripList" />
+        <CaseElse action="End" />
+      </Action>
+      <Action actionType="LOGIC" name="UpdateTripList" call="ProcessContext::TripListBo.updateTripList">
+        <Parameters>
+          <Input name="description" value="ProcessContext::WizardBO.description" />
+          <Input name="validFrom" value="ProcessContext::WizardBO.validFrom" />
+          <Input name="validThru" value="ProcessContext::WizardBO.validThru" />
+          <Input name="dayOfWeek" value="ProcessContext::WizardBO.dayOfWeek" />
+          <Input name="agendaOverviewList" value="ProcessContext::overviewList" />
+          <Input name="tripListMode" value="ProcessContext::tripListMode" />
+        </Parameters>
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="CONFIRM" confirmType="YesNoCancel" name="ConfirmDeleteTripList">
+        <Message messageId="CasConfirmTripListDeletionMsg" />
+        <Cases>
+          <Case value="Yes" action="LoadBoTripList" />
+          <Case value="No" action="End" />
+        </Cases>
+      </Action>
+      <Action actionType="LOGIC" name="DeleteTripList" call="ProcessContext::TripListBo.deleteTripList">
+        <Parameters/>
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="PROCESS" name="OpenTripListLookup" process="Call::TripListLookupProcess">
+        <Parameters>
+          <Input name="referenceDateFrom" value="ProcessContext::referenceDateFrom" />
+          <Input name="referenceDateThru" value="ProcessContext::referenceDateThru" />
+          <Input name="responsiblePKey" value="ProcessContext::referenceUserPKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::TripListPKey" value="tripListPKey" />
+          <Return name="ProcessContext::SelectedTripList" value="selectedTripList" />
+        </ReturnValues>
+        <TransitionTo action="TripListLookup_Result_Decision" />
+      </Action>
+      <Action name="TripListLookup_Result_Decision" actionType="DECISION" parameter="ProcessContext::TripListPKey">
+        <CaseEmpty action="ShowView" />
+        <CaseElse action="LoadTripListLookup" />
+      </Action>
+      <Action actionType="LOGIC" name="LoadTripListLookup" call="ProcessContext::WizardBO.loadTripListLookup">
+        <Parameters>
+          <Input name="tripListPKey" value="ProcessContext::TripListPKey" />
+          <Input name="tripListMode" value="ProcessContext::tripListMode" />
+        </Parameters>
+        <TransitionTo action="SetTripListDescription" />
+      </Action>
+      <Action actionType="LOGIC" name="SetTripListDescription" call="ProcessContext::WizardBO.setDescription">
+        <Parameters>
+          <Input name="description" value="ProcessContext::SelectedTripList.text" />
+        </Parameters>
+        <TransitionTo action="SetTripListType" />
+      </Action>
+      <Action actionType="LOGIC" name="SetTripListType" call="ProcessContext::WizardBO.setType">
+        <Parameters>
+          <Input name="type" value="ProcessContext::SelectedTripList.metaType" />
+        </Parameters>
+        <TransitionTo action="SetTripListValidFrom" />
+      </Action>
+      <Action actionType="LOGIC" name="SetTripListValidFrom" call="ProcessContext::WizardBO.setValidFrom">
+        <Parameters>
+          <Input name="validFrom" value="ProcessContext::SelectedTripList.validFrom" />
+        </Parameters>
+        <TransitionTo action="SetTripListValidThru" />
+      </Action>
+      <Action actionType="LOGIC" name="SetTripListValidThru" call="ProcessContext::WizardBO.setValidThru">
+        <Parameters>
+          <Input name="validThru" value="ProcessContext::SelectedTripList.validThru" />
+        </Parameters>
+        <TransitionTo action="LoadResponsibleUserDetails" />
+      </Action>
+      <Action actionType="LOAD" name="LoadResponsibleUserDetails" type="LuUser">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::SelectedTripList.responsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::ResponsibleUser" />
+        <TransitionTo action="SetResponsibleUser" />
+      </Action>
+      <Action actionType="LOGIC" name="SetResponsibleUser" call="ProcessContext::WizardBO.setResponsibleUser">
+        <Parameters>
+          <Input name="responsibleUser" value="ProcessContext::ResponsibleUser.name" />
+        </Parameters>
+      </Action>
+      <Action name="End" actionType="END" />
+    </Actions>
+  </Body>
+</Process>

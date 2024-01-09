@@ -1,0 +1,166 @@
+<Process name="Application::DashboardProcess" defaultAction="ConfigureStartScreen_Decision" schemaVersion="0.0.0.5" >
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="LuCallCount" type="LuCallCountByDate" />
+        <Declaration name="LuOrderCount" type="LuOrderCount" />
+        <Declaration name="LuDailyReportCount" type="LuUsrDRCount" />
+        <Declaration name="LuNotificationCount" type="LuNotificationCount" />
+        <Declaration name="LuPaymentRequestCount" type="LuPaymentRequestCount" />
+        <Declaration name="LuContractsCount" type="LuContractsCount" />
+        <Declaration name="LuTodoCount" type="LuTodoCount" />
+        <Declaration name="LuIssueCount" type="LuIssueCount" />
+        <Declaration name="LandingPage" type="String" />
+        <Declaration name="IsSfBackend" type="String" />
+        <Declaration name="SfReplicationCallbacks" type="BoSfReplicationCallbacks" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="LoadTeamOfUser" call="ApplicationContext::User.loadTeamOfUser">
+        <Parameters>
+          <Input name="includeCurrentUser" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+      <Action name="GetLandingPage" actionType="LOGIC" call="ApplicationContext::User.boUserSettings.getUsrLandingPageMobility">
+        <Return name="ProcessContext::LandingPage" />
+      </Action>
+      <!-- SF/CASDIF Start -->
+      <Action name="SetSfBackend_Logic" actionType="LOGIC" call="Utils.isSfBackend">
+        <Return name="ProcessContext::IsSfBackend" />
+      </Action>
+      <Action name="CreateReplicationCallBacksBo" actionType="CREATE" type="BoSfReplicationCallbacks">
+        <Return name="ProcessContext::SfReplicationCallbacks" />
+      </Action>
+      <!-- SF/CASDIF End -->
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ConfigureStartScreen_Decision" actionType="DECISION" parameter="ProcessContext::LandingPage">
+        <Case value="AdvancedUserCockpit" action="OpenAdvancedCockpit" />
+        <Case value="UserCockpit" action="OpenCockpit" />
+        <CaseElse action="LoadCallCount" />
+      </Action>
+      <Action name="LoadCallCount" actionType="LOAD" type="LuCallCountByDate">
+        <Return name="ProcessContext::LuCallCount" />
+        <TransitionTo action="LoadOrderCount" />
+      </Action>
+      <Action name="LoadOrderCount" actionType="LOAD" type="LuOrderCount">
+        <Return name="ProcessContext::LuOrderCount" />
+        <TransitionTo action="LoadNotificationCount" />
+      </Action>
+      <Action name="LoadNotificationCount" actionType="LOAD" type="LuNotificationCount">
+        <Return name="ProcessContext::LuNotificationCount" />
+        <TransitionTo action="LoadPaymentRequestCount" />
+      </Action>
+      <Action name="LoadPaymentRequestCount" actionType="LOAD" type="LuPaymentRequestCount">
+        <Return name="ProcessContext::LuPaymentRequestCount" />
+        <TransitionTo action="LoadContractsCount" />
+      </Action>
+      <Action name="LoadContractsCount" actionType="LOAD" type="LuContractsCount">
+        <Return name="ProcessContext::LuContractsCount" />
+        <TransitionTo action="LoadDailyReportCount" />
+      </Action>
+      <Action name="LoadDailyReportCount" actionType="LOAD" type="LuUsrDRCount">
+        <Return name="ProcessContext::LuDailyReportCount" />
+        <TransitionTo action="LoadTodoCount" />
+      </Action>
+      <Action name="LoadTodoCount" actionType="LOAD" type="LuTodoCount">
+        <Return name="ProcessContext::LuTodoCount" />
+        <TransitionTo action="LoadIssueCount" />
+      </Action>
+      <Action name="LoadIssueCount" actionType="LOAD" type="LuIssueCount">
+        <Return name="ProcessContext::LuIssueCount" />
+        <TransitionTo action="ShowMainMenu" />
+      </Action>
+      <Action actionType="VIEW" name="ShowMainMenu">
+        <UIDescription>Application::DashboardUI</UIDescription>
+        <Events>
+          <Event name="openAdvancedCockpit" action="OpenAdvancedCockpit" />
+          <Event name="openCockpit" action="OpenCockpit" />
+          <Event name="openAgendaOverview" action="CallAgenda" />
+          <Event name="openCustomerOverview" action="CustomerReviewCapture" />
+          <Event name="openOrderOverview" action="OrderOverview" />
+          <Event name="synchronizeData" action="SyncOverviewProcess" />
+          <Event name="openCustomerContracts" action="CustomerContractsOverview" />
+          <Event name="openDailyReport" action="DailyReportOverview" />
+          <Event name="openAboutScreen" action="OpenAboutScreen" />
+          <Event name="openNotifications" action="NotificationsOverview" />
+          <Event name="openPayments" action="PaymentsOverview" />
+          <Event name="openAdvLoggingPanel" action="OpenAdvLoggingPanel" />
+          <Event name="replicationDone" action="LoadCallCount" />
+          <Event name="myFlushLogs" action="FlushLogs" />
+          <Event name="openTodo" action="TodoOverview" />
+          <Event name="openIssue" action="IssueOverview" />
+          <Event name="openUsrSettings" action="UsrSettings" />
+          <Event name="openProductOverview" action="ProductOverview" />
+          <Event name="openReporting" action="ReportingOverview" />
+          <Event name="OpenSalesFolder" action="LoadSalesFolder_Decision" />
+        </Events>
+      </Action>
+      <Action actionType="PROCESS" name="OpenAdvancedCockpit" process="Application::CockpitProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action actionType="PROCESS" name="OpenCockpit" process="Application::UserCockpitProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action actionType="PROCESS" name="CallAgenda" process="Call::AgendaProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action actionType="PROCESS" name="CustomerReviewCapture" process="Customer::ReviewCaptureProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action actionType="PROCESS" name="OrderOverview" process="Order::OverviewProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action actionType="PROCESS" name="SyncOverviewProcess" process="Sync::OverviewProcess"></Action>
+      <Action actionType="PROCESS" name="CustomerContractsOverview" process="Contract::CustomerContractProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action actionType="PROCESS" name="DailyReportOverview" process="DailyReport::DailyReportProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action actionType="PROCESS" name="OpenAboutScreen" process="Application::AboutProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action actionType="PROCESS" name="NotificationsOverview" process="User::NotificationProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action actionType="PROCESS" name="PaymentsOverview" process="ContractPayment::PaymentRequestProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action actionType="LOGIC" name="OpenAdvLoggingPanel" call="window.showFrameworkSettingsPanel" />
+      <Action actionType="LOGIC" name="FlushLogs" call="Log.flush" />
+      <Action actionType="PROCESS" name="TodoOverview" process="Todo::OverviewProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action actionType="PROCESS" name="IssueOverview" process="Issue::OverviewProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action actionType="PROCESS" name="UsrSettings" process="User::UsrSettingsProcess">
+        <TransitionTo action="LoadCallCount" />
+      </Action>
+      <Action actionType="PROCESS" name="ProductOverview" process="Product::OverviewProcess" />
+      <Action actionType="PROCESS" name="ReportingOverview" process="Reporting::OverviewProcess" />
+      <Action name="LoadSalesFolder_Decision" actionType="DECISION" parameter="ProcessContext::IsSfBackend">
+        <Case value="true" action="CheckIfSalesFolderDataIsAvailable" />
+        <CaseElse action="SalesFolderOverview" />
+      </Action>
+      <Action name="CheckIfSalesFolderDataIsAvailable" actionType="LOGIC" call="ProcessContext::SfReplicationCallbacks.isSalesFolderOnDemandDataAvailable">
+        <Return name="ProcessContext::IsSalesFolderDataAvailable" />
+        <TransitionTo action="CanLoadSalesFolderDecision" />
+      </Action>
+      <Action name="CanLoadSalesFolderDecision" actionType="DECISION" parameter="ProcessContext::IsSalesFolderDataAvailable">
+        <Case value="1" action="SalesFolderOverview" />
+        <CaseElse action="Message_SalesFolderDataNotOnDevice" />
+      </Action>
+      <Action name="Message_SalesFolderDataNotOnDevice" actionType="CONFIRM" confirmType="Ok">
+        <Message messageId="CasMessageSalesFolderDataNotOnDevice" />
+        <Cases>
+          <Case value="Ok" action="ShowMainMenu" />
+        </Cases>
+      </Action>
+      <Action actionType="PROCESS" name="SalesFolderOverview" process="SalesFolder::SalesFolderOverviewProcess" />
+    </Actions>
+  </Body>
+</Process>

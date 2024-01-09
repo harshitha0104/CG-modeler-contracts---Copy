@@ -1,0 +1,33 @@
+<UIDescription name="PaymentTemplate::MetaLookupUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="PaymentTypeTitleId" defaultLabel="Payment Type" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="PaymentTypeList" dataSource="ProcessContext::PaymentTypeList.Items[]">
+          <Items name="Items" itemPattern="PaymentTypeItem">
+            <Bindings>
+              <Binding target="PaymentType" type="Text" binding=".text" bindingMode="ONE_WAY" />
+            </Bindings>
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemTitle" bindingId="PaymentType" />
+              </Col>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="text" value=".text" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

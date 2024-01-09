@@ -1,0 +1,79 @@
+<UIDescription name="Call::CreateNewCallViaTripListUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="CallCreateTripListTitleId" defaultLabel="Create via TripList" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="createCall">
+          <Bindings>
+            <Resource target="Text" type="Label" id="DoneId" defaultLabel="Create" />
+            <Resource target="Icon" type="Image" id="CheckGrey24" defaultImage="light/done_24.png" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="FinishWizard" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="TripListGroup">
+          <SelectionBox name="TripList">
+            <Bindings>
+              <Binding target="Value" binding="ProcessContext::WizardBO.loTripList.Current.pKey" bindingMode="TWO_WAY" />
+              <Binding target="DataSource" binding="ProcessContext::WizardBO.loTripList" bindingMode="ONE_WAY" />
+              <Resource target="Label" type="Label" id="TripListId" defaultLabel="Trip List" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".pKey" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <DatePickerField name="ValidFrom">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Valid From" id="TripListValidFromId" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.loTripList.Current.validFrom" bindingMode="TWO_WAY" />
+            </Bindings>
+          </DatePickerField>
+          <DatePickerField name="ValidThru">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Valid Thru" id="TripListValidThruId" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.loTripList.Current.validThru" bindingMode="TWO_WAY" />
+            </Bindings>
+          </DatePickerField>
+        </GroupElement>
+        <GroupElement name="DateTime">
+          <DatePickerField name="VisitDate">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Date" id="TripListDateId" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.selectedDate" bindingMode="TWO_WAY" />
+            </Bindings>
+          </DatePickerField>
+          <CheckBox name="AllDay">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="All Day" id="AllDay" />
+              <Binding target="checkedValue" binding="ProcessContext::WizardBO.allDay" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Events>
+              <ValueChangedEvent event="AllDayChanged" />
+            </Events>
+          </CheckBox>
+        </GroupElement>
+        <GroupElement name="CallTemplate">
+          <Lookup name="CallTemplateInput">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Call Type" id="callTypeId" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.callMetaLookup.text" bindingMode="ONE_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="OpenCallMetaLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

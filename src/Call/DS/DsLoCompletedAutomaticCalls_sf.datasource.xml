@@ -1,0 +1,56 @@
+<DataSource name="DsLoCompletedAutomaticCalls" backendSystem="sf" businessObjectClass="LoCompletedAutomaticCalls" external="true" editableEntity="Visit" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Visit" column="Id" />
+    <Attribute name="customerPKey" table="Visit" column="AccountId" />
+    <Attribute name="clbMetaPKey" table="Visit" column="Visit_Template__c" />
+    <Attribute name="completedDate" table="Visit" column="Completed_Date__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Visit" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+var responsiblePKey = "";
+var referenceDate = "";
+
+if(Utils.isDefined(jsonQuery.responsiblePKey)){
+  responsiblePKey = Utils.convertForDBParam(jsonQuery.responsiblePKey, "DomPKey");
+}
+if(Utils.isDefined(jsonQuery.referenceDate)){
+  referenceDate = Utils.convertForDBParam(jsonQuery.referenceDate, "DomDate");
+}
+
+var sqlParams = {responsiblePKey, referenceDate};
+
+var sqlStmt = " SELECT Visit.Id as pKey, ";
+sqlStmt += " Visit.AccountId as customerPKey, ";
+sqlStmt += " Visit.Visit_Template__c as clbMetaPKey, ";
+sqlStmt += " Visit.Completed_Date__c as completedDate ";
+sqlStmt += " FROM Visit";
+sqlStmt += " WHERE (1=1) AND Visit.Responsible__c = #responsiblePKey#";
+sqlStmt += " AND Visit.Status = 'Completed'";
+sqlStmt += " AND Visit.Creation_Mode__c <= 'Automatically'"; 
+sqlStmt += " AND #compareAsDate('Visit.Completed_Date__c', 'Date','<',#referenceDate#, 'Date')# ";
+sqlStmt += " AND Visit.Completed_Date__c <> ''"; 
+sqlStmt += " GROUP BY Visit.Visit_Template__c,Visit.AccountId ";
+sqlStmt += " HAVING MAX(Visit.Completed_Date__c)";
+
+return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+]]></Load>
+    <Update><![CDATA[ 
+// Intended to be empty     
+return undefined;     
+]]></Update>
+    <Insert><![CDATA[     
+// Intended to be empty     
+return undefined;     
+
+]]></Insert>
+    <Delete><![CDATA[      
+// Intended to be empty     
+return undefined;     
+]]></Delete>
+  </Database>
+</DataSource>

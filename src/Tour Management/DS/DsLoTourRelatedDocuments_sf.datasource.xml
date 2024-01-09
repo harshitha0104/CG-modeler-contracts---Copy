@@ -1,0 +1,13 @@
+<DataSource name="DsLoTourRelatedDocuments" backendSystem="sf" businessObjectClass="LoTourRelatedDocuments" external="true" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="pKey" value="''" />
+    <DerivedAttribute name="phase" value="''" />
+    <DerivedAttribute name="documentType" value="''" />
+    <DerivedAttribute name="docMetaType" value="''" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+				return undefined;
+			]]></Load>
+  </Database>
+</DataSource>

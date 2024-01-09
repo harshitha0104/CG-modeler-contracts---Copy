@@ -1,0 +1,12 @@
+<ListItem name="LiSvcRequestMetaForASO">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="businessModified" type="DomBusinessModified" dataSourceProperty="businessModified" />
+    <SimpleProperty name="issueType" type="DomSvcMetaIssueType" dataSourceProperty="issueType" />
+    <SimpleProperty name="metaType" type="DomSvcMetaType" dataSourceProperty="metaType" />
+    <SimpleProperty name="sort" type="DomSort" dataSourceProperty="sort" />
+    <SimpleProperty name="isPrivate" type="DomBool" dataSourceProperty="isPrivate" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+  </SimpleProperties>
+</ListItem>

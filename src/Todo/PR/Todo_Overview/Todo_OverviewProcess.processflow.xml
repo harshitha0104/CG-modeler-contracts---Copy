@@ -1,0 +1,487 @@
+<Process name="Todo::OverviewProcess" defaultAction="ShowOverviewList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OverviewList" type="LoToDoOverview" />
+        <Declaration name="TodoDetail" type="BoTodo" />
+        <!-- Needed for team/supervisor concept -->
+        <Declaration name="TeamList" type="String" />
+        <Declaration name="AddTodo_SvcRequestMetaPKey" type="DomPKey" />
+        <Declaration name="AddTodo_UserPKey" type="DomPKey" />
+        <Declaration name="AddTodo_ButtonPressed" type="String" />
+        <Declaration name="CopyTodo_ButtonPressed" type="String" />
+        <Declaration name="CopyTodo_CopiedTodoDetail" type="BoTodo" />
+        <Declaration name="ContextMenuList" type="LoToDoOverviewContextMenu" />
+        <Declaration name="isEqual" type="String" />
+        <Declaration name="CurrentListItem" type="String" />
+        <Declaration name="NextSelectedListItem" type="String" />
+        <Declaration name="ContextMenuListAttachment" type="LoTodoAttachmentsContextMenu" />
+        <Declaration name="svcRequestMetaPKey" type="DomPKey" />
+        <Declaration name="ownerPKey" type="DomPKey" />
+        <Declaration name="userAccountable" type="DomPKey" />
+        <Declaration name="description" type="String" />
+        <Declaration name="dueDate" type="DomDate" />
+        <Declaration name="StateType" type="String" />
+        <Declaration name="cameraSettings" type="Object" />
+        <Declaration name="ImageURI" type="String" />
+        <Declaration name="attachmentData" type="Object" />
+        <Declaration name="currentTabPage" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="TaskPKey" type="DomPKey" />
+        <Input name="Mode" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <!-- Reload team list of user (could be changed via background sync)
+      Param 1 means including current user into teamlist -->
+      <Action actionType="LOGIC" name="LoadTeamOfUser" call="ApplicationContext::User.loadTeamOfUser">
+        <Parameters>
+          <Input name="includeCurrentUser" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="GetTeamListForOverview" call="ApplicationContext::User.getTeamList">
+        <Return name="ProcessContext::TeamList" />
+      </Action>
+      <Action name="GetOverviewList" actionType="LOAD" type="LoToDoOverview">
+        <Parameters>
+          <Input name="teamList" value="ProcessContext::TeamList" />
+          <Input name="asoName" type="Literal" value="AsoToDoOverview" />
+        </Parameters>
+        <Return name="ProcessContext::OverviewList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowOverviewList" actionType="VIEW">
+        <UIDescription>Todo::OverviewUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="LoadTodoDetails" />
+          <!-- Menu item events -->
+          <Event name="showAllTodos" action="ResetTodoListFilter" />
+          <Event name="showOpenTodos" action="SetTodoFilter_Relevant" />
+          <Event name="addTodo" action="CreateAndValidateToDo" />
+          <Event name="releaseToDo" action="ReleaseToDo" />
+          <Event name="completeToDo" action="CompleteToDo" />
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+          <Event name="tabSelected" action="setCurrentTabName_Decision" />
+          <Event name="capturePicture" action="getCameraSettings" />
+          <Event name="contextMenuOpeningAttachment" action="GetContextMenuAttachment" />
+          <Event name="contextMenuItemSelectedAttachment" action="ContextMenu_Result_Decision_Attachment" />
+        </Events>
+      </Action>
+      <Action name="CreateAndValidateToDo" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::TodoDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidationToDoOnDiscard" />
+      </Action>
+      <Action name="ValidationToDoOnDiscard" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateDiscard" action="updateToDoStatus" />
+        <Case value="validateBack" action="ShowOverviewList" />
+        <CaseElse action="LoadTodoDetails.create" />
+      </Action>
+      <Action name="updateToDoStatus" actionType="LOGIC" call="ProcessContext::OverviewList.updateToDoStatus">
+        <Parameters>
+          <Input name="TodoDetail" value="ProcessContext::TodoDetail" />
+        </Parameters>
+        <TransitionTo action="LoadTodoDetails.create" />
+      </Action>
+      <Action name="LoadTodoDetails" actionType="MASTER_DETAIL_HANDLER">
+        <MasterList name="ProcessContext::OverviewList">
+          <!--RELOAD|UPDATE|NONE-->
+          <ItemUnselected type="RELOAD" />
+        </MasterList>
+        <DetailObject name="ProcessContext::TodoDetail" objectClass="BoTodo">
+          <Save type="DIRTY" confirmation="FALSE" validate="FALSE" />
+          <Create autoSave="FALSE">
+            <WizardProcess name="Todo::CreateNewWizardProcess" submitParameter="ProcessContext::AddTodo_ButtonPressed">
+              <Parameters></Parameters>
+              <ReturnValues>
+                <Return name="ProcessContext::svcRequestMetaPKey" value="svcRequestMetaPKey" />
+                <Return name="ProcessContext::ownerPKey" value="userPKey" />
+                <Return name="ProcessContext::text" value="description" />
+                <Return name="ProcessContext::dueDate" value="dueDate" />
+                <Return name="ProcessContext::userAccountable" value="userAccountable" />
+                <Return name="ProcessContext::AddTodo_ButtonPressed" value="buttonPressed" />
+                
+              </ReturnValues>
+            </WizardProcess>
+          </Create>
+          <Delete confirmation="TRUE" messageId="CasConfirmTodoDeletionMsg" nextCurrent="Next" />
+        </DetailObject>
+      </Action>
+      <!-- Todo ContextMenu -->
+      <Action actionType="LOAD" name="GetContextMenu" type="LoToDoOverviewContextMenu">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="issuePhase" value="Event.issuePhase" />
+          <Input name="responsiblePKey" value="Event.responsiblePKey" />
+          <Input name="initiatorPKey" value="Event.initiatorPKey" />
+          <Input name="isPrivate" value="Event.isPrivate" />
+          <Input name="wfeWorkflowPKey" value="Event.wfeWorkflowPKey" />
+          <Input name="actualStatePKey" value="Event.actualStatePKey" />
+          <Input name="isActive" value="Event.isActive" />
+        </Parameters>
+        <Return name="ProcessContext::ContextMenuList" />
+        <TransitionTo action="SetFocusOnListItem" />
+      </Action>
+      <Action name="SetFocusOnListItem" actionType="LOGIC" call="ProcessContext::OverviewList.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="PKeyCompare" />
+      </Action>
+      <Action name="PKeyCompare" actionType="LOGIC" call="Utils.startsWith">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="pkey2" value="ProcessContext::TodoDetail.PKey" />
+        </Parameters>
+        <Return name="ProcessContext::isEqual" />
+        <TransitionTo action="CheckIfNotEqualLoadedBO" />
+      </Action>
+      <Action name="CheckIfNotEqualLoadedBO" actionType="DECISION" parameter="ProcessContext::isEqual">
+        <Case value="false" action="LoadFocusedBo" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <Action name="LoadFocusedBo" actionType="LOAD" type="BoTodo">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::TodoDetail" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Cancel" action="CancelToDo" />
+        <Case value="Delete" action="LoadTodoDetails.delete" />
+        <Case value="Copy" action="SaveValidateTodoAndShowCopyWizard" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <Action name="AddNewTodoToList" actionType="LOGIC" call="ProcessContext::OverviewList.addItem">
+        <Parameters>
+          <Input name="newTodoDetail" value="ProcessContext::TodoDetail" />
+        </Parameters>
+      </Action>
+      <!-- Filter Options -->
+      <Action name="SetTodoFilter_Relevant" actionType="LOGIC" call="ProcessContext::OverviewList.setOnlyOpenFilter">
+        <TransitionTo action="ShowOverviewList" />
+      </Action>
+      <Action name="ResetTodoListFilter" actionType="LOGIC" call="ProcessContext::OverviewList.resetAllFilters">
+        <TransitionTo action="SetFirstItemAsSelected" />
+      </Action>
+      <Action name="SetFirstItemAsSelected" actionType="LOGIC" call="ProcessContext::OverviewList.setFirstItemAsCurrent"></Action>
+      <Action name="ReleaseToDo" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::TodoDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidationResultForRelease_Decision" />
+      </Action>
+      <Action name="ValidationResultForRelease_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="ReleaseToDoIfValid" />
+        <Case value="validateDiscard" action="GetCurrentListItem" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <Action name="CompleteToDo" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::TodoDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidationResultForComplete_Decision" />
+      </Action>
+      <Action name="ValidationResultForComplete_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="CompleteToDoIfValid" />
+        <Case value="validateDiscard" action="ResetStateOnDiscard" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <Action name="ResetStateOnDiscard" actionType="LOGIC" call="ProcessContext::TodoDetail.setObjectStatus">
+        <Parameters>
+          <Input name="ObjectState" type="Literal" value="0"></Input>
+        </Parameters>
+        <TransitionTo action="GetCurrentListItem"></TransitionTo>
+      </Action>
+      <Action name="CancelToDo" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::TodoDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidationResultForCancel_Decision" />
+      </Action>
+      <Action name="ValidationResultForCancel_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="CancelToDoIfValid" />
+        <Case value="validateDiscard" action="GetCurrentListItem" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <!-- Copy Wizard and Save -->
+      <Action name="SaveValidateTodoAndShowCopyWizard" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::TodoDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="CopyValidationResult_Decision" />
+      </Action>
+      <Action name="CopyValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="SaveAndShowCopyWizard" />
+        <Case value="validateDiscard" action="ShowOverviewList" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <Action name="SaveAndShowCopyWizard" actionType="SAVE">
+        <TransitionTo action="ShowCopyWizard" />
+      </Action>
+      <Action name="ShowCopyWizard" actionType="PROCESS" process="Todo::CopyFlyoutProcess">
+        <Parameters>
+          <Input name="TodoDetail" value="ProcessContext::TodoDetail" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CopyTodo_CopiedTodoDetail" value="copiedTodo" />
+          <Return name="ProcessContext::CopyTodo_ButtonPressed" value="buttonPressed" />
+        </ReturnValues>
+        <TransitionTo action="AssignCopyTodoWizard_Decision" />
+      </Action>
+      <Action name="AssignCopyTodoWizard_Decision" actionType="DECISION" parameter="ProcessContext::CopyTodo_ButtonPressed">
+        <CaseEmpty action="ShowOverviewList" />
+        <CaseElse action="AssignCopyTodo" />
+      </Action>
+      <Action actionType="LOGIC" name="AssignCopyTodo" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="ProcessContext::CopyTodo_CopiedTodoDetail" />
+        </Parameters>
+        <Return name="ProcessContext::TodoDetail" />
+        <TransitionTo action="UnprotectedSave" />
+      </Action>
+      <Action name="UnprotectedSave" actionType="SAVE">
+        <TransitionTo action="ClearCopyBo" />
+      </Action>
+      <Action actionType="LOGIC" name="ClearCopyBo" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="undefined" />
+        </Parameters>
+        <Return name="ProcessContext::CopyTodo_CopiedTodoDetail" />
+        <TransitionTo action="AddNewTodoToList" />
+      </Action>
+      <!-- Workflow Status Change -->
+      <Action name="ReleaseToDoIfValid" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="Released" />
+        </Parameters>
+        <Return name="ProcessContext::StateType" />
+        <TransitionTo action="ToDoStateTransition" />
+      </Action>
+      <Action name="CompleteToDoIfValid" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="Closed" />
+        </Parameters>
+        <Return name="ProcessContext::StateType" />
+        <TransitionTo action="ToDoStateTransition" />
+      </Action>
+      <Action name="CancelToDoIfValid" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="Cancelled" />
+        </Parameters>
+        <Return name="ProcessContext::StateType" />
+        <TransitionTo action="ToDoStateTransition" />
+      </Action>
+      <Action name="ToDoStateTransition" actionType="LOGIC" call="ProcessContext::TodoDetail.stateTransition">
+        <Parameters>
+          <Input name="stateType" value="ProcessContext::StateType" />
+        </Parameters>
+        <TransitionTo action="SaveReloadLoToDo" />
+      </Action>
+      <!-- Save -->
+      <Action name="SaveReloadLoToDo" actionType="SAVE">
+        <TransitionTo action="refreshEARights" />
+      </Action>
+      <Action name="refreshEARights" actionType="LOGIC" call="BindingUtils.refreshEARights">
+        <Parameters>
+          <Input name="includeLists" type="Literal" value="1" />
+        </Parameters>
+        <TransitionTo action="setOnlyOpenFilterAfterComplete" />
+      </Action>
+      <Action name="setOnlyOpenFilterAfterComplete" actionType="LOGIC" call="ProcessContext::OverviewList.setOnlyOpenFilterAfterComplete">
+        <Parameters>
+          <Input name="todoDetail" value="ProcessContext::TodoDetail" />
+        </Parameters>
+      </Action>
+      <!-- 1. Save and reload Todo with marking -->
+      <Action name="SaveReloadLoToDoWithMarking" actionType="SAVE">
+        <TransitionTo action="GetCurrentListItem" />
+      </Action>
+      <!-- 2. Get Current of Todo list -->
+      <Action actionType="LOGIC" name="GetCurrentListItem" call="ProcessContext::OverviewList.getCurrent">
+        <Return name="ProcessContext::CurrentListItem" />
+        <TransitionTo action="GetNextSelectedListItem" />
+      </Action>
+      <!-- 3. Get next list item to select -->
+      <Action name="GetNextSelectedListItem" actionType="LOGIC" call="ProcessContext::OverviewList.getNextListItemPKey">
+        <Parameters>
+          <Input name="record" value="ProcessContext::CurrentListItem" />
+        </Parameters>
+        <Return name="ProcessContext::NextSelectedListItem" />
+        <TransitionTo action="ReloadTodoList" />
+      </Action>
+      <!-- 4. Reload Todo list for removing deleted Todo (Workaround)-->
+      <Action actionType="LOAD" name="ReloadTodoList" type="LoToDoOverview">
+        <Parameters>
+          <Input name="teamList" value="ProcessContext::TeamList" />
+          <Input name="asoName" type="Literal" value="AsoToDoOverview" />
+        </Parameters>
+        <Return name="ProcessContext::OverviewList" />
+        <TransitionTo action="SetNextSelectedListItem" />
+      </Action>
+      <!-- 5. Set next list item selected -->
+      <Action name="SetNextSelectedListItem" actionType="LOGIC" call="ProcessContext::OverviewList.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::NextSelectedListItem" />
+        </Parameters>
+        <TransitionTo action="CheckIfNextItemIsAvailable" />
+      </Action>
+      <!--  6. Check if last element of list was deleted -->
+      <Action name="CheckIfNextItemIsAvailable" actionType="DECISION" parameter="ProcessContext::NextSelectedListItem">
+        <CaseEmpty action="ShowOverviewList" />
+        <CaseElse action="LoadSelectedBo" />
+      </Action>
+      <!-- 7. Load new selected Todo for UI detail area -->
+      <Action name="LoadSelectedBo" actionType="LOAD" type="BoTodo">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::NextSelectedListItem" />
+        </Parameters>
+        <Return name="ProcessContext::TodoDetail" />
+      </Action>
+      <!-- Decision Point for selected Tab Pages -->
+      <Action name="setCurrentTabName_Decision" actionType="DECISION" parameter="Event.tabName">
+        <Case value="Main" action="setCurrentTabName_Main" />
+        <Case value="Attachments" action="CheckLoadOnDemand" />
+        <CaseElse action="setCurrentTabName_Main" />
+      </Action>
+      <!-- BEGIN: Handling TabDecision -->
+      <Action actionType="LOGIC" name="setCurrentTabName_Main" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Main" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="SelectItemFromCockpit_Decision" />
+      </Action>
+      <Action name="SelectItemFromCockpit_Decision" actionType="DECISION" parameter="ProcessContext::Mode">
+        <Case value="Cockpit" action="SelectItemFromCockpit" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <Action name="SelectItemFromCockpit" actionType="LOGIC" call="ProcessContext::OverviewList.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::TaskPKey" />
+          <Input name="selected" type="Literal" value="true" />
+        </Parameters>
+        <TransitionTo action="resetMode" />
+      </Action>
+      <Action actionType="LOGIC" name="resetMode" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="normal" />
+        </Parameters>
+        <Return name="ProcessContext::Mode" />
+        <TransitionTo action="ShowOverviewList" />
+      </Action>
+      <!-- Attachments Tab -->
+      <Action actionType="LOGIC" name="CheckLoadOnDemand" call="ProcessContext::TodoDetail.loadOnDemand">
+        <Parameters>
+          <Input name="object" type="Literal" value="Attachments" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_Attachments" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Attachments" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Attachments" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+      </Action>
+      <!-- Todo ContextMenu -->
+      <Action actionType="LOAD" name="GetContextMenuAttachment" type="LoTodoAttachmentsContextMenu">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="issuePhase" value="ProcessContext::TodoDetail.issuePhase" />
+          <Input name="responsiblePKey" value="ProcessContext::TodoDetail.responsiblePKey" />
+          <Input name="initiatorPKey" value="ProcessContext::TodoDetail.initiatorPKey" />
+          <Input name="isPrivate" value="ProcessContext::TodoDetail.isPrivate" />
+          <Input name="isActive" value="ProcessContext::TodoDetail.isActive" />
+        </Parameters>
+        <Return name="ProcessContext::ContextMenuListAttachment" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision_Attachment" actionType="DECISION" parameter="Event.selected">
+        <Case value="Delete" action="DeleteTodoAttachmentConfirm" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <Action name="DeleteTodoAttachmentConfirm" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmAttachmentDeletionMsg"></Message>
+        <Cases>
+          <Case value="Yes" action="DeleteAttachment" />
+          <Case value="No" action="ShowOverviewList" />
+        </Cases>
+      </Action>
+      <Action name="DeleteAttachment" actionType="LOGIC" call="ProcessContext::TodoDetail.loTodoAttachments.deleteItem">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="DeleteAtmAttachment" />
+      </Action>
+      <Action actionType="LOGIC" name="DeleteAtmAttachment" call="ProcessContext::TodoDetail.loAtmAttachment.deleteItem">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="UpdateCounterForDelete" />
+      </Action>
+      <Action actionType="LOGIC" name="UpdateCounterForDelete" call="ProcessContext::TodoDetail.updateAttachmentCount">
+        <Parameters>
+          <Input name="update" type="Literal" value="Delete" />
+        </Parameters>
+        <TransitionTo action="ShowOverviewList" />
+      </Action>
+      <!-- END: Handling TabDecision -->
+      <!-- Capture Picture -->
+      <Action actionType="LOGIC" name="getCameraSettings" call="ProcessContext::TodoDetail.loTodoAttachments.getCameraSettings">
+        <Parameters>
+          <Input name="settingsType" type="Literal" value="picture" />
+        </Parameters>
+        <Return name="ProcessContext::cameraSettings" />
+        <TransitionTo action="CapturePicture" />
+      </Action>
+      <Action actionType="LOGIC" name="CapturePicture" call="ProcessContext::TodoDetail.loTodoAttachments.capturePicture">
+        <Parameters>
+          <Input name="cameraSettings" value="ProcessContext::cameraSettings" />
+        </Parameters>
+        <Return name="ProcessContext::ImageURI" />
+        <TransitionTo action="CapturePicture_Decision" />
+      </Action>
+      <Action name="CapturePicture_Decision" actionType="DECISION" parameter="ProcessContext::ImageURI">
+        <CaseEmpty action="clearImageURI" />
+        <CaseElse action="CreateNewAttachmentByMediaPath" />
+      </Action>
+      <Action actionType="LOGIC" name="CreateNewAttachmentByMediaPath" call="ProcessContext::TodoDetail.loTodoAttachments.addItem">
+        <Parameters>
+          <Input name="mediaPath" value="ProcessContext::ImageURI" />
+          <Input name="svcTodoPkey" value="ProcessContext::TodoDetail.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::attachmentData" />
+        <TransitionTo action="CreateNewAtmAttachment" />
+      </Action>
+      <Action actionType="LOGIC" name="CreateNewAtmAttachment" call="ProcessContext::TodoDetail.loAtmAttachment.addItem">
+        <Parameters>
+          <Input name="attachmentPKey" value="ProcessContext::attachmentData.pKey" />
+          <Input name="referencePKey" value="ProcessContext::attachmentData.svcTodoPKey" />
+          <Input name="objectType" type="Literal" value="SvcTodo" />
+          <Input name="fileName" value="ProcessContext::attachmentData.fileName" />
+          <Input name="fileType" value="ProcessContext::attachmentData.type" />
+          <Input name="attachmentText" value="ProcessContext::attachmentData.description" />
+        </Parameters>
+        <TransitionTo action="UpdateCounterForAdd" />
+      </Action>
+      <Action actionType="LOGIC" name="UpdateCounterForAdd" call="ProcessContext::TodoDetail.updateAttachmentCount">
+        <Parameters>
+          <Input name="update" type="Literal" value="Add" />
+        </Parameters>
+        <TransitionTo action="clearImageURI" />
+      </Action>
+      <Action actionType="LOGIC" name="clearImageURI" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value=" " />
+        </Parameters>
+        <Return name="ProcessContext::ImageURI" />
+      </Action>
+      <!-- END: Capture Picture -->
+    </Actions>
+  </Body>
+</Process>

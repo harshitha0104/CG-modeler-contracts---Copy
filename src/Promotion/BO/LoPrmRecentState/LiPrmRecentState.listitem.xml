@@ -1,0 +1,9 @@
+<ListItem name="LiPrmRecentState" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="prmPromotionPKey" type="DomPKey" dataSourceProperty="prmPromotionPKey" />
+    <SimpleProperty name="usrUserPKey" type="DomPKey" dataSourceProperty="usrUserPKey" />
+    <SimpleProperty name="wfeStatePKey" type="DomPKey" dataSourceProperty="wfeStatePKey" />
+    <SimpleProperty name="done" type="DomDate" dataSourceProperty="done" />
+  </SimpleProperties>
+</ListItem>

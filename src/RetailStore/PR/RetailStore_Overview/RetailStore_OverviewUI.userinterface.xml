@@ -1,0 +1,501 @@
+<UIDescription name="RetailStore::OverviewUI" schemaVersion="0.0.0.5"  simpleEditorOnly="true">
+  <Page pagePattern="SingleSectionPage" showNavigation="false">
+    <ViewVariables>
+      <ViewVariable name="currentTabName" value="Main" />
+    </ViewVariables>
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="RetailStoreOverviewId" defaultLabel="Retail Store" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="TabbedViewAreaSection" currentTab="View::currentTabName">
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="Home">
+              <Bindings>
+                <Resource target="image" type="Image" id="MainGrey24" defaultImage="MainGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="CustomerDetailMainTabId" defaultLabel="HOME" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="mapArea" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="MapGrey24" defaultImage="MapGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="CustomerDetailMapTabId" defaultLabel="Map" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="detailOpenHours" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="ClockGrey24" defaultImage="ClockGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="CustomerDetailOpenHoursTabId" defaultLabel="Open Hours" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Contact" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="UserGrey24" defaultImage="UserGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="ContactId" defaultLabel="Contact" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="InStoreLocations">
+              <Bindings>
+                <Resource target="image" type="Image" id="Store" defaultImage="Store" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="storeLocationsTabId" defaultLabel="In-store Locations" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="PreviousVisits">
+              <Bindings>
+                <Resource target="image" type="Image" id="ClockGrey24" defaultImage="ClockGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="PreviousVisitsId" defaultLabel="Visits" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="visitHourArea" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="ClipboardClock" defaultImage="ClipboardClock" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="CustomerDetailVisitHourTabId" defaultLabel="VISIT HOURS" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="tabSelected" storeTabNameIn="currentTabName" />
+          </Events>
+        </TabSelector>
+      </Area>
+      <Area areaName="Home" areaPattern="GroupedElementsArea">
+        <GroupElement name="RetailStoreGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="RetailStoreDetailId" defaultLabel="Identification" />
+          </Bindings>
+          <InputArea name="Name" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Name" id="retailStoreNameId" />
+              <Binding target="Value" type="Text" binding="ProcessContext::RetailStoreDetail.name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="Street" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="StreetId" defaultLabel="Street" />
+              <Binding target="Value" binding="ProcessContext::RetailStoreAddress.street" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="ZIP" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="ZipCodeId" defaultLabel="ZIP" />
+              <Binding target="Value" binding="ProcessContext::RetailStoreAddress.postalCode" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="State" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="StateId" defaultLabel="State" />
+              <Binding target="Value" binding="ProcessContext::RetailStoreAddress.state" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+        <GroupElement name="LocationGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="LocationId" defaultLabel="Location" />
+          </Bindings>
+          <InputArea name="Coordinates" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="CoordinatesId" defaultLabel="Latitude/Longitude" />
+              <Binding target="Value" binding="ProcessContext::RetailStoreAddress.latitudeAndLongitude" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+        <GroupElement name="CommunicationGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="CommunicationId" defaultLabel="Communication" />
+          </Bindings>
+          <InputArea name="StorePrimaryContact" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Primary Contact" id="retailStorePrimaryContactId" />
+              <Binding target="Value" type="Text" binding="ProcessContext::RetailStoreDetail.luContact.name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <Merger name="PhoneMerger" pattern="oneInputControlTwoButtonsMax">
+            <InputArea name="Phone" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Phone" id="PhoneId" />
+                <Binding target="Value" binding="ProcessContext::RetailStoreDetail.luContact.phone" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <ImageButton name="PhoneSMS">
+              <Bindings>
+                <Resource target="Image" type="Image" id="SpeechBubbleGrey24" />
+                <Binding type="Visible" target="Visible" call="ProcessContext::RetailStoreDetail.luContact.isVisible">
+                  <Parameters>
+                    <Input name="fieldName" type="Literal" value="phone" />
+                  </Parameters>
+                </Binding>
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="smsPressed" />
+              </Events>
+            </ImageButton>
+            <ImageButton name="PhoneImage">
+              <Bindings>
+                <Resource target="Image" type="Image" id="PhoneGrey24" />
+                <Binding type="Visible" target="Visible" call="ProcessContext::RetailStoreDetail.luContact.isVisible">
+                  <Parameters>
+                    <Input name="fieldName" type="Literal" value="phone" />
+                  </Parameters>
+                </Binding>
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="phonePressed" />
+              </Events>
+            </ImageButton>
+          </Merger>
+          <Merger name="EmailMerger" pattern="twoInputControls" labelHandling="Combined" separator="," leftRatio="10" rightRatio="1">
+            <InputArea name="Email" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="EmailId" defaultLabel="EMail" />
+                <Binding target="Value" binding="ProcessContext::RetailStoreDetail.luContact.email" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <ImageButton name="EmailImage">
+              <Bindings>
+                <Resource target="Image" type="Image" id="EnvelopeGrey24" />
+                <Binding type="Visible" target="Visible" call="ProcessContext::RetailStoreDetail.luContact.isVisible">
+                  <Parameters>
+                    <Input name="fieldName" type="Literal" value="email" />
+                  </Parameters>
+                </Binding>
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="mailPressed" />
+              </Events>
+            </ImageButton>
+          </Merger>
+        </GroupElement>
+        <GroupElement name="ClassificationGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="ClassificationId" defaultLabel="Classification" />
+          </Bindings>
+          <SelectionBox name="Priority" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="retailStorePriorityId" defaultLabel="Priority" />
+              <Binding target="DataSource" toggleId="StorePriority" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::RetailStoreDetail.priority" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <SelectionBox name="DeliveryMethod" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="retailStoreDeliveryMethodId" defaultLabel="Delivery Method" />
+              <Binding target="DataSource" toggleId="DeliveryMethod" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::RetailStoreDetail.deliveryMethod" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <SelectionBox name="DeliveryFrequency" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="retailStoreDeliveryFrequencyId" defaultLabel="Delivery Frequency" />
+              <Binding target="DataSource" toggleId="DeliveryFrequencyType" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::RetailStoreDetail.deliveryFrequencyType" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+        </GroupElement>
+      </Area>
+      <Area areaName="detailOpenHours" areaPattern="SingleElementArea">
+        <GroupedList name="OpenHoursList" searchable="false" dataSource="ProcessContext::RetailStoreDetail.loOpenHours.items[]">
+          <Items name="Items" itemPattern="OpenHoursPattern">
+            <Bindings>
+              <Binding target="dayOfWeek" type="Text" binding=".dayOfWeek" bindingMode="ONE_WAY" />
+              <Binding target="startTime" type="Text" binding=".startTime" bindingMode="ONE_WAY" />
+              <Binding target="endTime" type="Text" binding=".endTime" bindingMode="ONE_WAY" />
+              <!-- Header Labels -->
+              <Resource target="startTimeHeader" type="Label" id="OpenHoursStartTime" defaultLabel="Start time" />
+              <Resource target="endTimeHeader" type="Label" id="OpenHoursEndTime" defaultLabel="End time" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col>
+                  <Row layoutType="itemIdentifier" bindingId="dayOfWeek" />
+                  <Row layoutType="itemSecondary" bindingId="startTimeHeader" />
+                  <Row layoutType="itemSecondary" bindingId="endTimeHeader" />
+                </Col>
+                <Col>
+                  <Row />
+                  <Row layoutType="itemValueSmall" bindingId="startTime" />
+                  <Row layoutType="itemValueSmall" bindingId="endTime" />
+                </Col>
+              </Default>
+            </ItemListLayout>
+          </Items>
+        </GroupedList>
+      </Area>
+      <Area areaName="Contact" areaPattern="SingleElementArea">
+        <GroupedList name="ContactList" searchable="false" hasBorder="true" dataSource="ProcessContext::RetailStoreDetail.loContact.items[]">
+          <Items name="Items" itemPattern="ContactList">
+            <Bindings>
+              <Binding target="Title" type="Text" binding=".title" bindingMode="ONE_WAY" />
+              <Resource target="ContactPhoneLabel" type="Label" defaultLabel="Phone" id="ContactPhoneId" />
+              <Binding target="ContactPhone" type="Text" binding=".phone" bindingMode="ONE_WAY" />
+              <Resource target="ContactMobileLabel" type="Label" defaultLabel="Mobile" id="ContactMobileId" />
+              <Binding target="ContactMobile" type="Text" binding=".mobilePhone" bindingMode="ONE_WAY" />
+              <Binding target="Department" type="Text" binding=".department" bindingMode="ONE_WAY" />
+              <Binding target="Name" type="Text" binding=".name" bindingMode="ONE_WAY" />
+              <Binding target="ContactImage" type="Blob" binding=".mediaPath" fileTypeBinding=".fileType" roundedEdge="true" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col width="5em">
+                  <Row>
+                    <Col width="3em" layoutType="Image" bindingId="ContactImage" />
+                  </Row>
+                </Col>
+                <Col flex="1">
+                  <Row layoutType="itemIdentifier" bindingId="Name" />
+                  <Row layoutType="itemSecondary" bindingId="Title" />
+                  <Row layoutType="itemSecondary" bindingId="Department" />
+                </Col>
+                <Col width="2.1em">
+                  <Row layoutType="itemLabel" bindingId="ContactPhoneLabel" />
+                  <Row layoutType="itemLabel" bindingId="ContactMobileLabel" />
+                </Col>
+                <Col width="6.5em">
+                  <Row layoutType="itemValue" bindingId="ContactPhone" />
+                  <Row layoutType="itemValue" bindingId="ContactMobile" />
+                </Col>
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="5em">
+                    <Row>
+                      <Col width="3em" layoutType="Image" bindingId="ContactImage" />
+                    </Row>
+                  </Col>
+                  <Col flex="1">
+                    <Row layoutType="itemIdentifier" bindingId="Name" />
+                    <Row layoutType="itemSecondary" bindingId="Title" />
+                    <Row layoutType="itemSecondary" bindingId="Department" />
+                  </Col>
+                  <Col width="5em">
+                    <Row layoutType="itemLabel" bindingId="ContactPhoneLabel" />
+                    <Row layoutType="itemLabel" bindingId="ContactMobileLabel" />
+                  </Col>
+                  <Col width="6.5em">
+                    <Row layoutType="itemValue" bindingId="ContactPhone" />
+                    <Row layoutType="itemValue" bindingId="ContactMobile" />
+                  </Col>
+                </Default>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col>
+                    <Row>
+                      <Col width="3.5em">
+                        <Row>
+                          <Col width="3em" layoutType="Image" bindingId="ContactImage" />
+                        </Row>
+                      </Col>
+                      <Col flex="1">
+                        <Row layoutType="itemIdentifier" bindingId="Name" />
+                        <Row layoutType="itemSecondary" bindingId="Title" />
+                        <Row layoutType="itemSecondary" bindingId="Department" />
+                      </Col>
+                    </Row>
+                    <Row></Row>
+                    <Row>
+                      <Col width="3.5em">
+                        <Row layoutType="itemLabel" bindingId="ContactPhoneLabel" />
+                      </Col>
+                      <Col width="6.5em">
+                        <Row layoutType="itemValue" bindingId="ContactPhone" />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col width="3.5em">
+                        <Row layoutType="itemLabel" bindingId="ContactMobileLabel" />
+                      </Col>
+                      <Col width="6.5em">
+                        <Row layoutType="itemValue" bindingId="ContactMobile" />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Default>
+              </Phone>
+            </ItemListLayout>
+          </Items>
+        </GroupedList>
+      </Area>
+      <Area areaName="InStoreLocations" areaPattern="SingleElementArea">
+        <GroupedList name="InStoreLocationsList" searchable="false" dataSource="ProcessContext::RetailStoreDetail.loInStoreLocation.items[]">
+          <Items name="Items" itemPattern="SurveyPattern">
+            <Bindings>
+              <Binding target="inStoreLocationName" type="Text" binding=".name" bindingMode="ONE_WAY" />
+              <Binding target="inStoreLocationCategory" type="Text" binding=".category" bindingMode="ONE_WAY" />
+              <Binding target="inStoreLocationDescription" type="Text" binding=".description" bindingMode="ONE_WAY" />
+              <Resource target="inStoreLocationCategoryLabel" type="Label" id="InStoreLocationCategoryId" defaultLabel="In-store Location Category" />
+              <Resource target="inStoreLocationDescriptionLabel" type="Label" id="InStoreLocationDescriptionId" defaultLabel="Description" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col>
+                  <Row layoutType="itemIdentifier" bindingId="inStoreLocationName" />
+                  <Row layoutType="itemSecondary" bindingId="inStoreLocationCategoryLabel" />
+                  <Row layoutType="itemSecondary" bindingId="inStoreLocationDescriptionLabel" />
+                </Col>
+                <Col>
+                  <Row />
+                  <Row layoutType="itemValueSmall" bindingId="inStoreLocationCategory" />
+                  <Row layoutType="itemValueSmall" bindingId="inStoreLocationDescription" />
+                </Col>
+              </Default>
+            </ItemListLayout>
+          </Items>
+        </GroupedList>
+      </Area>
+      <Area areaName="PreviousVisits" areaPattern="SingleElementArea">
+        <GroupedList name="PreviousVisitsList" hasBorder="true" dataSource="ProcessContext::RetailStoreDetail.loPreviousVisits.items[]">
+          <Items name="Items" itemPattern="PreviousVisitList">
+            <Bindings>
+              <Resource target="userImage" type="Image" id="UserDarkGrey16" />
+              <Resource target="calendarImage" type="Image" id="CalendarDarkGrey24" />
+              <Resource target="suitcaseImage" type="Image" id="Suitcase_F" />
+              <Resource target="clockImage" type="Image" id="Clock_F" />
+              <Resource target="prdIcon" type="Label" id="IconId" defaultLabel="Icon" />
+              <Resource target="statusLabel" type="Label" id="StatusLabelId" defaultLabel="Status" />
+              <Resource target="responsibleLabel" type="Label" id="ResponsibleLabelId" defaultLabel="Responsible" />
+              <Resource target="dateLabel" type="Label" id="DateLabelId" defaultLabel="Date" />
+              <Resource target="timeLabel" type="Label" id="TimeLabelId" defaultLabel="Time" />
+              <Resource target="durationLabel" type="Label" id="DurationLabelId" defaultLabel="Duration" />
+              <Resource target="spacerLabel" type="Label" id="Spacer" defaultLabel=" " />
+              <Resource target="minutesLabel" type="Label" id="MinutesLabelId" defaultLabel="min" />
+              <Binding target="status" type="Text" bindingMode="ONE_WAY" binding=".status" />
+              <Binding target="responsible" type="Text" binding=".visitorName" bindingMode="ONE_WAY" />
+              <Binding target="date" type="Date" binding=".plannedStartDate" bindingMode="ONE_WAY" />
+              <Binding target="time" type="Text" binding=".plannedStartTime" bindingMode="ONE_WAY" />
+              <Binding target="duration" type="Text" binding=".duration" bindingMode="ONE_WAY" />
+            </Bindings>
+            <ItemListLayout>
+              <Tablet>
+                <Default>
+                  <Col align="left" width="1em">
+                    <Row height="1.4em" layoutType="Image" bindingId="suitcaseImage" />
+                    <Row />
+                    <Row />
+                  </Col>
+                  <Col align="left" width="10em">
+                    <Row width="7em" layoutType="itemNameSecondary" bindingId="date" />
+                    <Row layoutType="itemValueSmall" bindingId="timeLabel" />
+                    <Row layoutType="itemValueSmall" bindingId="responsibleLabel" />
+                  </Col>
+                  <Col align="left" flex="1">
+                    <Row />
+                    <Row layoutType="itemNameSecondary" bindingId="time" />
+                    <Row layoutType="itemNameSecondary" bindingId="responsible" />
+                  </Col>
+                  <Col width="10em" align="right">
+                    <Row />
+                    <Row layoutType="itemRight itemNameSecondary" bindingId="status" />
+                    <Row>
+                      <Col layoutType="itemNameSecondary" bindingId="duration" />
+                      <Col bindingId="minutesLabel" />
+                    </Row>
+                  </Col>
+                </Default>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col align="left" width="1em">
+                    <Row height="1.4em" layoutType="Image" bindingId="suitcaseImage" />
+                    <Row />
+                    <Row />
+                  </Col>
+                  <Col align="left" width="5em">
+                    <Row height="1.4em" layoutType="itemImportantValue" bindingId="date" />
+                    <Row layoutType="itemValueSmall" bindingId="timeLabel" />
+                    <Row layoutType="itemValueSmall" bindingId="responsibleLabel" />
+                  </Col>
+                  <Col align="left" width="4em">
+                    <Row height="1.4em" />
+                    <Row layoutType="itemValueSmall" bindingId="time" />
+                    <Row layoutType="itemValueSmall" bindingId="responsible" />
+                  </Col>
+                  <Col align="right" width="4em">
+                    <Row />
+                    <Row layoutType="itemValueSmall" bindingId="status" />
+                    <Row>
+                      <Col layoutType="itemValueSmall" bindingId="duration" />
+                      <Col layoutType="itemValueSmall" bindingId="minutesLabel" />
+                    </Row>
+                  </Col>
+                </Default>
+              </Phone>
+            </ItemListLayout>
+          </Items>
+        </GroupedList>
+      </Area>
+      <Area areaName="visitHourArea" areaPattern="SingleElementArea">
+        <GroupedList name="VisitHoursList" searchable="false" dataSource="ProcessContext::RetailStoreDetail.loPreferredVisitHour.items[]">
+          <Items name="Items" itemPattern="VisitHourPattern">
+            <Bindings>
+              <Binding target="dayOfWeek" type="Text" binding=".dayOfWeek" bindingMode="ONE_WAY" />
+              <Binding target="startTime" type="Text" binding=".startTime" bindingMode="ONE_WAY" />
+              <Binding target="endTime" type="Text" binding=".endTime" bindingMode="ONE_WAY" />
+              <Binding target="type" type="Text" binding=".type" bindingMode="ONE_WAY" />
+              <!-- Header Labels -->
+              <Resource target="startTimeHeader" type="Label" id="OpenHoursStartTime" defaultLabel="Start time" />
+              <Resource target="endTimeHeader" type="Label" id="OpenHoursEndTime" defaultLabel="End time" />
+              <Resource target="typeHeader" type="Label" id="OpenHoursType" defaultLabel="Type" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col>
+                  <Row layoutType="itemIdentifier" bindingId="dayOfWeek" />
+                  <Row layoutType="itemSecondary" bindingId="startTimeHeader" />
+                  <Row layoutType="itemSecondary" bindingId="endTimeHeader" />
+                  <Row layoutType="itemSecondary" bindingId="typeHeader" />
+                </Col>
+                <Col>
+                  <Row />
+                  <Row layoutType="itemValueSmall" bindingId="startTime" />
+                  <Row layoutType="itemValueSmall" bindingId="endTime" />
+                  <Row layoutType="itemValueSmall" bindingId="type" />
+                </Col>
+              </Default>
+            </ItemListLayout>
+          </Items>
+        </GroupedList>
+      </Area>
+      <Area areaName="mapArea" areaPattern="SingleElementArea" lazyLoading="true">
+        <MenuItems>
+          <MenuItem itemId="Navigate" directlyVisible="false">
+            <Bindings>
+              <Resource target="Text" type="Label" id="NavigateId" defaultLabel="Navigate to Customer" />
+              <Resource target="Icon" type="Image" id="TripDarkGrey24" defaultImage="TripDarkGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="navigateToCustomerPressed">
+                <SelectArea name="mapArea" />
+              </ButtonPressedEvent>
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <GoogleMap name="myMap" latitudeField="latitude" longitudeField="longitude" initialZoomLevel="15">
+          <Bindings>
+            <Binding target="longitude" binding="ProcessContext::RetailStoreLatLong.longitude" bindingMode="ONE_WAY" />
+            <Binding target="latitude" binding="ProcessContext::RetailStoreLatLong.latitude" bindingMode="ONE_WAY" />
+          </Bindings>
+        </GoogleMap>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

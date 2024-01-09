@@ -1,0 +1,24 @@
+<DataSource name="DsLoCustomerSalesRevenue" backendSystem="sf" businessObjectClass="LoCustomerSalesRevenue" external="false" editableEntity="Account_Sales_Data__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Sales_Data__c" column="Id" />
+    <Attribute name="netSales" table="Account_Sales_Data__c" column="Sales_Volume__c" />
+    <Attribute name="year" table="Account_Sales_Data__c" column="Year__c" />
+    <Attribute name="monthNumInYear" table="Account_Sales_Data__c" column="Month__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Sales_Data__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+    Account_Sales_Data__c.Account__c = #bpaMainPKey#
+    AND (Account_Sales_Data__c.Year__c = #year#
+    OR Account_Sales_Data__c.Year__c = #year# - 1)
+    ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Account_Sales_Data__c" attribute="Month__c" direction="ASC" />
+    <OrderCriterion entity="Account_Sales_Data__c" attribute="Year__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="bpaMainPKey" type="TEXT" />
+    <Parameter name="year" type="INTEGER" />
+  </Parameters>
+</DataSource>

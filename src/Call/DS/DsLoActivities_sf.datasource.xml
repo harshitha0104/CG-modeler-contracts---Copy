@@ -1,0 +1,166 @@
+<DataSource name="DsLoActivities" backendSystem="sf" objectClass="LoActivities" readOnly="true" external="true" editableEntity="Job_Definition_List__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Job_Definition_List__c" column="Id" />
+    <Attribute name="icon" table="Job_Definition_List_Template__c" column="Classification__c" />
+    <Attribute name="slogan" table="Job_Definition_List__c" column="Description_#Language#__c" />
+    <Attribute name="validFrom" table="Job_Definition_List__c" column="Valid_From__c" />
+    <Attribute name="validThru" table="Job_Definition_List__c" column="Valid_Thru__c" />
+    <Attribute name="callType" table="Visit_Template__c" column="Description_#Language#__c" />
+    <Attribute name="activityTemplate" table="Job_Definition_List_Template__c" column="Description_#Language#__c" />
+    <DerivedAttribute name="alertIcon" value="''" />
+    <Attribute name="promotionDateFrom" table="Promotion__c" column="Date_From__c" />
+    <Attribute name="promotionDateThru" table="Promotion__c" column="Date_Thru__c" />
+    <Attribute name="promotionId" table="Job_Definition_List__c" column="Promotion__c" />
+    <Attribute name="promotionSlogan" table="Promotion__c" column="Slogan_#Language#__c" />
+    <DerivedAttribute name="promotionIcon" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="Job_Definition_List__c" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[ 
+
+    var newParams = jsonQuery;
+
+    var cardDate = "";
+    var limitDueToFormFactor = "";
+    var prmPromotionPKey = ""
+    const SECONDS_PER_DAY = 24 * 60 * 60;
+    var addCond = "AND Job_Definition_List_Template__c.Display_In_Cockpit__c = '1' ";
+
+    if (Utils.isDefined(newParams.cardDate)){
+      cardDate = Utils.convertForDBParam(newParams.cardDate, 'DomDate');		 
+    }
+    if (Utils.isDefined(newParams.limitDueToFormFactor)){
+        limitDueToFormFactor = newParams.limitDueToFormFactor;
+    }
+    if (Utils.isDefined(newParams.prmPromotionPKey)){
+      prmPromotionPKey = Utils.convertForDBParam(newParams.prmPromotionPKey, 'DomKey');	
+      addCond = ""; // removed display in cockpit condition for promotion overview
+      addCond += " AND Job_Definition_List__c.Promotion__c = #prmPromotionPKey# ";
+    }
+
+    var sqlParams = {cardDate, SECONDS_PER_DAY, limitDueToFormFactor, prmPromotionPKey};
+
+	var sqlStmt = "";
+    sqlStmt += "SELECT DISTINCT ";
+
+    sqlStmt += "Job_Definition_List__c.Id as pKey, ";
+	sqlStmt += "Job_Definition_List__c.Promotion__c as promotionId, ";
+	sqlStmt += "Promotion__c.Date_from__c as promotionDateFrom, ";
+	sqlStmt += "Promotion__c.Date_thru__c as promotionDateThru, ";
+	sqlStmt += "Promotion__c.slogan_#Language#__c as promotionSlogan, ";
+	sqlStmt += "CASE WHEN (Job_Definition_List__c.promotion__c <> ' ' AND Promotion__c.slogan_#Language#__c <> ' ')  THEN 'Promotion' ELSE '' END as promotionIcon, "; 
+    sqlStmt += "CASE WHEN Job_Definition_List_Template__c.Classification__c <> ' ' THEN Job_Definition_List_Template__c.Classification__c ELSE 'No_Classification' END as icon, ";
+    sqlStmt += "Job_Definition_List__c.Description_#Language#__c as slogan, ";
+    sqlStmt += "Job_Definition_List__c.Valid_From__c as validFrom, ";
+    sqlStmt += "Job_Definition_List__c.Valid_Thru__c as validThru, ";
+  	sqlStmt += "Visit_Template__c.Description_#Language#__c as callType, ";
+    sqlStmt += "CASE WHEN (Job_Definition_List__c.Valid_Thru__c - #cardDate#) / #SECONDS_PER_DAY# <= 7 THEN 'RedIcon' WHEN (Job_Definition_List__c.Valid_Thru__c - #cardDate#) / #SECONDS_PER_DAY# <= 14 THEN 'YellowIcon' ELSE '' END as alertIcon, "; 
+    sqlStmt += "Job_Definition_List_Template__c.Description_#Language#__c as activityTemplate ";
+	sqlStmt += "FROM Job_Definition_List__c ";
+	sqlStmt += "INNER JOIN Job_List__c ON Job_List__c.Job_Definition_List__c = Job_Definition_List__c.Id ";
+	sqlStmt += "AND Job_Definition_List__c.IsDeleted <> '1' ";
+	sqlStmt += "AND Job_List__c.IsDeleted <> '1' ";
+	sqlStmt += "INNER JOIN Visit_Template__c ON Job_Definition_List__c.Visit_Template__c = Visit_Template__c.Id ";
+	sqlStmt += "AND Visit_Template__c.IsDeleted <> '1' ";
+	sqlStmt += "INNER JOIN Job_Definition_List_Template__c ON Job_Definition_List__c.Job_Definition_List_Template__c = Job_Definition_List_Template__c.Id ";
+	sqlStmt += "AND Job_Definition_List_Template__c.IsDeleted <> '1' ";
+	sqlStmt += "LEFT OUTER JOIN Promotion__c ON  Job_Definition_List__c.Promotion__c = Promotion__c.Id ";
+	sqlStmt += "AND Promotion__c.Active__c = '1' ";
+    sqlStmt += "AND Promotion__c.Phase__c = 'Committed' ";
+	sqlStmt += "AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #cardDate# , 'Date')# ";  
+    sqlStmt += "AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #cardDate# , 'Date')# ";
+	sqlStmt += "WHERE ";
+	sqlStmt += "Job_Definition_List__c.Valid_Thru__c >=  #cardDate# ";
+	sqlStmt += "AND Job_Definition_List__c.Approval_State__c <> 'Canceled' ";
+	sqlStmt += "AND Job_List__c.Valid_Thru__c >=  #cardDate# ";
+	sqlStmt += "AND Job_List__c.Done__c = '0' ";
+	sqlStmt += "AND Job_List__c.Manager__c = '#UserPKey#' ";
+	sqlStmt += addCond;
+
+	sqlStmt += "UNION ";
+	
+	sqlStmt += "SELECT DISTINCT ";
+    sqlStmt += "Job_Definition_List__c.Id as pKey, ";
+	sqlStmt += "Job_Definition_List__c.Promotion__c as promotionId, ";
+	sqlStmt += "Promotion__c.Date_from__c as promotionDateFrom, ";
+	sqlStmt += "Promotion__c.Date_thru__c as promotionDateThru, ";
+	sqlStmt += "Promotion__c.slogan_#Language#__c as promotionSlogan, ";
+	sqlStmt += "CASE WHEN (Job_Definition_List__c.promotion__c <> ' ' AND Promotion__c.slogan_#Language#__c <> ' ')  THEN 'Promotion' ELSE '' END as promotionIcon, "; 
+    sqlStmt += "CASE WHEN Job_Definition_List_Template__c.Classification__c <> ' ' THEN Job_Definition_List_Template__c.Classification__c ELSE 'No_Classification' END as icon, ";
+    sqlStmt += "Job_Definition_List__c.Description_#Language#__c as slogan, ";
+    sqlStmt += "Job_Definition_List__c.Valid_From__c as validFrom, ";
+    sqlStmt += "Job_Definition_List__c.Valid_Thru__c as validThru, ";
+  	sqlStmt += "Visit_Template__c.Description_#Language#__c as callType, ";
+    sqlStmt += "CASE WHEN (Job_Definition_List__c.Valid_Thru__c - #cardDate#) / #SECONDS_PER_DAY# <= 7 THEN 'RedIcon' WHEN (Job_Definition_List__c.Valid_Thru__c -#cardDate#) / #SECONDS_PER_DAY# <= 14 THEN 'YellowIcon' ELSE '' END as alertIcon, "; 
+    sqlStmt += "Job_Definition_List_Template__c.Description_#Language#__c as activityTemplate ";
+	sqlStmt += "FROM Job_Definition_List__c ";
+	sqlStmt += "INNER JOIN Visit_Template__c ON Job_Definition_List__c.Visit_Template__c = Visit_Template__c.Id ";
+	sqlStmt += "AND Visit_Template__c.IsDeleted <> '1' ";
+    sqlStmt += "AND Job_Definition_List__c.IsDeleted <> '1' ";
+	sqlStmt += "INNER JOIN Job_Definition_List_Template__c ON Job_Definition_List__c.Job_Definition_List_Template__c = Job_Definition_List_Template__c.Id ";
+	sqlStmt += "AND Job_Definition_List_Template__c.IsDeleted <> '1' ";
+	sqlStmt += "LEFT JOIN Job_Definition_List_Account__c ON Job_Definition_List_Account__c.Job_Definition_List__c = Job_Definition_List__c.Id ";
+	sqlStmt += "LEFT OUTER JOIN Promotion__c ON  Job_Definition_List__c.Promotion__c = Promotion__c.Id ";
+	sqlStmt += "AND Promotion__c.Active__c = '1' ";
+    sqlStmt += "AND Promotion__c.Phase__c = 'Committed' ";
+	sqlStmt += "AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #cardDate# , 'Date')# ";  
+    sqlStmt += "AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #cardDate# , 'Date')# ";
+    sqlStmt += "LEFT OUTER JOIN  ";
+    sqlStmt += "   ( ";
+    sqlStmt += "      Job_Definition_List_Account_Set__c  ";
+    sqlStmt += "      JOIN ";
+    sqlStmt += "      Account_Set_Account__c ON Job_Definition_List_Account_Set__c.Account_Set__c = Account_Set_Account__c.Account_Set__c AND  ";
+    sqlStmt += "                            Account_Set_Account__c.IsDeleted <> '1' and ";
+    sqlStmt += "                            Job_Definition_List_Account_Set__c.IsDeleted <> '1' ";
+    sqlStmt += "   )  on Job_Definition_List__c.Id = Job_Definition_List_Account_Set__c.Job_Definition_List__c and Job_Definition_List_Account_Set__c.IsDeleted <> '1'    ";                                       	
+    sqlStmt += "LEFT JOIN Account_Manager__c ON Job_Definition_List_Account__c.Account__c = Account_Manager__c.Account__c OR Account_Set_Account__c.Account_Set_Account__c = Account_Manager__c.Account__c ";
+	sqlStmt += "WHERE Job_Definition_List__c.Standard_Jobs__c = '1' ";
+	sqlStmt += "AND Job_Definition_List__c.Active__c = '1' ";
+	sqlStmt += "AND Job_Definition_List__c.Approval_State__c <> 'Canceled' ";
+	sqlStmt += "AND Job_Definition_List__c.Valid_Thru__c >= #cardDate# ";
+	sqlStmt += "AND (Job_Definition_List__c.Default_Management_Type__c = ' ' ";
+	sqlStmt += "OR (Job_Definition_List__c.Consider_Account__c = '0' ";
+	sqlStmt += "AND EXISTS ( ";
+	sqlStmt += "             SELECT NULL FROM Account_Manager__c AS AM WHERE ";
+	sqlStmt += "             AM.Valid_Thru__c >= #cardDate# ";
+	sqlStmt += "             AND AM.IsDeleted <> '1' ";
+	sqlStmt += "             AND Job_Definition_List__c.Default_Management_Type__c = AM.Management_Type__c ";
+	sqlStmt += "             AND AM.User__c = '#UserPKey#') ";
+	sqlStmt += ") ";
+	sqlStmt += "OR ( ";
+	sqlStmt += "Account_Manager__c.Valid_Thru__c >= #cardDate# ";
+	sqlStmt += "AND Account_Manager__c.User__c = '#UserPKey#' ";
+	sqlStmt += "AND Account_Manager__c.IsDeleted <> '1' ";
+	sqlStmt += "AND ( ";
+	sqlStmt += "( ";
+	sqlStmt += "Job_Definition_List__c.Consider_Account__c = '1' ";
+    sqlStmt += "AND Account_Manager__c.Management_Type__c = Job_Definition_List__c.Default_Management_Type__c ";
+	sqlStmt += "AND (Job_Definition_List_Account__c.IsDeleted <> '1' ";
+    sqlStmt += "AND Job_Definition_List_Account__c.Excluded__c <> '1' ) ";
+    sqlStmt += "OR (Job_Definition_List_Account_Set__c.Account_Set__c IS NOT NULL AND Job_Definition_List_Account__c.Account__c Is NULL) ";
+	sqlStmt += ") ";
+	sqlStmt += ") ) ";
+	sqlStmt += ") ";
+	sqlStmt += addCond;
+	sqlStmt += "ORDER BY Job_Definition_List__c.Valid_Thru__c ASC, Job_Definition_List__c.Description_#Language#__c ASC ";
+	sqlStmt += "LIMIT #limitDueToFormFactor# ";
+
+   return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+      ]]></Load>
+    <Update><![CDATA[ 
+        // Intended to be empty     
+        return undefined;     
+      ]]></Update>
+    <Insert><![CDATA[     
+        // Intended to be empty     
+        return undefined;
+      ]]></Insert>
+    <Delete><![CDATA[      
+        // Intended to be empty     
+        return undefined;     
+      ]]></Delete>
+  </Database>
+</DataSource>

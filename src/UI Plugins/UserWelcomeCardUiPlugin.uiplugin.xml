@@ -1,0 +1,379 @@
+<UIPlugin name="UserWelcomeCardUiPlugin" mainComponent="main">
+  <Interface>
+    <Property id="userImage" />
+    <Property id="userName" />
+    <Property id="visitsLabel" />
+    <Property id="visitCount" />
+    <Property id="customerTasksLabel" />
+    <Property id="issuesCount" />
+    <Property id="tasksLabel" />
+    <Property id="todosCount" />
+    <Property id="userMessage" />
+    <Property id="isTourUser" />
+    <Property id="userDefaultImage" />
+    <Property id="isSfBackend" />
+    <Property id="selectedDate" />
+    <Property id="previousDayIcon" />
+    <Property id="nextDayIcon" />
+    <Property id="previousDayOnTouchIcon" />
+    <Property id="nextDayOnTouchIcon" />
+    <Property id="todayIcon" />
+    <Property id="todayLabel" />
+  </Interface>
+  <UIComponent name="main"><![CDATA[
+
+var finalPath;
+
+var config = { 
+  margin: {top: 0, right: 15, bottom: 20, left: 15},
+  width:	280,
+  height:	80 
+}
+
+React.createClass({
+
+  /*######################
+  ###    Styles      ###
+  ######################*/
+  setStyles: function () {
+
+	  //User Image
+	  config.userImageStyle = {
+		  width: '57px',
+		  height: '57px',
+		  borderRadius: '50%',
+		  float: 'left',
+		  display: 'inline-block'
+	  };
+
+	  config.userMessageStyle = {
+		  font:	this.props.common.config.uiPlugin.FontRegular12,
+		  color: this.props.common.config.uiPlugin.Color22,
+		  paddingLeft: '12px',
+		  paddingTop: '6px',
+		  paddingBottom: '12px'	                 	                     			  
+	  };
+
+	  config.userNameStyle = {
+		  font: this.props.common.config.uiPlugin.FontMedium18,
+		  color: this.props.common.config.uiPlugin.Color4,
+		  paddingLeft: '12px',
+		  paddingBottom: '12px'		
+	  };
+
+	  config.counterBackgroundStyle = {
+		  backgroundColor: this.props.common.config.uiPlugin.Color6,
+		  height: '36px',
+		  width: '90%',
+		  alignContent: 'center',
+		  alignSelf: 'center',
+		  borderRadius: '18px'
+	  };
+
+	  config.counterDivStyle = {
+		  display: 'flex',
+		  justifyContent: 'center',
+		  alignSelf: 'center'
+	  };
+
+	  config.counterValueStyle = {
+		  font: '24px Regular',
+		  color: this.props.common.config.uiPlugin.Color4,
+		  display: 'table-cell',
+		  alignSelf: 'center'
+	  };
+
+	  config.counterLabelStyle = {
+		  font:	this.props.common.config.uiPlugin.FontRegular12,
+		  color: this.props.common.config.uiPlugin.Color22,
+		  display: 'table-cell',
+		  alignSelf: 'center',
+		  textAlign: 'center',
+		  verticalAlign: 'middle',
+		  paddingLeft: '5px'				  
+	  };
+
+	  config.counterBarLabelStyle = {
+		  font:	this.props.common.config.uiPlugin.FontRegular14,
+		  color: this.props.common.config.uiPlugin.Color1,
+		  display: 'table-cell',
+		  textAlign: 'center',
+		  verticalAlign: 'middle',
+		  alignSelf: 'center',
+		  paddingLeft: '2px'
+	  };
+
+	  config.counterInnerDivStyle = {
+		  textAlign: 'center',
+		  alignSelf: 'center',
+		  verticalAlign: 'middle',
+		  paddingLeft: '5px'
+	  };
+
+      config.issuesCounterInnerDivStyle = {
+		  textAlign: 'center',
+		  overflow: 'auto',
+          width: '38%',
+		  alignSelf: 'center',
+		  verticalAlign: 'middle',
+		  paddingLeft: '5px'
+	  };
+
+	  config.previousDayChangeImageStyle = {
+		  background: this.props.common.config.uiPlugin.Color6,
+          width: '36px',
+          height:'36px',
+		  borderRadius: '18px',
+		  marginLeft: '-9px'
+	  };
+
+	  config.nextDayChangeImageStyle = {
+          font:	this.props.common.config.uiPlugin.FontRegular14,
+		  background: this.props.common.config.uiPlugin.Color6,
+          width: '36px',
+          height:'36px',
+		  borderRadius: '18px',
+		  marginRight: '-8.9px'
+	  };
+
+	  config.cardDateStyle = {
+		  font:	this.props.common.config.uiPlugin.FontMedium14,
+		  color: this.props.common.config.uiPlugin.Color8
+	  }; 
+
+      config.todayBackgroundStyle = {
+		  backgroundColor: this.props.common.config.uiPlugin.Color6,
+		  height: '34px',
+		  width: '100%',
+		  alignContent: 'center',
+		  alignSelf: 'center',
+		  borderRadius: '17px',
+          marginTop: '-5px'
+	  };
+
+	  config.todayButtonStyle = {
+          background: this.props.common.config.uiPlugin.Color6,
+          height: '34px',
+          width: '100%',
+		  textAlign: 'center',
+		  alignSelf: 'center',
+		  verticalAlign: 'middle',
+          borderRadius: '17px'
+	  };
+
+      config.todayLabelStyle = {
+		  font:	this.props.common.config.uiPlugin.FontRegular12,
+		  color: this.props.common.config.uiPlugin.Color22,
+		  display: 'inline-block',
+		  alignSelf: 'center',
+		  textAlign: 'center',
+		  verticalAlign: 'middle',
+		  paddingLeft: '6px',
+          marginTop: '-6px'
+	  };
+
+      config.todayImageStyle = {
+		  width: '16px',
+		  display: 'inline-block',
+          marginTop: '-4.5px'
+	  };
+  },
+
+ previousDayButtonImageChange : function () {
+	this.setState({previousDay: this.props.previousDayOnTouchIcon});
+    this.props.CardDate.previousDay();
+  },
+
+  nextDayButtonImageChange : function () {
+	this.setState({nextDay: this.props.nextDayOnTouchIcon});
+	this.props.CardDate.nextDay();
+  },
+
+  setCardDateToToday : function () {
+    this.props.CardDate.set(Utils.createAnsiDateToday());
+  },
+
+  render : function () {
+	  var props = this.props;
+	  var imageSource;
+	  var cockpitDate = Localization.localize(props.selectedDate, "date", "ddd, MMM D");
+
+	  if (props.userImage == " ") {
+		  imageSource = props.userDefaultImage;
+	  } 
+	  else 
+	  {
+		  imageSource = this.finalPath;
+	  }
+	  var contentStyle = {
+		  margin: '0 auto'                         
+	  };
+
+	  var contentParagraphStyle = {
+		  alignContent: 'center',
+		  display: 'block',
+          marginTop: '0px'
+	  };
+
+	  if(props.isTourUser == "1"){
+		  return  <div>
+			  <table width="100%">
+			  <tbody>
+			  <tr style={{display: 'flex', paddingBottom: "11px"}}>
+				<td>
+					<div style={{paddingRight: "5px"}}>
+						<img style={config.userImageStyle} src={imageSource} /> 
+					</div>
+				</td>
+				<td style={{width: '-webkit-fill-available', textAlign: 'left'}}>
+					<div style={{paddingTop: "7px"}}>
+						<span style={config.userNameStyle}>{props.userName}</span>
+				  		<br/>
+				  		<span style={config.userMessageStyle}>{props.userMessage}</span>
+					</div>
+				</td>
+			  </tr>
+			  <tr>
+				<td colSpan="2" style={config.counterBackgroundStyle}>
+					<div style={config.counterDivStyle}>
+					  <div align="center">
+						<span style={config.counterValueStyle}>{props.visitCount}</span>											
+						<span style={config.counterLabelStyle}>{props.visitsLabel}</span>
+					  </div>
+					</div>
+				</td>
+			  </tr>			
+			  </tbody>
+			  </table>
+		  </div>;
+	  }else{
+		  return  <div>
+			  <table width="100%">
+			  <tbody>
+			  <tr style={{display: 'flex', paddingBottom: "11px"}}>
+				<td>
+					<div style={{paddingRight: "5px"}}>
+						<img style={config.userImageStyle} src={imageSource} /> 
+					</div>
+				</td>
+				<td style={{width: '-webkit-fill-available', textAlign: 'left'}}>
+					<div style={{paddingTop: "7px"}}>
+						<span style={config.userNameStyle}>{props.userName}</span>
+				  		<br/>
+				  		<span style={config.userMessageStyle}>{props.userMessage}</span>
+					</div>
+				</td>
+			  </tr>
+				<tr style={{display: 'flex'}}>
+				  <td>
+					<div className="ButtonContainer">
+							<button style={{background: this.props.common.config.uiPlugin.Color1}} onTouchEnd={() => this.previousDayButtonImageChange()}>
+								<img style={config.previousDayChangeImageStyle} src={this.state.previousDay} />
+							</button>
+						</div>
+				  </td>
+				  <td style={{width: '-webkit-fill-available', textAlign: 'center'}}>
+					<div style={{paddingTop: "15px"}}>
+							<span style={config.cardDateStyle}>{cockpitDate}</span>
+						</div>
+				  </td>
+                  <td style={config.todayBackgroundStyle}>
+					<button style={config.todayButtonStyle} onTouchEnd={() => this.setCardDateToToday()}>
+                             <img src={this.state.today} style={config.todayImageStyle}/>
+                             <div style={config.todayLabelStyle}>
+                                 {this.props.todayLabel}
+                             </div>
+					</button>
+				  </td>
+				  <td>
+					<div className="ButtonContainer" style={{paddingLeft: "2px"}}>
+							<button style={{background: this.props.common.config.uiPlugin.Color1}} onTouchEnd={() => this.nextDayButtonImageChange()}>
+								<img style={config.nextDayChangeImageStyle} src={this.state.nextDay} />
+							</button>
+						</div>
+				  </td>
+				</tr>
+
+			  <tr>
+				<td colSpan="2" style={config.counterBackgroundStyle}>	
+					<div style={config.counterDivStyle}>
+					
+					  <div style={config.counterInnerDivStyle}>
+						<span style={config.counterValueStyle}>{props.visitCount}</span>											
+						<span style={config.counterLabelStyle}>{props.visitsLabel}</span>
+					  </div>
+
+					  <span style={config.counterBarLabelStyle}>|</span>
+
+					 <div style={config.issuesCounterInnerDivStyle}>
+						<span style={config.counterValueStyle}>{props.issuesCount}</span>
+						<span style={config.counterLabelStyle}>{props.customerTasksLabel}</span>
+					  </div>
+
+					  <span style={config.counterBarLabelStyle}>|</span>
+
+					  <div style={config.counterInnerDivStyle}>
+						<span style={config.counterValueStyle}>{props.todosCount}</span>										
+						<span style={config.counterLabelStyle}>{props.tasksLabel}</span>   
+					  </div>
+
+					</div>
+				</td>
+			  </tr>		
+			  </tbody>
+			  </table>
+		  </div>;
+	  }
+  },
+	getInitialState : function () {
+		return {
+			previousDay: this.props.previousDayIcon, nextDay: this.props.nextDayIcon, imagesResolved : false, today: this.props.todayIcon
+		};
+	},
+	componentDidMount: function () {
+		if(Utils.isDefined(this.props.common.config.uiPlugin)){
+			this.setStyles();
+		}    
+	},
+	componentWillMount : function () {
+	 if (this.props.userImage != " " && this.props.userImage != "") {
+		  this.resolveImagePaths(this.props);
+	  }
+	},
+	shouldComponentUpdate(nextProps, nextState) {
+	  var update = true;
+	  if((nextProps.userImage.finalPath != this.finalPath) && (!Utils.isDefined(this.finalPath))){                 
+		  this.finalPath = nextProps.userImage.finalPath;
+	  }
+	  else if (Utils.isDefined(nextState.userImage) && nextState.userImage != this.finalPath && !Utils.isDefined(this.finalPath)){                 
+		this.finalPath = nextState.userImage;
+      }
+	  return update;
+	},
+	resolveImagePaths : function (props) {
+		 var self = this;
+	     var pictureLoaded;
+         if (Utils.isCasBackend()) {
+		   pictureLoaded = this.getMediaPathAsync(props.userImage, self);
+         } else {
+           pictureLoaded = ProfilePicture.getPictureUrlAsync();
+         }
+         pictureLoaded.then(function (pictureUrl) {
+		   self.setState({
+		   imagesResolved : true,
+           userImage: pictureUrl
+		   })
+		});
+	},
+	getMediaPathAsync : function (item, self) {
+		return Attachment.getPathAsync(item, 'image/jpeg').then(
+		  function (path) {
+		    self.finalPath = path;
+		  });
+	}
+})
+]]></UIComponent>
+  <UIComponentStyling><![CDATA[
+
+]]></UIComponentStyling>
+</UIPlugin>

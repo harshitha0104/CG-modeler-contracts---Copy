@@ -1,0 +1,37 @@
+<Process name="ServiceRequest::MetaLookupForASOProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="SvcRequestMetaList" type="LoSvcRequestMetaForASO" />
+      </Declarations>
+      <Parameters>
+        <Input name="metaType" type="String" />
+        <Input name="issueType" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="GetSvcRequestMetaList" type="LoSvcRequestMetaForASO">
+        <Parameters>
+          <Input name="metaType" value="ProcessContext::MetaType" />
+          <Input name="issueType" value="ProcessContext::IssueType" />
+        </Parameters>
+        <Return name="ProcessContext::SvcRequestMetaList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>ServiceRequest::MetaLookupForASOUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="End" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="svcRequestMetaPKey" value="Event.pKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

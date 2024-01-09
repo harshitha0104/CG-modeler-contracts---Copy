@@ -1,0 +1,31 @@
+<Process name="Call::ActivitiesListProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="currentDate" type="DomDate" />
+        <Declaration name="activities" type="LoActivities" />
+      </Declarations>
+      <Parameters></Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetCurrentDate" actionType="LOGIC" call="Utils.createAnsiDateToday">
+        <Return name="ProcessContext::currentDate" />
+      </Action>
+      <Action name="LoadActivities" actionType="LOAD" type="LoActivities">
+        <Parameters>
+          <Input name="cardDate" value="ProcessContext::currentDate" type="Binding" />
+          <Input name="limitDueToFormFactor" value="-1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::activities" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Call::ActivitiesListUI</UIDescription>
+        <Events></Events>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

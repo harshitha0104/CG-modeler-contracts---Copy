@@ -1,0 +1,19 @@
+<LookupObject name="LuOrderItemMeta">
+  <DataSource name="DsLuOrderItemMeta" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomString" dataSourceProperty="text" />
+    <SimpleProperty name="shortText" type="DomString" dataSourceProperty="shortText" />
+    <SimpleProperty name="prdProposalItemMetaPosition" type="DomPrdPdaItemPosition" dataSourceProperty="prdProposalItemMetaPosition" />
+    <SimpleProperty name="useAssortmentSdoItem" type="DomBool" dataSourceProperty="useAssortmentSdoItem" />
+    <SimpleProperty name="useClosedListing" type="DomBool" dataSourceProperty="useClosedListing" />
+    <SimpleProperty name="priceEffect" type="DomSdoItemMetaPriceEffect" dataSourceProperty="priceEffect" />
+    <SimpleProperty name="saveZeroQuantity" type="DomBool" dataSourceProperty="saveZeroQuantity" />
+    <SimpleProperty name="calculationGroup" type="DomSdoCalculationGroup" dataSourceProperty="calculationGroup" />
+    <SimpleProperty name="modifyPresetQuantity" type="DomSdoModifyPresetQuantity" dataSourceProperty="modifyPresetQuantity" />
+    <SimpleProperty name="scanIncrementQuantity" type="DomInteger" dataSourceProperty="scanIncrementQuantity" />
+    <SimpleProperty name="uoMScanBehavior" type="DomSdoUoMScanBehavior" dataSourceProperty="uoMScanBehavior" />
+    <SimpleProperty name="uoMScanDefaultUnit" type="DomSdoDefaultUnit" dataSourceProperty="uoMScanDefaultUnit" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>

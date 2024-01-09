@@ -1,0 +1,8 @@
+<ListObject name="LoBpaContextMenu" generateLoadMethod="false">
+  <DataSource name="DsLoBpaContextMenu" />
+  <Item objectClass="LiBpaContextMenu" />
+  <Methods>
+    <Method name="loadAsync" />
+    <Method name="createMenuItem" />
+  </Methods>
+</ListObject>

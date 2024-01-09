@@ -1,0 +1,18 @@
+<ValidationMessages name="BoUserDailyReportMessages" businessObject="BoUserDailyReport" schemaVersion="0.0.0.5">
+  <ValidationMessage name="CasUsrDailyReportWorkTimeFromGreaterThru" defaultMessage="Please enter a Work Time Thru, which is greater than or equal to Work Time From." comment="validates entered work times" />
+  <ValidationMessage name="CasUsrDailyReportUniquePerDay" defaultMessage="Only one daily report can be created per day." comment="validates there's only one report - if defined unique in template" />
+  <ValidationMessage name="CasUsrDailyReportPostDatingNotAllowed" defaultMessage="Daily Reports can only be created for the present or the past." comment="validates if report is created for the past - if defined in template" />
+  <ValidationMessage name="CasUsrDailyReportActivityDuration" defaultMessage="The total duration of all daily activities should be less than or equal to one day." comment="validates if total duration of all activities is more than one day" />
+  <ValidationMessage name="CasUsrDailyReportFillInAllValues" defaultMessage="Please fill in all values." comment="All fields need to be filled with values." />
+  <ValidationMessage name="CasUsrDailyReportNoOpenTimeCard" defaultMessage="A new time card cannot be created while an open time card exists." comment="validates new Time Card is not created if there is already a Time Card open." />
+  <ValidationMessage name="CasUsrTimeCardNoTimeOverlap" defaultMessage="Time Entry Overlap. New Time Entry cannot be created." comment="validates new Time entry." />
+  <ValidationMessage name="CasUsrTimeEntryInvalidData" defaultMessage="Please enter Time Thru/Date Thru greater than or equal to Time From/Date From." comment="validates edit Time entry." />
+  <ValidationMessage name="CasUsrTimeEntryEmptyReason" defaultMessage="Please enter a valid Reason Code for Time change." comment="validates edit Time entry." />
+  <ValidationMessage name="CasUsrTimeEntryOverlap" defaultMessage="Time information overlaps with existing data." comment="validates edit Time entry." />
+  <ValidationMessage name="CasUsrTimeEntryDSTInvalid" defaultMessage="Sorry Due to Daylight Saving Time change, the entered times are invalid. Time Entry cannot be changed." comment="validates edit Time entry." />
+  <ValidationMessage name="CasUsrTimeCardReleaseNoTimeOverlap" defaultMessage="Time Entry Overlap. Time Card cannot be released." comment="validates time entries on time card release" />
+  <ValidationMessage name="CasUsrTimeCardSaveNoTimeOverlap" defaultMessage="Time Entry Overlap between Entries #entry1# (#time1#) and #entry2# (#time2#). Time Card cannot be saved." comment="validates time entries on time card save" />
+  <ValidationMessage name="CasUsrTimeEntryEditNoTimeOverlap" defaultMessage="Time Entry Overlap between Entries #entry1# (#time1#) and #entry2# (#time2#). Time Entry cannot be edited." comment="validates time entries on time entry edit" />
+  <ValidationMessage name="CasUsrTimeEntryOutOfBounds" defaultMessage="Sorry the Time Entry #entry# (#time#) is outside working time." comment="validates time entries inside working hours" />
+  <ValidationMessage name="CasUsrTimeEntryOutOfBoundsReleaseActive" defaultMessage="Sorry the Time Entry #entry# (#time#) is outside working time. The Time Card cannot be released." comment="validates time entries inside working hours" />
+</ValidationMessages>

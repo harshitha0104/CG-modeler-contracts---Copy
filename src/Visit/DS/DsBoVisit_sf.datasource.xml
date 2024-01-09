@@ -1,0 +1,39 @@
+<DataSource name="DsBoVisit" backendSystem="sf" businessObjectClass="BoVisit" external="false" editableEntity="Visit" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Visit" column="Id" />
+    <Attribute name="name" table="Visit" column="Name" />
+    <Attribute name="instructionDescription" table="Visit" column="InstructionDescription" />
+    <Attribute name="plannedVisitStartTime" table="Visit" column="PlannedVisitStartTime" />
+    <Attribute name="plannedVisitEndTime" table="Visit" column="PlannedVisitEndTime" />
+    <Attribute name="ActualVisitStartTime" table="Visit" column="ActualVisitStartTime" />
+    <Attribute name="ActualVisitEndTime" table="Visit" column="ActualVisitEndTime" />
+    <Attribute name="status" table="Visit" column="Status" />
+    <Attribute name="statusRemarks" table="Visit" column="StatusRemarks" />
+    <Attribute name="visitPriority" table="Visit" column="VisitPriority" />
+    <Attribute name="accountId" table="Visit" column="AccountId" />
+    <DateTimeAttribute dateName="plannedStartDate" timeName="plannedStartTime" table="Visit" column="PlannedVisitStartTime" />
+    <DateTimeAttribute dateName="plannedEndDate" timeName="plannedEndTime" table="Visit" column="PlannedVisitEndTime" />
+    <DateTimeAttribute dateName="actualEndDate" timeName="actualEndTime" table="Visit" column="ActualVisitEndTime" />
+    <DateTimeAttribute dateName="actualStartDate" timeName="actualStartTime" table="Visit" column="ActualVisitStartTime" />
+    <Attribute name="visitor" table="user" column="Name" />
+    <Attribute name="storeId" table="Visit" column="PlaceId" />
+    <DerivedAttribute name="duration" value="'90'" />
+  </Attributes>
+  <Entities>
+    <Entity name="Visit" alias="" idAttribute="Id" />
+    <Entity name="User" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Visit.VisitorId" comparator="eq" rightSideType="Attribute" rightSideValue="User.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Visit.Id = #pKey#
+      ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

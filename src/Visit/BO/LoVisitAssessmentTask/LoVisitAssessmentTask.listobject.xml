@@ -1,0 +1,15 @@
+<ListObject name="LoVisitAssessmentTask" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoVisitAssessmentTask" />
+  <Item objectClass="LiVisitAssessmentTask" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="checkForIncompleteMandatoryTasks"/>
+  </Methods>
+</ListObject>

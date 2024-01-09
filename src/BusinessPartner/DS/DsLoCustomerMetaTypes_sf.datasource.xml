@@ -1,0 +1,24 @@
+<DataSource name="DsLoCustomerMetaTypes" backendSystem="sf" businessObjectClass="LoCustomerMetaTypes" external="false" editableEntity="Account_Template__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Template__c" column="Id" />
+    <Attribute name="text" table="Account_Template__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Template__c" alias="" />
+    <Entity name="RecordType" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Account_Template__c.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+          <Condition leftSideValue="RecordType.DeveloperName" comparator="eq" rightSideType="Parameter" rightSideValue="'Customer'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+ Account_Template__c.Active__c = '1'
+ ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Account_Template__c" attribute="Description_#Language#__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters />
+</DataSource>

@@ -1,0 +1,23 @@
+<BusinessObject name="BoUserDRAnnotation"  generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsBoUserDRAnnotation" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="language" type="DomLanguage" dataSourceProperty="language" />
+    <SimpleProperty name="text" type="DomLongText" dataSourceProperty="text" />
+    <SimpleProperty name="usage" type="DomTxtUsage" dataSourceProperty="usage" />
+    <SimpleProperty name="referencePKey" type="DomPKey" dataSourceProperty="referencePKey" />
+  </SimpleProperties>
+  <Methods>
+    <!-- Default methods -->
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="afterInitialize" />
+    <Method name="beforeInitialize" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="beforeCreateAsync" />
+  </Methods>
+</BusinessObject>

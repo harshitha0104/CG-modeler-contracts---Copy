@@ -1,0 +1,35 @@
+<DataSource name="DsLoBpaMetaRoleMetaRel" backendSystem="sf" objectClass="LoBpaMetaRoleMetaRel" businessObjectClass="LoBpaMetaRoleMetaRel" external="true" editableEntity="Account_Template__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="bpaMetaPKey" table="Account_Template__c" column="Id" />
+    <DerivedAttribute name="pKey" value="''" />
+    <DerivedAttribute name="bpaRoleMetaPKey" value="''" />
+    <DerivedAttribute name="bpaRoleMetaId" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[   
+
+			var bpaMetaPKey = "";
+
+			if(Utils.isDefined(jsonQuery.bpaMetaPKey)) {
+				bpaMetaPKey = Utils.convertForDBParam(jsonQuery.bpaMetaPKey, "DomPKey");
+			}
+
+			var sqlParams = {bpaMetaPKey};
+
+			var sqlStmt = "WITH split(word, str, offsep) AS ( ";
+			sqlStmt += "SELECT '', Initial_Roles__c ||';', 1 FROM Account_Template__c WHERE Account_Template__c.Id = #bpaMetaPKey# ";
+			sqlStmt += "UNION ALL SELECT ";
+			sqlStmt += "substr(str, 0, case when instr(str, ';') then instr(str, ';') else str end), ";
+			sqlStmt += "ltrim(substr(str, instr(str, ';')), '; '), ";
+			sqlStmt += "instr(str, ';') ";
+			sqlStmt += "FROM split ";
+			sqlStmt += "WHERE offsep ";
+			sqlStmt += ") SELECT word as bpaRoleMetaId, #bpaMetaPKey# as BpaMetaPKey, ' ' as BpaRoleMetaPKey FROM split WHERE trim(word)!='' ";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+	</Database>
+</DataSource>

@@ -1,0 +1,27 @@
+<ListItem name="LiHurdles">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="hurdleTitle" type="DomText" dataSourceProperty="hurdleTitle" />
+    <SimpleProperty name="booleanValue" type="DomBool" dataSourceProperty="booleanValue" />
+    <SimpleProperty name="numericValue" type="DomInteger" dataSourceProperty="numericValue" />
+    <SimpleProperty name="textValue" type="DomString" dataSourceProperty="textValue" />
+    <SimpleProperty name="dateValue" type="DomDate" dataSourceProperty="dateValue" />
+    <SimpleProperty name="classification" type="DomString" dataSourceProperty="classification" />
+    <SimpleProperty name="operator" type="DomString" dataSourceProperty="operator" />
+    <SimpleProperty name="rewardGroupId" type="DomPKey" dataSourceProperty="rewardGroupId" />
+    <SimpleProperty name="expressionFunction" type="DomString" dataSourceProperty="expressionFunction" />
+    <SimpleProperty name="expressionResultType" type="DomString" dataSourceProperty="expressionResultType" />
+    <SimpleProperty name="jobDefinitionTemplate" type="DomPKey" dataSourceProperty="jobDefinitionTemplate" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="allowsClassification" type="DomBool" dataSourceProperty="allowsClassification" />
+    <SimpleProperty name="promotionPKey" type="DomPKey" dataSourceProperty="promotionPKey" />
+    <SimpleProperty name="promotionRewardGroupTitle" type="DomText" dataSourceProperty="promotionRewardGroupTitle" />
+    <SimpleProperty name="sort" type="DomInteger" dataSourceProperty="sort" />
+    <SimpleProperty name="isFulfilled" type="DomBool" />
+    <SimpleProperty name="valueToFulfillHurdle" type="DomText" />
+    <SimpleProperty name="targetValue" type="DomText" />
+    <SimpleProperty name="calculatedValue" type="DomText" />
+    <SimpleProperty name="operation" type="DomText" dataSourceProperty="operation" />
+    <SimpleProperty name="hurdleType" type="DomText" dataSourceProperty="hurdleType" />
+  </SimpleProperties>
+</ListItem>

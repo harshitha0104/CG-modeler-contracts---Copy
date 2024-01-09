@@ -1,0 +1,13 @@
+<BusinessObject name="BoUnitConversion"  generateLoadMethod="true" generateCreateMethod="false">
+  <DataSource name="DsBoUnitConversion" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="productPKey" type="DomPKey" storable="false" dataSourceProperty="productPKey" />
+  </SimpleProperties>
+  <ListObjects>
+    <ListObject name="loUnitFactorForProduct" objectClass="LoUnitFactorForProduct" dataSourceProperty="productPKey" listProperty="productPKey" loadMode="LoadOnDemand" />
+  </ListObjects>
+  <Methods>
+    <Method name="createAsync" />
+  </Methods>
+</BusinessObject>

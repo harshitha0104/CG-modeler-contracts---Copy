@@ -1,0 +1,108 @@
+<UIDescription name="Call::AttachmentTagsFlyoutUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="Tags" defaultLabel="Tags" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="SystemTags">
+          <Bindings>
+            <Resource target="Title" type="Label" id="SystemTags" defaultLabel="System Tags" />
+          </Bindings>
+          <Merger name="Created" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Created" id="Created" />
+            </Bindings>
+            <DatePickerField name="CreationDate" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Creation Date" id="CreationDate" />
+                <Binding target="Value" binding="ProcessContext::attachmentTags.creationDate" bindingMode="ONE_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <TimePickerField name="CreationTime" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Creation Time" id="CreationTime" />
+                <Binding target="Value" binding="ProcessContext::attachmentTags.creationTime" bindingMode="ONE_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+          <Merger name="Location" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Location" id="Location" />
+            </Bindings>
+            <InputArea name="Latitude" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Latitude" defaultLabel="Latitude" />
+                <Binding target="Value" binding="ProcessContext::attachmentTags.latitude" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="Longitude" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Longitude" defaultLabel="Longitude" />
+                <Binding target="Value" binding="ProcessContext::attachmentTags.longitude" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </Merger>
+          <SelectionBox name="Deviation" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="Deviation" defaultLabel="Deviation" />
+              <Binding target="DataSource" toggleId="ClbLocationDeviation" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::attachmentTags.locationDeviation" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+        </GroupElement>
+        <GroupElement name="UserDefined">
+          <Bindings>
+            <Resource target="Title" type="Label" id="UserDefined" defaultLabel="Content" />
+          </Bindings>
+          <InputArea name="Note" editable="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="NoteId" defaultLabel="Note" />
+              <Binding target="Value" binding="ProcessContext::attachmentTags.subjectTag" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <SelectionBox name="Type" editable="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="Type" defaultLabel="Type" />
+              <Binding target="DataSource" toggleId="ClbTypeTag" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::attachmentTags.typeTag" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <SelectionBox name="Area" editable="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="Area" defaultLabel="Area" />
+              <Binding target="DataSource" toggleId="ClbAreaTag" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::attachmentTags.areaTag" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <CheckBox name="Competitor" editable="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="CompetitorId" defaultLabel="Competitor" />
+              <Binding target="checkedValue" binding="ProcessContext::attachmentTags.competitorTag" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

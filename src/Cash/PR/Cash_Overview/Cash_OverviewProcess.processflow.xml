@@ -1,0 +1,241 @@
+<Process name="Cash::OverviewProcess" defaultAction="GetCashList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CashList" type="LoCashOverview" />
+        <Declaration name="ContextMenuList" type="LoCashOverviewContextMenu" />
+        <Declaration name="CashDocumentMetaTypeList" type="LoCashDocumentMetaType" />
+        <Declaration name="CashMain" type="BoCash" />
+        <Declaration name="CreateNew_CashDocumentMetaPKey" type="DomPKey" />
+        <Declaration name="CashPKey" type="DomPKey" />
+        <Declaration name="currentTourStatus" type="String" />
+        <Declaration name="EtpWarehousePKey" type="DomPKey" />
+        <Declaration name="ActiveObjectRelations" type="LoTmgTourObjectRelations" />
+      </Declarations>
+      <Parameters>
+        <Input name="currentTourPKey" type="DomPKey" />
+        <Input name="navigationMode" type="DomString" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="LOAD" name="GetCashList" type="LoCashOverview">
+        <Parameters>
+          <Input name="tmgMainPKey" value="ProcessContext::currentTourPKey" />
+        </Parameters>
+        <Return name="ProcessContext::CashList" />
+        <TransitionTo action="LoadTmgTourObjectRelations" />
+      </Action>
+      <!-- Directly load following infos because needed for button visibility -->
+      <Action name="LoadTmgTourObjectRelations" actionType="LOAD" type="LoTmgTourObjectRelations">
+        <Parameters>
+          <Input name="tmgMainPKey" value="ProcessContext::currentTourPKey" />
+        </Parameters>
+        <Return name="ProcessContext::ActiveObjectRelations" />
+        <TransitionTo action="ShowCashOverview" />
+      </Action>
+      <!-- Commented to handle visibility of checkout/checkin buttons "LoCashOverview" loaded in entry action		
+      <Action name="GetCashList_Decision" actionType="DECISION" parameter="ApplicationContext::currentTourStatus">
+        <Case value="Running" action="GetCashList" />
+        <CaseElse action="ShowCashOverview" />
+        <CaseEmpty action="ShowCashOverview" />
+      </Action>      
+   -->
+      <Action actionType="VIEW" name="ShowCashOverview">
+        <UIDescription>Cash::OverviewUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="LoadBO" />
+          <!-- Context menu events -->
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+          <Event name="createNewCashCheckOut" action="GetActiveCheckOutDocument" />
+          <Event name="createNewCashCheckIn" action="GetActiveCheckInDocument" />
+          <Event name="createNewDocument" action="GetCashDocumentMetaTypes" />
+        </Events>
+      </Action>
+      <Action actionType="LOAD" name="GetContextMenu" type="LoCashOverviewContextMenu">
+        <Parameters>
+          <Input name="phase" value="Event.phase" />
+        </Parameters>
+        <Return name="ProcessContext::ContextMenuList" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Cancel" action="Cancel" />
+        <CaseElse action="ShowCashOverview" />
+      </Action>
+      <Action name="Cancel" actionType="PROCESS" process="Cash::CancelWizardProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="GetCashList" />
+      </Action>
+      <!-- Check In Decision -->
+      <Action actionType="LOGIC" name="GetActiveCheckInDocument" call="ProcessContext::CashList.getOpenCheckInDocument">
+        <Return name="ProcessContext::CashPkey" />
+        <TransitionTo action="CreateOrSelectDecisionCheckIn" />
+      </Action>
+      <Action name="CreateOrSelectDecisionCheckIn" actionType="DECISION" parameter="ProcessContext::CashPkey">
+        <CaseEmpty action="GetCashCheckInDocumentMetaTypes" />
+        <CaseElse action="OpenItem" />
+      </Action>
+      <!--Load temaplates for Check In -->
+      <Action name="GetCashCheckInDocumentMetaTypes" actionType="LOAD" type="LoCashDocumentMetaType">
+        <Parameters>
+          <Input name="tmgTourObjectRelUsage" type="Literal" value="'SdoMeta.CashCheckIn'" />
+          <Input name="additionalCondition" type="Literal" value="AND TmgTourObjectRel.UsedForEndOfDay = #used#" />
+        </Parameters>
+        <Return name="ProcessContext::CashDocumentMetaTypeList" />
+        <TransitionTo action="CheckMultipleCheckInTemplateAvailable" />
+      </Action>
+      <!--Check for avaialble temaplates for Check In -->
+      <Action actionType="LOGIC" name="CheckMultipleCheckInTemplateAvailable" call="ProcessContext::CashList.isMultipleCheckinTemplateAvailable">
+        <Parameters>
+          <Input name="templates" type="LoCashDocumentMetaType" value="ProcessContext::CashDocumentMetaTypeList" />
+        </Parameters>
+        <Return name="ProcessContext::IsMultipleTemplatesAvailable" />
+        <TransitionTo action="CreateNewCashCheckInDocument_Decision" />
+      </Action>
+      <!--Multiple templates available - Show fly out -->
+      <!--Single template available - Dont show the fly out and add the item directly-->
+      <Action name="CreateNewCashCheckInDocument_Decision" actionType="DECISION" parameter="ProcessContext::IsMultipleTemplatesAvailable">
+        <Case value="1" action="CreateNewCashCheckInDocument" />
+        <CaseElse action="setFirstCheckinItem" />
+      </Action>
+      <Action actionType="LOGIC" name="setFirstCheckinItem" call="ProcessContext::CashDocumentMetaTypeList.getFirstItemPKey">
+        <Return name="ProcessContext::CreateNew_CashDocumentMetaPKey" />
+        <TransitionTo action="SetWarehouseOfRunningTour_ForCheckIn" />
+      </Action>
+      <Action actionType="LOGIC" name="SetWarehouseOfRunningTour_ForCheckIn" call="Utils.identity">
+        <Parameters>
+          <Input name="pKey" value="ApplicationContext::CurrentTour.startEtpWarehousePKey" />
+        </Parameters>
+        <Return name="ProcessContext::EtpWarehousePKey" />
+        <TransitionTo action="CreateCashFromCashOverview" />
+      </Action>
+      <!-- Check Out Decision -->
+      <Action actionType="LOGIC" name="GetActiveCheckOutDocument" call="ProcessContext::CashList.getOpenCheckOutDocument">
+        <Return name="ProcessContext::CashPkey" />
+        <TransitionTo action="CreateOrSelectDecision" />
+      </Action>
+      <Action name="CreateOrSelectDecision" actionType="DECISION" parameter="ProcessContext::CashPkey">
+        <CaseEmpty action="GetCashCheckOutDocumentMetaTypes" />
+        <CaseElse action="OpenItem" />
+      </Action>
+      <Action name="OpenItem" actionType="PROCESS" process="Cash::LoadProcess">
+        <Parameters>
+          <Input name="MainPKey" value="ProcessContext::CashPkey" />
+        </Parameters>
+        <TransitionTo action="GetCashList" />
+      </Action>
+      <!--Load temaplates for Check Out -->
+      <Action name="GetCashCheckOutDocumentMetaTypes" actionType="LOAD" type="LoCashDocumentMetaType">
+        <Parameters>
+          <Input name="tmgTourObjectRelUsage" type="Literal" value="'SdoMeta.CashCheckOut'" />
+          <Input name="additionalCondition" type="Literal" value="AND TmgTourObjectRel.UsedForStartOfDay = #used#" />
+        </Parameters>
+        <Return name="ProcessContext::CashDocumentMetaTypeList" />
+        <TransitionTo action="CheckMultipleCheckoutTemplateAvailable" />
+      </Action>
+      <!--Check for avaialble temaplates for Check Out -->
+      <Action actionType="LOGIC" name="CheckMultipleCheckoutTemplateAvailable" call="ProcessContext::CashList.isMultipleCheckoutTemplateAvailable">
+        <Parameters>
+          <Input name="templates" type="LoCashDocumentMetaType" value="ProcessContext::CashDocumentMetaTypeList" />
+        </Parameters>
+        <Return name="ProcessContext::IsMultipleTemplatesAvailable" />
+        <TransitionTo action="CreateNewCashCheckOutDocument_Decision" />
+      </Action>
+      <!--Multiple templates available - Show fly out -->
+      <!--Single template available - Dont show the fly out and add the item directly-->
+      <Action name="CreateNewCashCheckOutDocument_Decision" actionType="DECISION" parameter="ProcessContext::IsMultipleTemplatesAvailable">
+        <Case value="1" action="CreateNewCashCheckOutDocument" />
+        <CaseElse action="setFirstCheckoutItem" />
+      </Action>
+      <Action actionType="LOGIC" name="setFirstCheckoutItem" call="ProcessContext::CashDocumentMetaTypeList.getFirstItemPKey">
+        <Return name="ProcessContext::CreateNew_CashDocumentMetaPKey" />
+        <TransitionTo action="SetWarehouseOfRunningTour_ForCheckout" />
+      </Action>
+      <Action actionType="LOGIC" name="SetWarehouseOfRunningTour_ForCheckout" call="Utils.identity">
+        <Parameters>
+          <Input name="pKey" value="ApplicationContext::CurrentTour.startEtpWarehousePKey" />
+        </Parameters>
+        <Return name="ProcessContext::EtpWarehousePKey" />
+        <TransitionTo action="CreateCashFromCashOverview" />
+      </Action>
+      <!-- WIZARD -->
+      <Action name="CreateNewCashCheckOutDocument" actionType="PROCESS" process="Cash::CreateNewWizardProcess">
+        <Parameters>
+          <Input name="TemplateList" value="ProcessContext::CashDocumentMetaTypeList" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CreateNew_CashDocumentMetaPKey" value="cashDocumentMetaPKey" />
+          <Return name="ProcessContext::EtpWarehousePKey" value="etpWarehousePKey" />
+          <Return name="ProcessContext::ButtonPressed" value="buttonPressed" />
+        </ReturnValues>
+        <TransitionTo action="CreateNewWizard_Result_Decision" />
+      </Action>
+      <Action name="CreateNewCashCheckInDocument" actionType="PROCESS" process="Cash::CreateNewWizardProcess">
+        <Parameters>
+          <Input name="TemplateList" value="ProcessContext::CashDocumentMetaTypeList" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CreateNew_CashDocumentMetaPKey" value="cashDocumentMetaPKey" />
+          <Return name="ProcessContext::EtpWarehousePKey" value="etpWarehousePKey" />
+          <Return name="ProcessContext::ButtonPressed" value="buttonPressed" />
+        </ReturnValues>
+        <TransitionTo action="CreateNewWizard_Result_Decision" />
+      </Action>
+      <Action name="CreateNewDocument" actionType="PROCESS" process="Cash::CreateNewWizardProcess">
+        <Parameters>
+          <Input name="TemplateList" value="ProcessContext::CashDocumentMetaTypeList" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CreateNew_CashDocumentMetaPKey" value="cashDocumentMetaPKey" />
+          <Return name="ProcessContext::EtpWarehousePKey" value="etpWarehousePKey" />
+          <Return name="ProcessContext::ButtonPressed" value="buttonPressed" />
+        </ReturnValues>
+        <TransitionTo action="CreateNewWizard_Result_Decision" />
+      </Action>
+      <!-- DESICIONS AFTER CREATE WIZARD -->
+      <Action name="CreateNewWizard_Result_Decision" actionType="DECISION" parameter="ProcessContext::ButtonPressed">
+        <Case value="createDocument" action="CreateCashFromCashOverview" />
+        <CaseElse action="ShowCashOverview" />
+      </Action>
+      <!-- CREATE -->
+      <Action actionType="PROCESS" name="CreateCashFromCashOverview" process="Cash::CreateNewProcess">
+        <Parameters>
+          <Input name="CashDocumentMetaPKey" value="ProcessContext::CreateNew_CashDocumentMetaPKey" />
+          <Input name="EtpWarehousePKey" value="ProcessContext::EtpWarehousePKey" />
+        </Parameters>
+        <TransitionTo action="GetCashList" />
+      </Action>
+      <!-- CANCEL -->
+      <Action name="CancelCash" actionType="PROCESS" process="Cash::CancelWizardProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+          <Input name="SdoMetaPKey" value="Event.sdoMetaPKey" />
+        </Parameters>
+        <TransitionTo action="GetCashList" />
+      </Action>
+      <Action name="LoadBO" actionType="PROCESS" process="Cash::LoadProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="GetCashList" />
+      </Action>
+      <!-- Create new document - START -->
+      <!--Load cash document temaplates -->
+      <Action name="GetCashDocumentMetaTypes" actionType="LOAD" type="LoCashDocumentMetaType">
+        <Parameters>
+          <Input name="tmgTourObjectRelUsage" type="Literal" value="'SdoMeta.CashCheckOut','SdoMeta.CashCheckIn','SdoMeta.Expenses'" />
+          <Input name="additionalCondition" type="Literal" value="AND TmgTourObjectRel.UsedForStartOfDay = #notUsed# AND TmgTourObjectRel.UsedForEndOfDay = #notUsed#" />
+        </Parameters>
+        <Return name="ProcessContext::CashDocumentMetaTypeList" />
+        <TransitionTo action="CreateNewDocument" />
+      </Action>
+      <!-- Create new document - END -->
+      <Action actionType="END" name="End" />
+    </Actions>
+  </Body>
+</Process>

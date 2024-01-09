@@ -1,0 +1,67 @@
+<BusinessObject name="BoVisit" schemaVersion="1.1" generateLoadMethod="true">
+  <DataSource name="DsBoVisit"/>
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" id="true" dataSourceProperty="pKey"/>
+    <SimpleProperty name="actualStartDateTime" type="DomDateTime" id="false" dataSourceProperty="ActualVisitStartTime"/>
+    <SimpleProperty name="actualEndDateTime" type="DomDateTime" id="false" dataSourceProperty="ActualVisitEndTime"/>
+    <SimpleProperty name="actualStartDate" type="DomDate" id="false"/>
+    <SimpleProperty name="actualStartTime" type="DomTime" id="false"/>
+    <SimpleProperty name="actualStartTimeUI" type="DomText" id="false"/>
+    <SimpleProperty name="actualEndDate" type="DomDate" id="false"/>
+    <SimpleProperty name="actualEndTime" type="DomTime" id="false"/>
+    <SimpleProperty name="actualEndTimeUI" type="DomText" id="false"/>
+    <SimpleProperty name="instructionDescription" type="DomText" dataSourceProperty="instructionDescription"/>
+    <SimpleProperty name="name" type="DomText" dataSourceProperty="name"/>
+    <SimpleProperty name="plannedStartDateTime" type="DomDateTime" id="false" dataSourceProperty="plannedVisitStartTime"/>
+    <SimpleProperty name="plannedEndDateTime" type="DomDateTime" id="false" dataSourceProperty="plannedVisitEndTime"/>
+    <SimpleProperty name="plannedStartDate" type="DomDate" id="false"/>
+    <SimpleProperty name="plannedStartTime" type="DomTime" id="false"/>
+    <SimpleProperty name="plannedEndDate" type="DomDate" id="false"/>
+    <SimpleProperty name="plannedEndTime" type="DomTime" id="false"/>
+    <SimpleProperty name="status" type="DomVisitStatus" id="false" dataSourceProperty="status"/>
+    <SimpleProperty name="statusRemarks" type="DomText" id="false" dataSourceProperty="statusRemarks"/>
+    <SimpleProperty name="storeId" type="DomPKey" id="false" dataSourceProperty="storeId" blobPKeyField="" blobTable=""/>
+    <SimpleProperty name="accountId" type="DomPKey" id="false" dataSourceProperty="accountId"/>
+    <SimpleProperty name="visitor" type="DomText" id="false" dataSourceProperty="visitor"/>
+    <SimpleProperty name="visitPriority" type="DomVisitPriority" id="false" dataSourceProperty="visitPriority"/>
+    <SimpleProperty name="duration" type="DomInteger" id="false" dataSourceProperty="duration"/>
+  </SimpleProperties>
+  <ObjectLookups/>
+  <NestedObjects/>
+  <ListObjects>
+    <ListObject name="loAssessmentTasks" objectClass="LoVisitAssessmentTask" dataSourceProperty="pKey" listProperty="visitId"/>
+  </ListObjects>
+  <Methods>
+    <Method name="afterCreateAsync"/>
+    <Method name="afterDoValidateAsync"/>
+    <Method name="afterInitialize"/>
+    <Method name="afterLoadAsync"/>
+    <Method name="afterSaveAsync"/>
+    <Method name="beforeCreateAsync"/>
+    <Method name="beforeDoValidateAsync"/>
+    <Method name="beforeInitialize"/>
+    <Method name="beforeLoadAsync"/>
+    <Method name="beforeSaveAsync"/>
+    <Method name="createAsync"/>
+    <Method name="endVisit"/>
+    <Method name="getCockpitMenuVisibility"/>
+    <Method name="isEndVisitButtonVisible"/>
+    <Method name="isStartVisitButtonVisible"/>
+    <Method name="loadAsync"/>
+    <Method name="saveAsync"/>
+    <Method name="setEARights"/>
+    <Method name="startVisit"/>
+    <Method name="onPropertyChanged"/>
+    <Method name="abandonVisit"/>
+    <Method name="reschedule"/>
+    <Method name="loadTasksBasedOnStatus"/>
+    <Method name="getCallDuration"/>
+    <Method name="getCameraSettings"/>
+    <Method name="capturePicture"/>
+    <Method name="validateLengthOfFields"/>
+    <Method name="validateOperatingHours"/>
+  </Methods>
+  <Validations>
+    <Validation name="validateLengthOfFields"/>
+  </Validations>
+</BusinessObject>

@@ -1,0 +1,7 @@
+<ListObject name="LoSurveyColumns" generateLoadMethod="false">
+  <DataSource name="DsLoSurveyColumns" />
+  <Item objectClass="LiSurveyColumn" />
+  <Methods>
+    <Method name="loadAsync" />
+  </Methods>
+</ListObject>

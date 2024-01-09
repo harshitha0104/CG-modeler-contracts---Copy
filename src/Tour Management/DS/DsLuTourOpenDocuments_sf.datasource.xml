@@ -1,0 +1,36 @@
+<Datasource name="DsLuTourOpenDocuments" backendSystem="sf" objectClass="LuTourOpenDocuments" businessObjectClass="LuTourOpenDocuments" readOnly="true" external="true" editableEntity="Order__c" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+      
+      var tmgMainPKey = "";
+	  var sdoMetaPKeys = [];
+      if(Utils.isDefined(jsonQuery.TmgMainPKey)){
+      	tmgMainPKey = Utils.convertForDBParam(jsonQuery.TmgMainPKey, "DomPKey");
+      }
+      if(Utils.isDefined(jsonQuery.SdoMetaPKeys)){
+      	sdoMetaPKeys = jsonQuery.SdoMetaPKeys;
+      }
+      var sqlParams = {tmgMainPKey};
+      var sqlStmt1 = "SELECT (SELECT COUNT(*) FROM Order__c INNER JOIN Order_Template__c ON Order_Template__c.Id=Order__c.Order_Template__c WHERE Order__c.Phase__c = 'Initial' AND Order__c.Tour__c=#tmgMainPKey#) AS openRelatedDocuments,";
+      sqlStmt1 += "(SELECT COUNT(*) FROM Order__c INNER JOIN Order_Template__c ON Order_Template__c.Id=Order__c.Order_Template__c WHERE Order__c.Phase__c = 'Released' AND Order_Template__c.Document_Type__c = 'CashCheckIn' AND Order__c.Tour__c=#tmgMainPKey#) AS doneCashCheckInDocuments,";
+	  sqlStmt1 += "(SELECT COUNT(*) FROM Order__c INNER JOIN Order_Template__c ON Order_Template__c.Id=Order__c.Order_Template__c WHERE Order__c.Phase__c = 'Released' AND Order__c.Order_Template__c IN (";
+
+	  //sdoMetaPKeys
+	  sdoMetaPKeys = Utils.getListParams(sdoMetaPKeys); 
+
+	  var sqlStmt2 =") AND Order__c.Tour__c=#tmgMainPKey#) AS doneProductCheckIns, ";
+      sqlStmt2 += "(SELECT COUNT(*) FROM Order__c WHERE Order__c.Phase__c = 'Released' AND Order__c.Document_Type__c = 'TruckIvcTransferOutward') AS openFakeInwardDocuments, ";
+	  sqlStmt2 += "(SELECT COUNT(*) FROM Order__c WHERE Order__c.Phase__c = 'Canceled' AND Order__c.Document_Type__c = 'TruckIvcTransferInward') AS openFakeRejectedDocuments ";
+     
+ 	  var sqlStmt1Result = Utils.replaceMacrosParam(sqlStmt1, sqlParams);
+	  var sqlStmt2Result = Utils.replaceMacrosParam(sqlStmt2, sqlParams);
+
+			
+	  var finalSql = sqlStmt1Result.sql + sdoMetaPKeys.sql + sqlStmt2Result.sql;
+	  var finalParams = sqlStmt1Result.params.concat(sdoMetaPKeys.params).concat(sqlStmt2Result.params);
+
+	  return {sql: finalSql, params: finalParams};
+      
+		]]></Load>
+  </Database>
+</Datasource>

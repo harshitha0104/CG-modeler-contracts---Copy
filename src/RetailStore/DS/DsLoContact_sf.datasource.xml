@@ -1,0 +1,56 @@
+<DataSource name="DsLoContact" backendSystem="sf" businessObjectClass="LoContact" external="true" editableEntity="Contact" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contact" column="Id" />
+    <Attribute name="name" table="Contact" column="Name" />
+    <Attribute name="title" table="Contact" column="Title" />
+    <Attribute name="phone" table="Contact" column="Phone" />
+    <Attribute name="mobilePhone" table="Contact" column="MobilePhone" />
+    <Attribute name="department" table="Contact" column="Department" />
+    <DerivedAttribute name="contactName" value="" />
+    <DerivedAttribute name="mediaPath" value="' '" />
+    <DerivedAttribute name="fileType" value="' '" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+     var accountId = "";
+
+    if(Utils.isDefined(jsonQuery.accountId)){
+     accountId =  Utils.convertForDBParam(jsonQuery.accountId, "DomPKey");
+    }
+
+   var sqlParams = {accountId};
+   var sqlStmt = "";
+   sqlStmt += "SELECT pKey ";
+   sqlStmt += ",name ";
+   sqlStmt += ",title ";
+   sqlStmt += ",phone ";
+   sqlStmt += ",mobilePhone ";
+   sqlStmt += ",department ";
+   sqlStmt += ",contactName ";
+   sqlStmt += ",fileType ";
+   sqlStmt += ",mediaPath ";
+   sqlStmt += "FROM ";
+   sqlStmt += "(SELECT Contact.Id as pKey ";
+   sqlStmt += ",Contact.Name as name ";
+   sqlStmt += ",Contact.Title as title";
+   sqlStmt += ",Contact.Phone as phone ";
+   sqlStmt += ",Contact.MobilePhone as mobilePhone ";
+   sqlStmt += ",Contact.Department as department ";
+   sqlStmt += ",Contact.Salutation || ' ' || Contact.Name as contactName ";
+   sqlStmt += ",replace( SF_File.PathOnClient, rtrim(SF_File.PathOnClient,replace(SF_File.PathOnClient, '.', '')),'') as fileType ";
+   sqlStmt += ",CASE SF_File.Usage__c WHEN 'Icon' THEN SF_File.VersionData ELSE ' ' END as mediaPath ";
+   sqlStmt += "FROM Contact ";
+   sqlStmt += "LEFT OUTER JOIN SF_FileLink ON SF_FileLink.ParentId = Contact.Id ";
+   sqlStmt += "AND SF_FileLink.IsDeleted <> '1' ";
+   sqlStmt += "LEFT OUTER JOIN SF_File ON SF_FileLink.FileId = SF_File.Id ";
+   sqlStmt += "AND SF_File.Usage__c = 'Icon' ";
+   sqlStmt += "AND SF_File.IsDeleted <> '1' ";
+   sqlStmt += "WHERE 1=1 ";
+   sqlStmt += "AND Contact.AccountId = #accountId# ";
+   sqlStmt += "AND Contact.IsDeleted <> '1' ";
+   sqlStmt += "ORDER BY Contact.Id AND SF_File.CreatedDate) ";
+   sqlStmt += "GROUP BY pKey";
+   return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+  ]]></Load>
+  </Database>
+</DataSource>

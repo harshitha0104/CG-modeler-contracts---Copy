@@ -1,0 +1,7 @@
+<ListItem name="LiCndCpReadBpaSets">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="PKey" />
+    <SimpleProperty name="BpaCustomerPKey" type="DomPKey" storable="false" dataSourceProperty="BpaCustomerPKey" />
+    <SimpleProperty name="BpaSetPKey" type="DomPKey" storable="false" dataSourceProperty="BpaSetPKey" />
+  </SimpleProperties>
+</ListItem>

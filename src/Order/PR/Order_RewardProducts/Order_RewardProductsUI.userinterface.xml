@@ -1,0 +1,34 @@
+<UIDescription name="Order::RewardProductsUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" defaultLabel="Choose Free Products" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="rewardProductsList" numberpadDefaultField="quantity" showPreviousNextEnter="true" dataSource="ProcessContext::ValidationBo.loRewardProducts.items[]">
+          <TextBar name="TextBar">
+            <Bindings>
+              <Binding target="text" type="Text" binding="ProcessContext::listTitle" bindingMode="ONE_WAY" />
+            </Bindings>
+          </TextBar>
+          <Items name="Items" itemPattern="RewardProductsItem">
+            <ItemListLayout>
+              <Default>
+                <Col width="0.2em" layoutType="Image" bindingId="rewardImage" />
+                <Col width="9em" layoutType="itemName" bindingId="productName" />
+                <Col width="9em" bindingId="quantity" />
+              </Default>
+            </ItemListLayout>
+            <Bindings>
+              <Resource target="rewardImage" type="Image" id="RewardProduct" defaultImage="RewardProduct" />
+              <Binding target="productName" type="Text" binding=".productName" bindingMode="ONE_WAY" />
+              <Binding target="quantity" type="Stepper" minValue="0" maxValue="9999" minBinding="minStepperValue" binding=".quantity" formatV2="4.0" bindingMode="TWO_WAY" />
+            </Bindings>
+          </Items>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

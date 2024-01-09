@@ -1,0 +1,16 @@
+<BusinessObject name="BoUserDocMeta"  generateLoadMethod="true" OERReference="UsrDocMeta">
+  <DataSource name="DsBoUserDocMeta" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="type" type="DomText" dataSourceProperty="type" />
+    <SimpleProperty name="uniquePerDay" type="DomBool" dataSourceProperty="uniquePerDay" />
+    <SimpleProperty name="allowPostdating" type="DomBool" dataSourceProperty="allowPostdating" />
+    <SimpleProperty name="mobilityRelevant" type="DomBool" dataSourceProperty="mobilityRelevant" />
+    <SimpleProperty name="uiGroup" type="DomId" dataSourceProperty="uiGroup" />
+    <SimpleProperty name="breakUsrTimeEntryMetaPKey" type="DomPKey" dataSourceProperty="breakUsrTimeEntryMetaPKey" />
+    <SimpleProperty name="breakUsrTimeEntryText" type="DomText" dataSourceProperty="breakUsrTimeEntryText" />
+    <SimpleProperty name="workUsrTimeEntryMetaPKey" type="DomPKey" dataSourceProperty="workUsrTimeEntryMetaPKey" />
+  </SimpleProperties>
+  <Methods></Methods>
+</BusinessObject>

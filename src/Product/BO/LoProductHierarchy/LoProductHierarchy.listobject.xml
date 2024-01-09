@@ -1,0 +1,12 @@
+<ListObject name="LoProductHierarchy" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoProductHierarchy" />
+  <Item objectClass="LiProductHierarchy" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+  </Methods>
+</ListObject>

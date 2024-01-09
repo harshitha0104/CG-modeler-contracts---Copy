@@ -1,0 +1,29 @@
+<ListObject name="LoProductForAdd" filter="InDatabase" generateLoadMethod="false" >
+  <DataSource name="DsLoProductForAdd" />
+  <Item objectClass="LiProductForAdd" />
+  <Methods>
+    <Method name="loadAsync" />
+    <Method name="getDSForProducts" />
+    <Method name="getDSForCustomerAssortment" />
+    <Method name="getDSForSdoAssortment" />
+    <Method name="getDSForAuthorizationList" />
+    <Method name="getDSForPromotion" />
+    <Method name="getMEParams" />
+    <Method name="setBpaAssortmentFilter" />
+    <Method name="setClosedListingFilter" />
+    <Method name="buildQueryCondition" />
+    <Method name="postLoadItemUpdates" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoProductForAdd">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="ProductForSearch_prdId" property="prdId" type="Text" />
+        <AdvancedSearchAttribute label="ProductForSearch_text1" property="text1" type="Text" />
+        <AdvancedSearchAttribute label="ProductForSearch_category" property="category" toggleId="PrdCategory" type="Selection" />
+        <AdvancedSearchAttribute label="ProductForSearch_eAN" property="eAN" type="Text" />
+        <AdvancedSearchAttribute label="ProductForSearch_prdType" property="prdType" toggleId="PrdType" type="Selection" />
+        <AdvancedSearchAttribute label="ProductForSearch_foreignProduct" property="foreignProduct" type="Boolean" defaultValue="0" defaultOperator="EQ" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

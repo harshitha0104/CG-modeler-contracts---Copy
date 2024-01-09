@@ -1,0 +1,26 @@
+<BusinessObject name="BoFastOrderValidation" schemaVersion="1.1">
+  <DataSource name="DsBoFastOrderValidation" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects>
+    <ListObject name="LoFastOrderProducts" objectClass="LoFastOrderProducts" dataSourceProperty="empty" listProperty="empty" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+  </Methods>
+  <Validations>
+    <Validation name="validateNotEmpty" />
+  </Validations>
+</BusinessObject>

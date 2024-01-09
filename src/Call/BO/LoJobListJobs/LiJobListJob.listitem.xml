@@ -1,0 +1,10 @@
+<ListItem name="LiJobListJob">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="jobDefinitionPKey" type="DomPKey" storable="false" dataSourceProperty="jobDefinitionPKey" />
+    <SimpleProperty name="jobListPKey" type="DomPKey" storable="false" dataSourceProperty="jobListPKey" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" storable="false" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="posBpaMainPKey" type="DomPKey" storable="false" dataSourceProperty="posBpaMainPKey" />
+    <SimpleProperty name="clbMainPKey" type="DomPKey" dataSourceProperty="clbKey" />
+  </SimpleProperties>
+</ListItem>

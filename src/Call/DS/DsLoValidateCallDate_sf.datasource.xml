@@ -1,0 +1,23 @@
+<DataSource name="DsLoValidateCallDate" backendSystem="sf" businessObjectClass="LoValidateCallDate" distinct="false" readOnly="true" external="false" editableEntity="Account_Opening_Hours__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="timeFrom" table="Account_Opening_Hours__c" column="Time_From__c" />
+    <Attribute name="timeThru" table="Account_Opening_Hours__c" column="Time_Thru__c" />
+    <Attribute name="monday" table="Account_Opening_Hours__c" column="Mon__c" />
+    <Attribute name="tuesday" table="Account_Opening_Hours__c" column="Tue__c" />
+    <Attribute name="wednesday" table="Account_Opening_Hours__c" column="Wed__c" />
+    <Attribute name="thursday" table="Account_Opening_Hours__c" column="Thu__c" />
+    <Attribute name="friday" table="Account_Opening_Hours__c" column="Fri__c" />
+    <Attribute name="saturday" table="Account_Opening_Hours__c" column="Sat__c" />
+    <Attribute name="sunday" table="Account_Opening_Hours__c" column="Sun__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Opening_Hours__c" alias="" />
+  </Entities>
+  <QueryCondition><![CDATA[
+			Account_Opening_Hours__c.Account__c = #customerPKey#
+		]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="customerPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

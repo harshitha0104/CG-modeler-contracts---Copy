@@ -1,0 +1,30 @@
+<UIDescription name="Cash::CancelWizardUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="CashCancelTitleId" defaultLabel="Cancel" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="CashMetaList" dataSource="ProcessContext::CancelReasons.Items[]">
+          <Items name="Items" itemPattern="CashCancelReasonItem">
+            <ItemListLayout>
+              <Col layoutType="itemTitle" bindingId="Text" />
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="Text" type="Text" binding=".reasonCode.text" bindingMode="ONE_TIME" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="reasonCode" value=".reasonCode" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

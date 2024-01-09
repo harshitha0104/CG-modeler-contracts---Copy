@@ -1,0 +1,11 @@
+<LookupObject name="LuCustomerTradeOrg">
+  <DataSource name="DsLuCustomerTradeOrg" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="name" type="DomBpaName" dataSourceProperty="name" />
+    <SimpleProperty name="name2" type="DomBpaName" dataSourceProperty="name2" />
+    <SimpleProperty name="city" type="DomCity" dataSourceProperty="city" />
+    <SimpleProperty name="id" type="DomId" dataSourceProperty="id" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>

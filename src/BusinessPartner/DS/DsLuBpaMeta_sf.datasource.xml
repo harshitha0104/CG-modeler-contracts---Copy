@@ -1,0 +1,16 @@
+<DataSource name="DsLuBpaMeta" backendSystem="sf" businessObjectClass="LuBpaMeta" external="false" editableEntity="Account_Template__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Template__c" column="Id" />
+    <Attribute name="text" table="Account_Template__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+       Account_Template__c.Name = #id# 
+        ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="id" type="TEXT" />
+  </Parameters>
+</DataSource>

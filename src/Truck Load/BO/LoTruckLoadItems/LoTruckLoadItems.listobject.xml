@@ -1,0 +1,23 @@
+<ListObject name="LoTruckLoadItems" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoTruckLoadItems" />
+  <Item objectClass="LiTruckLoadItems" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="addItem" />
+    <Method name="setEARights" />
+    <Method name="incrementQuantityByScan" />
+    <Method name="addCheckInItem" />
+    <Method name="findAllMissingUoMForItem" />
+    <Method name="addMissingUoMsToItem" />
+    <Method name="getFirstOrderUnitItemForMainItem" />
+    <Method name="getUnitOfMeasureItemsForMainItem" />
+    <Method name="getOrderUnitItems" />  
+  </Methods>
+</ListObject>

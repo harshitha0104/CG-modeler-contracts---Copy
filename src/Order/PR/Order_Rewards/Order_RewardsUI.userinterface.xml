@@ -1,0 +1,58 @@
+<UIDescription name="Order::RewardsUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" defaultLabel="Rewards" bindingMode="ONE_TIME" />
+      </Bindings>
+      <MenuItems />
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <EnhancedDecisionList name="rewardList">
+          <Bindings>
+            <Binding target="Title" type="Text" binding="ProcessContext::PromotionSlogan" />
+            <List target="Decisions" dataSource="ProcessContext::hurdleEvaluationHelper.loHurdles.items[]">
+              <Binding target="pKey" type="Text" binding=".pKey" />
+              <Binding target="description" type="Text" binding=".hurdleTitle" />
+              <Binding target="detailText" type="Text" binding=".valueToFulfillHurdle" />
+              <Binding target="isTrue" type="Boolean" binding=".isFulfilled" />
+              <Binding target="groupId" type="Text" binding=".rewardGroupId" />
+              <Binding target="sort" type="Text" binding=".sort" />
+            </List>
+            <List target="Results" dataSource="ProcessContext::hurdleEvaluationHelper.loRewards.items[]">
+              <Binding target="pKey" type="Text" binding=".pKey" />
+              <Binding target="description" type="Text" binding=".rewardTitle" />
+              <Binding target="detailText" type="Text" binding=".counterString" />
+              <Binding target="showButton" type="Boolean" binding=".showButton" />
+              <Binding target="buttonText" type="Text" binding=".buttonText" />
+              <Binding target="isSelected" type="Boolean" binding=".isSelectedOnUI" />
+              <Binding target="groupId" type="Text" binding=".rewardGroupId" />
+              <Binding target="sort" type="Text" binding=".sort" />
+              <Binding target="editable" type="Boolean" binding=".editable" />
+            </List>
+            <List target="Groups" dataSource="ProcessContext::hurdleEvaluationHelper.loRewardGroups.items[]">
+              <Binding target="pKey" type="Text" binding=".pKey" />
+              <Binding target="description" type="Text" binding=".rewardGroupTitle" />
+              <Binding target="additionalInfo" type="Text" binding=".rewardGroupDescription" />
+              <Binding target="resultSectionText" type="Text" binding=".rewardSectionText" />
+              <Binding target="sort" type="Text" binding=".sort" />
+              <Binding target="HeaderBackgroundColor" type="Color" binding=".headerBackgroundColor" bindingMode="ONE_WAY" />
+            </List>
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="onButtonPressedEvent">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ButtonPressedEvent>
+            <ItemSelectedEvent event="onRewardSelectionChangedEvent">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </EnhancedDecisionList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

@@ -1,0 +1,23 @@
+<DataSource name="DsLoPaymentMeta" backendSystem="sf" businessObjectClass="LoPaymentMeta" external="false" editableEntity="Order_Payment_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Order_Payment_Template__c" column="Id" />
+    <Attribute name="paymentMethod" table="Order_Payment_Template__c" column="PaymentMethod__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order_Payment_Template__c" alias="" idAttribute="Id" />
+    <Entity name="Order_Template_Order_Payment_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Order_Payment_Template__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Order_Template_Order_Payment_Template__c.Order_Payment_Template__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Order_Template_Order_Payment_Template__c.Order_Template__c = #sdoMetaPKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="sdoMetaPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,35 @@
+<Process name="TruckLoad::AddProductProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations></Declarations>
+      <Parameters>
+        <Input name="ProductList" type="LoEtpWarehouseProducts" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="InitializeButtonPressed" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="addProduct" />
+        </Parameters>
+        <Return name="ProcessContext::buttonPressed" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>TruckLoad::AddProductUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="EndAddProduct" />
+        </Events>
+      </Action>
+      <!-- End action -->
+      <Action actionType="END" name="EndAddProduct">
+        <ReturnValues>
+          <Return name="ProductPKey" value="Event.prdMainPKey" />
+          <Return name="buttonPressed" value="ProcessContext::buttonPressed" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

@@ -1,0 +1,124 @@
+<UIPlugin name="VisitDetailsUiPlugin" mainComponent="main">
+  <Interface>
+    <Property id="visitStatus" />
+    <Property id="visitPriority" />
+    <Property id="visitDate" />
+    <Property id="plannedStartTime" />
+    <Property id="plannedEndTime" />
+    <Property id="actualStartDate" />
+    <Property id="actualStartTime" />
+    <Property id="actualEndDate" />
+    <Property id="actualEndTime" />
+    <Property id="Duration" />
+    <Property id="visitStatusLabel" />
+    <Property id="visitPriorityLabel" />
+    <Property id="visitDateLabel" />
+    <Property id="plannedTimeLabel" />
+    <Property id="actualTimeLabel" />
+    <Property id="durationLabel" />
+  </Interface>
+  <UIComponent name="main"><![CDATA[
+	
+    var config = { 
+          margin: {top: 0, right: 15, bottom: 20, left: 15},
+          width:	280,
+          height:	80 
+      };
+    var state = {
+		 showActualStartTime: true,
+		 showActualEndTime: true
+	};
+	React.createClass({
+
+	hideElements: function() {
+		if(this.props.actualStartDate === "1700-01-01"){
+			state.showActualStartTime = false;
+		} else {
+			state.showActualStartTime = true;
+		}
+		if(this.props.actualEndDate === "1700-01-01"){
+			state.showActualEndTime = false;
+		} else {
+			state.showActualEndTime = true;
+		}
+	},
+	setStyles: function () {           
+          config.labelStyle = {
+              font: 	this.props.common.config.uiPlugin.FontRegular12,
+              color:	this.props.common.config.uiPlugin.LabelFontColor,
+              display: 'block',
+     		  paddingRight: '0.25em'
+          };
+          config.valueStyle = {
+              font: 	this.props.common.config.uiPlugin.FontRegular12,
+              color:	this.props.common.config.uiPlugin.FontColor,
+              display: 'block',
+     		  paddingRight: '0.25em'
+          };
+			config.editButtonStyle = {
+              font: 	this.props.common.config.uiPlugin.FontMedium12,
+              color:	this.props.common.config.uiPlugin.Color12,
+			  background : 'grey',
+			  cursor : 'pointer',
+     		  paddingRight: '0.25em'
+          };
+	},
+	componentDidUpdate: function () {
+                    this.setStyles();
+    },
+	render : function(){
+      var props = this.props;
+	  this.hideElements();
+      return <div>
+                  <table width="100%">
+                      <tbody>
+                          <tr>
+                              <td width='50%'><span style={config.labelStyle}>
+                                  {props.durationLabel}
+         						  </span>
+                              </td>
+                              <td width='50%'><span style={config.valueStyle}> {props.Duration} min</span>
+                              </td>
+                          </tr>
+						  <tr>
+                              <td width='50%'> <span style={config.labelStyle}>
+                                  {props.visitDateLabel}</span>
+                              </td>
+                              <td width='50%'> <span style={config.valueStyle}> {Localization.localize(this.props.visitDate, "date")} </span>
+                              </td>
+                          </tr>
+						  <tr>
+                              <td width='50%'> <span style={config.labelStyle}> {props.plannedTimeLabel}  </span>                                
+                              </td>
+                              <td width='50%'> <span style={config.valueStyle}> {Localization.localize(props.plannedStartTime, "time")} - {Localization.localize(props.plannedEndTime, "time")} </span>
+                              </td>
+                          </tr>
+						  <tr>
+                              <td width='50%'> <span style={config.labelStyle}>
+                                  {props.actualTimeLabel} </span>
+                              </td>
+                              <td width='50%'> <span style={config.valueStyle}> {state.showActualStartTime ? Localization.localize(props.actualStartTime, "time") : null} - {state.showActualEndTime ? Localization.localize(props.actualEndTime, "time") : null} </span>
+                              </td>
+                          </tr>
+						  <tr>
+                              <td width='50%'><span style={config.labelStyle}> {props.visitStatusLabel} </span>
+                              </td>
+                              <td width='50%'> <span style={config.valueStyle}> {props.visitStatus} </span>
+                              </td>
+                          </tr>
+						  <tr>
+                              <td width='50%'> <span style={config.labelStyle}> 
+                                  {props.visitPriorityLabel} </span>
+                              </td>
+                              <td width='50%'> <span style={config.valueStyle}> {props.visitPriority} </span>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+   			</div>;
+      }
+	})
+    ]]></UIComponent>
+  <UIComponentStyling><![CDATA[
+    ]]></UIComponentStyling>
+</UIPlugin>

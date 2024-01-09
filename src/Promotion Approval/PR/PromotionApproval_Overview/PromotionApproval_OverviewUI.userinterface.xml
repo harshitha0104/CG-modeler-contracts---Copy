@@ -1,0 +1,466 @@
+<UIDescription  name="PromotionApproval::OverviewUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="MasterDetailSectionPage" masterSectionFlex="40" detailSectionFlex="60">
+    <ViewVariables>
+      <ViewVariable name="currentTabName" value="Main" />
+    </ViewVariables>
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TitleId" defaultLabel="Approve Promotions" bindingMode="ONE_TIME" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="false" itemId="sortListByDate">
+          <Bindings>
+            <Resource target="Text" type="Label" id="sortByDateId" defaultLabel="By Date" />
+            <Resource target="Icon" type="Image" id="DayDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="sortListByDate" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="sortListByAnchor">
+          <Bindings>
+            <Resource target="Text" type="Label" id="sortByAnchorId" defaultLabel="By Anchor" />
+            <Resource target="Icon" type="Image" id="SortDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="sortListByAnchor" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="ApprovePromotionList" searchable="true" master="true" groupBy="customerName" dataSource="ProcessContext::PromotionList.Items[]">
+          <Items name="Items" itemPattern="ApprovePromotionItem">
+            <Bindings>
+              <Resource target="PhaseImage" type="Image" id="InfoDarkGrey16" defaultImage="InfoDarkGrey16" bindingMode="ONE_TIME" />
+              <Binding target="PrmText" type="Text" binding=".prmText" bindingMode="ONE_WAY" />
+              <Binding target="CustomerName" type="Text" binding=".customerName" bindingMode="ONE_WAY" />
+              <Binding target="DateFrom" type="Date" binding=".dateFrom" bindingMode="ONE_WAY" />
+              <Binding target="DateThru" type="Date" binding=".dateThru" bindingMode="ONE_WAY" />
+              <Resource target="Hyphen" type="Label" id="noId" defaultLabel=" - " />
+              <Binding target="MetaText" type="Text" binding=".metaText" bindingMode="ONE_WAY" />
+              <Binding target="Phase" type="Text" binding=".phase.text" bindingMode="ONE_WAY" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col>
+                  <Row layoutType="itemIdentifier" bindingId="PrmText" />
+                  <Row layoutType="itemSecondary" bindingId="CustomerName" />
+                  <Row>
+                    <Col layoutType="itemSecondary" bindingId="DateFrom" />
+                    <Col layoutType="itemSecondary" bindingId="Hyphen" />
+                    <Col layoutType="itemSecondary" bindingId="DateThru" />
+                  </Row>
+                  <Row>
+                    <Col layoutType="itemSecondary" bindingId="MetaText" />
+                  </Row>
+                  <Row>
+                    <Col width="1em" height="0.9em" layoutType="Image" bindingId="PhaseImage" />
+                    <Col layoutType="itemSecondary" bindingId="Phase" />
+                  </Row>
+                </Col>
+              </Default>
+            </ItemListLayout>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::ContextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="listItemSelected" resetMultiAreas="true">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+            <ContextOpeningEvent event="contextMenuOpening">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="phase" value=".phase" />
+                <Param name="responsiblePKey" value=".responsiblePKey" />
+                <Param name="customerPKey" value=".customerPKey" />
+                <Param name="wfeWorkflowPKey" value=".wfeWorkflowPKey" />
+                <Param name="actualStatePKey" value=".actualStatePKey" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="contextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextSelectedEvent>
+          </Events>
+          <SearchAttributes>
+            <SearchAttribute name="CustomerName" />
+            <SearchAttribute name="Phase" />
+            <SearchAttribute name="DateFrom" />
+            <SearchAttribute name="DateThru" />
+            <SearchAttribute name="ResponsibleUserName" />
+            <SearchAttribute name="PrmText" />
+          </SearchAttributes>
+        </GroupedList>
+      </Area>
+    </Section>
+    <Section sectionName="detailSection" sectionPattern="TabbedViewAreaSection" currentTab="View::currentTabName">
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="Main">
+              <Bindings>
+                <Resource target="image" type="Image" id="MainGrey24" defaultImage="MainGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="MainId" defaultLabel="Main" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="KPIs">
+              <Bindings>
+                <Resource target="image" type="Image" id="CheckListGrey24" defaultImage="CheckListGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="KPIId" defaultLabel="KPIs" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Products">
+              <Bindings>
+                <Resource target="image" type="Image" id="ProductsGrey24" defaultImage="ProductsGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="ProductId" defaultLabel="Products" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Tactic">
+              <Bindings>
+                <Resource target="image" type="Image" id="StarGrey24" defaultImage="StarGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="TacticId" defaultLabel="Tactics" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="tabSelected" storeTabNameIn="currentTabName" />
+          </Events>
+        </TabSelector>
+      </Area>
+      <Area areaName="Main" areaPattern="GroupedElementsArea">
+        <MenuItems>
+          <MenuItem directlyVisible="true" itemId="approvePromotion">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::PromotionBO.isNextStateAvailable">
+                <Parameters>
+                  <Input name="stateType" type="Literal" value="Committed" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="approvePromotionId" defaultLabel="Approve" />
+              <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="approvePromotion" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="rejectPromotion">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::PromotionBO.isNextStateAvailable">
+                <Parameters>
+                  <Input name="stateType" type="Literal" value="Rejected,initial" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="rejectPromotionId" defaultLabel="Reject" />
+              <Resource target="Icon" type="Image" id="CancelDarkGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="rejectPromotion" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="forApprovalPromotion">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::PromotionBO.isNextStateAvailable">
+                <Parameters>
+                  <Input name="stateType" type="Literal" value="ForApproval" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="forApprovalPromotionId" defaultLabel="For Approval" />
+              <Resource target="Icon" type="Image" id="PromotionForwardDarkGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="forApprovalPromotion" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <GroupElement name="PromotionInfoGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="IdentificationId" defaultLabel="Identification" />
+          </Bindings>
+          <InputArea name="Id" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Id" id="PromotionId" />
+              <Binding target="Value" binding="ProcessContext::PromotionBO.prmId" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="Slogan" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Name" id="PromotionSlogan" />
+              <Binding target="Value" binding="ProcessContext::PromotionBO.boSlogan.text" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="Customer" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Customer" id="CustomerName" />
+              <Binding target="Value" binding="ProcessContext::PromotionBO.boAnchor.text" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="PromotionType" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Promotion Type" id="PromotionType" />
+              <Binding target="Value" binding="ProcessContext::PromotionBO.luPrmMeta.text" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <DatePickerField name="InitiationDate" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Reference Date" id="ReferenceDate" />
+              <Binding target="Value" binding="ProcessContext::PromotionBO.commitDate" bindingMode="ONE_WAY" />
+            </Bindings>
+          </DatePickerField>
+          <DatePickerField name="StartDate" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Start Date" id="StartDate" />
+              <Binding target="Value" binding="ProcessContext::PromotionBO.dateFrom" bindingMode="ONE_WAY" />
+            </Bindings>
+          </DatePickerField>
+          <DatePickerField name="EndDate" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="End Date" id="EndDate" />
+              <Binding target="Value" binding="ProcessContext::PromotionBO.dateThru" bindingMode="ONE_WAY" />
+            </Bindings>
+          </DatePickerField>
+        </GroupElement>
+        <GroupElement name="PromotionStatusGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="StatusTitleId" defaultLabel="Status" />
+          </Bindings>
+          <SelectionBox name="Status" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Phase" id="PhaseId" />
+              <Binding target="Value" binding="ProcessContext::PromotionBO.phase" bindingMode="ONE_WAY" />
+              <Binding target="DataSource" toggleId="PrmPhase" bindingMode="ONE_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <InputArea name="State" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="State" id="StateId" />
+              <Binding target="Value" binding="ProcessContext::PromotionBO.luWfeState.text" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="Owner" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Owner" id="OwnerUserId" />
+              <Binding target="Value" binding="ProcessContext::PromotionBO.luOwner.name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="Responsible" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Responsible" id="ResponsibleUserId" />
+              <Binding target="Value" binding="ProcessContext::PromotionBO.luResponsible.name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+      </Area>
+      <Area areaName="KPIs" areaPattern="GroupedElementsArea">
+        <MenuItems>
+          <MenuItem directlyVisible="true" itemId="approvePromotion">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::PromotionBO.isNextStateAvailable">
+                <Parameters>
+                  <Input name="stateType" type="Literal" value="Committed" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="approvePromotionId" defaultLabel="Approve" />
+              <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="approvePromotion" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="rejectPromotion">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::PromotionBO.isNextStateAvailable">
+                <Parameters>
+                  <Input name="stateType" type="Literal" value="Rejected,initial" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="rejectPromotionId" defaultLabel="Reject" />
+              <Resource target="Icon" type="Image" id="CancelDarkGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="rejectPromotion" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="forApprovalPromotion">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::PromotionBO.isNextStateAvailable">
+                <Parameters>
+                  <Input name="stateType" type="Literal" value="ForApproval" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="forApprovalPromotionId" defaultLabel="For Approval" />
+              <Resource target="Icon" type="Image" id="PromotionForwardDarkGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="forApprovalPromotion" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <EmbeddedList name="KPIList" dataSource="ProcessContext::PromotionBO.loKPIs.Items[]" disabled="true">
+          <Items name="Items" itemPattern="PrmKPIListItem">
+            <Bindings>
+              <Binding target="Text" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              <Binding target="Type" type="Text" binding=".type.text" bindingMode="ONE_WAY" />
+              <Binding target="Total" type="Float" formatV2="10.2" binding=".total" bindingMode="ONE_WAY" />
+              <Resource target="TextLabel" type="Label" id="TextLabelId" defaultLabel="Measure" />
+              <Resource target="TypeLabel" type="Label" id="TypeLabelId" defaultLabel="Type" />
+              <Resource target="TotalLabel" type="Label" id="TotalLabelId" defaultLabel="Total" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Header>
+                  <Col bindingId="TextLabel" layoutType="itemLeft" align="left" />
+                  <Col bindingId="TypeLabel" layoutType="itemCenter" align="center" />
+                  <Col bindingId="TotalLabel" layoutType="itemCenter" align="center" />
+                </Header>
+                <Col flex="1" layoutType="itemLeft" bindingId="Text" />
+                <Col width="3em" layoutType="itemCenter" bindingId="Type" />
+                <Col width="7em" layoutType="itemRight" bindingId="Total" />
+              </Default>
+            </ItemListLayout>
+          </Items>
+          <Events />
+        </EmbeddedList>
+        <GroupElement name="PrmAnnotation">
+          <Bindings>
+            <Resource target="Title" type="Label" id="AnnotationId" defaultLabel="Annotation" />
+          </Bindings>
+          <InputAreaMultiLine name="Text">
+            <Bindings>
+              <Binding target="Value" binding="ProcessContext::PromotionBO.boAnnotation.text" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+        </GroupElement>
+      </Area>
+      <Area areaName="Products" areaPattern="SingleElementArea">
+        <MenuItems />
+        <GroupedList name="ProductList" indexBar="false" searchable="false" hasBorder="true" dataSource="ProcessContext::PromotionBO.loProducts.Items[]" disabled="true">
+          <Items name="Items" itemPattern="ApprovePromotionProductListItem">
+            <Bindings>
+              <Binding target="Image" type="Image" binding=".groupFlag" bindingMode="ONE_WAY" />
+              <Binding target="Product" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              <Binding target="Quantity" type="Float" binding=".quantity" bindingMode="ONE_WAY" />
+              <Binding target="Discount" type="Float" formatV2="3.1" binding=".discount" bindingMode="ONE_WAY" />
+              <Binding target="Price" type="Float" formatV2="10.2" binding=".specialPrice" bindingMode="ONE_WAY" />
+              <Resource target="QuantityLabel" type="Label" id="QuantityLabel" defaultLabel="Quantity" />
+              <Resource target="DiscountLabel" type="Label" id="DiscountLabel" defaultLabel="Discount" />
+              <Resource target="PromotedPriceLabel" type="Label" id="PromotedPriceLabel" defaultLabel="Promoted Price" />
+              <Resource target="ProductNameLabel" type="Label" id="ProductNameLabel" defaultLabel="Product Name" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Header>
+                  <Col />
+                  <Col bindingId="ProductNameLabel" layoutType="itemLeft" align="left" />
+                  <Col bindingId="QuantityLabel" layoutType="itemCenter" align="center" />
+                  <Col bindingId="PromotedPriceLabel" layoutType="itemCenter" align="center" />
+                </Header>
+                <Col width="2em" height="1.5em" layoutType="Image" bindingId="Image" />
+                <Col flex="1" layoutType="itemLeft" bindingId="Product" />
+                <Col width="4em" height="1.5em" layoutType="itemRight" bindingId="Quantity" />
+                <Col width="6em" height="1.5em" layoutType="itemRight" bindingId="Price" />
+              </Default>
+              <Phone>
+                <Default>
+                  <Header>
+                    <Col />
+                    <Col bindingId="ProductNameLabel" layoutType="itemLeft" align="left" />
+                    <Col bindingId="QuantityLabel" layoutType="itemCenter" align="center" />
+                    <Col bindingId="PromotedPriceLabel" layoutType="itemCenter" align="center" />
+                  </Header>
+                  <Col width="1.5em" height="1.5em" layoutType="Image" bindingId="Image" />
+                  <Col flex="1" layoutType="itemLeft" bindingId="Product" />
+                  <Col width="4em" height="1.5em" layoutType="itemRight" bindingId="Quantity" />
+                  <Col width="5.5em" height="1.5em" layoutType="itemRight" bindingId="Price" />
+                </Default>
+              </Phone>
+            </ItemListLayout>
+          </Items>
+          <Events />
+        </GroupedList>
+      </Area>
+      <Area areaName="Tactic" areaPattern="SingleElementArea">
+        <MenuItems />
+        <GroupedList name="TacticList" dataSource="ProcessContext::PromotionBO.loTactics.Items[]" disabled="true">
+          <Items name="Items" itemPattern="ApprovePromotionTacticListItem">
+            <Bindings>
+              <Binding target="CostAmount" type="Float" formatV2="10.2" binding=".costAmount" bindingMode="ONE_WAY" />
+              <Binding target="DateFrom" type="Date" binding=".dateFrom" bindingMode="ONE_WAY" />
+              <Binding target="DateThru" type="Date" binding=".dateThru" bindingMode="ONE_WAY" />
+              <Binding target="TacticMetaName" type="Text" binding=".tacticMetaName" bindingMode="ONE_WAY" />
+              <Binding target="CompensationMetaText" type="Text" binding=".compensationMetaText" bindingMode="ONE_WAY" />
+              <Resource target="TacticNameLabel" type="Label" id="TacticNameLabel" defaultLabel="Tactic Type" />
+              <Resource target="DateLabel" type="Label" id="DateLabel" defaultLabel="Date" />
+              <Resource target="AmountLabel" type="Label" id="AmountLabel" defaultLabel="Amount" />
+              <Resource target="DateFromLabel" type="Label" id="DateFromLabel" defaultLabel="Date From" />
+              <Resource target="DateThruLabel" type="Label" id="DateThruLabel" defaultLabel="Thru" />
+              <Resource target="CompensationMetaTextLabel" type="Label" id="CompensationMetaTextLabel" defaultLabel="Compensation" />
+              <Resource target="Hyphen" type="Label" id="noId" defaultLabel=" - " />
+              <Resource target="Spacer" type="Label" id="blankId" defaultLabel="  " />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Header>
+                  <Col bindingId="TacticNameLabel" layoutType="itemLeft" align="left" />
+                  <Col bindingId="DateLabel" layoutType="itemCenter" align="center" />
+                  <Col bindingId="AmountLabel" layoutType="itemCenter" align="center" />
+                  <Col width="5em" bindingId="CompensationMetaTextLabel" />
+                </Header>
+                <Col flex="1" layoutType="itemLeft" bindingId="TacticMetaName" />
+                <Col width="6em">
+                  <Row layoutType="itemCenter" bindingId="DateFrom" />
+                  <Row layoutType="itemCenter" bindingId="DateThru" />
+                </Col>
+                <Col width="6em" layoutType="itemRight" bindingId="CostAmount" />
+                <Col width="6em" layoutType="itemCenter" bindingId="CompensationMetaText" />
+              </Default>
+              <Phone>
+                <Default>
+                  <Header>
+                    <Col bindingId="TacticNameLabel" layoutType="itemLeft" align="left" />
+                    <Col bindingId="AmountLabel" layoutType="itemCenter" align="center" />
+                    <Col bindingId="CompensationMetaTextLabel" layoutType="itemCenter" align="center" />
+                  </Header>
+                  <Col>
+                    <Row>
+                      <Col flex="1" layoutType="itemLeft" bindingId="TacticMetaName" />
+                    </Row>
+                    <Row>
+                      <Col flex="1" layoutType="itemSecondary" bindingId="DateFrom" />
+                    </Row>
+                    <Row>
+                      <Col flex="1" layoutType="itemSecondary" bindingId="DateThru" />
+                    </Row>
+                  </Col>
+                  <Col width="5em" layoutType="itemCenter" bindingId="CostAmount" />
+                  <Col width="6em" layoutType="itemCenter" bindingId="CompensationMetaText" />
+                </Default>
+              </Phone>
+            </ItemListLayout>
+          </Items>
+          <Events />
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

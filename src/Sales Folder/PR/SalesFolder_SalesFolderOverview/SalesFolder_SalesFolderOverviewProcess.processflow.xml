@@ -1,0 +1,106 @@
+<Process name="SalesFolder::SalesFolderOverviewProcess" defaultAction="LoadSalesFolderAndShowUI_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="SalesFolderList" type="LoSalesFolder" />
+        <Declaration name="SalesFolderCallCustomerList" type="LoSalesFolderCallCustomer" />
+        <Declaration name="IsSfBackend" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="CurrentCustomerPKey" type="String" />
+        <Input name="CurrentCustomerName" type="String" />
+        <Input name="CallDate" type="String" />
+        <Input name="LeadTime" type="String" />
+        <Input name="NavigationMode" type="String" />
+        <Input name="CallDateThru" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="SetSfBackend_Logic" actionType="LOGIC" call="Utils.isSfBackend">
+        <Return name="ProcessContext::IsSfBackend" />
+      </Action>     
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="LoadSalesFolderAndShowUI_Decision" actionType="DECISION" parameter="ProcessContext::NavigationMode">
+        <Case value="CustomerSalesFolder" action="LoadSalesFolderCallCustomerList_Decision" />
+        <CaseElse action="LoadSalesFolderList" />
+      </Action>    
+      <Action name="LoadSalesFolderList" actionType="LOAD" type="LoSalesFolder">
+        <Return name="ProcessContext::SalesFolderList" />
+        <Parameters>
+          <Input name="asoName" value="AsoSalesFolderOverview" type="Literal" />
+        </Parameters>
+        <TransitionTo action="ShowSalesFolderOverviewList" />
+      </Action>
+      <Action name="LoadSalesFolderCallCustomerList_Decision" actionType="DECISION" parameter="ProcessContext::IsSfBackend">
+        <Case value="true" action="LoadSalesFolderCallCustomerList_SalesForce" />
+        <CaseElse action="LoadSalesFolderCallCustomerList" />
+      </Action>     
+      <Action name="LoadSalesFolderCallCustomerList_SalesForce" actionType="LOAD" type="LoSalesFolderCallCustomer">
+        <Return name="ProcessContext::SalesFolderCallCustomerList" />
+        <Parameters>
+          <Input name="currentCustomerPKey" value="ProcessContext::CurrentCustomerPKey" />
+          <Input name="callDate" value="ProcessContext::CallDate" />
+          <Input name="callDateThru" value="ProcessContext::CallDateThru" />
+          <Input name="navigationMode" value="ProcessContext::NavigationMode" />
+        </Parameters>
+        <TransitionTo action="ShowSalesFolderCallCustomerTabList" />
+      </Action>
+      <!-- SF/CASDIF End -->
+      <Action name="LoadSalesFolderCallCustomerList" actionType="LOAD" type="LoSalesFolderCallCustomer">
+        <Return name="ProcessContext::SalesFolderCallCustomerList" />
+        <Parameters>
+          <Input name="currentCustomerPKey" value="ProcessContext::CurrentCustomerPKey" />
+          <Input name="callDate" value="ProcessContext::CallDate" />
+          <Input name="leadTime" value="ProcessContext::LeadTime" />
+          <Input name="navigationMode" value="ProcessContext::NavigationMode" />
+        </Parameters>
+        <TransitionTo action="ShowSalesFolderCallCustomerTabList" />
+      </Action>
+      <Action name="ShowSalesFolderCallCustomerTabList" actionType="VIEW">
+        <UIDescription>SalesFolder::SalesFolderCallCustomerTabUI</UIDescription>
+        <Events>
+          <Event name="sortListByCustomer" action="SortByCustomerForVisit" />
+          <Event name="sortListByType" action="SortByTypeForVisit" />
+          <Event name="itemSelected" action="LoadPromotions" />
+        </Events>
+      </Action>
+      <Action name="ShowSalesFolderOverviewList" actionType="VIEW">
+        <UIDescription>SalesFolder::SalesFolderOverviewUI</UIDescription>
+        <Events>
+          <Event name="sortListByCustomer" action="SortByCustomer" />
+          <Event name="sortListByType" action="SortByType" />
+          <Event name="itemSelected" action="LoadPromotions" />
+        </Events>
+      </Action>
+      <Action name="SortByCustomer" actionType="LOGIC" call="ProcessContext::SalesFolderList.setSortOrder">
+        <Parameters>
+          <Input name="orderBy" value="Customer" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="SortByType" actionType="LOGIC" call="ProcessContext::SalesFolderList.setSortOrder">
+        <Parameters>
+          <Input name="orderBy" value="Type" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="SortByCustomerForVisit" actionType="LOGIC" call="ProcessContext::SalesFolderCallCustomerList.setSortOrderForVisit">
+        <Parameters>
+          <Input name="orderBy" value="Customer" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="SortByTypeForVisit" actionType="LOGIC" call="ProcessContext::SalesFolderCallCustomerList.setSortOrderForVisit">
+        <Parameters>
+          <Input name="orderBy" value="Type" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="LoadPromotions" actionType="PROCESS" process="SalesFolder::SalesFolderPromotionProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+          <Input name="SloganText" value="Event.sloganText" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

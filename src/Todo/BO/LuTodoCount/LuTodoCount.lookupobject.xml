@@ -1,0 +1,11 @@
+<LookupObject name="LuTodoCount" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuTodoCount" />
+  <SimpleProperties>
+    <SimpleProperty name="todoCount" type="DomInteger" storable="false" dataSourceProperty="todoCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

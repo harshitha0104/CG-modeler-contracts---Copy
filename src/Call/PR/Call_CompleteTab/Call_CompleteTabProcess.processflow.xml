@@ -1,0 +1,146 @@
+<Process name="Call::CompleteTabProcess" defaultAction="IsCustomerRelatedCall" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OrderInfo" type="LuCallOrderInfo" />
+        <Declaration name="HasOpenOrders" type="String" />
+        <Declaration name="ResponsibleLookupPKey" type="DomPKey" />
+        <Declaration name="currentTabPage" type="String" />
+        <Declaration name="completed" type="String" />
+        <Declaration name="SurveyExceptions" type="Object" />
+        <Declaration name="CardController" type="BoStoreCockpitHelper" />
+        <Declaration name="ModeMaximized" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoCall" />
+        <Input name="boCallReports" type="BoCallReports" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="loadOrderInfo" type="LuCallOrderInfo">
+        <Parameters>
+          <Input name="clbMainPKey" value="ProcessContext::MainBO.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::OrderInfo" />
+      </Action>
+      <Action name="setOrderInfoEARights" actionType="LOGIC" call="ProcessContext::OrderInfo.setEARights">
+        <Parameters>
+          <Input name="companyRequired" value="ProcessContext::MainBO.luCallMeta.companyRequired" />
+        </Parameters>
+      </Action>
+      <Action actionType="CREATE" name="CreateCardController" type="BoStoreCockpitHelper">
+        <Return name="ProcessContext::CardController" />
+      </Action>
+      <Action name="SetMaximizedMode" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::ModeMaximized" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="DECISION" name="IsCustomerRelatedCall" parameter="ProcessContext::MainBO.luCallMeta.mobilityUserGuidance">
+        <Case value="NonCustomer" action="ShowCallDetail" />
+        <CaseElse action="CalculateSurveyExceptions" />
+      </Action>
+      <Action actionType="LOGIC" name="CalculateSurveyExceptions" call="ProcessContext::CardController.getSurveyExceptions">
+        <Parameters>
+          <Input name="currentSurveys" value="ProcessContext::MainBO.boJobManager.loCurrentSurveys" />
+        </Parameters>
+        <Return name="ProcessContext::SurveyExceptions" />
+        <TransitionTo action="ShowCallDetail" />
+      </Action>
+      <Action actionType="VIEW" name="ShowCallDetail">
+        <UIDescription>Call::CompleteTabUI</UIDescription>
+        <Events>
+          <Event name="executeBreak" action="ExecuteBreak" />
+          <Event name="completeCall" action="CheckForEmptyDateFields" />
+          <Event name="responsibleLookup" action="OpenResponsibleLookup" />
+          <Event name="tabSelected" action="setCurrentTabName_Decision" />
+        </Events>
+      </Action>
+      <!-- Tab Handling -->
+      <Action name="setCurrentTabName_Decision" actionType="DECISION" parameter="Event.tabName">
+        <Case value="Complete" action="setCurrentTabName_Complete" />
+        <Case value="Summary" action="TabProcessHideChartToolTip" />
+        <CaseElse action="setCurrentTabName_Complete" />
+      </Action>
+      <Action name="TabProcessHideChartToolTip" actionType="LOGIC" call="ProcessContext::boCallReports.chartHelper.hideChartToolTip">
+        <Parameters>
+          <Input name="containerName" value="CallSummaryReportContainer" type="Literal" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_Summary" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Complete" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Complete" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Summary" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Summary" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+      </Action>
+      <!-- End of Tab Handling -->
+      <Action actionType="LOGIC" name="CheckForEmptyDateFields" call="ProcessContext::MainBO.checkForEmptyCallDate">
+        <Return name="ProcessContext::ValidationResult" />
+        <TransitionTo action="EmptyCalldate_Decision" />
+      </Action>
+      <Action actionType="DECISION" name="EmptyCalldate_Decision" parameter="ProcessContext::ValidationResult">
+        <Case value="invalid" action="ShowCallDetail" />
+        <Case value="valid" action="CompleteCall" />
+        <CaseElse action="ShowCallDetail" />
+      </Action>
+      <Action actionType="PROCESS" name="CompleteCall" process="Call::CompleteCallProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::MainBO" />
+          <Input name="OrderInfo" value="ProcessContext::OrderInfo" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::Completed" value="completed" />
+        </ReturnValues>
+        <TransitionTo action="IsCallCompleted" />
+      </Action>
+      <Action name="IsCallCompleted" actionType="DECISION" parameter="ProcessContext::Completed">
+        <Case value="1" action="EndComplete" />
+        <CaseElse action="ShowCallDetail" />
+      </Action>
+      <!-- Actions for Responsible Lookup -->
+      <Action actionType="PROCESS" name="OpenResponsibleLookup" process="User::LookupProcess">
+        <ReturnValues>
+          <Return name="ProcessContext::ResponsibleLookupPKey" value="UserPKey" />
+        </ReturnValues>
+        <TransitionTo action="AssignResponsiblePKey" />
+      </Action>
+      <Action actionType="LOGIC" name="AssignResponsiblePKey" call="Utils.identity">
+        <Parameters>
+          <Input name="view" value="ProcessContext::ResponsibleLookupPKey" />
+        </Parameters>
+        <Return name="ProcessContext::MainBO.responsiblePKey" />
+        <TransitionTo action="LoadResponsibleLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadResponsibleLookup" type="LuUser">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::ResponsibleLookupPKey" />
+        </Parameters>
+        <Return name="ProcessContext::MainBO.luUser" />
+      </Action>
+      <!-- Call Break Process -->
+      <Action name="ExecuteBreak" actionType="PROCESS" process="DailyReport::ExecuteBreakProcess">
+        <Parameters>
+          <Input name="ClbMainBo" value="ProcessContext::MainBO" />
+          <Input name="TimeCardLoaded" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+      <Action actionType="END" name="EndComplete">
+        <ReturnValues>
+          <Return name="completed" type="Literal" value="1" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

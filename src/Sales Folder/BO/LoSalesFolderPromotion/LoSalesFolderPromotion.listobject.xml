@@ -1,0 +1,14 @@
+<ListObject name="LoSalesFolderPromotion" generateLoadMethod="false" schemaVersion="1.1">
+  <DataSource name="DsLoSalesFolderPromotion" />
+  <Item objectClass="LiSalesFolderPromotion" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="setPromotionTitle" />
+    <Method name="checkSalesFolderDataAvailable" />
+  </Methods>
+</ListObject>

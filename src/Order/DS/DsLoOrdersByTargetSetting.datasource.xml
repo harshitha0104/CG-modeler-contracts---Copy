@@ -1,0 +1,44 @@
+<DataSource name="DsLoOrdersByTargetSetting" backendSystem="cas" businessObjectClass="LoOrdersByTargetSetting" external="false" editableEntity="SdoMain" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="sdoMainPKey" table="SdoMain" column="PKey" />
+    <Attribute name="grossTotalValue" table="SdoMain" column="GrossTotalValue" />
+    <Attribute name="targetSettingConsideration" table="SdoMeta" column="TargetSettingConsideration" />
+  </Attributes>
+  <Entities>
+    <Entity name="SdoMain" alias="" idAttribute="PKey" />
+    <Entity name="SdoMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoMain.SdoMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoMeta.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="TmgTour" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoMain.TmgMainPKey" comparator="eq" rightSideType="Attribute" rightSideValue="TmgTour.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="TmgRoute" alias="">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="TmgTour.TmgRoutePKey" comparator="eq" rightSideType="Attribute" rightSideValue="TmgRoute.PKey" />
+          <Condition leftSideValue="TmgRoute.DefaultUsrPKey" comparator="eq" rightSideType="Parameter" rightSideValue="'#UserPKey#'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+    DATE(SdoMain.ReleaseTime) >= #FromDate# AND DATE(SdoMain.ReleaseTime) <= #ThruDate#
+    AND SdoMeta.SdoSubType IN ('OrderEntry', 'Delivery') AND SdoMeta.MetaType = 'OrderEntry'
+    AND SdoMain.ClbMainPKey <> ' '
+    AND SdoMain.TmgMainPKey <> ' '
+    AND SdoMain.Phase = 'Released'
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="FromDate" type="TEXT" />
+    <Parameter name="ThruDate" type="TEXT" />
+  </Parameters>
+</DataSource>

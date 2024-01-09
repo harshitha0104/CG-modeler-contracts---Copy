@@ -1,0 +1,25 @@
+<ListObject name="LoOpenJobLists" generateLoadMethod="false" filter="InDatabase" paging="true">
+  <DataSource name="DsLoOpenJobLists" />
+  <Item objectClass="LiOpenJobLists" />
+  <Methods>
+    <Method name="loadAsync" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoJobLists">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="JobLists_CustomerName" property="customerPKey" type="Lookup" lookupProcess="Customer::LookupProcess" lookupProcessReturnValue="customerPKey" lookupObject="LuCustomer" lookupObjectDisplayValue="name">
+          <Parameters></Parameters>
+        </AdvancedSearchAttribute>
+        <AdvancedSearchAttribute label="JobLists_Activity" property="jobDefinitionListText" type="Text" />
+        <AdvancedSearchAttribute label="JobLists_Street" property="customerStreet" type="Text" />
+        <AdvancedSearchAttribute label="JobLists_ZIP" property="customerZIP" type="Text" />
+        <AdvancedSearchAttribute label="JobLists_City" property="customerCity" type="Text" />
+        <AdvancedSearchAttribute label="JobLists_State" property="customerState" type="Text" />
+        <!--  <AdvancedSearchAttribute label="JobLists_Prio" property="customerName" type="Text" /> -->
+        <AdvancedSearchAttribute label="JobLists_validFrom" property="validFrom" type="Date" />
+        <AdvancedSearchAttribute label="JobLists_validThru" property="validThru" type="Date" />
+        <AdvancedSearchAttribute label="JobLists_Substitution" property="substituted" type="Boolean" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

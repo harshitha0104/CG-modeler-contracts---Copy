@@ -1,0 +1,20 @@
+<Datasource objectClass="BoUsrReminderRuleExecution" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+      // Intended to be empty!
+      return "SELECT null FROM UsrUser WHERE PKey='Undefined'";
+   ]]></Load>
+    <Update><![CDATA[
+      // Intended to be empty!
+      return undefined;
+   ]]></Update>
+    <Insert><![CDATA[
+      // Intended to be empty!
+      return undefined;
+   ]]></Insert>
+    <Delete><![CDATA[
+      // Intended to be empty!
+      return undefined;
+   ]]></Delete>
+  </Database>
+</Datasource>

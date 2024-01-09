@@ -1,0 +1,32 @@
+<DataSource name="DsLoProductBoM" backendSystem="sf" businessObjectClass="LoProductBoM" external="false" editableEntity="Product_Part__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Product_Part__c" column="Id" />
+    <Attribute name="id" table="Product2" column="Consumer_Goods_Product_Code__c" />
+    <Attribute name="text1" table="Product2" column="Description_1_#Language#__c" />
+    <Attribute name="ean" table="Product2" column="GTIN__c" />
+    <Attribute name="prdType" table="Product2" column="Product_Type__c" />
+    <Attribute name="quantity" table="Product_Part__c" column="Quantity__c" />
+    <Attribute name="validFrom" table="Product_Part__c" column="Valid_From__c" />
+    <Attribute name="validThru" table="Product_Part__c" column="Valid_Thru__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Product_Part__c" alias="" idAttribute="Id" />
+    <Entity name="Product2" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product_Part__c.Child_Product__c" comparator="eq" rightSideType="Attribute" rightSideValue="Product2.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Product_Part__c.Parent_Product__c= #ProductPKey#  
+        AND Product2.Sales_Org__c = '#SalesOrg#'
+        ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Product2" attribute="Description_1_#Language#__c " direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="ProductPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

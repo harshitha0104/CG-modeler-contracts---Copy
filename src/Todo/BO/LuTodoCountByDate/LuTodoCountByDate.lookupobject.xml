@@ -1,0 +1,10 @@
+<LookupObject name="LuTodoCountByDate" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuTodoCountByDate" />
+  <SimpleProperties>
+    <SimpleProperty name="todoCount" type="DomInteger" storable="false" dataSourceProperty="todoCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

@@ -1,0 +1,136 @@
+<Process name="Call::RescheduleCallProcess" defaultAction="Silent_Decision">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="RescheduleCallBo" type="BoWizardRescheduleCall" />
+        <Declaration name="CallBo" type="BoCall" />
+        <Declaration name="dateFrom" type="String" />
+        <Declaration name="timeFrom" type="String" />
+        <Declaration name="duration" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainPKey" type="DomPKey" />
+        <Input name="AllDay" type="DomBool" />
+        <Input name="Silent" type="DomString" />
+        <Input name="dateThru" type="String" />
+        <Input name="timeThru" type="String" />
+        <Input name="ResponsiblePKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadBo" actionType="LOAD" type="BoCall">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainPKey" />
+          <Input name="referenceUserPKey" value="ProcessContext::ResponsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::CallBo" />
+      </Action>
+      <Action name="LoadWizardBo" actionType="CREATE" type="BoWizardRescheduleCall">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainPKey" />
+          <Input name="dateFrom" value="ProcessContext::dateFrom" />
+          <Input name="timeFrom" value="ProcessContext::timeFrom" />
+          <Input name="dateThru" value="ProcessContext::dateThru" />
+          <Input name="timeThru" value="ProcessContext::timeThru" />
+          <Input name="duration" value="ProcessContext::duration" />
+          <Input name="callBo" value="ProcessContext::CallBo" />
+        </Parameters>
+        <Return name="ProcessContext::RescheduleCallBo" />
+      </Action>
+      <Action name="SetEARights" actionType="LOGIC" call="ProcessContext::RescheduleCallBo.setEARights"></Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="Silent_Decision" actionType="DECISION" parameter="ProcessContext::Silent">
+        <Case value="1" action="LoadManagementInformationNonWizard" />
+        <CaseElse action="ShowDetail" />
+        <CaseEmpty action="ShowDetail" />
+      </Action>
+      <Action actionType="View" name="ShowDetail">
+        <UIDescription>Call::RescheduleCallUI</UIDescription>
+        <Events>
+          <Event name="rescheduleCall" action="LoadManagementInformation" />
+        </Events>
+      </Action>
+      <Action actionType="LOGIC" name="LoadManagementInformation" call="ProcessContext::RescheduleCallBo.loadManagementInformation">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::CallBo.bpaMainPKey" />
+          <Input name="dateFrom" value="ProcessContext::RescheduleCallBo.dateFrom" />
+          <Input name="calledByWizard" type="Literal" value="1" />
+        </Parameters>
+        <TransitionTo action="AssignDateThru" />
+      </Action>
+      <Action actionType="LOGIC" name="AssignDateThru" call="Utils.identity">
+        <Parameters>
+          <Input name="param" value="ProcessContext::dateFrom" />
+        </Parameters>
+        <Return name="ProcessContext::dateThru" />
+        <TransitionTo action="WizardValidation" />
+      </Action>
+      <Action actionType="VALIDATION" name="WizardValidation">
+        <Validations>
+          <Validation name="ProcessContext::RescheduleCallBo.validateRescheduleCall" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="RescheduleCallByWizard" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowDetail" />
+      </Action>
+      <Action actionType="LOGIC" name="RescheduleCallByWizard" call="ProcessContext::CallBo.reschedule">
+        <Parameters>
+          <Input name="newDateFrom" value="ProcessContext::RescheduleCallBo.dateFrom" />
+          <Input name="newTimeFrom" value="ProcessContext::RescheduleCallBo.timeFrom" />
+          <Input name="newDateThru" value="ProcessContext::RescheduleCallBo.dateThru" />
+          <Input name="newTimeThru" value="ProcessContext::RescheduleCallBo.timeThru" />
+          <Input name="newAllDayFlag" value="ProcessContext::CallBo.allDay" />
+        </Parameters>
+        <TransitionTo action="UpdateMagnetization" />
+      </Action>
+      <Action actionType="LOGIC" name="LoadManagementInformationNonWizard" call="ProcessContext::RescheduleCallBo.loadManagementInformation">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::CallBo.bpaMainPKey" />
+          <Input name="dateFrom" value="ProcessContext::RescheduleCallBo.dateFrom" />
+          <Input name="calledByWizard" type="Literal" value="0" />
+        </Parameters>
+        <TransitionTo action="RescheduleValidationNonWizard" />
+      </Action>
+      <Action actionType="VALIDATION" name="RescheduleValidationNonWizard">
+        <Validations>
+          <Validation name="ProcessContext::RescheduleCallBo.validateRescheduleCall" />
+        </Validations>
+        <TransitionTo action="ValidationResult_DecisionNonWizard" />
+      </Action>
+      <Action name="ValidationResult_DecisionNonWizard" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="RescheduleCall" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="EndCancel" />
+      </Action>
+      <Action actionType="LOGIC" name="RescheduleCall" call="ProcessContext::CallBo.reschedule">
+        <Parameters>
+          <Input name="newDateFrom" value="ProcessContext::dateFrom" />
+          <Input name="newTimeFrom" value="ProcessContext::timeFrom" />
+          <Input name="newDateThru" value="ProcessContext::dateThru" />
+          <Input name="newTimeThru" value="ProcessContext::timeThru" />
+          <Input name="newAllDayFlag" value="ProcessContext::AllDay" />
+        </Parameters>
+        <TransitionTo action="UpdateMagnetization" />
+      </Action>
+      <Action name="UpdateMagnetization" actionType="LOGIC" call="ProcessContext::CallBo.updateJobListMagnetization">
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="END" name="EndCancel">
+        <ReturnValues>
+          <Return name="refreshRequired" type="Literal" value="0" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="refreshRequired" type="Literal" value="1" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

@@ -1,0 +1,47 @@
+<UIDescription name="Visit::ReviewImageUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::retailStoreName" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <MediaListControl name="Attachments" dataSource="ProcessContext::attachments.Items[]">
+          <Bindings>
+            <Binding bindingMode="ONE_WAY" binding=".attachmentBlob" type="Text" target="MediaPath" />
+            <Binding bindingMode="ONE_WAY" binding=".fileType" type="Text" target="Type" />
+            <Binding target="IsTagged" type="Text" binding=".isTagged" bindingMode="ONE_WAY" />
+          </Bindings>
+          <Items>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::contextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding target="Editable" type="Editable" binding=".actionEnabled" />
+                  <Binding target="Visible" type="Visible" binding=".actionVisible" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+          </Items>
+          <Events>
+            <ContextSelectedEvent event="contextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextSelectedEvent>
+            <ContextOpeningEvent event="contextMenuOpening">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextOpeningEvent>
+          </Events>
+        </MediaListControl>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

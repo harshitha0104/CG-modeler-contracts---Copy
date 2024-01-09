@@ -1,0 +1,37 @@
+<DataSource name="DsLoOrderAttachment" backendSystem="sf" editableEntity="SF_File" businessObjectClass="LoOrderAttachment" external="false" distinct="false" readOnly="false" schemaVersion="2.0" linkedEntityAttributeName="sdoMainPKey">
+  <Attributes>
+    <Attribute name="pKey" table="SF_FileLink" column="Id" />
+    <Attribute name="sdoMainPKey" table="SF_FileLink" column="ParentId" />
+    <Attribute name="creationDate" table="SF_File" column="CreatedDate" />
+    <Attribute name="fileName" table="SF_File" column="PathOnClient" />
+    <DerivedAttribute name="fileType" value="replace(PathOnClient, rtrim(PathOnClient, replace(PathOnClient, '.', '')), '')" />
+    <Attribute name="fileSize" table="SF_File" column="ContentSize" />
+    <DerivedAttribute name="attachmentTextPKey" value="''" />
+    <Attribute name="attachmentText" table="SF_File" column="Description" />
+    <Attribute name="attachmentBlobPKey" table="SF_File" column="Id" />
+    <Attribute name="mediapath" table="SF_File" column="VersionData" />
+    <Attribute name="usage" table="SF_File" column="Usage__c" />
+    <DerivedAttribute name="type" value="''" />
+    <DerivedAttribute name="description" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="SF_File" alias="" idAttribute="Id" />
+    <Entity name="SF_FileLink" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SF_File.Id" comparator="eq" rightSideType="Attribute" rightSideValue="SF_FileLink.FileId" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        SF_FileLink.ParentId = #sdoMainPKey# AND SF_File.IsDeleted <> 1 
+      ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="SF_File" attribute="CreatedDate" direction="DESC" />
+    <OrderCriterion entity="SF_File" attribute="PathOnClient" direction="DESC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="sdoMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

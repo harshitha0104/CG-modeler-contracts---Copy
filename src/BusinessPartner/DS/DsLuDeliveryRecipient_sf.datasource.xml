@@ -1,0 +1,35 @@
+<DataSource name="DsLuDeliveryRecipient" backendSystem="sf" businessObjectClass="LuDeliveryRecipient" external="false" editableEntity="Account" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account" column="Id" />
+    <DerivedAttribute name="customerNumber" type="String" value="CASE WHEN Customer_Role_Number__c = 0 THEN ' ' ELSE Customer_Role_Number__c END" />
+    <Attribute name="street" table="Account" column="ShippingStreet" />
+    <DerivedAttribute name="houseNumber" type="String" value="' '" />
+    <Attribute name="city" table="Account" column="ShippingCity" />
+    <Attribute name="countryState" table="Account" column="ShippingState" />
+    <Attribute name="zipCode" table="Account" column="ShippingPostalCode" />
+    <Attribute name="name" table="Account" column="Name" />
+    <Attribute name="phone1" table="Account" column="Phone" />
+    <Attribute name="sdoModifyPresetQuantity" table="Account_Extension__c" column="Delivery_Role_Modify_Preset_Quantity__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account" alias="" idAttribute="Id" />
+    <Entity name="Account_Extension__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Account.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Account_Extension__c.Account__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Account.Id = #pKey#
+  AND #compareAsDate('Account_Extension__c.Delivery_Role_Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')#
+        AND #compareAsDate('Account_Extension__c.Delivery_Role_Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#
+    ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Account" attribute="Id" direction="DESC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

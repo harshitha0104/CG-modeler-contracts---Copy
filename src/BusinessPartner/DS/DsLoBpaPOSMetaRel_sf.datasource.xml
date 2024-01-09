@@ -1,0 +1,19 @@
+<DataSource name="DsLoBpaPOSMetaRel" backendSystem="sf" businessObjectClass="LoBpaPOSMetaRel" external="false" editableEntity="POS_Template__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="POS_Template__c" column="Id" />
+    <Attribute name="bpaPosMetaPKey" table="POS_Template__c" column="Id" />
+    <DerivedAttribute name="mandatory" value="'0'" />
+    <Attribute name="text" table="POS_Template__c" column="Description_#Language#__c" />
+    <DerivedAttribute name="bpaRelMetaPKey" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="POS_Template__c" alias="" />
+  </Entities>
+  <QueryCondition><![CDATA[
+       POS_Template__c.Id = #bpaPosMetaPKey# 
+        ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="bpaPosMetaPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

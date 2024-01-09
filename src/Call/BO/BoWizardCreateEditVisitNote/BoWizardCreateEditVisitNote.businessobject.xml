@@ -1,0 +1,27 @@
+<BusinessObject name="BoWizardCreateEditVisitNote" schemaVersion="1.1">
+  <DataSource name="DsBoWizardCreateEditVisitNote"/>
+  <SimpleProperties>
+    <SimpleProperty name="clbMainPKey" type="DomPKey" />
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="note" type="String" />
+    <SimpleProperty name="isCurrentNote" type="DomBool" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+  </Methods>
+</BusinessObject>

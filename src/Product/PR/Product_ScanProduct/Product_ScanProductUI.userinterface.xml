@@ -1,0 +1,53 @@
+<UIDescription name="Product::ScanProductUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionDialogPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="NonUniqueUPCId" defaultLabel="Non-unique UPC" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="ScannedProductList" groupBy="grouping1" dataSource="ProcessContext::loScannedProduct.Items[]">
+          <Items name="Items" itemPattern="ScannedProductOverviewItem">
+            <Bindings>
+              <Binding target="ShortText" type="Text" binding=".shortText" bindingMode="ONE_WAY" />
+              <Binding target="EAN" type="Text" binding=".eAN" bindingMode="ONE_WAY" />
+              <Binding target="id" type="Text" binding=".productId" bindingMode="ONE_WAY" />
+              <Binding target="PKey" type="Text" binding=".pKey" bindingMode="ONE_WAY" />
+              <Resource target="PrdGTINLabel" type="Label" id="PrdGTINLabel" defaultLabel="Prd GTIN :" />
+              <Resource target="PrdNoLabel" type="Label" id="PrdNoLabel" defaultLabel="Prd No. :" />
+              <Resource target="UnitTypeLabel" type="Label" id="UnitTypeLabel" defaultLabel="Unit Type :" />
+              <Binding target="UnitType" type="Text" binding=".unitType.text" bindingMode="ONE_WAY" />
+            </Bindings>
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemIdentifier" bindingId="ShortText" />
+                <Row>
+                  <Col height="1.5em" width="4.5em" layoutType="itemLabel" bindingId="PrdNoLabel" />
+                  <Col layoutType="itemSecondary" width="8em" bindingId="id" />
+                </Row>
+                <Row>
+                  <Col height="1.5em" width="5.2em" layoutType="itemLabel" bindingId="PrdGTINLabel" />
+                  <Col layoutType="itemSecondary" width="8em" bindingId="EAN" />
+                </Row>
+                <Row>
+                  <Col height="1.5em" width="5.2em" layoutType="itemLabel" bindingId="UnitTypeLabel" />
+                  <Col layoutType="itemSecondary" width="8em" bindingId="UnitType" />
+                </Row>
+              </Col>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".productPKey" />
+                <Param name="id" value=".productId" />
+                <Param name="unitType" value=".unitType" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

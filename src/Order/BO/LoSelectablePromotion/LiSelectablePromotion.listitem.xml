@@ -1,0 +1,17 @@
+<ListItem name="LiSelectablePromotion">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="promotionSlogan" type="DomText" dataSourceProperty="promotionSlogan" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" />
+    <SimpleProperty name="attachmentBlobPKey" type="DomPKey" dataSourceProperty="attachmentBlobPKey" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+    <SimpleProperty name="bannerMediaPath" type="DomBlob" dataSourceProperty="bannerMediaPath" />
+    <SimpleProperty name="bannerAttachmentBlobPKey" type="DomPKey" dataSourceProperty="bannerAttachmentBlobPKey" />
+    <SimpleProperty name="bannerFileType" type="DomFileType" dataSourceProperty="bannerFileType" />
+    <SimpleProperty name="specialOption" type="DomText" storable="false" />
+    <SimpleProperty name="considerPromotionRewards" type="DomBool" dataSourceProperty="considerPromotionRewards" />
+    <SimpleProperty name="totalRewardGroup" type="DomInteger" dataSourceProperty="totalRewardGroup" />
+    <SimpleProperty name="satisfiedRewardGroupCount" type="DomInteger" dataSourceProperty="satisfiedRewardGroupCount" />
+    <SimpleProperty name="specialPromoted" type="DomBool" dataSourceProperty="specialPromoted" />
+  </SimpleProperties>
+</ListItem>

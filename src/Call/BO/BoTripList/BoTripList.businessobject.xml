@@ -1,0 +1,29 @@
+<BusinessObject name="BoTripList"  generateLoadMethod="false">
+  <DataSource name="DsBoTripList" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="tripListName" type="DomText" dataSourceProperty="tripListName" />
+    <SimpleProperty name="metaType" type="DomTplMetaType" dataSourceProperty="metaType" />
+    <SimpleProperty name="validFrom" type="DomDate" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomValidThru" dataSourceProperty="validThru" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="description" type="DomText" dataSourceProperty="description" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="ownerPKey" type="DomPKey" dataSourceProperty="ownerPKey" />
+  </SimpleProperties>
+  <ListObjects>
+    <ListObject name="loTripListBpaRel" objectClass="LoTripListBpaRel" dataSourceProperty="pKey" listProperty="tplMainPKey" loadMode="LoadImmediate" />
+  </ListObjects>
+  <ObjectLookups></ObjectLookups>
+  <Methods>
+    <Method name="createAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="createCalls" />
+    <Method name="updateTripList" />
+    <Method name="deleteTripList" />
+  </Methods>
+  <Validations>
+    <Validation name="validateNotEmpty" />
+  </Validations>
+</BusinessObject>

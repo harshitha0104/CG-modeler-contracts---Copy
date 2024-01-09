@@ -1,0 +1,44 @@
+<UIDescription name="Call::SetDateUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::currentDate" />
+        <!-- CW-REQUIRED: remove title binding -->
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="setDate">
+          <Bindings>
+            <Resource target="Text" type="Label" id="setDateId" defaultLabel="Set date" />
+            <Resource target="Icon" type="Image" id="CheckGrey24" defaultImage="light/done_24.png" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="setDate" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="DateGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="DateGroupElement" defaultLabel="" />
+          </Bindings>
+          <DatePickerField name="CallDate">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Call date" id="CallDate" />
+              <Binding target="Value" binding="ProcessContext::currentDate" bindingMode="TWO_WAY" />
+            </Bindings>
+          </DatePickerField>
+        </GroupElement>
+        <ImageButton name="TodayButton">
+          <Bindings>
+            <Resource target="Text" type="Label" id="TodayId" defaultLabel="Today" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="TodayButtonPressed" />
+          </Events>
+        </ImageButton>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

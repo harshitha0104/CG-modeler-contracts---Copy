@@ -1,0 +1,31 @@
+<DataSource name="DsLoSalesFolderPromotion" backendSystem="sf" businessObjectClass="LoSalesFolderPromotion" external="false" editableEntity="Sell_Sheet__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Sell_Sheet__c" column="Id" />
+    <Attribute name="prmPKey" table="Sell_Sheet__c" column="Id" />
+    <Attribute name="sloganText" table="Sell_Sheet__c" column="Description_#Language#__c" />
+    <DerivedAttribute name="dateFrom" value="' '" />
+    <DerivedAttribute name="dateThru" value="' '" />
+    <DerivedAttribute name="groupText" value="' '" />
+    <Attribute name="annotationText" table="Sell_Sheet__c" column="Note__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Sell_Sheet__c" alias="" idAttribute="Id" />
+    <Entity name="Sales_Folder_Sell_Sheet__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Sales_Folder_Sell_Sheet__c.Sell_Sheet__c" comparator="eq" rightSideType="Attribute" rightSideValue="Sell_Sheet__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+ Sales_Folder_Sell_Sheet__c.Sales_Folder__c = #prmSalesFolderPKey#
+]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Sales_Folder_Sell_Sheet__c" attribute="Sort__c = '0'" direction="ASC" />
+    <OrderCriterion entity="Sales_Folder_Sell_Sheet__c" attribute="Sort__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="prmSalesFolderPKey" type="TEXT"/>
+  </Parameters>
+</DataSource>

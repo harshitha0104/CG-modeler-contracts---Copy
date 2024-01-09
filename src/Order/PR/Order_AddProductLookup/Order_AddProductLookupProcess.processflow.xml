@@ -1,0 +1,32 @@
+<Process name="Order::AddProductLookupProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations></Declarations>
+      <Parameters>
+        <Input name="ProductList" type="LoProductForAdd" />
+        <Input name="ProductPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Order::AddProductLookup</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="EndWithNewValue" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="EndWithNewValue">
+        <ReturnValues>
+          <Return name="ProductPKey" value="Event.prdMainPKey" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="ProductPKey" value="ProcessContext::ProductPKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

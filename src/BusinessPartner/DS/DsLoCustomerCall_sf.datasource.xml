@@ -1,0 +1,38 @@
+<DataSource name="DsLoCustomerCall" backendSystem="sf" businessObjectClass="LoCustomerCall" external="false" editableEntity="Visit" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="clbStatus" table="Visit" column="Status" />
+    <Attribute name="responsiblePKey" table="Visit" column="Responsible__c" />
+    <Attribute name="subject" table="Visit" column="Subject__c" />
+    <DateTimeAttribute dateName="dateFrom" timeName="timeFrom" table="Visit" column="PlannedVisitStartTime" />
+    <Attribute name="timeThru" table="Visit" column="PlannedVisitEndTime" />
+    <DerivedAttribute name="responsibleName" type="String" value="User.LastName || ', ' || User.FirstName" />
+    <DerivedAttribute name="clbTypeStatus" type="String" value="'ClbTypeStatus_'||Visit_Template__c.Meta_Type__c||'_'||Visit.Status" />
+  </Attributes>
+  <Entities>
+    <Entity name="Visit" alias="" />
+    <Entity name="User" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="User.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Visit.Responsible__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Visit_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Visit_Template__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Visit.Visit_Template__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+   Visit.Status <> 'Unscheduled'
+   AND Visit.AccountId = #bpaMainPKey#
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Visit" attribute="PlannedVisitStartTime" direction="DESC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="bpaMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

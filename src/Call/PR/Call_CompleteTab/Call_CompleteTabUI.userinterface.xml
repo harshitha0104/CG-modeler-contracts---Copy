@@ -1,0 +1,294 @@
+<UIDescription name="Call::CompleteTabUI" schemaVersion="0.0.0.5"  simpleEditorOnly="true">
+  <Page pagePattern="SingleSectionPage" cachable="false">
+    <ViewVariables>
+      <ViewVariable name="currentTabName" value="Complete" />
+    </ViewVariables>
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::MainBO.luCustomer.name" />
+        <!-- CW-REQUIRED: remove title binding -->
+      </Bindings>
+      <MenuItems></MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="TabbedViewAreaSection" currentTab="View::currentTabName">
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="Complete">
+              <Bindings>
+                <Resource target="image" type="Image" id="MainGrey24" defaultImage="MainGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="MainTabId" defaultLabel="Main" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Exceptions">
+              <Bindings>
+                <Binding type="Visible" target="Visible" call="ProcessContext::MainBO.checkReportTabVisibility" />
+                <Resource target="image" type="Image" id="LineChartGrey24" defaultImage="LineChartGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="ExceptionsTabId" defaultLabel="Exceptions" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="tabSelected" storeTabNameIn="currentTabName" />
+          </Events>
+        </TabSelector>
+      </Area>
+      <Area areaName="Complete" areaPattern="GroupedElementsArea">
+        <MenuItems>
+          <!-- Complete Button -->
+          <MenuItem itemId="completeCall" directlyVisible="true">
+            <Bindings>
+              <Resource target="Text" type="Label" id="completeCallId" defaultLabel="Complete" />
+              <Resource target="Icon" type="Image" id="CheckCircleGrey24" defaultImage="light/done2_24.png" />
+              <Binding type="Visible" target="Visible" call="ProcessContext::MainBO.getButtonVisibility">
+                <Parameters>
+                  <Input name="token" type="Literal" value="btnComplete" />
+                </Parameters>
+              </Binding>
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="completeCall" />
+            </Events>
+          </MenuItem>
+          <!-- Break Button -->
+        </MenuItems>
+        <GroupElement name="CallInfoGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="CallInformation" defaultLabel="Call Information" />
+          </Bindings>
+          <Merger name="VisitStartDateTime" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Visit Date / Time" id="VisitStartDateTimeId" />
+            </Bindings>
+            <DatePickerField name="VisitDateStart">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Visit Start Date" id="VisitDate" />
+                <Binding target="Value" binding="ProcessContext::MainBO.dateFrom" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <TimePickerField name="TimeFrom">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Time From" id="TimeFrom" />
+                <Binding target="Value" binding="ProcessContext::MainBO.timeFrom" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+          <Merger name="VisitEndDateTime" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="End Date / Time" id="VisitEndDateTimeId" />
+            </Bindings>
+            <DatePickerField name="VisitDateEnd">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Visit End Date" id="VisitDateEnd" />
+                <Binding target="Value" binding="ProcessContext::MainBO.dateThru" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <TimePickerField name="TimeThru">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Time Thru" id="TimeThru" />
+                <Binding target="Value" binding="ProcessContext::MainBO.timeThru" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+          <CheckBox name="AllDay">
+            <Bindings>
+              <Resource target="Label" type="Label" id="AllDay" defaultLabel="All Day" />
+              <Binding target="checkedValue" binding="ProcessContext::MainBO.allDay" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+          <SelectionBox name="ClbStatus" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="ClbStatus" defaultLabel="Status" />
+              <Binding target="DataSource" toggleId="VisitStatus" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::MainBO.clbStatus" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <Lookup name="Responsible">
+            <Bindings>
+              <Resource target="Label" type="Label" id="Responsible" defaultLabel="Responsible" />
+              <Binding target="Value" binding="ProcessContext::MainBO.luUser.name" bindingMode="ONE_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="responsibleLookup" />
+            </Events>
+          </Lookup>
+          <InputArea name="Subject">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Subject" id="Subject" />
+              <Binding target="Value" binding="ProcessContext::MainBO.subject" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="VisitType" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Visit Type" id="VisitType" />
+              <Binding target="Value" binding="ProcessContext::MainBO.luCallMeta.text" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <CheckBox name="FixedVisit">
+            <Bindings>
+              <Resource target="Label" type="Label" id="FixedVisit" defaultLabel="Fixed Visit" />
+              <Binding target="checkedValue" binding="ProcessContext::MainBO.fixed" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+          <InputArea name="TourId" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Tour Id" id="TourId" />
+              <Binding target="Value" binding="ProcessContext::MainBO.tmgMainId" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <CheckBox name="SubstitutionVisit" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="SubstitutionVisit" defaultLabel="Substitution visit" />
+              <Binding target="checkedValue" binding="ProcessContext::MainBO.substitution" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+          <Lookup name="SubstitutionFor" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="SubstitutionFor" defaultLabel="Substitution for" />
+              <Binding target="Value" binding="ProcessContext::MainBO.luCustomerManagementInfo.substitutedUsrName" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Lookup>
+        </GroupElement>
+        <GroupElement name="CapturedTimes">
+          <Bindings>
+            <Resource target="Title" type="Label" id="CapturedTimesId" defaultLabel="Captured Times" />
+          </Bindings>
+          <Merger name="EffectiveStartStopTime" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Effective Start / Stop Time" id="EffectiveStartStopTimeId" />
+            </Bindings>
+            <TimePickerField name="StartTimeEffectiveArea" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Start Time Effective" id="StartTimeEffective" />
+                <Binding target="Value" binding="ProcessContext::MainBO.startTimeEffectiveUI" bindingMode="ONE_WAY" />
+              </Bindings>
+            </TimePickerField>
+            <TimePickerField name="StopTimeEffectiveArea" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Stop Time Effective" id="StopTimeEffectiveId" />
+                <Binding target="Value" binding="ProcessContext::MainBO.stopTimeEffectiveUI" bindingMode="ONE_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+          <InputArea name="durationEffective" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Duration Effective" id="durationEffectiveId" />
+              <Binding target="Value" binding="ProcessContext::MainBO.durationEffective" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+        <GroupElement name="Summary">
+          <Bindings>
+            <Resource target="Title" type="Label" id="Summary" defaultLabel="Summary" />
+          </Bindings>
+          <Merger name="OrdersItems" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Orders / Items" id="OrdersItemsId" />
+            </Bindings>
+            <InputArea name="OrderCount" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Orders" id="Orders" />
+                <Binding target="Value" binding="ProcessContext::OrderInfo.orders" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="ItemsCount" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Items" id="Items" />
+                <Binding target="Value" binding="ProcessContext::OrderInfo.items" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </Merger>
+          <Merger name="TotalOrderValue" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Total Order Value" id="TotalOrderValueId" />
+            </Bindings>
+            <InputArea name="TotalOrderValue" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Total Order Value" id="TotalOrderValue" />
+                <Binding target="Value" type="Decimal" formatV2="10.2" binding="ProcessContext::OrderInfo.totalValue" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <SelectionBox name="Currency" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CurrencyId" defaultLabel="Currency" />
+                <Binding target="DataSource" toggleId="Currency" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::OrderInfo.currency" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </Merger>
+        </GroupElement>
+        <GroupElement name="CustomerInfoGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="Customer" defaultLabel="Customer" />
+          </Bindings>
+          <InputArea name="CustomerName" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Customer Name" id="CustomerName" />
+              <Binding target="Value" binding="ProcessContext::MainBO.luCustomer.name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <Merger name="StreetNo" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Street No." id="StreetNoId" />
+            </Bindings>
+            <InputArea name="Street" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Street" id="Street" />
+                <Binding target="Value" binding="ProcessContext::MainBO.luCustomer.street" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="House no" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="HouseNumberId" defaultLabel="House No." />
+                <Binding target="Value" binding="ProcessContext::MainBO.luCustomer.houseNumber" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </Merger>
+          <Merger name="ZIPCity" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="ZIP City" id="ZIPCityId" />
+            </Bindings>
+            <InputArea name="ZIP" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="ZIP" id="ZIP" />
+                <Binding target="Value" binding="ProcessContext::MainBO.luCustomer.zipCode" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="City" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="City" id="City" />
+                <Binding target="Value" binding="ProcessContext::MainBO.luCustomer.city" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </Merger>
+          <InputArea name="State" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="State" defaultLabel="State" />
+              <Binding target="Value" binding="ProcessContext::MainBO.luCustomer.state" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+      </Area>
+      <Area areaName="Exceptions" areaPattern="SingleElementArea">
+        <UIPluginV2 name="CardSurveyExceptionsUiPlugin" uiPlugin="CardSurveyExceptionsUiPluginV2">
+          <Bindings>
+            <Binding target="surveys" binding="ProcessContext::SurveyExceptions" type="Blob" bindingMode="ONE_WAY" />
+           <Binding target="maximizedMode" type="Text" binding="ProcessContext::ModeMaximized" bindingMode="ONE_WAY" />
+          </Bindings>
+        </UIPluginV2>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

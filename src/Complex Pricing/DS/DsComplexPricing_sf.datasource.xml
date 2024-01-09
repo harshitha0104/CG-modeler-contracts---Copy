@@ -1,0 +1,714 @@
+<Datasource name="DsComplexPricing" backendSystem="sf" objectClass="ComplexPricing" readOnly="true" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Custom>
+      <!-- ######################################
+   Reads calculation steps of given calculation schema
+   Params: CalculationSchemaKey
+   ######################################-->
+      <CndCpReadCalculationSteps><![CDATA[
+		var cndCpCalculationSchemaPKey = "";
+        if (Utils.isDefined(jsonParams.CndCpCalculationSchemaPKey)){
+        	cndCpCalculationSchemaPKey = Utils.convertForDBParam(jsonParams.CndCpCalculationSchemaPKey, "DomPKey");
+        }
+        var sqlParams = {cndCpCalculationSchemaPKey};
+        var sql = "";
+		sql += "SELECT ";
+		sql +=       "CP_Calculation_Schema_Step__c.Position__c as Position, ";
+		sql +=       "CP_Calculation_Schema_Step__c.Step_Reference__c as StepReference, ";
+		sql +=       "CP_Calculation_Schema_Step__c.Pricing_Condition_Template__c as CndCpMetaPKey, ";
+		sql +=       "CP_Pricing_Condition_Template__c.Meta_Type__c as CndCpMetaMetaId, ";
+		sql +=       "CP_Pricing_Condition_Template__c.Name as ConditionMetaId, ";
+		sql +=       "CP_Pricing_Condition_Template__c.Condition_Level__c as ConditionLevel, ";
+		sql +=       "CP_Pricing_Condition_Template__c.Base__c as Base, ";
+		sql +=       "CP_Pricing_Condition_Template__c.Scale_Type__c as ScaleType, ";
+		sql +=       "CP_Pricing_Condition_Template__c.Distribute_To_Item__c as DistributeToItem, ";
+		sql +=       "CP_Pricing_Condition_Template__c.Item_Grouping__c as ItemGrouping, ";
+		sql +=       "CP_Pricing_Condition_Template__c.Manual__c as Manual, ";
+		sql +=       "CP_Pricing_Condition_Template__c.Manual_Source_Attribute__c as ManualSourceAttribute, ";
+		sql +=       "CP_Pricing_Condition_Template__c.Subtotal__c as Subtotal, ";
+		sql +=       "CP_Calculation_Schema_Step__c.Statistical__c as Statistical, ";
+		sql +=       "CP_Calculation_Schema_Step__c.Print_Relevant__c as PrintRelevant, ";
+		sql +=       "CASE CP_Calculation_Schema_Step__c.Interim_Value__c WHEN 'CarryOver(1)' THEN 'CarryOver1' WHEN 'CarryOver(2)' THEN 'CarryOver2' WHEN 'CarryOver(3)' THEN 'CarryOver3' WHEN 'CarryOver(4)' THEN 'CarryOver4' WHEN 'CarryOver(5)' THEN 'CarryOver5' WHEN 'CarryOver(6)' THEN 'CarryOver6' ELSE ' ' END as CalcVariable, ";
+		sql +=       "CP_Calculation_Schema_Step__c.Target_Condition__c as TargetAttributeCondition, ";
+		sql +=       "CP_Calculation_Schema_Step__c.Target_Result__c as TargetAttributeResult, ";
+		sql +=       "CP_Calculation_Schema_Step__c.Constraint_User_Exit_Id__c as ConstraintUserExitId, ";
+		sql +=       "CP_Calculation_Schema_Step__c.Base_User_Exit_Id__c as BaseUserExitId, ";
+		sql +=       "CP_Calculation_Schema_Step__c.User_Exit_Id__c as UserExitId, ";
+		sql +=       "CP_Calculation_Schema_Step__c.Calculation_Groups__c as CalculationGroups, ";
+		sql +=       "CP_Calculation_Schema_Step__c.Item_Meta_Rule__c as CndCpItemMetaRulePKey, ";
+		sql +=       "CP_Calculation_Schema_Step__c.Accrual__c as Accrual, ";
+        sql +=       "CP_Calculation_Schema_Step__c.Selectable_Promotion_Skip__c as SkipSelectablePromotion, ";
+		sql +=       "CP_Pricing_Condition_Template__c.Search_Strategy__c as CndCpSearchStrategyPKey, ";
+		sql +=       "CP_Pricing_Condition_Template__c.Decimal_Places__c as DecimalPlaces, ";
+		sql +=       "CP_Pricing_Condition_Template__c.Rounding__c as Rounding, ";
+		sql +=       "CP_Calculation_Schema_Step__c.Mandatory__c as Mandatory, ";
+		sql +=       "'0' as PDARelevant, ";
+		sql +=       "CP_Pricing_Condition_Template__c.Description_#Language#__c as CndCpMetaText ";
+		sql += "FROM ";
+		sql +=       "CP_Calculation_Schema_Step__c, ";
+		sql +=       "CP_Pricing_Condition_Template__c, ";
+		sql +=       "	CP_Calculation_Schema__c ";
+		sql += "WHERE ";
+		sql +=       "CP_Calculation_Schema_Step__c.Pricing_Condition_Template__c=CP_Pricing_Condition_Template__c.Id ";
+		sql +=       "AND CP_Calculation_Schema_Step__c.Calculation_Schema__c=	CP_Calculation_Schema__c.Id ";
+		sql +=       "AND CP_Pricing_Condition_Template__c.Sales_Org__c='#SALESORG#' ";
+		sql +=       "AND CP_Calculation_Schema__c.Sales_Org__c='#SALESORG#' ";
+		sql +=       "AND CP_Calculation_Schema_Step__c.Active__c='1' ";
+		sql +=       "AND CP_Calculation_Schema_Step__c.Calculation_Schema__c= #cndCpCalculationSchemaPKey# ";
+		sql += "ORDER BY ";
+		sql +=       "Position__c asc";
+		return Utils.replaceMacrosParam(sql, sqlParams);
+		]]></CndCpReadCalculationSteps>
+      <!-- ######################################
+   Reads KeyTypes for given list of search strategies.
+   Params: List of search strategies
+   ######################################-->
+      <CndCpReadKeyTypes><![CDATA[
+
+		var searchStrategyList = [];
+        if(Utils.isDefined(jsonParams.SearchStrategyList)){
+            searchStrategyList = jsonParams.SearchStrategyList;
+        }
+        var sqlParams = {};
+		var sql1= "";
+
+		sql1 += "SELECT ";
+		sql1 +=       "CP_Search_Strategy_Step__c.Search_Strategy__c as CndCpSearchStrategyPKey, ";
+		sql1 +=       "CP_Search_Strategy__c.Name as SearchStrategyId, ";
+		sql1 +=       "CP_Key_Type__c.Id as CndCpKeyTypePKey, ";
+		sql1 +=       "CP_Search_Strategy_Step__c.Account_Hierarchy_Search__c as BpaHierarchySearch, ";
+		sql1 +=       "CP_Search_Strategy_Step__c.Product_Hierarchy_Search__c as PrdHierarchySearch, ";
+		sql1 +=       "CP_Key_Type__c.Consider_Account__c as ConsiderBpaMain, ";
+		sql1 +=       "CP_Key_Type__c.Consider_Account_Set__c as ConsiderBpaSet, ";
+		sql1 +=       "CP_Key_Type__c.Consider_Product_Hierarchy__c as ConsiderPrdMain, ";
+		sql1 +=       "CP_Key_Type__c.Consider_Product_Set__c as ConsiderPrdSet, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_1__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Entity__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_1__c) END) as Key1MobilityEntity, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_1__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Attribute__c ";
+		sql1 += "FROM ";
+		sql1 += "      CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_1__c) END) as Key1MobilityAttribute, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_2__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Attribute__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_2__c) END) as Key2MobilityAttribute, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_2__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Entity__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_2__c) END) as Key2MobilityEntity, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_3__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Entity__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_3__c) END) as Key3MobilityEntity, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_3__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Attribute__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_3__c) END) as Key3MobilityAttribute, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_4__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Entity__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_4__c) END) as Key4MobilityEntity, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_4__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Attribute__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_4__c) END) as Key4MobilityAttribute, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_5__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Entity__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_5__c) END) as Key5MobilityEntity, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_5__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Attribute__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_5__c) END) as Key5MobilityAttribute, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_6__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Attribute__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_6__c) END) as Key6MobilityAttribute, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_6__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Entity__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_6__c) END) as Key6MobilityEntity, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_7__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Attribute__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_7__c) END) as Key7MobilityAttribute, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_7__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Entity__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_7__c) END) as Key7MobilityEntity, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_8__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Attribute__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_8__c) END) as Key8MobilityAttribute, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_8__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Entity__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_8__c) END) as Key8MobilityEntity, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_9__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Attribute__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_9__c) END) as Key9MobilityAttribute, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_9__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Entity__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_9__c) END) as Key9MobilityEntity, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_10__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Attribute__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_10__c) END) as Key10MobilityAttribute, ";
+		sql1 +=       "(CASE WHEN LTRIM(RTRIM(CP_Key_Type__c.Key_10__c ";
+		sql1 +=       "))= '' THEN ' ' ElSE (SELECT ";
+		sql1 +=       "CP_Key_Attribute__c.Mobility_Entity__c ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Key_Attribute__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Key_Attribute__c.Id=CP_Key_Type__c.Key_10__c) END) as Key10MobilityEntity, ";
+		sql1 +=       "CP_Search_Strategy_Step__c.Exclusive__c as StepExclusive, ";
+		sql1 +=       "CP_Key_Type__c.Id as KeyTypeId, ";
+		sql1 +=       "CP_Search_Strategy_Step__c.Sort__c as Position, ";
+		sql1 +=       "CP_Search_Strategy_Step__c.Constraint_User_Exit_Id__c as ConstraintUserExitId, ";
+		sql1 +=       "CP_Search_Strategy_Step__c.Customer_Role__c as CustomerRole, ";
+		sql1 +=       "CP_Key_Type__c.Consider_Account_Hierarchy__c as ConsiderBpaHierarchy, ";
+		sql1 +=       "CP_Key_Type__c.Consider_Sales_Org__c as ConsiderSalesOrg, ";
+		sql1 +=       "CP_Key_Type__c.Consider_Promotion__c as ConsiderPromotion, ";
+		sql1 +=       "CP_Key_Type__c.Consider_Promotion_Rewards__c as ConsiderReward, ";
+		sql1 +=       "CP_Key_Type__c.Consider_Product_Hierarchy__c as ConsiderPrdHierarchy, ";
+		sql1 +=       "'0' as ConsiderDivision, ";
+		sql1 +=       "'0' as ConsiderDistribChannel ";
+		sql1 += "FROM ";
+		sql1 +=       "CP_Search_Strategy_Step__c, ";
+		sql1 +=       "CP_Key_Type__c, ";
+		sql1 +=       "CP_Search_Strategy__c ";
+		sql1 += "WHERE ";
+		sql1 +=       "CP_Search_Strategy_Step__c.Key_Type__c=CP_Key_Type__c.Id ";
+		sql1 +=       "AND CP_Search_Strategy_Step__c.Search_Strategy__c=CP_Search_Strategy__c.Id ";
+		sql1 +=       "AND CP_Key_Type__c.Sales_Org__c= '#SALESORG#' ";
+		sql1 +=       "AND CP_Search_Strategy__c.Sales_Org__c= '#SALESORG#' ";
+		sql1 +=       "AND CP_Search_Strategy_Step__c.Search_Strategy__c IN ( ";
+
+		//searchStrategyList
+        searchStrategyList = Utils.getListParams(searchStrategyList);
+
+		var sql2 = " ) ORDER BY CP_Search_Strategy_Step__c.Search_Strategy__c, Position asc";
+		
+		var sqlStmt1Result = Utils.replaceMacrosParam(sql1, sqlParams);
+        var sqlStmt2Result = Utils.replaceMacrosParam(sql2, sqlParams);
+		var finalSql = sqlStmt1Result.sql + searchStrategyList.sql + sqlStmt2Result.sql;
+        var finalParams = sqlStmt1Result.params.concat(searchStrategyList.params).concat(sqlStmt2Result.params);
+
+        return {sql: finalSql, params: finalParams};
+		]]></CndCpReadKeyTypes>
+      <!-- ######################################
+   Reads relevant promotions for given customer, calculation schema and pricing date. Calculation schema is needed because it is  checked if calculation schema has  steps with key types which consider promotions and if conditions for this key type and condition template are available. That is done beause of performance optimizations.
+   Params: CustomerKey, CalculationSchemaKey, PricingDate
+   ######################################-->
+      <CndCpReadPromotions><![CDATA[  
+		var customerPKey = "";
+		var calculationSchemaPKey = "";
+		if (Utils.isDefined(jsonParams.CustomerPKey)){
+			customerPKey = Utils.convertForDBParam(jsonParams.CustomerPKey, "DomPKey");
+		}
+		if (Utils.isDefined(jsonParams.CalculationSchemaPKey)){
+			calculationSchemaPKey = Utils.convertForDBParam(jsonParams.CalculationSchemaPKey, "DomPKey");
+        }
+        var sqlParams = {customerPKey,calculationSchemaPKey};
+        var sql = "";
+		sql += "SELECT DISTINCT PR.Promotion__c as PromotionPrmMainPKey ";
+		sql += "FROM Promotion_Store__c AS PR,";
+		sql += "     CP_Key_Type__c AS KT,";
+		sql += "     CP_Calculation_Schema_Step__c AS STEP,";
+		sql += "     CP_Pricing_Condition_Template__c AS META,";
+		sql += "     CP_Search_Strategy__c as METAKTREL,";
+		sql += "     CP_Search_Strategy_Step__c as KTREL, ";
+        sql += "     Promotion_Template__c as PRTMPL, ";
+        sql += "     Promotion__c as PRHEAD ";
+		sql += "WHERE PR.Store__c = #customerPKey# AND ";
+		sql += "     KT.Id = KTREL.Key_Type__c AND ";
+		sql += "     KT.Consider_Promotion__c = '1' AND ";
+		sql += "     KTREL.Search_Strategy__c = METAKTREL.Id AND";
+		sql += "     METAKTREL.Id=META.Search_Strategy__c AND";
+		sql += "     META.Id = STEP.Pricing_Condition_Template__c AND ";
+        sql += "     PRHEAD.Id = PR.Promotion__c AND ";
+        sql += "     PRTMPL.Id = PRHEAD.Promotion_Template__c AND ";
+        sql += "     PRTMPL.Selectable_Promotion__c = '0' AND ";
+        sql += "	 PRHEAD.Active__c = '1' AND ";
+        sql += "	 PRHEAD.Phase__c = 'Committed' AND ";
+        sql += "	 #compareAsDate('PRHEAD.Date_From__c', 'Date','<=' , #TodayAsDate# , 'Date')# AND ";  
+        sql += "	 #compareAsDate('PRHEAD.Date_Thru__c', 'Date','>=' , #TodayAsDate# , 'Date')# AND ";
+		sql += "     STEP.Calculation_Schema__c = #calculationSchemaPKey# ";
+		sql += " AND EXISTS (";
+		sql += "         SELECT NULL";
+		sql += "         FROM CP_Pricing_Condition__c";
+		sql += "         WHERE CP_Pricing_Condition__c.Promotion__c = PR.Promotion__c AND ";
+		sql += "               CP_Pricing_Condition__c.Pricing_Condition_Template__c = META.Id AND ";
+		sql += "               CP_Pricing_Condition__c.Key_Type__c = KT.Id";
+		sql += "     )";
+
+		sql += " UNION";
+
+		sql += " SELECT DISTINCT PR.Id as PromotionPrmMainPKey ";
+		sql += " FROM Promotion__c AS PR,";
+		sql += "     CP_Key_Type__c AS KT,";
+		sql += "     CP_Calculation_Schema_Step__c AS STEP,";
+		sql += "     CP_Pricing_Condition_Template__c AS META,";
+		sql += "     CP_Search_Strategy__c as METAKTREL,";
+		sql += "     CP_Search_Strategy_Step__c as KTREL, ";
+        sql += "     Promotion_Template__c as PRTMPL ";
+		sql += " JOIN Account_Set_Account__c ON PR.Anchor_Account_Set__c = Account_Set_Account__c.Account_Set__c";
+		sql += " WHERE Account_Set_Account__c.Account_Set_Account__c = #customerPKey# AND ";
+		sql += "     KT.Id = KTREL.Key_Type__c AND ";
+		sql += "     KT.Consider_Promotion__c = '1' AND ";
+		sql += "     KTREL.Search_Strategy__c = METAKTREL.Id AND";
+		sql += "     METAKTREL.Id=META.Search_Strategy__c AND";
+		sql += "     META.Id = STEP.Pricing_Condition_Template__c AND ";
+        sql += "     PRTMPL.Id = PR.Promotion_Template__c AND ";
+        sql += "     PRTMPL.Selectable_Promotion__c = '0' AND ";
+		sql += "	 PR.Active__c = '1' AND ";
+        sql += "	 PR.Phase__c = 'Committed' AND ";
+        sql += "	 #compareAsDate('PR.Date_From__c', 'Date','<=' , #TodayAsDate# , 'Date')# AND ";  
+        sql += "	 #compareAsDate('PR.Date_Thru__c', 'Date','>=' , #TodayAsDate# , 'Date')# AND ";
+		sql += "     STEP.Calculation_Schema__c = #calculationSchemaPKey# ";
+		sql += " AND EXISTS (";
+		sql += "         SELECT NULL";
+		sql += "         FROM CP_Pricing_Condition__c";
+		sql += "         WHERE CP_Pricing_Condition__c.Promotion__c = PR.Id AND ";
+		sql += "               CP_Pricing_Condition__c.Pricing_Condition_Template__c = META.Id AND ";
+		sql += "               CP_Pricing_Condition__c.Key_Type__c = KT.Id";
+		sql += "     )";
+
+		return Utils.replaceMacrosParam(sql, sqlParams);
+]]></CndCpReadPromotions>
+      <CndCpReadRewards><![CDATA[
+		var customerPKey = "";
+        var calculationSchemaPKey = "";
+        var sql = "";
+
+        if (Utils.isDefined(jsonParams.CustomerPKey)){
+            customerPKey = Utils.convertForDBParam(jsonParams.CustomerPKey, "DomPKey");
+        }
+        if (Utils.isDefined(jsonParams.CalculationSchemaPKey)){
+            calculationSchemaPKey = Utils.convertForDBParam(jsonParams.CalculationSchemaPKey, "DomPKey");
+        }
+        var sqlParams = {customerPKey, calculationSchemaPKey};
+
+		sql += "SELECT DISTINCT PRREWARD.Id as rewardPKey, PR.Promotion__c as promotionPKey, META.Id as cndCpMetaPKey ";
+		sql += "FROM Promotion_Store__c AS PR,";
+		sql += "     CP_Key_Type__c AS KT,";
+		sql += "     CP_Calculation_Schema_Step__c AS STEP,";
+		sql += "     CP_Pricing_Condition_Template__c AS META,";
+		sql += "     CP_Search_Strategy__c as METAKTREL,";
+		sql += "     CP_Search_Strategy_Step__c as KTREL, ";
+        sql += "     Promotion_Template__c as PRTMPL, ";
+        sql += "     Promotion__c as PRHEAD, ";
+        sql += "     Promotion_Reward_Group__c as PRREWARDGRP, ";
+        sql += "     Promotion_Reward__c as PRREWARD ";
+		sql += "WHERE PR.Store__c = #customerPKey# AND ";
+		sql += "     KT.Id = KTREL.Key_Type__c AND ";
+		sql += "     KT.Consider_Promotion_Rewards__c = '1' AND ";
+		sql += "     KTREL.Search_Strategy__c = METAKTREL.Id AND";
+		sql += "     METAKTREL.Id=META.Search_Strategy__c AND";
+		sql += "     META.Id = STEP.Pricing_Condition_Template__c AND ";
+        sql += "     PRHEAD.Id = PR.Promotion__c AND ";
+		sql += "	 PRHEAD.Active__c = '1' AND ";
+        sql += "	 PRHEAD.Phase__c = 'Committed' AND ";
+        sql += "	 #compareAsDate('PRHEAD.Date_From__c', 'Date','<=' , #TodayAsDate# , 'Date')# AND ";  
+        sql += "	 #compareAsDate('PRHEAD.Date_Thru__c', 'Date','>=' , #TodayAsDate# , 'Date')# AND ";
+        sql += "     PRTMPL.Id = PRHEAD.Promotion_Template__c AND ";
+        sql += "     PRTMPL.Selectable_Promotion__c = '1' AND ";
+		sql += "     STEP.Calculation_Schema__c = #calculationSchemaPKey# AND ";
+		sql += "     PRREWARDGRP.Promotion__c = PRHEAD.Id AND ";
+		sql += "     PRREWARDGRP.Id = PRREWARD.Promotion_Reward_Group__c AND ";
+		sql += "     PRREWARD.Pricing_Condition_Template__c = META.Id ";
+		sql += " AND EXISTS (";
+		sql += "         SELECT NULL";
+		sql += "         FROM CP_Pricing_Condition__c";
+		sql += "         WHERE CP_Pricing_Condition__c.Pricing_Condition_Template__c = META.Id AND ";
+		sql += "               CP_Pricing_Condition__c.Key_Type__c = KT.Id";
+		sql += "     )";
+
+		sql += " UNION";
+
+		sql += " SELECT DISTINCT PRREWARD.Id as rewardPKey, PR.Id as promotionPKey, META.Id as cndCpMetaPKey ";
+		sql += " FROM Promotion__c AS PR,";
+		sql += "     CP_Key_Type__c AS KT,";
+		sql += "     CP_Calculation_Schema_Step__c AS STEP,";
+		sql += "     CP_Pricing_Condition_Template__c AS META,";
+		sql += "     CP_Search_Strategy__c as METAKTREL,";
+		sql += "     CP_Search_Strategy_Step__c as KTREL, ";
+        sql += "     Promotion_Template__c as PRTMPL, ";
+		sql += "     Promotion_Reward_Group__c as PRREWARDGRP, ";
+        sql += "     Promotion_Reward__c as PRREWARD ";
+		sql += " JOIN Account_Set_Account__c ON PR.Anchor_Account_Set__c = Account_Set_Account__c.Account_Set__c";
+		sql += " WHERE Account_Set_Account__c.Account_Set_Account__c = #customerPKey# AND ";
+		sql += "     KT.Id = KTREL.Key_Type__c AND ";
+		sql += "     KT.Consider_Promotion_Rewards__c = '1' AND ";
+		sql += "     KTREL.Search_Strategy__c = METAKTREL.Id AND";
+		sql += "     METAKTREL.Id=META.Search_Strategy__c AND";
+		sql += "     META.Id = STEP.Pricing_Condition_Template__c AND ";
+        sql += "     PRTMPL.Id = PR.Promotion_Template__c AND ";
+        sql += "     PRTMPL.Selectable_Promotion__c = '1' AND ";
+		sql += "	 PR.Active__c = '1' AND ";
+        sql += "	 PR.Phase__c = 'Committed' AND ";
+        sql += "	 #compareAsDate('PR.Date_From__c', 'Date','<=' , #TodayAsDate# , 'Date')# AND ";  
+        sql += "	 #compareAsDate('PR.Date_Thru__c', 'Date','>=' , #TodayAsDate# , 'Date')# AND "
+		sql += "     STEP.Calculation_Schema__c = #calculationSchemaPKey# AND";
+		sql += "     PRREWARDGRP.Promotion__c = PR.Id AND ";
+		sql += "     PRREWARDGRP.Id = PRREWARD.Promotion_Reward_Group__c AND ";
+		sql += "     PRREWARD.Pricing_Condition_Template__c = META.Id ";
+		sql += " AND EXISTS (";
+		sql += "         SELECT NULL";
+		sql += "         FROM CP_Pricing_Condition__c";
+		sql += "         WHERE CP_Pricing_Condition__c.Pricing_Condition_Template__c = META.Id AND ";
+		sql += "               CP_Pricing_Condition__c.Key_Type__c = KT.Id";
+		sql += "     )";
+
+		return Utils.replaceMacrosParam(sql, sqlParams);
+      			]]></CndCpReadRewards>
+      <!-- ######################################
+   Reads customer sets for given customer and calculation schema.
+   Calculation schema is needed because it is checked if calculation schema has steps with key types which consider customer sets and if conditions for this key type and condition template are available. That is done beause of performance optimizations.
+   Params: CustomerKey, CalculationSchemaKey
+   ######################################-->
+      <CndCpReadBpaSets><![CDATA[
+		var customerPKey = "";
+        var calculationSchemaPKey = "";
+        if (Utils.isDefined(jsonParams.CustomerPKey)){
+            customerPKey = Utils.convertForDBParam(jsonParams.CustomerPKey, "DomPKey");
+        }
+        if (Utils.isDefined(jsonParams.CalculationSchemaPKey)){
+            calculationSchemaPKey = Utils.convertForDBParam(jsonParams.CalculationSchemaPKey, "DomPKey");
+        }
+        var sqlParams = {customerPKey, calculationSchemaPKey};
+        var sql= "";
+		sql += "SELECT ";
+		sql += "DISTINCT BR.Account_Set__c as BpaSetPKey ";
+		sql += "FROM Account_Set_Account__c as BR, CP_Key_Type__c as KT, CP_Calculation_Schema_Step__c as STEP, CP_Pricing_Condition_Template__c as META, CP_Search_Strategy_Step__c as KTREL ";
+		sql += "WHERE BR.Account_Set_Account__c=#customerPKey# AND ";
+		sql += "KT.Id = KTREL.Key_Type__c AND ";
+		sql += "KT.Consider_Account_Set__c='1' AND ";
+		sql += "KTREL.Search_Strategy__c=META.Search_Strategy__c AND ";
+		sql += "META.Id = STEP.Pricing_Condition_Template__c AND ";
+		sql += "STEP.Calculation_Schema__c=#calculationSchemaPKey# ";
+		//Performance Optimization: only consider Customer Sets whcih have condition records
+		sql += "AND EXISTS(SELECT NULL from CP_Pricing_Condition__c WHERE CP_Pricing_Condition__c.Account_Set__c=BR.Account_Set__c AND CP_Pricing_Condition__c.Pricing_Condition_Template__c=META.Id AND CP_Pricing_Condition__c.Key_Type__c=KT.Id) ";
+		return Utils.replaceMacrosParam(sql, sqlParams);
+]]></CndCpReadBpaSets>
+      <!-- ######################################
+   Reads the customer hierarchy for given customer and pricing date.
+   Params: CustomerKey
+   NOTE!!! - Do not change the attribute names of this query. There is an implicit check in the pricing engine which check the attribute names in order to distinguish between CGCloud/onPrem mode!
+           - It is necessary to seect the Org Level from account extension because the flatten account hierarchy level does not necessarily match with the Org Level.
+             If there is a hierarchy Country -> Region -> Store and all levels are filled then the levels match
+             Country   OL 1      CHL 1
+             Region	   OL 2      CHL 2
+             Store     OL 3      CHL 3
+             But if there exists missing levels between the nodes the flattener will close it:
+             Country   OL 1      CHL 1
+             Store	   OL 3      CHL 2
+             As example shows Store has always same OL but can have different CHL
+   ######################################-->
+      <CndCpReadCustomerHierarchy><![CDATA[
+        var customerPKey = "";
+        if (Utils.isDefined(jsonParams.CustomerPKey)){
+            customerPKey = Utils.convertForDBParam(jsonParams.CustomerPKey, "DomPKey");
+        }
+        var sqlParams = {customerPKey};
+		var sql= "";
+		sql +=" SELECT  ";
+		sql +="  Account_Level_01__c, ";
+		sql +="  (Select Account_Extension__c.Org_Level__c  from Account_Extension__c where Account_Level_01__c = Account_Extension__c.Account__c) as OrgLevel1, ";
+		sql +="  Account_Level_02__c, ";
+		sql +="  (Select Account_Extension__c.Org_Level__c  from Account_Extension__c where Account_Level_02__c = Account_Extension__c.Account__c) as OrgLevel2, ";
+		sql +="  Account_Level_03__c, ";
+		sql +="  (Select Account_Extension__c.Org_Level__c  from Account_Extension__c where Account_Level_03__c = Account_Extension__c.Account__c) as OrgLevel3, ";
+		sql +="  Account_Level_04__c, ";
+		sql +="  (Select Account_Extension__c.Org_Level__c  from Account_Extension__c where Account_Level_04__c = Account_Extension__c.Account__c) as OrgLevel4, ";
+		sql +="  Account_Level_05__c, ";
+		sql +="  (Select Account_Extension__c.Org_Level__c  from Account_Extension__c where Account_Level_05__c = Account_Extension__c.Account__c) as OrgLevel5, ";
+		sql +="  Account_Level_06__c, ";
+		sql +="  (Select Account_Extension__c.Org_Level__c  from Account_Extension__c where Account_Level_06__c = Account_Extension__c.Account__c) as OrgLevel6, ";
+		sql +="  Account_Level_07__c, ";
+		sql +="  (Select Account_Extension__c.Org_Level__c  from Account_Extension__c where Account_Level_07__c = Account_Extension__c.Account__c) as OrgLevel7, ";
+		sql +="  Account_Level_08__c, ";
+		sql +="  (Select Account_Extension__c.Org_Level__c  from Account_Extension__c where Account_Level_08__c = Account_Extension__c.Account__c) as OrgLevel8 ";
+		sql +=" FROM Flatten_Account_Hierarchy__c ";
+		sql +=" WHERE Flatten_Account_Hierarchy__c.Account__c = #customerPKey# ";
+		return Utils.replaceMacrosParam(sql, sqlParams);
+		]]></CndCpReadCustomerHierarchy>
+      <!-- ######################################
+   Reads conversion factor for given currencies and pricing date.
+   Params: FromCurrency, ToCurrency, PricingDate
+   !!! Note: Not available in CGCloud backend ... derrived with 1
+   ######################################-->
+      <CndCpReadCurrencyConversionFactor><![CDATA[  
+	   var sqlParams = {};
+	   var sql = "SELECT 1 as Ratio,1 as Amount";
+	   return Utils.replaceMacrosParam(sql, sqlParams);
+	   ]]></CndCpReadCurrencyConversionFactor>
+      <!-- ######################################
+   Reads unit informations for given product.
+   Params: ProductKey
+   ######################################-->
+      <CpReadUnitFactors><![CDATA[ 
+		var productPKey = "";
+		if (Utils.isDefined(jsonParams.ProductPKey)){
+			productPKey = Utils.convertForDBParam(jsonParams.ProductPKey, "DomPKey");
+		}
+		var sqlParams = {productPKey};
+		var sql = "";
+		sql += "SELECT ";
+		sql += "Unit_Of_measure__c.Pieces_per_Smallest_Unit__c as PiecesPerSmallestUnit, Unit_Of_measure__c.Is_Order_Unit__c as IsOrderUnit, Unit_Of_measure__c.Is_Consumer_Unit__c as IsConsumerUnit, Unit_Of_measure__c.Unit_Type__c as UnitType, ";
+		sql += "Unit_Of_measure__c.Is_Price_Unit__c as IsPriceUnit, Volume__c as CndCpVolume, Weight__c as CndCpWeight ";
+		sql += "FROM ";
+		sql += "Unit_Of_measure__c ";
+		sql += "WHERE ";
+		sql += "Unit_Of_measure__c.Product__c = #productPKey# ";
+		return Utils.replaceMacrosParam(sql, sqlParams);
+		]]></CpReadUnitFactors>
+      <!-- ######################################
+   Reads unit informations for given list of products.
+   Params: ProductList
+   ######################################-->
+      <CpReadUnitFactorsForProductList><![CDATA[ 
+		var productPKeyList = [];
+		if (Utils.isDefined(jsonParams.ProductList)){
+			productPKeyList = Utils.getListParams(jsonParams.ProductList);
+		}
+		var sqlParams = {};
+		var sql = "";
+		sql += "SELECT ";
+		sql += "Unit_Of_measure__c.Product__c as ProductPKey, Unit_Of_measure__c.Pieces_per_Smallest_Unit__c as PiecesPerSmallestUnit, Unit_Of_measure__c.Is_Order_Unit__c as IsOrderUnit, Unit_Of_measure__c.Is_Consumer_Unit__c as IsConsumerUnit, Unit_Of_measure__c.Unit_Type__c as UnitType, ";
+		sql += "Unit_Of_measure__c.Is_Price_Unit__c as IsPriceUnit, Volume__c as CndCpVolume, Weight__c as CndCpWeight ";
+		sql += "FROM ";
+		sql += "Unit_Of_measure__c ";
+		sql += "WHERE ";
+		sql += "Unit_Of_measure__c.Product__c IN (";
+
+        var sql2 = ") ORDER BY Unit_Of_measure__c.Product__c "; 
+
+        var sqlStmt1Result = Utils.replaceMacrosParam(sql, sqlParams);
+        var sqlStmt2Result = Utils.replaceMacrosParam(sql2, sqlParams);
+        var finalSql = sqlStmt1Result.sql + productPKeyList.sql + sqlStmt2Result.sql;
+        var finalParams = sqlStmt1Result.params.concat(productPKeyList.params).concat(sqlStmt2Result.params);
+
+        return {sql: finalSql, params: finalParams};
+		]]></CpReadUnitFactorsForProductList>
+      <!-- ######################################
+   Reads item meta rule records for given list of meta rules.
+   Params: List of item meta rule keys
+   ######################################-->
+      <CndCpReadItemMetaUsage><![CDATA[ 
+        var cndCpItemMetaRulePKeyList = [];
+        if(Utils.isDefined(jsonParams.CndCpItemMetaRulePKeyList)){
+            cndCpItemMetaRulePKeyList = jsonParams.CndCpItemMetaRulePKeyList;
+        }
+        var sqlParams = {};
+		var sql1 = "";
+		sql1 += "SELECT ";
+		sql1 += "Item_Meta_Rule__c as CndCpItemMetaRulePKey, Order_Item_Template__c as SdoItemMetaPKey, Effect__c as Effect ";
+		sql1 += "FROM ";
+		sql1 += "Order_Item_Rule__c ";
+		sql1 += "WHERE ";
+		sql1 += "Item_Meta_Rule__c IN (";
+				
+        //cndCpItemMetaRulePKeyList
+        cndCpItemMetaRulePKeyList = Utils.getListParams(cndCpItemMetaRulePKeyList);
+
+        var sql2 = ") ";  
+
+        var sqlStmt1Result = Utils.replaceMacrosParam(sql1, sqlParams);
+        var sqlStmt2Result = Utils.replaceMacrosParam(sql2, sqlParams);
+        var finalSql = sqlStmt1Result.sql + cndCpItemMetaRulePKeyList.sql + sqlStmt2Result.sql;
+        var finalParams = sqlStmt1Result.params.concat(cndCpItemMetaRulePKeyList.params).concat(sqlStmt2Result.params);
+
+        return {sql: finalSql, params: finalParams};
+		]]></CndCpReadItemMetaUsage>
+      <!-- ######################################
+   Reads customer information for given customer. At the moment 
+   this is follwing list:
+	 -BpaCustomer.Name 
+	 -BpaCustomer.Id 
+	 -BpaCustomer.Priority
+	 -BpaCustomer.ClassOfTrade
+	 -BpaCustomer.CompanyType
+	 -BpaCustomer.TaxJurisdictionCode
+	 -BpaAddress.Usage
+	 -BpaAddress.City
+	 -BpaAddress.CountryState
+	 -BpaAddress.Country
+	 -BpaAddress.ZipCode
+   Params: CustomerKey
+   ######################################-->
+      <CndCpReadCustomerAttributes><![CDATA[ 
+        var bpaMainPKey = "";
+        if (Utils.isDefined(jsonParams.BpaMainPKey)){
+            bpaMainPKey = Utils.convertForDBParam(jsonParams.BpaMainPKey, "DomPKey");
+        }
+        var sqlParams = {bpaMainPKey};
+		var sql = "";
+		sql += "SELECT ";
+		sql += "Account.Name, Account.Account_Number__c as Id, Account_Extension__c.Priority__c as Priority, Account_Extension__c.Class_Of_Trade__c as ClassOfTrade, Account_Extension__c.Company_Type__c as CompanyType, Account_Extension__c.Tax_Jurisdiction_Code__c as TaxJurisdictionCode, ";
+		sql += "'Delivery' as Usage, Account.ShippingCity as City, Account.ShippingState as State, Account.ShippingCountry as Country, Account.ShippingPostalCode as ZipCode ";
+		sql += "FROM ";
+		sql += "Account, Account_Extension__c ";
+		sql += "WHERE ";
+		sql += "Account.Id = #bpaMainPKey# ";               
+		sql += "AND Account_Extension__c.Account__c = #bpaMainPKey# ";
+		return Utils.replaceMacrosParam(sql, sqlParams);
+		]]></CndCpReadCustomerAttributes>
+      <!-- ######################################
+   Reads product information for given product. At the moment this is following list:
+	 -PrdProduct.PKey
+	 -PrdProduct.EAN
+	 -PrdProduct.ShortId
+	 -PrdProduct.Id
+	 -PrdProduct.ForeignProduct
+	 -PrdProduct.State
+	 -PrdProduct.TaxClassification
+	 -PrdProduct.PrdType
+	 -PrdProduct.OrgLevel
+	 -PrdSales.Category
+	 -PrdSales.Criterion1PKey
+	 -PrdSales.Criterion2PKey
+	 -PrdSales.Criterion3PKey
+	 -PrdSales.Criterion4PKey
+	 -PrdSales.Criterion5PKey
+	 -PrdSales.Criterion6PKey
+   Params: ProductKey
+   ######################################-->
+      <CndCpReadProductAttributes><![CDATA[ 
+        var prdMainPKey = [];
+        if (Utils.isDefined(jsonParams.PrdMainPKey)){
+            prdMainPKey = jsonParams.PrdMainPKey;
+        }
+        var sqlParams = {};
+		var sql1 = "";
+		sql1 += "SELECT ";
+		sql1 += "Product2.Id as PKey, Product2.GTIN__c as EAN, Product2.Product_Short_Code__c as ShortId, Product2.Consumer_Goods_Product_Code__c as Id, Product2.Competitive_Product__c as ForeignProduct, Product2.State__c as State, Product2.Tax_Classification__c as TaxClassification, Product2.Product_Type__c as PrdType, Product2.Product_Level__c as OrgLevel, ";
+		sql1 += "Product2.Category__c as Category, Product2.Criterion_1_Product__c as Criterion1PKey, Product2.Criterion_2_Product__c as Criterion2PKey, Product2.Criterion_3_Product__c as Criterion3PKey, Product2.Criterion_4_Product__c as Criterion4PKey, Product2.Criterion_5_Product__c as Criterion5PKey, Product2.Criterion_6_Product__c as Criterion6PKey ";
+		sql1 += "FROM ";
+		sql1 += "Product2 ";
+		sql1 += "WHERE ";
+		sql1 += "Product2.Sales_Org__c = '#SalesOrg#' ";
+		sql1 += "AND Product2.Id IN (";
+        //prdMainPKey
+        prdMainPKey = Utils.getListParams(prdMainPKey);
+
+        var sql2 = ") ";
+
+        var sqlStmt1Result = Utils.replaceMacrosParam(sql1, sqlParams);
+        var sqlStmt2Result = Utils.replaceMacrosParam(sql2, sqlParams);
+        var finalSql = sqlStmt1Result.sql + prdMainPKey.sql + sqlStmt2Result.sql;
+        var finalParams = sqlStmt1Result.params.concat(prdMainPKey.params).concat(sqlStmt2Result.params);
+
+        return {sql: finalSql, params: finalParams};
+		]]></CndCpReadProductAttributes>
+      <!-- ######################################
+   !!! NOTE !!! Not supported in CGCloud because there is no product set type in place which can be used
+   Reads product sets for given product, calculation schema and pricing date.
+   Calculation schema is needed because it is checked if calculation schema has steps with key types which consider product sets and if conditions for this key type and condition template are available. That is done beause of performance optimizations.
+   Params: ProductKey, CalculationSchemaKey, PricingDate
+   ######################################-->
+      <CndCpReadPrdAssortments><![CDATA[  
+        var prdMainPKey = [];
+        var calculationSchemaPKey = "";
+        var pricingDate = "";
+        if (Utils.isDefined(jsonParams.PrdMainPKey)){
+            prdMainPKey = jsonParams.PrdMainPKey;
+        }
+        if (Utils.isDefined(jsonParams.PricingDate)){
+            pricingDate = Utils.convertForDBParam(jsonParams.PricingDate, "DomDate");
+        }
+        if (Utils.isDefined(jsonParams.CalculationSchemaPKey)){
+            calculationSchemaPKey = Utils.convertForDBParam(jsonParams.CalculationSchemaPKey, "DomPKey");
+        }
+        var sqlParams1 = {};
+        var sqlParams2 = {pricingDate,calculationSchemaPKey};
+		var sql1 = "";
+		sql1 += "SELECT PA.PrdAssortmentPKey, PA.PrdMainPKey FROM ( ";
+		sql1 += "SELECT AssortmentProduct.ProductId as PrdMainPKey, AssortmentProduct.AssortmentId as PrdAssortmentPKey, Assortment.Valid_From__c as ValidFrom, Assortment.Valid_Thru__c as ValidThru ";
+		sql1 += "FROM AssortmentProduct, Assortment, Product_Assortment_Template__c ";
+		sql1 += "WHERE AssortmentProduct.AssortmentId = Assortment.Id AND Assortment.Product_Assortment_Template__c = Product_Assortment_Template__c.Id AND AssortmentProduct.Active__c = '1' AND Product_Assortment_Template__c.Sales_Org__c='#SalesOrg#' ";
+		sql1 += "UNION ";
+		sql1 += "SELECT AssortmentProduct.ProductId as PrdMainPKey, AssortmentProduct.AssortmentId as PrdAssortmentPKey, Assortment.Valid_From__c as ValidFrom, Assortment.Valid_Thru__c as ValidThru ";
+		sql1 += "FROM AssortmentProduct, Assortment, Product_Assortment_Template__c, Product_Assortment_Order_Template__c, Order_Template__c, RecordType ";
+		sql1 += "WHERE AssortmentProduct.AssortmentId = Assortment.Id AND Assortment.Product_Assortment_Template__c = Product_Assortment_Template__c.Id AND Product_Assortment_Order_Template__c.Product_Assortment__c=Assortment.Id AND Order_Template__c.Id=Product_Assortment_Order_Template__c.Order_Template__c AND Order_Template__c.Sales_Document_Assortment__c='1' AND AssortmentProduct.Active__c = '1' AND Product_Assortment_Template__c.Sales_Org__c='#SalesOrg#' AND RecordType.Id = Product_Assortment_Template__c.RecordTypeId AND RecordType.DeveloperName = 'Sales_Document_Assortments' ";
+		sql1 += ") AS PA, ";
+		sql1 += "CP_Key_Type__c as KT, CP_Calculation_Schema_Step__c as STEP, CP_Pricing_Condition_Template__c as META, CP_Search_Strategy__c as METAKTREL, CP_Search_Strategy_Step__c as KTREL ";
+		sql1 += "WHERE PA.PrdMainPKey IN (";
+
+		//PrdMainPKey
+		prdMainPKey = Utils.getListParams(prdMainPKey);
+
+		var sql2 = ") AND #compareAsDate('PA.ValidFrom', 'Date', '<=',#pricingDate#, 'Date')# AND #compareAsDate('PA.ValidThru', 'Date', '>=',#pricingDate#, 'Date')# ";
+		sql2 += "AND KT.Id = KTREL.Key_Type__c AND KT.Consider_Product_Set__c='1' AND KTREL.Search_Strategy__c = METAKTREL.Id AND METAKTREL.Id=META.Search_Strategy__c AND META.Id = STEP.Pricing_Condition_Template__c AND STEP.Calculation_Schema__c= #calculationSchemaPKey# ";
+		
+		var sqlStmt1Result = Utils.replaceMacrosParam(sql1, sqlParams1);
+        var sqlStmt2Result = Utils.replaceMacrosParam(sql2, sqlParams2);
+        var finalSql = sqlStmt1Result.sql + prdMainPKey.sql + sqlStmt2Result.sql;
+        var finalParams = sqlStmt1Result.params.concat(prdMainPKey.params).concat(sqlStmt2Result.params);
+
+        return {sql: finalSql, params: finalParams};
+]]></CndCpReadPrdAssortments>
+    </Custom>
+  </Database>
+</Datasource>

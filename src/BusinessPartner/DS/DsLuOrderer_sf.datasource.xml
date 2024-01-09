@@ -1,0 +1,32 @@
+<DataSource name="DsLuOrderer" backendSystem="sf" businessObjectClass="LuOrderer" external="False" editableEntity="Account" readOnly="True" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account" column="Id" />
+    <Attribute name="name" table="Account" column="Name" />
+    <DerivedAttribute name="hitClosedListing" value="IFNULL((SELECT MIN(Obligatory__c) FROM Assortment INNER JOIN Product_Assortment_Store__c ON Assortment.Id = Product_Assortment_Store__c.Assortment__c WHERE Product_Assortment_Store__c.Store__c = '#pKey#'), '0')" />
+    <DerivedAttribute name="collectClosedListing" value="'0'" />
+    <Attribute name="considerModule" table="Account_Extension__c" column="Consider_Modules__c" />
+    <Attribute name="payerDocTaType" table="Account_Extension__c" column="Payer_Role_Document_Transaction_Type__c" />
+    <Attribute name="orderDocTaType" table="Account_Extension__c" column="Order_Document_Transaction_Type__c" />
+    <Attribute name="invoiceDocTaType" table="Account_Extension__c" column="Invoice_Document_Transaction_Type__c" />
+    <Attribute name="payerValidFrom" table="Account_Extension__c" column="Payer_Role_Valid_From__c" />
+    <Attribute name="payerValidThru" table="Account_Extension__c" column="Payer_Role_Valid_Thru__c" />
+    <Attribute name="paymentMode" table="Account_Extension__c" column="Payment_Mode__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account" alias="" idAttribute="Id" />
+    <Entity name="Account_Extension__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Account_Extension__c.Account__c" comparator="eq" rightSideType="Attribute" rightSideValue="Account.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Account.Id = #pKey#
+ ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

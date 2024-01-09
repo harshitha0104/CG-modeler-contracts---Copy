@@ -1,0 +1,4 @@
+<ValidationMessages name="BoHurdleEvaluationHelperMessages" businessObject="BoHurdleEvaluationHelper" schemaVersion="0.0.0.5">
+  <ValidationMessage name="Header_RewardProductsList" defaultMessage="You can choose up to #x# free products." comment="Title for selecting products within a max limit for free products." />
+  <ValidationMessage name="Header_RewardProductsList_NoLimit" defaultMessage="You can choose any number of products." comment="Title for selecting products without any limit for free products." />
+</ValidationMessages>

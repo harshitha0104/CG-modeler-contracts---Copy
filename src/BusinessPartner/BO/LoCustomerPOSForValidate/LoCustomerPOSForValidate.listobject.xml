@@ -1,0 +1,7 @@
+<ListObject name="LoCustomerPOSForValidate" generateLoadMethod="true" >
+  <DataSource name="DsLoCustomerPOSForValidate" />
+  <Item objectClass="LiCustomerPOSForValidate" />
+  <Methods>
+    <Method name="saveAsync" />
+  </Methods>
+</ListObject>

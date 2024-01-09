@@ -1,0 +1,13 @@
+<LookupObject name="LuInitialAndNextState" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuInitialAndNextState" />
+  <SimpleProperties>
+    <SimpleProperty name="initialStatePKey" type="DomPKey" dataSourceProperty="initialStatePKey" />
+    <SimpleProperty name="initialStateType" type="DomWfeStateType" dataSourceProperty="initialStateType" />
+    <SimpleProperty name="nextStatePKey" type="DomPKey" dataSourceProperty="nextStatePKey" />
+    <SimpleProperty name="nextStateType" type="DomWfeStateType" dataSourceProperty="nextStateType" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

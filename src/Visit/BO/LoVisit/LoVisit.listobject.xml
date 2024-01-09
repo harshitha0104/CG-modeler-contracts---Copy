@@ -1,0 +1,20 @@
+<ListObject name="LoVisit" generateLoadMethod="true" schemaVersion="1.1" paging="false">
+  <DataSource name="DsLoVisit" />
+  <Item objectClass="LiVisit" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="getCalendarTitle" />
+    <Method name="getVisitsByDate" />
+    <Method name="getDailyViewTitle" />
+    <Method name="getRetailStoreId" />
+    <Method name="navigateToCustomer" />
+    <Method name="prepareMapDetails" />
+  </Methods>
+</ListObject>

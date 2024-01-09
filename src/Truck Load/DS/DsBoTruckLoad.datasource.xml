@@ -1,0 +1,70 @@
+<DataSource name="DsBoTruckLoad" businessObjectClass="BoTruckLoad" external="false" editableEntity="SdoMain" schemaVersion="1.1">
+  <Attributes>
+    <Attribute name="pKey" table="SdoMain" column="PKey" />
+    <Attribute name="id" table="SdoMain" column="Id" />
+    <Attribute name="commitDate" table="SdoMain" column="CommitDate" />
+    <Attribute name="phase" table="SdoMain" column="Phase" />
+    <Attribute name="ivcRef1PKey" table="SdoMain" column="IvcRef1PKey" />
+    <Attribute name="ivcRef2PKey" table="SdoMain" column="IvcRef2PKey" />
+    <Attribute name="ivcRef3PKey" table="SdoMain" column="IvcRef3PKey" />
+    <Attribute name="ivcRef4PKey" table="SdoMain" column="IvcRef4PKey" />
+    <Attribute name="ivcRef5PKey" table="SdoMain" column="IvcRef5PKey" />
+    <Attribute name="responsiblePKey" table="SdoMain" column="ResponsiblePKey" />
+    <Attribute name="salesOrg" table="SdoMain" column="SalesOrg" />
+    <Attribute name="docTaType" table="SdoMain" column="DocTaType" />
+    <Attribute name="sdoMetaPKey" table="SdoMain" column="SdoMetaPKey" />
+    <Attribute name="releaseTime" table="SdoMain" column="ReleaseTime" />
+    <Attribute name="actualStatePKey" table="SdoMain" column="ActualStatePKey" />
+    <Attribute name="nextStatePKey" table="SdoMain" column="NextStatePKey" />
+    <Attribute name="documentType" table="SdoMain" column="DocumentType" />
+    <Attribute name="tmgMainPKey" table="SdoMain" column="TmgMainPKey" />
+    <Attribute name="etpWarehousePKey" table="SdoMain" column="EtpWarehousePKey" />
+    <Attribute name="ownerPKey" table="SdoMain" column="OwnerPKey" />
+    <Attribute name="initiatorPKey" table="SdoMain" column="InitiatorPKey" />
+    <Attribute name="currency" table="SdoMain" column="Currency" />
+    <Attribute name="initiationDate" table="SdoMain" column="InitiationDate" />
+    <Attribute name="wfeWorkflowPKey" table="SdoMain" column="WfeWorkflowPKey" />
+    <Attribute name="pricingDate" table="SdoMain" column="PricingDate" />
+    <Attribute name="calculationStatus" table="SdoMain" column="CalculationStatus" />
+    <Attribute name="calculationTime" table="SdoMain" column="CalculationTime" />
+    <Attribute name="totalValue" table="SdoMain" column="TotalValue" />
+    <Attribute name="totalValueReceipt" table="SdoMain" column="TotalValueReceipt" />
+    <Attribute name="grossTotalValue" table="SdoMain" column="GrossTotalValue" />
+    <Attribute name="bookInventoryValue" table="SdoMain" column="OriginalGrossTotalValue" />
+    <Attribute name="grossTotalValueReceipt" table="SdoMain" column="GrossTotalValueReceipt" />
+    <Attribute name="merchandiseValue" table="SdoMain" column="MerchandiseValue" />
+    <Attribute name="merchandiseValueReceipt" table="SdoMain" column="MerchandiseValueReceipt" />
+    <Attribute name="totalShippedQuantity" table="SdoMain" column="TotalShippedQuantity" />
+    <Attribute name="totalReturnedQuantity" table="SdoMain" column="TotalReturnedQuantity" />
+    <Attribute name="paidAmount" table="SdoMain" column="PaidAmount" />
+    <Attribute name="paidAmountReceipt" table="SdoMain" column="PaidAmountReceipt" />
+    <Attribute name="deliveryDate" table="SdoMain" column="DeliveryDate" />
+    <Attribute name="headerDiscount" table="SdoMain" column="HeaderDiscount" />
+    <Attribute name="billToCustomerPKey" table="SdoMain" column="BillToCustomerPKey" />
+    <Attribute name="payerCustomerPKey" table="SdoMain" column="PayerCustomerPKey" />
+    <Attribute name="brokerCustomerPKey" table="SdoMain" column="BrokerCustomerPKey" />
+    <Attribute name="cndCpCalculationSchemaPKey" table="SdoMain" column="CndCpCalculationSchemaPKey" />
+    <Attribute name="distribChannel" table="SdoMain" column="DistribChannel" />
+    <Attribute name="division" table="SdoMain" column="Division" />
+    <Attribute name="paymentReason" table="SdoMain" column="PaymentReason" />
+    <Attribute name="deliveryRecipientPKey" table="SdoMain" column="DeliveryRecipientPKey" />
+    <Attribute name="ordererPKey" table="SdoMain" column="OrdererPKey" />
+    <Attribute name="cancelReason" table="SdoMain" column="CancelReason" />
+    <Attribute name="absolutePaidAmount" table="SdoMain" column="AbsolutePaidAmount" />
+    <Attribute name="actualPrdCheckOutType" table="SdoMain" column="ActualPrdCheckOutType" />
+    <Attribute name="senderPKey" table="SdoMain" column="SenderPKey" />
+    <Attribute name="recipientPKey" table="SdoMain" column="RecipientPKey" />
+    <Attribute name="inwardTransferDocumentPKey" table="SdoMain" column="InwardTransferDocumentPKey" />
+    <DerivedAttribute name="actualValueCurrency" value="SdoMain.Currency" />
+  </Attributes>
+  <Entities>
+    <Entity name="SdoMain" alias="" idAttribute="PKey" />
+  </Entities>
+  <QueryCondition><![CDATA[
+		SdoMain.PKey = '#pKey#'
+		]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" />
+  </Parameters>
+</DataSource>

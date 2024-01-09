@@ -1,0 +1,12 @@
+<LookupObject name="LuReplenishmentCustomer" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuReplenishmentCustomer" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="customerPKey" type="DomPKey" dataSourceProperty="customerPKey" />    
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

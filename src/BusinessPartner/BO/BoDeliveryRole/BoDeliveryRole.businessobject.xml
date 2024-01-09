@@ -1,0 +1,21 @@
+<BusinessObject name="BoDeliveryRole"  generateLoadMethod="true">
+  <DataSource name="DsBoDeliveryRole" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="customerPKey" type="DomPKey" storable="true" dataSourceProperty="customerPKey" />
+    <SimpleProperty name="bpaRolePKey" type="DomPKey" storable="true" dataSourceProperty="bpaRolePKey" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" storable="true" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="sysCalendarPKey" type="DomPKey" storable="true" dataSourceProperty="sysCalendarPKey" />
+    <SimpleProperty name="sdoSplittingRule" type="DomSdoSplittingRule" storable="true" dataSourceProperty="sdoSplittingRule" />
+    <SimpleProperty name="sdoSplittingOption" type="DomBpaSplittingOption" storable="true" dataSourceProperty="sdoSplittingOption">
+      <Events>
+        <Event name="onChanged" eventHandler="onSdoSplittingOptionChanged" />
+      </Events>
+    </SimpleProperty>
+  </SimpleProperties>
+  <Methods>
+    <Method name="saveAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="onSdoSplittingOptionChanged" />
+  </Methods>
+</BusinessObject>

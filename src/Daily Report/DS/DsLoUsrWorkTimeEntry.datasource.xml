@@ -1,0 +1,26 @@
+<DataSource name="DsLoUsrWorkTimeEntry" businessObjectClass="LoUsrWorkTimeEntry" external="false" editableEntity="UsrTimeEntry" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="UsrTimeEntry" column="PKey" />
+    <Attribute name="effectiveUTCTimeFrom" table="UsrTimeEntry" column="EffectiveUTCTimeFrom" />
+    <Attribute name="effectiveUTCTimeThru" table="UsrTimeEntry" column="EffectiveUTCTimeThru" />
+    <Attribute name="usrDailyReportPKey" table="UsrTimeEntry" column="UsrDailyReportPKey" />
+    <Attribute name="usrTimeEntryMetaPKey" table="UsrTimeEntry" column="UsrTimeEntryMetaPKey" />
+    <Attribute name="systemTimeThru" table="UsrTimeEntry" column="SystemTimeThru" />
+    <Attribute name="duration" table="UsrTimeEntry" column="Duration" />
+  </Attributes>
+  <Entities>
+    <Entity name="UsrTimeEntry" alias="" idAttribute="PKey" />
+    <Entity name="UsrDocMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="UsrTimeEntry.UsrTimeEntryMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="UsrDocMeta.WorkUsrTimeEntryMetaPKey"></Condition>
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition />
+  <OrderCriteria>
+    <OrderCriterion entity="UsrTimeEntry" attribute="EffectiveUTCTimeFrom" direction="ASC" />
+  </OrderCriteria>
+  <Parameters />
+</DataSource>

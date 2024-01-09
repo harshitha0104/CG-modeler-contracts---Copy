@@ -1,0 +1,19 @@
+<DataSource name="DsLuTourRelatedSalesDocuments" objectClass="LuTourRelatedSalesDocuments" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+      
+      var tmgMainPKey = "";
+      if(Utils.isDefined(jsonQuery.TmgMainPKey)){
+		tmgMainPKey = Utils.convertForDBParam(jsonQuery.TmgMainPKey, "DomPKey");
+	  }
+
+	  var sqlParams = {tmgMainPKey};
+      var sqlStmt = "SELECT COUNT(*) AS openDocsCount FROM SdoMain";
+      sqlStmt += " INNER JOIN SdoMeta ON SdoMain.SdoMetaPKey=SdoMeta.PKey WHERE SdoMeta.MetaType = 'OrderEntry'";
+      sqlStmt += " AND SdoMain.TmgMainPKey = #tmgMainPKey# AND SdoMain.Phase = 'Initial' ";
+	
+      return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+      
+		]]></Load>
+  </Database>
+</DataSource>

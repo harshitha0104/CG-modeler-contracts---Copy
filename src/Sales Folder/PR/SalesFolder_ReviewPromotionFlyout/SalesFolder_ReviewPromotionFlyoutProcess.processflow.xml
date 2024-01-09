@@ -1,0 +1,18 @@
+<Process name="SalesFolder::ReviewPromotionFlyoutProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations></Declarations>
+      <Parameters>
+        <Input name="PromotionList" type="Object" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>SalesFolder::ReviewPromotionFlyoutUI</UIDescription>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

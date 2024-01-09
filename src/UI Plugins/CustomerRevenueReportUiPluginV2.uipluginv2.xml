@@ -1,0 +1,647 @@
+<UIPluginV2 name="CustomerRevenueReportUiPluginV2">
+  <Interface>
+    <Property id="maximizedMode" />
+    <List id="customerSales">
+      <Property id="pKey" />
+      <Property id="netSales" />
+      <Property id="year " />
+      <Property id="month" />
+    </List>
+  </Interface>
+  <Labels>
+    <Label id="Report_CustomerRevenue_Currency" />
+    <Label id="Report_CustomerRevenue_Title" />
+    <Label id="Report_CustomerRevenue_Title_VS" />
+    <Label id="Report_CustomerRevenue_January" />
+    <Label id="Report_CustomerRevenue_February" />
+    <Label id="Report_CustomerRevenue_March" />
+    <Label id="Report_CustomerRevenue_April" />
+    <Label id="Report_CustomerRevenue_May" />
+    <Label id="Report_CustomerRevenue_June" />
+    <Label id="Report_CustomerRevenue_July" />
+    <Label id="Report_CustomerRevenue_August" />
+    <Label id="Report_CustomerRevenue_September" />
+    <Label id="Report_CustomerRevenue_October" />
+    <Label id="Report_CustomerRevenue_November" />
+    <Label id="Report_CustomerRevenue_December" />
+    <Label id="ThousandSign_Chart" />
+    <Label id="Report_CustomerRevenue_January_Tooltip" />
+    <Label id="Report_CustomerRevenue_February_Tooltip" />
+    <Label id="Report_CustomerRevenue_March_Tooltip" />
+    <Label id="Report_CustomerRevenue_April_Tooltip" />
+    <Label id="Report_CustomerRevenue_May_Tooltip" />
+    <Label id="Report_CustomerRevenue_June_Tooltip" />
+    <Label id="Report_CustomerRevenue_July_Tooltip" />
+    <Label id="Report_CustomerRevenue_August_Tooltip" />
+    <Label id="Report_CustomerRevenue_September_Tooltip" />
+    <Label id="Report_CustomerRevenue_October_Tooltip" />
+    <Label id="Report_CustomerRevenue_November_Tooltip" />
+    <Label id="Report_CustomerRevenue_December_Tooltip" />
+  </Labels>
+  <Libraries>
+    <Library name="C3JS" />
+    <Library name="D3JS" />
+  </Libraries>
+  <UIComponentHTML name="UIComponentHTML"><![CDATA[
+      <div id="container_SalesChart" class="SalesChart">
+        <div id="chartTitle_SalesChart"></div>
+        <div id="chart_SalesReportContainer" ></div>
+        <div id="colorContainer" ></div>
+      </div>
+    ]]></UIComponentHTML>
+  <UIComponentCSS name="UIComponentCSS"><![CDATA[
+
+    .SalesChart {
+      /*background-color: #FFFFFF;*/
+      padding-top: 20px;
+    }
+
+
+    /* ######################
+      ###     FONTS      ###
+      ###################### */
+
+    @font-face {
+      font-family: "Regular";
+	  font-weight: 400;
+      src: local("Arial");
+    }
+
+    @font-face {
+      font-family: "Light";
+	  font-weight: 300;
+      src: local("Arial");
+    }
+
+    @font-face {
+      font-family: "Medium";
+	  font-weight: 500;
+      src: local("Arial");
+    }
+
+    ]]></UIComponentCSS>
+  <UIComponentJS name="UIComponentJS"><![CDATA[
+const chartSelector = "#chart_SalesReportContainer";
+const chartContainer = "#container_SalesChart";
+let chartReference;
+let currentSize = {
+  width: 0,
+  height: 0,
+};
+
+function connectCallback() {
+  renderChart();
+}
+
+function disconnectCallback() {
+  if (PluginManager.helpers.isDefined(chartReference)) {
+    chartReference.destroy();
+  }
+}
+
+function renderCallback() {
+  inputChanged();
+}
+
+function isMaximizedMode() {
+  return (
+    PluginManager.helpers.isDefined(PluginManager.maximizedMode) &&
+    PluginManager.maximizedMode == "1"
+  );
+}
+
+function getSize() {
+  var sizeJson;
+  if (
+    !PluginManager.pluginConfiguration.isPortrait &&
+    (isMaximizedMode() || PluginManager.deviceInfo.isPhone)
+  ) {
+    sizeJson = {
+      width:
+        d3.select(chartContainer)._groups[0][0].parentElement.offsetWidth *
+        0.96,
+      height:
+        d3.select(chartContainer)._groups[0][0].parentElement.offsetWidth * 0.5,
+    };
+  } else {
+    sizeJson = {
+      width:
+        d3.select(chartContainer)._groups[0][0].parentElement.offsetWidth *
+        0.96,
+      height:
+        d3.select(chartContainer)._groups[0][0].parentElement.offsetWidth * 0.7,
+    };
+  }
+  return sizeJson;
+}
+
+function sizeChanged(newSize) {
+  return (
+    currentSize.width !== newSize.width || currentSize.height !== newSize.height
+  );
+}
+
+function inputChanged() {
+  var jsonData = prepareData(PluginManager.customerSales.data);
+  var chart = chartReference;
+  var d3Container = d3.select(chartContainer);
+
+  if (PluginManager.helpers.isDefined(chartReference)) {
+    var sizeJson = getSize();
+    if (sizeChanged(sizeJson)) {
+        currentSize = sizeJson;
+        chartReference.resize(sizeJson);
+    }    
+  }
+
+  if (
+    PluginManager.helpers.isDefined(chart) &&
+    PluginManager.helpers.isDefined(chart.internal) &&
+    PluginManager.helpers.isDefined(chart.internal.cache)
+  ) {
+    chart.load(jsonData.data);
+    chart.axis.range(jsonData.axisRange);
+    chart.focus();
+
+    // Set color of axis line
+    d3.select(".c3-axis-x")
+      .select("path")
+      .style("stroke", PluginManager.pluginConfiguration.Color8);
+    d3.select(".c3-axis-y")
+      .select("path")
+      .style("stroke", PluginManager.pluginConfiguration.Color8);
+
+    // Set color of tick lines
+    d3.select(".c3-axis-x")
+      .selectAll("line")
+      .style("stroke", PluginManager.pluginConfiguration.Color8);
+    d3.select(".c3-axis-y")
+      .selectAll("line")
+      .style("stroke", PluginManager.pluginConfiguration.Color8);
+
+    // Set color of axis labels
+    d3.select(".c3-axis-x")
+      .selectAll("text")
+      .style("fill", PluginManager.pluginConfiguration.Color8)
+      .style("font", PluginManager.pluginConfiguration.FontRegular12);
+    d3.select(".c3-axis-y")
+      .selectAll("text")
+      .style("fill", PluginManager.pluginConfiguration.Color8)
+      .style("font", PluginManager.pluginConfiguration.FontRegular12);
+
+    // Set grid lines color
+    d3.selectAll(".c3-ygrid").style(
+      "stroke",
+      PluginManager.pluginConfiguration.Color11
+    );
+    var svg = d3.select(chartSelector);
+    var text = svg.selectAll("text");
+
+    // Check if the ChartHelper is defined or not
+    if (!PluginManager.helpers.isDefined(d3Container)) {
+      return;
+    }
+    var chartDiv = d3Container.select(chartSelector);
+    var eventRect = chartDiv.selectAll(".c3-event-rect");
+
+    eventRect.on("mouseout", function (elem) {});
+  }
+}
+
+function prepareData(loCustomerSalesRevenue) {
+  var resultPrevYear = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  var resultCurrYear = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  var maxValue1 = 0;
+  var maxValue2 = 0;
+  var currentYear = parseInt(
+    PluginManager.helpers.createDateToday().getUTCFullYear()
+  );
+  var prevYear = currentYear - 1;
+  if (PluginManager.helpers.isDefined(loCustomerSalesRevenue)) {
+    var items = loCustomerSalesRevenue;
+    var index = 0;
+    var length = items.length;
+    var itemIndex = 0;
+
+    for (; index < length; index++) {
+      var currentItem = items[index];
+
+      itemIndex = currentItem.month - 1;
+
+      if (currentItem.year == currentYear)
+        resultCurrYear[itemIndex] = currentItem.netSales;
+      else resultPrevYear[itemIndex] = currentItem.netSales;
+    }
+
+    //HIDE REST OF CURRENT YEAR
+    var monthIndex = PluginManager.helpers.createDateToday().getUTCMonth() + 1;
+    for (; monthIndex < 12; monthIndex++) {
+      resultCurrYear[monthIndex] = 0;
+    }
+
+    maxValue1 = resultPrevYear.reduce(function (p, v) {
+      return p > v ? p : v;
+    });
+    maxValue2 = resultCurrYear.reduce(function (p, v) {
+      return p > v ? p : v;
+    });
+  }
+  maxValue1 = Math.max(maxValue1, maxValue2);
+
+  var axisMax = Math.max(Math.ceil(maxValue1 * 1.1), 1000);
+
+  resultPrevYear = [prevYear].concat(resultPrevYear);
+  resultCurrYear = [currentYear].concat(resultCurrYear);
+
+  var jsonData = {
+    data: {
+      columns: [resultPrevYear, resultCurrYear],
+    },
+    axisRange: {
+      max: {
+        y: axisMax,
+      },
+    },
+  };
+
+  return jsonData;
+}
+
+function tooltipFunction(d, defaultTitleFormat, defaultValueFormat, color) {
+  var $$ = this,
+    config = $$.config,
+    titleFormat = config.tooltip_format_title || defaultTitleFormat,
+    nameFormat =
+      config.tooltip_format_name ||
+      function (name) {
+        return name;
+      },
+    valueFormat = config.tooltip_format_value || defaultValueFormat,
+    text,
+    i,
+    title,
+    value,
+    name,
+    bgcolor;
+  var fontRegular = PluginManager.pluginConfiguration.FontRegular14;
+  for (i = 0; i < d.length; i++) {
+    if (!(d[i] && (d[i].value || d[i].value === 0))) {
+      continue;
+    }
+    if (!text) {
+      title = titleFormat ? titleFormat(d[i].x) : d[i].x;
+      text =
+        "<table class='c3-tooltip' cellspacing='0' style='font: " +
+        fontRegular +
+        "; border-spacing:0; border: 1px solid " +
+        PluginManager.pluginConfiguration.Color11 +
+        "'>";
+      text =
+        text +
+        (title || title === 0
+          ? "<tr><th colspan='2' style='font: " +
+            fontRegular +
+            "; background-color:" +
+            PluginManager.pluginConfiguration.Color23 +
+            "; color:" +
+            PluginManager.pluginConfiguration.Color1 +
+            "; padding: 2px 5px; text-align: left'>" +
+            title +
+            "</th></tr>"
+          : "");
+    }
+
+    value = valueFormat(d[i].value, d[i].ratio, d[i].id, d[i].index);
+    if (value !== undefined) {
+      name = nameFormat(d[i].name, d[i].ratio, d[i].id, d[i].index);
+      bgcolor = $$.levelColor ? $$.levelColor(d[i].value) : color(d[i].id);
+
+      text +=
+        "<tr class='c3-tooltip-name-" +
+        d[i].id +
+        "' style='border: 1px solid " +
+        PluginManager.pluginConfiguration.Color6 +
+        "'>";
+      text +=
+        "<td class='name' style='font: " +
+        fontRegular +
+        "; background-color:" +
+        PluginManager.pluginConfiguration.Color6 +
+        "; color:" +
+        PluginManager.pluginConfiguration.Color2 +
+        "; padding: 3px 6px; border-right: 1px dotted " +
+        PluginManager.pluginConfiguration.Color23 +
+        "; border-bottom: 1px solid " +
+        PluginManager.pluginConfiguration.Color11 +
+        "'>";
+      text +=
+        "<span style='font: " +
+        fontRegular +
+        "; display: inline-block; width: 10px; height: 10px; margin-right: 6px; background-color:" +
+        bgcolor +
+        "'></span>" +
+        name +
+        "</td>";
+      text +=
+        "<td class='value' style='font: " +
+        fontRegular +
+        "; background-color: " +
+        PluginManager.pluginConfiguration.Color1 +
+        "; color:" +
+        PluginManager.pluginConfiguration.Color2 +
+        "; border-bottom: 1px solid " +
+        PluginManager.pluginConfiguration.Color11 +
+        "; padding: 3px 6px; text-align: right'>" +
+        value +
+        "</td>";
+      text += "</tr>";
+    }
+  }
+  return text + "</table>";
+}
+
+function renderChart() {
+  var createToolTip = false;
+  var d3Container = d3.select(chartContainer);
+
+  // Set title
+  var currentYear = parseInt(
+    PluginManager.helpers.createDateToday().getUTCFullYear()
+  );
+  var prevYear = currentYear - 1;
+  var title =
+    PluginManager.locale.labels.Report_CustomerRevenue_Title +
+    " - " +
+    prevYear +
+    " " +
+    PluginManager.locale.labels.Report_CustomerRevenue_Title_VS +
+    " " +
+    currentYear;
+  var width = d3Container._groups[0][0].offsetWidth;
+  var svg = d3.select("#chartTitle_SalesChart");
+  svg.attr("width", width);
+  svg.attr("height", "6em");
+  svg.attr("align", "center");
+  var svgHeight = svg._groups[0][0].offsetHeight;
+  svg.append("text");
+  var text = svg.selectAll("text").text(title);
+  text.style("text-anchor", "middle").attr("alignment-baseline", "middle");
+  text.attr("transform", "translate(" + width / 2 + "," + svgHeight / 2 + ")");
+
+  text.style("font", PluginManager.pluginConfiguration.FontMedium18);
+  text.style("fill", PluginManager.pluginConfiguration.Color8);
+
+  if (PluginManager.deviceInfo.isWindows) {
+    text.attr("x", width / 2);
+    text.attr("y", "2em");
+  }
+
+  // Define attributes for chart
+  var sizeJson = getSize();
+  currentSize = sizeJson;
+  var currencySign =
+    PluginManager.locale.labels.Report_CustomerRevenue_Currency;
+  var barColors = [
+    PluginManager.pluginConfiguration.Color16,
+    PluginManager.pluginConfiguration.Color19,
+  ];
+  var colors = function (color, d) {
+    return barColors[(d.id && d.id == currentYear) || d == currentYear ? 1 : 0];
+  };
+
+  var monthArray = [
+    "Report_CustomerRevenue_January_Tooltip",
+    "Report_CustomerRevenue_February_Tooltip",
+    "Report_CustomerRevenue_March_Tooltip",
+    "Report_CustomerRevenue_April_Tooltip",
+    "Report_CustomerRevenue_May_Tooltip",
+    "Report_CustomerRevenue_June_Tooltip",
+    "Report_CustomerRevenue_July_Tooltip",
+    "Report_CustomerRevenue_August_Tooltip",
+    "Report_CustomerRevenue_September_Tooltip",
+    "Report_CustomerRevenue_October_Tooltip",
+    "Report_CustomerRevenue_November_Tooltip",
+    "Report_CustomerRevenue_December_Tooltip",
+  ];
+
+  if (PluginManager.helpers.isDefined(chartReference)) {
+    chartReference.destroy();
+  }
+
+  // Create Chart
+  chartReference = c3.generate({
+    bindto: chartSelector,
+    data: {
+      columns: [
+        [prevYear, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [currentYear, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      ],
+      color: colors,
+      type: "bar",
+      labels: false,
+    },
+    bar: {
+      width: {
+        ratio: 0.8,
+      },
+    },
+    size: sizeJson,
+    transition: {
+      duration: 1000,
+    },
+    axis: {
+      rotated: false,
+      x: {
+        type: "category",
+        categories: [
+          PluginManager.locale.labels.Report_CustomerRevenue_January,
+          PluginManager.locale.labels.Report_CustomerRevenue_February,
+          PluginManager.locale.labels.Report_CustomerRevenue_March,
+          PluginManager.locale.labels.Report_CustomerRevenue_April,
+          PluginManager.locale.labels.Report_CustomerRevenue_May,
+          PluginManager.locale.labels.Report_CustomerRevenue_June,
+          PluginManager.locale.labels.Report_CustomerRevenue_July,
+          PluginManager.locale.labels.Report_CustomerRevenue_August,
+          PluginManager.locale.labels.Report_CustomerRevenue_September,
+          PluginManager.locale.labels.Report_CustomerRevenue_October,
+          PluginManager.locale.labels.Report_CustomerRevenue_November,
+          PluginManager.locale.labels.Report_CustomerRevenue_December,
+        ],
+      },
+      y: {
+        padding: {
+          top: 50,
+          bottom: 0,
+        },
+        show: true,
+        tick: {
+          format: function (d) {
+            var number;
+            var localizedValue;
+            if (PluginManager.helpers.isDefined(d) && d > 9999) {
+              number = Math.floor(d / 1000);
+              localizedValue =
+                formatAxisValue(number) +
+                " " +
+                PluginManager.locale.labels.ThousandSign_Chart;
+            } else {
+              number = d;
+              localizedValue = formatAxisValue(number);
+            }
+
+            return localizedValue;
+          },
+        },
+        max: 1000,
+      },
+    },
+    grid: {
+      y: {
+        show: true,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      format: {
+        title: function (d) {
+          return PluginManager.locale.labels[monthArray[d]];
+        },
+        value: function (value, ratio, id) {
+          var localizedValue = formatTooltipValue(value);
+          createToolTip = true;
+          return localizedValue;
+        },
+      },
+      contents: tooltipFunction,
+    },
+  });
+
+  // custom legend
+
+  var legend = d3Container
+    .select("#colorContainer")
+    .insert("div", ".chart")
+    .attr("id", "legendDiv")
+    .attr("align", "center")
+    .append("svg")
+    .attr("class", "legend")
+    .attr("width", "360")
+    .attr("height", "60")
+    .append("g")
+    .attr("align", "center");
+  var rects = legend
+    .selectAll("rect")
+    .data([{ id: prevYear.toString() }, { id: currentYear.toString() }])
+    .enter()
+    .append("rect")
+    .attr("x", function (d, i) {
+      return i == 1 ? 180 + 52 : 152;
+    })
+    .attr("y", function (d, i) {
+      return 10;
+    })
+    .attr("width", "1em")
+    .attr("height", "1em")
+    .style("fill", function (id) {
+      return chartReference.color(id.id);
+    })
+    .on("mouseover", function (id) {
+      chartReference.focus(id.id);
+    })
+    .on("mouseout", function (id) {
+      chartReference.revert();
+    })
+    .on("click", function (id) {
+      var svg = d3.select(chartSelector);
+      var text = svg.selectAll("text");
+      var d3Container = d3.select("#container_SalesChart");
+      var chartDiv = d3Container.select(chartSelector);
+      var eventRect = chartDiv.selectAll(".c3-event-rect");
+      eventRect.on("mouseout", function (elem) {});
+    });
+
+  var texts = legend
+    .selectAll("text")
+    .data([{ id: prevYear.toString() }, { id: currentYear.toString() }])
+    .enter()
+    .append("text")
+    .style("font", PluginManager.pluginConfiguration.FontRegular16)
+    .attr("x", function (d, i) {
+      return i == 1 ? 180 + 10 : 110;
+    })
+    .attr("y", function (d, i) {
+      return 27;
+    })
+    .text(function (id) {
+      return id.id;
+    })
+    .on("mouseover", function (id) {
+      chartReference.focus(id.id);
+    })
+    .on("mouseout", function (id) {
+      chartReference.revert();
+    })
+    .on("click", function (id) {
+      var svg = d3.select(chartSelector);
+      var text = svg.selectAll("text");
+      var d3Container = d3.select(chartContainer);
+      var chartDiv = d3Container.select(chartSelector);
+      var eventRect = chartDiv.selectAll(".c3-event-rect");
+      eventRect.on("mouseout", function (elem) {});
+    });
+
+  var d3Cont = d3.select(chartContainer);
+  var colorContainer = d3Cont.select("#SalesChart");
+  colorContainer.on("click", function () {
+    if (PluginManager.deviceInfo.isPhone) {
+      chartReference.internal.hideTooltip();
+    } else {
+      if (!createToolTip) {
+        chartReference.internal.hideTooltip();
+      }
+      createToolTip = false;
+    }
+  });
+
+  // update text sizes
+  var svg = d3.select(chartSelector);
+  var text = svg.selectAll("text");
+
+  inputChanged();
+}
+
+/* 
+################################
+custom value formatting using d3
+################################ 
+*/
+
+let locale;
+
+function setupLocale() {
+  locale = d3.formatLocale({
+    decimal: PluginManager.locale.formats.NumberFormats.DecimalSeparator.value,
+    thousands:
+      PluginManager.locale.formats.NumberFormats.ThousandSeparator.value,
+    grouping: [3],
+    currency: [PluginManager.locale.labels.Report_CustomerRevenue_Currency, ""],
+  });
+}
+
+function formatAxisValue(d) {
+  if (!PluginManager.helpers.isDefined(locale)) {
+    setupLocale();
+  }
+  return locale.format("$,")(d);
+}
+
+function formatTooltipValue(d) {
+  if (!PluginManager.helpers.isDefined(locale)) {
+    setupLocale();
+  }
+  return locale.format("$,.2f")(d);
+}
+    ]]></UIComponentJS>
+</UIPluginV2>

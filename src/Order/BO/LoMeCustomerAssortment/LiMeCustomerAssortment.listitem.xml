@@ -1,0 +1,19 @@
+<ListItem name="LiMeCustomerAssortment" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty id="true" name="prdMainPKey" type="DomPKey" storable="false" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="customerAssortment" type="DomBool" storable="false" dataSourceProperty="customerAssortment" />
+    <SimpleProperty name="sdoItemMeta1" type="DomBool" dataSourceProperty="sdoItemMeta1" />
+    <SimpleProperty name="sdoItemMeta2" type="DomBool" dataSourceProperty="sdoItemMeta2" />
+    <SimpleProperty name="sdoItemMeta3" type="DomBool" dataSourceProperty="sdoItemMeta3" />
+    <SimpleProperty name="sdoItemMeta4" type="DomBool" dataSourceProperty="sdoItemMeta4" />
+    <SimpleProperty name="sdoItemMeta5" type="DomBool" dataSourceProperty="sdoItemMeta5" />
+    <SimpleProperty name="sdoItemMeta6" type="DomBool" dataSourceProperty="sdoItemMeta6" />
+    <SimpleProperty name="sdoItemMeta7" type="DomBool" dataSourceProperty="sdoItemMeta7" />
+    <SimpleProperty name="sdoItemMeta8" type="DomBool" dataSourceProperty="sdoItemMeta8" />
+    <SimpleProperty name="sdoItemMeta9" type="DomBool" dataSourceProperty="sdoItemMeta9" />
+    <SimpleProperty name="sdoItemMeta10" type="DomBool" dataSourceProperty="sdoItemMeta10" />
+    <SimpleProperty name="sdoItemMeta11" type="DomBool" dataSourceProperty="sdoItemMeta11" />
+    <SimpleProperty name="sdoItemMeta12" type="DomBool" dataSourceProperty="sdoItemMeta12" />
+  </SimpleProperties>
+</ListItem>

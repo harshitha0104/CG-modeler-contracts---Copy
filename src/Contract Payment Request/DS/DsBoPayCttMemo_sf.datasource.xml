@@ -1,0 +1,17 @@
+<DataSource name="DsBoPayCttMemo" backendSystem="sf" businessObjectClass="BoPayCttMemo" external="false" readOnly="false" editableEntity="Contract_Payment__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contract_Payment__c" column="Id" />
+    <Attribute name="paytext" table="Contract_Payment__c" column="Text__c" />
+    <DerivedAttribute name="payCttPaymentPKey" value="Contract_Payment__c.Id" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contract_Payment__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   Contract_Payment__c.Id = #payCttPaymentPKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="payCttPaymentPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

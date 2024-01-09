@@ -1,0 +1,172 @@
+<BusinessObject name="BoTour" generateLoadMethod="false" schemaVersion="1.1" OERReference="TmgTour">
+  <DataSource name="DsBoTour" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="businessModified" type="DomBusinessModified" dataSourceProperty="businessModified" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="tmgMetaPKey" type="DomPKey" dataSourceProperty="tmgMetaPKey" />
+    <SimpleProperty name="tourId" type="DomId" dataSourceProperty="tourId" />
+    <SimpleProperty name="dateFrom" type="DomDate" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" dataSourceProperty="dateThru" />
+    <SimpleProperty name="timeFrom" type="DomTime" dataSourceProperty="timeFrom" />
+    <SimpleProperty name="timeThru" type="DomTime" dataSourceProperty="timeThru" />
+    <SimpleProperty name="message" type="DomLongDescription" dataSourceProperty="message" />
+    <SimpleProperty name="tmgStatus" type="DomTmgStatus" dataSourceProperty="tmgStatus" />
+    <SimpleProperty name="mileageStart" type="DomMileage" dataSourceProperty="mileageStart" />
+    <SimpleProperty name="mileageEnd" type="DomMileage" dataSourceProperty="mileageEnd" />
+    <SimpleProperty name="sealOK" type="DomBool" dataSourceProperty="sealOK" />
+    <SimpleProperty name="truckId" type="DomId" dataSourceProperty="truckId" />
+    <SimpleProperty name="trailerId" type="DomId" dataSourceProperty="trailerId" />
+    <SimpleProperty name="trailerId2" type="DomId" dataSourceProperty="trailerId2" />
+    <SimpleProperty name="tourDate" type="DomDate" />
+    <SimpleProperty name="vehicleOKStart" type="DomBool" dataSourceProperty="vehicleOKStart">
+      <Events>
+        <Event name="onChanged" eventHandler="onVehicleOKStartChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="vehicleStatusStart" type="DomTmgVehicleStatus" dataSourceProperty="vehicleStatusStart" />
+    <SimpleProperty name="vehicleOKEnd" type="DomBool" dataSourceProperty="vehicleOKEnd">
+      <Events>
+        <Event name="onChanged" eventHandler="onVehicleOKEndChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="vehicleStatusEnd" type="DomTmgVehicleStatus" dataSourceProperty="vehicleStatusEnd" />
+    <SimpleProperty name="defaultUsrMainPKey" type="DomPKey" dataSourceProperty="defaultUsrMainPKey" />
+    <SimpleProperty name="actualUsrMainPKey" type="DomPKey" dataSourceProperty="actualUsrMainPKey" />
+    <SimpleProperty name="startEtpWarehousePKey" type="DomPKey" dataSourceProperty="startEtpWarehousePKey" />
+    <SimpleProperty name="cashHandlingRequired" type="DomBool" dataSourceProperty="cashHandlingRequired" />
+    <SimpleProperty name="expressCheckOutAllowed" type="DomBool" dataSourceProperty="expressCheckOutAllowed" />
+    <SimpleProperty name="palletCheckOutAllowed" type="DomBool" dataSourceProperty="palletCheckOutAllowed" />
+    <SimpleProperty name="countingGroupCheckOutAllowed" type="DomBool" dataSourceProperty="countingGroupCheckOutAllowed" />
+    <SimpleProperty name="considerMileage" type="DomTmgConsiderMileage" dataSourceProperty="considerMileage" />
+    <SimpleProperty name="considerVehicle" type="DomTmgConsiderVehicle" dataSourceProperty="considerVehicle" />
+    <SimpleProperty name="considerVehicleStatus" type="DomTmgConsiderVehicleStatus" dataSourceProperty="considerVehicleStatus" />
+    <SimpleProperty name="considerSealCheck" type="DomTmgConsiderSealCheck" dataSourceProperty="considerSealCheck" />
+    <SimpleProperty name="etpVehicleTruckPKey" type="DomPKey" dataSourceProperty="etpVehicleTruckPKey" />
+    <SimpleProperty name="etpVehicleTrailer1PKey" type="DomPKey" dataSourceProperty="etpVehicleTrailer1PKey" />
+    <SimpleProperty name="etpVehicleTrailer2PKey" type="DomPKey" dataSourceProperty="etpVehicleTrailer2PKey" />
+    <SimpleProperty name="deleteCallAllowed" type="DomBool" dataSourceProperty="deleteCallAllowed" />
+    <SimpleProperty name="displaySealWarning" type="DomBool" dataSourceProperty="displaySealWarning" />
+    <SimpleProperty name="deliveryListPreviewPrintout" type="DomBool" dataSourceProperty="deliveryListPreviewPrintout" />
+    <SimpleProperty name="printUIGroup" type="DomId" dataSourceProperty="printUIGroup" />
+    <SimpleProperty name="sealCheckPresettingPolicy" type="DomTmgSealCheckPresettingPolicy" dataSourceProperty="sealCheckPresettingPolicy" />
+    <SimpleProperty name="agendaScanBehavior" type="DomClbAgendaScanBehavior" dataSourceProperty="agendaScanBehavior" />
+    <SimpleProperty name="coDriverRequired" type="DomTmgCoDriverRequired" dataSourceProperty="coDriverRequired" />
+    <SimpleProperty name="completionReleaseTime" type="DomDateTime" dataSourceProperty="completionReleaseTime" />
+    <SimpleProperty name="coDriverUsrMainPKey" type="DomPKey" dataSourceProperty="coDriverUsrMainPKey" />
+    <SimpleProperty name="cashCheckInRequired" type="DomRpsRequiredWithoutNone" dataSourceProperty="cashCheckInRequired" />
+    <SimpleProperty name="multipleCashCheckInAllowed" type="DomBool" dataSourceProperty="multipleCashCheckInAllowed" />
+    <SimpleProperty name="defaultCurrency" type="DomCurrency" dataSourceProperty="defaultCurrency" />
+    <SimpleProperty name="advancedUOMAllowed" type="DomBool" dataSourceProperty="advancedUOMAllowed" />
+    <SimpleProperty name="tSRLevelOfDetail" type="DomTmgTSRLevelOfDetail" dataSourceProperty="tSRLevelOfDetail" />
+    <SimpleProperty name="tSRShowTourInfo" type="DomBool" dataSourceProperty="tSRShowTourInfo" />
+    <SimpleProperty name="tSRShowVisitInfo" type="DomBool" dataSourceProperty="tSRShowVisitInfo" />
+    <SimpleProperty name="tSRShowInventoryInfo" type="DomBool" dataSourceProperty="tSRShowInventoryInfo" />
+    <SimpleProperty name="tSRShowDeliveryDocInfo" type="DomBool" dataSourceProperty="tSRShowDeliveryDocInfo" />
+    <SimpleProperty name="tSRShowSalesDocInfo" type="DomBool" dataSourceProperty="tSRShowSalesDocInfo" />
+    <SimpleProperty name="tSRShowCashInfo" type="DomBool" dataSourceProperty="tSRShowCashInfo" />
+    <SimpleProperty name="startReleaseTime" type="DomDateTime" dataSourceProperty="startReleaseTime" />
+    <SimpleProperty name="previewPrintout" type="DomBool" dataSourceProperty="previewPrintout" />
+    <SimpleProperty name="inclDSDActivities" type="DomBool" dataSourceProperty="inclDSDActivities" />
+    <SimpleProperty name="inclPreSalesActivities" type="DomBool" dataSourceProperty="inclPreSalesActivities" />
+    <SimpleProperty name="inclMerchActivities" type="DomBool" dataSourceProperty="inclMerchActivities" />
+    <SimpleProperty name="inclOffRouteActivities" type="DomBool" dataSourceProperty="inclOffRouteActivities" />
+    <SimpleProperty name="defaultEtpVehicleTruckPKey" type="DomPKey" dataSourceProperty="defaultEtpVehicleTruckPKey" />
+    <SimpleProperty name="endEtpWarehousePKey" type="DomPKey" dataSourceProperty="endEtpWarehousePKey" />
+    <SimpleProperty name="usrDocMetaPKey" type="DomPKey" dataSourceProperty="usrDocMetaPKey" />
+    <SimpleProperty name="driver" type="DomString" dataSourceProperty="driver" />
+    <SimpleProperty name="releaseButton" type="Object" />
+    <SimpleProperty name="completeButton" type="Object" />
+    <SimpleProperty name="releaseInfoButton" type="Object" />
+    <SimpleProperty name="completeInfoButton" type="Object" />
+    <SimpleProperty name="storedSysReleasePKey" type="DomPKey" />
+    <SimpleProperty name="storedSysCompletePKey" type="DomPKey" />
+    <SimpleProperty name="cancelReason" type="DomTmgCancelReason" dataSourceProperty="cancelReason" />
+    <SimpleProperty name="cancelNote" type="DomLongDescription" dataSourceProperty="cancelNote" />
+    <SimpleProperty name="validateForCancelTour" type="DomBool" />
+    <SimpleProperty name="sysReleaseProcessPKey" type="DomPKey" />
+    <SimpleProperty name="sysReleaseProcessStepsExists" type="DomBool" />
+  </SimpleProperties>
+  <NestedObjects>
+    <NestedObject name="boTourMeta" objectClass="BoTourMeta" dataSourceProperty="tmgMetaPKey" nestingProperty="pKey" loadMode="LoadImmediate" />
+    <NestedObject name="boUserDailyReport" objectClass="BoUserDailyReport" dataSourceProperty="pKey" nestingProperty="pKey" loadMode="OnDemand" />
+    <NestedObject name="boTruckLoad" objectClass="BoTruckLoad" dataSourceProperty="pKey" nestingProperty="tmgMainPKey" loadMode="OnDemand" />
+  </NestedObjects>
+  <ObjectLookups>
+    <ObjectLookup name="luEtpWarehouse" objectClass="LuEtpWarehouse" dataSourceProperty="startEtpWarehousePKey" lookupProperty="pKey" />
+    <ObjectLookup name="luEndEtpWarehouse" objectClass="LuEtpWarehouse" dataSourceProperty="endEtpWarehousePKey" lookupProperty="pKey" />
+    <ObjectLookup name="luTruck" objectClass="LuEtpVehicle" dataSourceProperty="etpVehicleTruckPKey" lookupProperty="pKey" />
+    <ObjectLookup name="luTrailer1" objectClass="LuEtpVehicle" dataSourceProperty="etpVehicleTrailer1PKey" lookupProperty="pKey" />
+    <ObjectLookup name="luTrailer2" objectClass="LuEtpVehicle" dataSourceProperty="etpVehicleTrailer2PKey" lookupProperty="pKey" />
+    <ObjectLookup name="luCoDriver" objectClass="LuUser" dataSourceProperty="coDriverUsrMainPKey" lookupProperty="pKey" />
+    <ObjectLookup name="luDriver" objectClass="LuUser" dataSourceProperty="actualUsrMainPKey" lookupProperty="pKey" />
+    <ObjectLookup name="luTemplate" objectClass="LuTourTemplate" dataSourceProperty="tmgMetaPKey" lookupProperty="pKey" />
+  </ObjectLookups>
+  <ListObjects>
+    <!--
+    <ListObject name="loEtpWarehouse" objectClass="LoEtpWarehouse" dataSourceProperty="pKey" listProperty="startEtpWarehousePKey" />-->
+    <ListObject name="loTourRelatedCalls" objectClass="LoTourRelatedCalls" dataSourceProperty="pKey" listProperty="tmgMainPKey" />
+    <ListObject name="loTmgTourObjectRelations" objectClass="LoTmgTourObjectRelations" dataSourceProperty="pKey" listProperty="tmgMainPKey" />
+    <ListObject name="loSysSignatureAttribute" objectClass="LoSysSignatureAttribute" dataSourceProperty="pKey" listProperty="tmgMainPKey" />
+    <ListObject name="loSysSignatureBlob" objectClass="LoSysSignatureBlob" dataSourceProperty="pKey" listProperty="tmgMainPKey" />
+    <ListObject name="loGeoLocation" objectClass="LoCallLocation" dataSourceProperty="pKey" listProperty="tmgMainPKey" />
+    <ListObject name="loTourDescription" objectClass="LoTourDescription" dataSourceProperty="pKey" listProperty="tmgTourPKey" />
+    <ListObject name="loTmgMetaCheckRel" objectClass="LoTmgMetaCheckRel" dataSourceProperty="tmgMetaPKey" listProperty="tmgMetaPKey" />
+    <ListObject name="loTmgTourCheckRelations" objectClass="LoTmgTourCheckRelations" dataSourceProperty="pKey" listProperty="tmgMainPKey" />
+    <ListObject name="loTourChecks" objectClass="LoTourChecks" dataSourceProperty="pKey" listProperty="tmgMainPKey">
+      <Events>
+        <Event name="listItemChanged" eventHandler="onQuestionChanged" />
+      </Events>
+    </ListObject>
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+    <Method name="tourStateTransition" />
+    <Method name="setEARights" />
+    <Method name="checkButtonVisibility" />
+    <Method name="rescheduleTourDate" />
+    <Method name="rollbackStateTransition" />
+    <Method name="validateForRelease" />
+    <Method name="validateContextRunningTour" />
+    <Method name="validateOpencalls" />
+    <Method name="validateOpenDocuments" />
+    <Method name="validateVehicle" />
+    <Method name="createTimeCard" />
+    <Method name="timeCardOperations" />
+    <Method name="createTourId" />
+    <Method name="getNavigationProcess" />
+    <Method name="getReleaseTitle" />
+    <Method name="determineSysReleaseProcessPKey" />
+    <!-- inventory handling -->
+    <Method name="processTourEndInventoryActions" />
+    <Method name="processTourStartInventoryActions" />
+    <!-- button handling -->
+    <Method name="handleButtonVisibility" />
+    <Method name="cancelTour" />
+    <Method name="onVehicleOKStartChanged" />
+    <Method name="onVehicleOKEndChanged" />
+    <Method name="checkListTabVisibility" />
+    <Method name="loadTourChecklist" />
+    <Method name="onQuestionChanged" />
+    <Method name="validateChecksAnswered" />
+    <Method name="resetWarehouseValues" />
+    <Method name="setTourDescription" />
+    <Method name="isOpenTourForToday" />
+  </Methods>
+  <Validations>
+    <Validation name="validateTourDate" />
+    <Validation name="validateMileage" />
+    <Validation name="validateReasonCode" />
+  </Validations>
+</BusinessObject>

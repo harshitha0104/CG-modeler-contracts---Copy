@@ -1,0 +1,1561 @@
+<Process name="Call::AgendaProcess" defaultAction="SaveAgendaViewInProcessContextIfNotEmpty" schemaVersion="0.0.0.5" ignoreMultiViewStack="true">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OverviewList" type="LoAgendaOverview" />
+        <Declaration name="DateFrom" type="String" />
+        <Declaration name="TimeFrom" type="String" />
+        <Declaration name="AllDay" type="String" />
+        <Declaration name="currentCallFilter" type="String" />
+        <Declaration name="currentTime" type="String" />
+        <Declaration name="ContextMenuList" type="LoAgendaOverviewContextMenu" />
+        <Declaration name="currentDate" type="String" />
+        <Declaration name="currentDateTitle" type="String" />
+        <Declaration name="currentWeekStartDate" type="String" />
+        <Declaration name="currentWeeklyViewStartDate" type="String" />
+        <Declaration name="currentWeeklyViewEndDate" type="String" />
+        <Declaration name="currentSidebarReferenceDate" type="String" />
+        <Declaration name="currentSidebarID" type="String" />
+        <Declaration name="CallMetaPKey" type="String" />
+        <Declaration name="CallPlanningMetaPKey" type="String" />
+        <Declaration name="CustomerPKey" type="String" />
+        <Declaration name="TripListPKey" type="String" />
+        <Declaration name="ButtonPressed" type="String" />
+        <Declaration name="SubstitutedUsrPKey" type="DomPKey" />
+        <Declaration name="CurrentResponsiblePKey" type="DomPKey" />
+        <Declaration name="JobListPKey" type="DomPKey" />
+        <Declaration name="CurrentAgendaView" type="String" />
+        <Declaration name="IsManagedCustomer" type="DomBool" />
+        <Declaration name="IsSubstituted" type="DomBool" />
+        <Declaration name="UserSettings" type="LoUserSetting" />
+        <Declaration name="SidebarData_Customers" type="LoCustomerOverview" />
+        <Declaration name="SidebarData_JobLists" type="LoOpenJobLists" />
+        <Declaration name="SidebarData_TripLists" type="LoTripList" />
+        <Declaration name="newSidebarID" type="String" />
+        <Declaration name="currentSidebarReferenceDateCheckResult" type="String" />
+        <Declaration name="TodayIsInCurrentWeek" type="String" />
+        <Declaration name="DragAndDropEventParams" type="Object" />
+        <Declaration name="creationAllowed" type="DomBool" />
+        <Declaration name="DisplayTraffic" type="DomBool" />
+        <Declaration name="DisplayRoute" type="DomBool" />
+        <Declaration name="agendaMode" type="String" />
+        <Declaration name="currentHeader" type="String" />
+        <Declaration name="weeklyHeader" type="String" />
+        <Declaration name="tourVisibilty" type="DomBool" />
+        <Declaration name="dailyVisibilty" type="DomBool" />
+        <Declaration name="timeVisibilty" type="DomBool" />
+        <Declaration name="ScanCustomer_CustomerPKey" type="String" />
+        <Declaration name="ScanCustomer_CustomerId" type="String" />
+        <Declaration name="ScanCustomer_Success" type="String" />
+        <Declaration name="ScanCustomer_FirstVisit" type="String" />
+        <Declaration name="ScanCustomer_CallPKey" type="String" />
+        <Declaration name="ScanCustomer_CallPlanningMetaPKey" type="String" />
+        <Declaration name="OrderInfo" type="LuCallOrderInfo" />
+        <Declaration name="ViewMode" type="String" />
+        <Declaration name="DisplayCalendarWeek" type="DomBool" />
+        <Declaration name="MainBO" type="BoCall" />
+        <Declaration name="EmptyCallBO" type="BoCall" />
+        <Declaration name="SaveClbStatus" type="String" />
+        <Declaration name="IsAutoCallPlanVisibile" type="DomBool" />
+        <Declaration name="ChooseUser" type="DomBool" />
+        <Declaration name="UserName" type="String" />
+        <!-- On Demand Data check  -->
+        <Declaration name="CurrentCustomerPKey" type="String" />
+        <!-- SF/CASDIF -->
+        <Declaration name="SfReplicationCallbacks" type="BoSfReplicationCallbacks" />
+        <!-- Map Based Planning -->
+        <Declaration name="ShowAdditionalDatasource" type="DomBool" />
+        <Declaration name="ShowMapDetails" type="DomBool" />
+        <Declaration name="CustomerList" type="LoCustomerOverview" />
+        <Declaration name="MapDetail" type="LuMapDetail" />
+        <Declaration name="CurrentLocation" type="LuCurrentAddress" />
+        <Declaration name="CallDate" type="String" />
+        <Declaration name="Map_CallMetaPKey" type="String" />
+        <Declaration name="Map_CustomerPKey" type="String" />
+        <Declaration name="Map_DateFrom" type="String" />
+        <Declaration name="Map_TimeFrom" type="String" />
+        <Declaration name="Map_AllDay" type="DomBool" />
+        <Declaration name="Map_ButtonPressed" type="String" />
+        <Declaration name="Map_SubstitutedUsrPKey" type="String" />
+        <Declaration name="Map_IsManagedCustomer" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="AgendaView" type="String" />
+        <Input name="cardDate" type="DomDate" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="AssignResponsible" actionType="LOGIC" call="ApplicationContext::User.getPKey">
+        <Return name="ProcessContext::CurrentResponsiblePKey" />
+      </Action>
+      <Action name="AssignCallMetaPKey" actionType="LOGIC" call="ApplicationContext::User.boUserSales.getClbMetaPKey">
+        <Return name="ProcessContext::CallPlanningMetaPKey" />
+      </Action>
+      <Action name="AssignUserSettings" actionType="LOGIC" call="ApplicationContext::User.getCallCalendarSettings">
+        <Return name="ProcessContext::UserSettings" />
+      </Action>
+      <Action name="GetOverviewList" actionType="CREATE" type="LoAgendaOverview">
+        <Return name="ProcessContext::OverviewList" />
+      </Action>
+      <Action name="setCurrentDate" actionType="LOGIC" call="ProcessContext::OverviewList.getCurrentDate">
+        <Parameters>
+          <Input name="currentDate" value="ProcessContext::cardDate" />
+        </Parameters>
+        <Return name="ProcessContext::currentDate" />
+      </Action>
+      <Action name="setCurrentDateTitle" actionType="LOGIC" call="ProcessContext::OverviewList.setCurrentDateTitle">
+        <Parameters>
+          <Input name="currentDate" value="ProcessContext::currentDate" />
+        </Parameters>
+        <Return name="ProcessContext::currentDateTitle" />
+      </Action>
+      <Action name="AssignCurrentAgendaView" actionType="LOGIC" call="ProcessContext::UserSettings.getSettingByName">
+        <Return name="ProcessContext::CurrentAgendaView" />
+        <Parameters>
+          <Input name="name" value="ClbCalendarInitialViewMobility" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="GetTimeVisibilty" actionType="LOGIC" call="ApplicationContext::User.boUserSettings.getClbAgendaDisplayTimeMobility">
+        <Return name="ProcessContext::timeVisibilty" />
+      </Action>
+      <Action name="SetEARights" actionType="LOGIC" call="ProcessContext::OverviewList.setEARights">
+        <Parameters>
+          <Input name="timeVisibilty" value="ProcessContext::timeVisibilty" />
+        </Parameters>
+      </Action>
+      <Action name="AssignCurrentCallFilter" actionType="LOGIC" call="ProcessContext::UserSettings.getSettingByName">
+        <Return name="ProcessContext::currentCallFilter" />
+        <Parameters>
+          <Input name="name" value="ClbCalendarDefaultCallStatus" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="LoadTeamOfUser" actionType="LOGIC" call="ApplicationContext::User.loadTeamOfUser">
+        <Parameters>
+          <Input name="includeCurrentUser" value="1" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="InitializeDisplayTrafficWithUserSetting" actionType="LOGIC" call="ApplicationContext::User.boUserSettings.getClbDisplayTrafficInMapMobility">
+        <Return name="ProcessContext::DisplayTraffic" />
+      </Action>
+      <Action name="InitializeDisplayRouteWithUserSetting" actionType="LOGIC" call="ApplicationContext::User.boUserSettings.getClbDisplayRouteInMapMobility">
+        <Return name="ProcessContext::DisplayRoute" />
+      </Action>
+      <!-- SF/CASDIF Start-->
+      <Action name="CreateReplicationCallBacksBo" actionType="CREATE" type="BoSfReplicationCallbacks">
+        <Return name="ProcessContext::SfReplicationCallbacks" />
+      </Action>
+      <!-- SF/CASDIF End-->
+      <Action name="InitializeCWWithUserSetting" actionType="LOGIC" call="ApplicationContext::User.boUserSettings.getClbShowCalendarWeekMobility">
+        <Return name="ProcessContext::DisplayCalendarWeek" />
+      </Action>
+      <Action name="GetCustomerList" actionType="LOAD" type="LoCustomerOverview">
+        <Parameters>
+          <Input name="asoName" value="AsoFindCustomers" type="Literal" />
+          <Input name="referenceUserPKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerList" />
+      </Action>
+      <Action name="GetCurrentLocation" actionType="LOAD" type="LuCurrentAddress">
+        <Return name="ProcessContext::CurrentLocation" />
+      </Action>
+      <Action name="HideAdditionalDatasource" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="0" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::ShowAdditionalDatasource" />
+      </Action>
+      <Action name="SetInitialDetailVisibility" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="0" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::ShowMapDetails" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="SaveAgendaViewInProcessContextIfNotEmpty" actionType="DECISION" parameter="ProcessContext::AgendaView">
+        <CaseEmpty action="ShowCalendarView_Decision_From_InputParam" />
+        <CaseElse action="SaveAgendaViewInProcessContext" />
+      </Action>
+      <Action name="SaveAgendaViewInProcessContext" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="AgendaView" value="ProcessContext::AgendaView" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentAgendaView" />
+        <TransitionTo action="ShowCalendarView_Decision_From_InputParam" />
+      </Action>
+      <Action name="ShowCalendarView_Decision_From_InputParam" actionType="DECISION" parameter="ProcessContext::AgendaView">
+        <Case value="DayWithMap" action="CheckAgendaModeDay" />
+        <Case value="DayWithoutMap" action="CheckAgendaModeDay" />
+        <CaseElse action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="ShowCalendarView_Decision" actionType="DECISION" parameter="ProcessContext::CurrentAgendaView">
+        <Case value="DayWithMap" action="CheckAgendaModeDay" />
+        <Case value="DayWithoutMap" action="CheckAgendaModeDay" />
+        <Case value="Week" action="CheckAgendaModeWeek" />
+        <CaseElse action="CheckAgendaModeWeek" />
+      </Action>
+      <Action name="CheckAgendaModeDay" actionType="LOGIC" call="ProcessContext::OverviewList.checkAgendaMode">
+        <Return name="ProcessContext::agendaMode" />
+        <TransitionTo action="SetTourTitle" />
+      </Action>
+      <Action name="SetTourTitle" actionType="LOGIC" call="ProcessContext::OverviewList.chooseAgendaTitle">
+        <Return name="ProcessContext::currentHeader" />
+        <TransitionTo action="SetCallPlanButtonVisibility" />
+        <Parameters>
+          <Input name="currentDate" value="ProcessContext::currentDate" />
+          <Input name="displayCalendarWeek" value="ProcessContext::DisplayCalendarWeek" />
+          <Input name="value" value="0" type="Literal" />
+          <Input name="userName" value="ProcessContext::UserName" />
+          <Input name="pKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+      </Action>
+      <Action name="SetCallPlanButtonVisibility" actionType="LOGIC" call="ProcessContext::OverviewList.getCallPlanButtonVisibility">
+        <Return name="ProcessContext::IsAutoCallPlanVisibile" />
+        <TransitionTo action="GetCallsByCurrentDate" />
+        <Parameters>
+          <Input name="currentDate" value="ProcessContext::currentDate" />
+        </Parameters>
+      </Action>
+      <Action name="CheckAgendaModeWeek" actionType="LOGIC" call="ProcessContext::OverviewList.checkAgendaMode">
+        <Return name="ProcessContext::agendaMode" />
+        <TransitionTo action="TourOrAgenda" />
+      </Action>
+      <Action name="AgendaViewSwitched" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::CurrentAgendaView" />
+        <TransitionTo action="ReloadCalendarView_Decision" />
+        <Parameters>
+          <Input name="view" value="Event.view" />
+        </Parameters>
+      </Action>
+      <Action name="ReloadCalendarView_Decision" actionType="DECISION" parameter="ProcessContext::CurrentAgendaView">
+        <Case value="DayWithMap" action="DetermineTodayIsInCurrentWeek" />
+        <Case value="DayWithoutMap" action="DetermineTodayIsInCurrentWeek" />
+        <Case value="Week" action="TourOrAgenda" />
+        <CaseElse action="TourOrAgenda" />
+      </Action>
+      <Action name="DetermineTodayIsInCurrentWeek" actionType="LOGIC" call="ProcessContext::OverviewList.isDateBetween">
+        <Return name="ProcessContext::TodayIsInCurrentWeek" />
+        <TransitionTo action="DailyViewDate_Decision" />
+        <Parameters>
+          <Input name="date" value="#Today#" type="Literal" />
+          <Input name="start" value="ProcessContext::currentWeeklyViewStartDate" />
+          <Input name="end" value="ProcessContext::currentWeeklyViewEndDate" />
+        </Parameters>
+      </Action>
+      <Action name="DailyViewDate_Decision" actionType="DECISION" parameter="ProcessContext::TodayIsInCurrentWeek">
+        <Case value="1" action="GetCallsForToday" />
+        <CaseElse action="GetCallsByCurrentDate" />
+      </Action>
+      <Action name="GetCallsForToday" actionType="LOGIC" call="ProcessContext::OverviewList.getCallsByDate">
+        <Return name="ProcessContext::currentDate" />
+        <TransitionTo action="TourOrDailyView" />
+        <Parameters>
+          <Input name="setDateFunction" value="none" type="Literal" />
+          <Input name="filterCalls" value="ProcessContext::currentCallFilter" />
+          <Input name="currentDateStart" value="ProcessContext::currentDate" />
+          <Input name="currentDateEnd" value="ProcessContext::currentDate" />
+          <Input name="currentResponsible" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+      </Action>
+      <Action name="GetCallsByCurrentDate" actionType="LOGIC" call="ProcessContext::OverviewList.getCallsByDate">
+        <Return name="ProcessContext::currentDate" />
+        <TransitionTo action="TourOrDailyView" />
+        <Parameters>
+          <Input name="setDateFunction" value="none" type="Literal" />
+          <Input name="filterCalls" value="ProcessContext::currentCallFilter" />
+          <Input name="currentDateStart" value="ProcessContext::currentDate" />
+          <Input name="currentDateEnd" value="ProcessContext::currentDate" />
+          <Input name="currentResponsible" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+      </Action>
+      <Action name="TourOrDailyView" actionType="DECISION" parameter="ProcessContext::agendaMode">
+        <Case value="Delivery" action="TriggerTourView" />
+        <CaseElse action="TriggerDailyView" />
+      </Action>
+      <Action name="TriggerTourView" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="view" type="Literal" value="ShowTourView" />
+        </Parameters>
+        <Return name="ProcessContext::ViewMode" />
+        <TransitionTo action="ShowTourView" />
+      </Action>
+      <Action name="TriggerDailyView" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="view" type="Literal" value="ShowAgendaDailyView" />
+        </Parameters>
+        <Return name="ProcessContext::ViewMode" />
+        <TransitionTo action="ShowAgendaDailyView" />
+      </Action>
+      <Action name="ShowTourView" actionType="VIEW">
+        <UIDescription>Call::TourViewUI</UIDescription>
+        <Events>
+          <Event name="swipeEvent" action="Swipe_Decision" />
+          <Event name="itemSelected" action="LoadCall_Decision" />
+          <Event name="createNewCall" action="CreateNewCallWizard" />
+          <Event name="createNewCallsViaTripList" action="CreateNewCallsViaTripList" />
+          <Event name="createNewCallsViaJobLists" action="InitJobListWizardValues" />
+          <Event name="createNewCallsViaManagedCustomers" action="CreateNewCallsViaManagedCustomers" />
+          <Event name="executeBreak" action="ExecuteBreak" />
+          <Event name="SetCallFilter" action="SetCallFilter" />
+          <Event name="ChangeUser" action="ShowUserSelection" />
+          <Event name="SwitchCalendarView" action="AgendaViewSwitched" />
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_CustomerOnDevice_Decision" />
+          <Event name="DisplayTraffic" action="DisplayTraffic" />
+          <Event name="HideTraffic" action="HideTraffic" />
+          <Event name="DisplayRoute" action="DisplayRoute" />
+          <Event name="HideRoute" action="HideRoute" />
+          <Event name="CancelAllCalls" action="CancelAllCalls" />
+          <Event name="ChangeCallPlanningTemplate" action="OpenCallPlanningCallMetaLookup" />
+          <Event name="scanCustomer" action="ShowLoadMaskAndScanCustomer" />
+        </Events>
+      </Action>
+      <Action name="ShowAgendaDailyView" actionType="VIEW">
+        <UIDescription>Call::AgendaUI</UIDescription>
+        <Events>
+          <Event name="swipeEvent" action="Swipe_Decision" />
+          <Event name="itemSelected" action="LoadCall_Decision" />
+          <Event name="createNewCall" action="CreateNewCallWizard" />
+          <Event name="createNewCallsViaTripList" action="CreateNewCallsViaTripList" />
+          <Event name="createNewCallsViaJobLists" action="InitJobListWizardValues" />
+          <Event name="createNewCallsViaManagedCustomers" action="CreateNewCallsViaManagedCustomers" />
+          <Event name="executeBreak" action="ExecuteBreak" />
+          <Event name="setDate" action="OpenSetDate" />
+          <Event name="moveNextDay" action="MoveToNextDay" />
+          <Event name="movePrevDay" action="MoveToPrevDay" />
+          <Event name="SetCallFilter" action="SetCallFilter" />
+          <Event name="ChangeUser" action="ShowUserSelection" />
+          <Event name="SwitchCalendarView" action="AgendaViewSwitched" />
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_CustomerOnDevice_Decision" />
+          <Event name="DisplayTraffic" action="DisplayTraffic" />
+          <Event name="HideTraffic" action="HideTraffic" />
+          <Event name="DisplayRoute" action="DisplayRoute" />
+          <Event name="HideRoute" action="HideRoute" />
+          <Event name="CancelAllCalls" action="CancelAllCalls" />
+          <Event name="ChangeCallPlanningTemplate" action="OpenCallPlanningCallMetaLookup" />
+          <Event name="scanCustomer" action="ShowLoadMaskAndScanCustomer" />
+          <Event name="tabSelected" action="ShowAgendaDailyView" />
+          <Event name="loadGoogleMapDetails" action="PrepareMapDetail" />
+          <Event name="createCallViaMap" action="SetDetailInvisibile" />
+          <Event name="advancedSearchEnded" action="UpdateAdditonalPins_AfterAdvancedSearch" />
+        </Events>
+      </Action>
+      <Action name="UpdateAdditonalPins_AfterAdvancedSearch" actionType="LOGIC" call="ProcessContext::CustomerList.deleteAdditionalWaypoints">
+        <Parameters>
+          <Input name="overviewList" value="ProcessContext::OverviewList" />
+        </Parameters>
+        <TransitionTo action="ShowAdditionalDatasource" />
+      </Action>
+      <Action name="ShowAdditionalDatasource" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::ShowAdditionalDatasource" />
+        <TransitionTo action="HideMapDetails" />
+      </Action>
+      <Action name="HideMapDetails" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="0" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::ShowMapDetails" />
+      </Action>
+      <Action name="PrepareMapDetail" actionType="LOGIC" call="ProcessContext::OverviewList.prepareMapDetails">
+        <Parameters>
+          <Input name="customers" value="ProcessContext::CustomerList" />
+          <Input name="pKey" value="event.pkey" />
+          <Input name="currentLatitude" value="ProcessContext::CurrentLocation.latitude" />
+          <Input name="currentLongitude" value="ProcessContext::CurrentLocation.longitude" />
+        </Parameters>
+        <Return name="ProcessContext::MapDetail" />
+        <TransitionTo action="SetDetailVisibile" />
+      </Action>
+      <Action name="SetDetailVisibile" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::ShowMapDetails" />
+        <TransitionTo action="ShowAgendaDailyView" />
+      </Action>
+      <Action name="SetDetailInvisibile" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="0" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::ShowMapDetails" />
+        <TransitionTo action="AddNewVisitViaMap" />
+      </Action>
+      <Action name="AddNewVisitViaMap" actionType="PROCESS" process="Call::CreateNewWizardProcess">
+        <Parameters>
+          <Input name="DateFrom" value="ProcessContext::currentDate" />
+          <Input name="CustomerPKey" value="ProcessContext::MapDetail.pKey" />
+          <Input name="CallMetaPKey" value="ApplicationContext::User.boUserSales.clbMetaPKey" />
+          <Input name="Mode" value="Manual" type="Literal" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="CreateCallViaMap" value="1" type="Literal" />
+        </Parameters>
+        <TransitionTo action="CreateNewCallViaMap" />
+        <ReturnValues>
+          <Return name="ProcessContext::Map_CallMetaPKey" value="callMetaPKey" />
+          <Return name="ProcessContext::Map_CustomerPKey" value="customerPKey" />
+          <Return name="ProcessContext::Map_DateFrom" value="dateFrom" />
+          <Return name="ProcessContext::Map_TimeFrom" value="timeFrom" />
+          <Return name="ProcessContext::Map_AllDay" value="allDay" />
+          <Return name="ProcessContext::Map_ButtonPressed" value="buttonPressed" />
+          <Return name="ProcessContext::Map_SubstitutedUsrPKey" value="substitutedUsrPKey" />
+          <Return name="ProcessContext::Map_IsManagedCustomer" value="isManagedCustomer" />
+        </ReturnValues>
+      </Action>
+      <Action name="CreateNewCallViaMap" actionType="PROCESS" process="Call::CreateNewCallProcess">
+        <Parameters>
+          <Input name="callMetaPKey" value="ProcessContext::Map_CallMetaPKey" />
+          <Input name="customerPKey" value="ProcessContext::Map_CustomerPKey" />
+          <Input name="dateFrom" value="ProcessContext::Map_DateFrom" />
+          <Input name="timeFrom" value="ProcessContext::Map_TimeFrom" />
+          <Input name="allDay" value="ProcessContext::Map_AllDay" />
+          <Input name="substitutedUsrPKey" value="ProcessContext::Map_SubstitutedUsrPKey" />
+          <Input name="responsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="isManagedCustomer" value="ProcessContext::Map_IsManagedCustomer" />
+          <Input name="boSfReplicationCallbacks" value="ProcessContext::SfReplicationCallbacks" />
+        </Parameters>
+        <TransitionTo action="ReloadOverviewList" />
+      </Action>
+      <Action name="ReloadOverviewList" actionType="LOAD" type="LoAgendaOverview">
+        <Parameters>
+          <Input name="dateFromStart" value="ProcessContext::CallDate" />
+          <Input name="dateFromEnd" value="ProcessContext::CallDate" />
+        </Parameters>
+        <Return name="ProcessContext::OverviewList" />
+        <TransitionTo action="SetEARightsAfterReload" />
+      </Action>
+      <Action name="SetEARightsAfterReload" actionType="LOGIC" call="ProcessContext::OverviewList.setEARights">
+        <Parameters>
+          <Input name="timeVisibilty" value="ProcessContext::timeVisibilty" />
+        </Parameters>
+        <TransitionTo action="GetCallsForTodayAfterReload" />
+      </Action>
+      <Action name="GetCallsForTodayAfterReload" actionType="LOGIC" call="ProcessContext::OverviewList.getCallsByDate">
+        <Return name="ProcessContext::currentDate" />
+        <TransitionTo action="UpdateAdditonalPinsAfterCallCreationViaMap" />
+        <Parameters>
+          <Input name="setDateFunction" value="none" type="Literal" />
+          <Input name="filterCalls" value="ProcessContext::currentCallFilter" />
+          <Input name="currentDateStart" value="ProcessContext::currentDate" />
+          <Input name="currentDateEnd" value="ProcessContext::currentDate" />
+          <Input name="currentResponsible" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+      </Action>
+      <Action name="UpdateAdditonalPinsAfterCallCreationViaMap" actionType="LOGIC" call="ProcessContext::CustomerList.deleteAdditionalWaypoints">
+        <Parameters>
+          <Input name="overviewList" value="ProcessContext::OverviewList" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerList" />
+      </Action>
+      <Action name="TourOrAgenda" actionType="DECISION" parameter="ProcessContext::agendaMode">
+        <Case value="Delivery" action="SetTourViewLabel" />
+        <CaseElse action="SetDailyViewLabel" />
+      </Action>
+      <Action name="SetTourViewLabel" actionType="LOGIC" call="ProcessContext::OverviewList.checkButtonVisibility">
+        <Return name="ProcessContext::tourVisibilty" />
+        <TransitionTo action="SetDailyViewLabelInvis" />
+        <Parameters>
+          <Input name="tourOrDay" value="TourVisible" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="SetDailyViewLabelInvis" actionType="LOGIC" call="ProcessContext::OverviewList.checkButtonVisibility">
+        <Return name="ProcessContext::dailyVisibilty" />
+        <TransitionTo action="TriggerWeeklyView" />
+        <Parameters>
+          <Input name="tourOrDay" value="DayInvisible" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="SetDailyViewLabel" actionType="LOGIC" call="ProcessContext::OverviewList.checkButtonVisibility">
+        <Return name="ProcessContext::dailyVisibilty" />
+        <TransitionTo action="SetTourViewLabelInvis" />
+        <Parameters>
+          <Input name="tourOrDay" value="DayVisible" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="SetTourViewLabelInvis" actionType="LOGIC" call="ProcessContext::OverviewList.checkButtonVisibility">
+        <Return name="ProcessContext::tourVisibilty" />
+        <TransitionTo action="TriggerWeeklyView" />
+        <Parameters>
+          <Input name="tourOrDay" value="TourInvisible" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="TriggerWeeklyView" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="view" type="Literal" value="ShowAgendaWeeklyView" />
+        </Parameters>
+        <Return name="ProcessContext::ViewMode" />
+        <TransitionTo action="ShowAgendaWeeklyView" />
+      </Action>
+      <Action name="ShowAgendaWeeklyView" actionType="VIEW">
+        <UIDescription>Call::AgendaWeeklyViewUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="LoadCall_Decision" />
+          <Event name="createNewCall" action="CreateNewCall_Tour_Decision" />
+          <Event name="createNewCallsViaTripList" action="CreateNewCallsViaTripList" />
+          <Event name="createNewCallsViaJobLists" action="InitJobListWizardValues" />
+          <Event name="createNewCallsViaManagedCustomers" action="CreateNewCallsViaManagedCustomers" />
+          <Event name="setDate" action="OpenSetDate" />
+          <Event name="moveNextDay" action="MoveToNextDay" />
+          <Event name="movePrevDay" action="MoveToPrevDay" />
+          <Event name="SetCallFilter" action="SetCallFilter" />
+          <Event name="ChangeUser" action="ShowUserSelection" />
+          <Event name="ChangeCallPlanningTemplate" action="OpenCallPlanningCallMetaLookup" />
+          <Event name="SwitchCalendarView" action="AgendaViewSwitched" />
+          <Event name="executeBreak" action="ExecuteBreak" />
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_CustomerOnDevice_Decision" />
+          <Event name="longTap" action="CreateNewCall_Tour_Decision" />
+          <Event name="itemDropped" action="AssignDragDropParams" />
+          <Event name="itemMove" action="RescheduleVisitSilently" />
+          <Event name="itemResize" action="RescheduleVisitSilently" />
+          <Event name="DateRangeChanged" action="AssignWeeklyViewStartDate" />
+          <Event name="showSidebar" action="AssignNewSidebar" />
+          <Event name="scanCustomer" action="ShowLoadMaskAndScanCustomer" />
+          <Event name="automaticCallPlanning" action="ShowAutomaticCallPlanning" />
+          <Event name="createTripList" action="SetCreateTripListMode" />
+          <Event name="updateTripList" action="SetUpdateTripListMode" />
+          <Event name="deleteTripList" action="SetDeleteTripListMode" />
+        </Events>
+      </Action>
+      <Action name="GetContextMenu" actionType="LOAD" type="LoAgendaOverviewContextMenu">
+        <Return name="ProcessContext::ContextMenuList" />
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="clbStatus" value="Event.clbStatus" />
+          <Input name="deleteAllowed" value="Event.deleteAllowed" />
+          <Input name="referenceUserPKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="responsiblePKey" value="Event.responsiblePKey" />
+          <Input name="referenceDate" value="Event.dateFrom" />
+          <Input name="bpaMainPKey" value="Event.bpaMainPKey" />
+        </Parameters>
+      </Action>
+      <Action name="ContextMenu_CustomerOnDevice_Decision" actionType="DECISION" parameter="Event.customerOnDevice">
+        <Case value="1" action="ContextMenu_Result_Decision" />
+        <CaseElse action="Message_CallDataNotOnDevice" />
+      </Action>
+      <Action name="Swipe_Decision" actionType="DECISION" parameter="Event.direction">
+        <Case value="left" action="MoveToNextDay" />
+        <Case value="right" action="MoveToPrevDay" />
+        <CaseElse action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Execute" action="LoadCall_Decision" />
+        <Case value="Cancel" action="CancelVisit" />
+        <Case value="Delete" action="DeleteVisit" />
+        <Case value="Complete" action="LoadOpenOrderInfo" />
+        <Case value="Re-Schedule" action="RescheduleVisit" />
+        <Case value="Info" action="VisitInfo" />
+        <Case value="NavigateToCustomer" action="NavigateToCustomer" />
+        <CaseElse action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="LoadCall_Decision" actionType="DECISION" parameter="Event.customerOnDevice">
+        <Case value="1" action="LoadCustomerPKey" />
+        <CaseElse action="Message_CallDataNotOnDevice" />
+      </Action>
+      <Action name="LoadCustomerPKey" actionType="LOGIC" call="ProcessContext::OverviewList.getCustomerPKey">
+        <Parameters>
+          <Input name="CallPKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentCustomerPKey" />
+        <TransitionTo action="CheckIfDataIsAvailable" />
+      </Action>
+      <Action name="CheckIfDataIsAvailable" actionType="LOGIC" call="ProcessContext::SfReplicationCallbacks.isCallOnDemandDataAvailable">
+        <Parameters>
+          <Input name="CallPKey" value="Event.pKey" />
+          <Input name="customerPKey" value="ProcessContext::CurrentCustomerPKey" />
+        </Parameters>
+        <Return name="ProcessContext::CallDataAvailable" />
+        <TransitionTo action="CallDataCheck_Decision" />
+      </Action>
+      <Action name="CallDataCheck_Decision" actionType="DECISION" parameter="ProcessContext::CallDataAvailable">
+        <Case value="1" action="LoadCallFinal" />
+        <Case value="2" action="LoadingCallData" />
+        <CaseElse action="AskForDataRequest" />
+      </Action>
+      <Action name="AskForDataRequest" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmLoadCallOnDemandData" />
+        <Cases>
+          <Case value="Yes" action="RequestCallData" />
+          <Case value="No" action="ShowCalendarView_Decision" />
+        </Cases>
+      </Action>
+      <Action name="LoadingCallData" actionType="CONFIRM" confirmType="Ok">
+        <Message messageId="CasCallDataLoadingInProgress" />
+        <Cases>
+          <Case value="Ok" action="ShowCalendarView_Decision" />
+        </Cases>
+      </Action>
+      <Action name="RequestCallData" actionType="LOGIC" call="ProcessContext::SfReplicationCallbacks.requestCallOnDemandDataAsync">
+        <Parameters>
+          <Input name="callPKey" value="Event.pKey" />
+          <Input name="customerPKey" value="ProcessContext::CurrentCustomerPKey" />
+        </Parameters>
+        <TransitionTo action="ShowCalendarView_Decision" />
+      </Action>
+      <Action actionType="PROCESS" name="LoadCallFinal" process="Call::LoadCallProcess">
+        <Parameters>
+          <Input name="CallPKey" value="Event.pKey" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <TransitionTo action="RefreshCurrentViewByView_Decision" />
+      </Action>
+      <Action name="RefreshCurrentViewByView_Decision" actionType="DECISION" parameter="ProcessContext::CurrentAgendaView">
+        <Case value="DayWithMap" action="RefreshCurrentView_Decision" />
+        <Case value="DayWithoutMap" action="RefreshCurrentView_Decision" />
+        <Case value="Week" action="ReloadSidebarData_Decision" />
+        <CaseElse action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="Message_CallDataNotOnDevice" actionType="CONFIRM" confirmType="Ok">
+        <Message messageId="CasConfirmCallDataNotOnDevice" />
+        <Cases>
+          <Case value="Ok" action="View_Decision" />
+        </Cases>
+      </Action>
+      <Action name="View_Decision" actionType="DECISION" parameter="ProcessContext::ViewMode">
+        <Case value="ShowTourView" action="ShowTourView" />
+        <Case value="ShowAgendaWeeklyView" action="ShowAgendaWeeklyView" />
+        <Case value="ShowAgendaDailyView" action="ShowAgendaDailyView" />
+        <CaseElse action="ShowAgendaWeeklyView" />
+      </Action>
+      <Action name="VisitInfo" actionType="PROCESS" process="Call::InfoTabProcess">
+        <Parameters>
+          <Input name="CallPKey" value="Event.pKey" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+      </Action>
+      <Action name="CancelAllCalls" actionType="PROCESS" process="Call::ChangeStatusWizardProcess">
+        <Parameters>
+          <Input name="MainPKey" value=" " type="Literal" />
+          <Input name="targetClbStatus" value="CancelAll" type="Literal" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="OverviewList" value="ProcessContext::OverviewList" />
+        </Parameters>
+        <TransitionTo action="RefreshRequired_Decision" />
+        <ReturnValues>
+          <Return name="ProcessContext::RefreshRequired" value="refreshRequired" />
+        </ReturnValues>
+      </Action>
+      <Action name="CancelVisit" actionType="PROCESS" process="Call::ChangeStatusWizardProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+          <Input name="targetClbStatus" value="Abandoned" type="Literal" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::RefreshRequired" value="refreshRequired" />
+        </ReturnValues>
+        <TransitionTo action="RefreshRequired_Decision" />
+      </Action>
+      <Action name="DeleteVisit" actionType="PROCESS" process="Call::ChangeStatusWizardProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+          <Input name="targetClbStatus" value="Deleted" type="Literal" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::RefreshRequired" value="refreshRequired" />
+        </ReturnValues>
+        <TransitionTo action="RefreshRequired_Decision" />
+      </Action>
+      <Action name="LoadOpenOrderInfo" actionType="LOAD" type="LuCallOrderInfo">
+        <Return name="ProcessContext::OrderInfo" />
+        <TransitionTo action="CheckOpenOrders" />
+        <Parameters>
+          <Input name="clbMainPKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <Action name="CheckOpenOrders" actionType="LOGIC" call="ProcessContext::OverviewList.hasOpenOrders">
+        <Return name="ProcessContext::HasOpenOrders" />
+        <TransitionTo action="openOrders_Decision" />
+        <Parameters>
+          <Input name="lookup" value="ProcessContext::OrderInfo" />
+        </Parameters>
+      </Action>
+      <Action name="openOrders_Decision" actionType="DECISION" parameter="ProcessContext::HasOpenOrders">
+        <Case value="1" action="CallHasOpenOrdersConfirmation" />
+        <Case value="0" action="LoadMainBO" />
+        <CaseElse action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="CallHasOpenOrdersConfirmation" actionType="CONFIRM" confirmType="Ok">
+        <Message messageId="CasClbCompleteHasOpenOrders" />
+        <Cases>
+          <Case value="Ok" action="RefreshRequired_Decision" />
+        </Cases>
+      </Action>
+      <Action name="LoadMainBO" actionType="LOAD" type="BoCall">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::MainBO" />
+        <TransitionTo action="ValidateBeforeComplete_SaveStatus" />
+      </Action>
+      <Action actionType="LOGIC" name="ValidateBeforeComplete_SaveStatus" call="ProcessContext::MainBO.getClbStatus">
+        <Return name="ProcessContext::SaveClbStatus" />
+        <TransitionTo action="ValidateBeforeComplete_SetStatus" />
+      </Action>
+      <Action actionType="LOGIC" name="ValidateBeforeComplete_SetStatus" call="ProcessContext::MainBO.setClbStatus">
+        <Parameters>
+          <Input name="targetClbStatus" value="Completed" type="Literal" />
+        </Parameters>
+        <TransitionTo action="ValidateBeforeComplete" />
+      </Action>
+      <Action actionType="LOGIC" name="ValidateBeforeComplete" call="ProcessContext::MainBO.validateMandatoryQuestions">
+        <Return name="ProcessContext::ValidationResult" />
+        <TransitionTo action="ValidateBeforeComplete_Decision" />
+      </Action>
+      <Action name="ValidateBeforeComplete_Decision" actionType="DECISION" parameter="ProcessContext::ValidationResult">
+        <Case value="valid" action="CompleteVisit" />
+        <CaseElse action="ValidateBeforeComplete_ResetStatus" />
+      </Action>
+      <Action actionType="LOGIC" name="ValidateBeforeComplete_ResetStatus" call="ProcessContext::MainBO.setClbStatus">
+        <Parameters>
+          <Input name="targetClbStatus" value="ProcessContext::SaveClbStatus" />
+        </Parameters>
+        <TransitionTo action="ShowCalendarView_Decision_From_InputParam" />
+      </Action>
+      <Action name="CompleteVisit" actionType="PROCESS" process="Call::ChangeStatusWizardProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+          <Input name="targetClbStatus" value="Completed" type="Literal" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::RefreshRequired" value="refreshRequired" />
+        </ReturnValues>
+        <TransitionTo action="RefreshRequired_Decision_CompleteVisit" />
+      </Action>
+      <Action name="resetMainBo" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="ProcessContext::EmptyCallBO" />
+        </Parameters>
+        <Return name="ProcessContext::MainBO" />
+        <TransitionTo action="RefreshCurrentView_Decision" />
+      </Action>
+      <Action name="RefreshRequired_Decision_CompleteVisit" actionType="DECISION" parameter="ProcessContext::RefreshRequired">
+        <Case value="1" action="resetMainBo" />
+        <CaseElse action="ResetStatusBeforeComplete" />
+      </Action>
+      <Action actionType="LOGIC" name="ResetStatusBeforeComplete" call="ProcessContext::MainBO.setClbStatus">
+        <Parameters>
+          <Input name="targetClbStatus" value="ProcessContext::SaveClbStatus" />
+        </Parameters>
+        <TransitionTo action="resetMainBo" />
+      </Action>
+      <Action name="RescheduleVisit" actionType="PROCESS" process="Call::RescheduleCallProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+          <Input name="dateFrom" value="Event.dateFrom" />
+          <Input name="timeFrom" value="Event.timeFrom" />
+          <Input name="dateThru" value="Event.dateThru" />
+          <Input name="timeThru" value="Event.timeThru" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::RefreshRequired" value="refreshRequired" />
+        </ReturnValues>
+        <TransitionTo action="RefreshRequired_Decision" />
+      </Action>
+      <Action name="RescheduleVisitSilently" actionType="PROCESS" process="Call::RescheduleCallProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+          <Input name="Silent" value="1" type="Literal" />
+          <Input name="dateFrom" value="Event.dateFrom" />
+          <Input name="timeFrom" value="Event.timeFrom" />
+          <Input name="dateThru" value="Event.dateThru" />
+          <Input name="timeThru" value="Event.timeThru" />
+          <Input name="AllDay" value="Event.isAllDay" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::RefreshRequired" value="refreshRequired" />
+        </ReturnValues>
+        <TransitionTo action="RefreshRequired_Decision" />
+      </Action>
+      <Action name="RefreshRequired_Decision" actionType="DECISION" parameter="ProcessContext::RefreshRequired">
+        <Case value="1" action="RefreshCurrentView_Decision" />
+        <CaseElse action="RefreshCurrentView_Decision" />
+      </Action>
+      <Action name="ResetRefreshRequiredAndRefresh" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::RefreshRequired" />
+        <TransitionTo action="RefreshCurrentView_Decision" />
+        <Parameters>
+          <Input name="value" value="0" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="AssignWeeklyViewStartDate" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::currentWeeklyViewStartDate" />
+        <TransitionTo action="AssignWeeklyViewEndDate" />
+        <Parameters>
+          <Input name="view" value="Event.dateFrom" />
+        </Parameters>
+      </Action>
+      <Action name="AssignWeeklyViewEndDate" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::currentWeeklyViewEndDate" />
+        <TransitionTo action="AssignWeeklyViewCurrentDate" />
+        <Parameters>
+          <Input name="view" value="Event.dateThru" />
+        </Parameters>
+      </Action>
+      <Action name="AssignWeeklyViewCurrentDate" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::CurrentDate" />
+        <TransitionTo action="RefreshCurrentView_Decision" />
+        <Parameters>
+          <Input name="view" value="ProcessContext::CurrentDate" />
+        </Parameters>
+      </Action>
+      <Action name="SetCallFilter" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::currentCallFilter" />
+        <TransitionTo action="RefreshCurrentView_Decision" />
+        <Parameters>
+          <Input name="filterValue" value="Event.filterValue" />
+        </Parameters>
+      </Action>
+      <Action name="RefreshCurrentView_Decision" actionType="DECISION" parameter="ProcessContext::CurrentAgendaView">
+        <Case value="DayWithMap" action="GetCallsByDate" />
+        <Case value="DayWithoutMap" action="GetCallsByDate" />
+        <Case value="Week" action="GetCallsByDateRange" />
+        <CaseElse action="GetCallsByDateRange" />
+      </Action>
+      <Action actionType="LOGIC" name="GetCallsByDate" call="ProcessContext::OverviewList.getCallsByDate">
+        <Parameters>
+          <Input name="setDateFunction" value="none" type="Literal" />
+          <Input name="filterCalls" value="ProcessContext::currentCallFilter" />
+          <Input name="currentDateStart" value="ProcessContext::currentDate" />
+          <Input name="currentDateEnd" value="ProcessContext::currentDate" />
+          <Input name="currentResponsible" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::currentDate" />
+        <TransitionTo action="HideMapDetailsAfterCallCreation" />
+      </Action>
+      <Action name="HideMapDetailsAfterCallCreation" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="0" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::ShowMapDetails" />
+        <TransitionTo action="UpdateAdditonalWaypointsAfterCallCreation" />
+      </Action>
+      <Action name="UpdateAdditonalWaypointsAfterCallCreation" actionType="LOGIC" call="ProcessContext::CustomerList.deleteAdditionalWaypoints">
+        <Parameters>
+          <Input name="overviewList" value="ProcessContext::OverviewList" />
+          <Input name="makePinVisible" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerList" />
+        <TransitionTo action="ChooseUser_Decision" />
+      </Action>
+      <!--without Else Case because Framework Fallback is to go back to the last View Action since we do not know whether this is triggered from Weekly or Daily View this is intended -->
+      <Action name="ChooseUser_Decision" actionType="DECISION" parameter="ProcessContext::ChooseUser">
+        <Case value="undefined" action="SetHeaderDateTitle" />
+      </Action>
+      <Action name="GetCallsByDateRange" actionType="LOGIC" call="ProcessContext::OverviewList.getCallsByDate">
+        <Return name="ProcessContext::currentWeekStartDate" />
+        <TransitionTo action="changeWeeklyTitle" />
+        <Parameters>
+          <Input name="setDateFunction" value="none" type="Literal" />
+          <Input name="filterCalls" value="ProcessContext::currentCallFilter" />
+          <Input name="currentDateStart" value="ProcessContext::currentWeeklyViewStartDate" />
+          <Input name="currentDateEnd" value="ProcessContext::currentWeeklyViewEndDate" />
+          <Input name="currentResponsible" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+      </Action>
+      <Action name="changeWeeklyTitle" actionType="LOGIC" call="ProcessContext::OverviewList.chooseAgendaTitle">
+        <Return name="ProcessContext::weeklyHeader" />
+        <TransitionTo action="SetCallPlanVisibility" />
+        <Parameters>
+          <Input name="currentStartDate" value="ProcessContext::currentWeekStartDate" />
+          <Input name="displayCalendarWeek" value="ProcessContext::DisplayCalendarWeek" />
+          <Input name="value" value="0" type="Literal" />
+          <Input name="userName" value="ProcessContext::UserName" />
+          <Input name="pKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+      </Action>
+      <Action name="SetCallPlanVisibility" actionType="LOGIC" call="ProcessContext::OverviewList.getCallPlanButtonVisibility">
+        <Return name="ProcessContext::IsAutoCallPlanVisibile" />
+        <TransitionTo action="ClearCurrentSidebarData" />
+        <Parameters>
+          <Input name="currentDate" value="ProcessContext::currentWeekStartDate" />
+        </Parameters>
+      </Action>
+      <Action name="MoveToNextDay" actionType="LOGIC" call="ProcessContext::OverviewList.getCallsByDate">
+        <Return name="ProcessContext::currentDate" />
+        <Parameters>
+          <Input name="setDateFunction" value="NextDay" type="Literal" />
+          <Input name="filterCalls" value="ProcessContext::currentCallFilter" />
+          <Input name="currentDateStart" value="ProcessContext::currentDate" />
+          <Input name="currentDateEnd" value="ProcessContext::currentDate" />
+          <Input name="currentResponsible" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <TransitionTo action="DailyView_Decision" />
+      </Action>
+      <Action name="MoveToPrevDay" actionType="LOGIC" call="ProcessContext::OverviewList.getCallsByDate">
+        <Return name="ProcessContext::currentDate" />
+        <Parameters>
+          <Input name="setDateFunction" value="PrevDay" type="Literal" />
+          <Input name="filterCalls" value="ProcessContext::currentCallFilter" />
+          <Input name="currentDateStart" value="ProcessContext::currentDate" />
+          <Input name="currentDateEnd" value="ProcessContext::currentDate" />
+          <Input name="currentResponsible" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <TransitionTo action="DailyView_Decision" />
+      </Action>
+      <Action name="DailyView_Decision" actionType="DECISION" parameter="ProcessContext::ViewMode">
+        <Case value="ShowAgendaDailyView" action="UpdateAdditonalPinsOnDateChange" />
+        <CaseElse action="SetHeaderDateTitle" />
+      </Action>
+      <Action name="UpdateAdditonalPinsOnDateChange" actionType="LOGIC" call="ProcessContext::CustomerList.deleteAdditionalWaypoints">
+        <Parameters>
+          <Input name="overviewList" value="ProcessContext::OverviewList" />
+          <Input name="makePinVisible" type="Literal" value="1" />
+        </Parameters>
+        <TransitionTo action="SetHeaderDateTitle" />
+      </Action>
+      <Action name="SetHeaderDateTitle" actionType="LOGIC" call="ProcessContext::OverviewList.chooseDailyViewTitle">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="userName" value="ProcessContext::UserName" />
+          <Input name="currentDate" value="ProcessContext::currentDate" />
+        </Parameters>
+        <Return name="ProcessContext::currentDateTitle" />
+      </Action>
+      <Action name="InitJobListWizardValues" actionType="LOGIC" call="ProcessContext::OverviewList.getCurrentTime">
+        <Return name="ProcessContext::currentTime" />
+        <TransitionTo action="CreateNewCallsViaJobLists" />
+        <Parameters>
+          <Input name="getTime" value="ProcessContext::currentTime" />
+        </Parameters>
+      </Action>
+      <Action name="CreateNewCallWizard" actionType="PROCESS" process="Call::CreateNewWizardProcess">
+        <Parameters>
+          <Input name="Mode" value="Manual" type="Literal" />
+          <Input name="DateFrom" value="ProcessContext::currentDate" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <TransitionTo action="CreateNewCall_Decision" />
+        <ReturnValues>
+          <Return name="ProcessContext::CallMetaPKey" value="callMetaPKey" />
+          <Return name="ProcessContext::CustomerPKey" value="customerPKey" />
+          <Return name="ProcessContext::DateFrom" value="dateFrom" />
+          <Return name="ProcessContext::TimeFrom" value="timeFrom" />
+          <Return name="ProcessContext::AllDay" value="allDay" />
+          <Return name="ProcessContext::ButtonPressed" value="buttonPressed" />
+          <Return name="ProcessContext::SubstitutedUsrPKey" value="substitutedUsrPKey" />
+          <Return name="ProcessContext::IsManagedCustomer" value="isManagedCustomer" />
+          <Return name="ProcessContext::IsSubstituted" value="isSubstituted" />
+        </ReturnValues>
+      </Action>
+      <Action name="CreateNewCall_Tour_Decision" actionType="LOGIC" call="ProcessContext::OverviewList.creationAllowed">
+        <Return name="ProcessContext::creationAllowed" />
+        <TransitionTo action="CreateNewCall_Tour_Decision1" />
+      </Action>
+      <Action name="CreateNewCall_Tour_Decision1" actionType="DECISION" parameter="ProcessContext::creationAllowed">
+        <Case value="1" action="CreateNewCallWizardCalendar" />
+        <CaseElse action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="CreateNewCallWizardCalendar" actionType="PROCESS" process="Call::CreateNewWizardProcess">
+        <Parameters>
+          <Input name="DateFrom" value="Event.calendarDate" />
+          <Input name="TimeFrom" value="Event.calendarTime" />
+          <Input name="AllDay" value="Event.isAllDay" />
+          <Input name="Mode" value="Manual" type="Literal" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <TransitionTo action="CreateNewCall_Decision" />
+        <ReturnValues>
+          <Return name="ProcessContext::CallMetaPKey" value="callMetaPKey" />
+          <Return name="ProcessContext::CustomerPKey" value="customerPKey" />
+          <Return name="ProcessContext::DateFrom" value="dateFrom" />
+          <Return name="ProcessContext::TimeFrom" value="timeFrom" />
+          <Return name="ProcessContext::AllDay" value="allDay" />
+          <Return name="ProcessContext::ButtonPressed" value="buttonPressed" />
+          <Return name="ProcessContext::SubstitutedUsrPKey" value="substitutedUsrPKey" />
+          <Return name="ProcessContext::IsManagedCustomer" value="isManagedCustomer" />
+          <Return name="ProcessContext::IsSubstituted" value="isSubstituted" />
+        </ReturnValues>
+      </Action>
+      <Action name="CreateNewCall_Decision" actionType="DECISION" parameter="ProcessContext::ButtonPressed">
+        <Case value="createCall" action="CreateNewCallWithCustomer_Decision" />
+        <CaseElse action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="CreateNewCallWithCustomer_Decision" actionType="DECISION" parameter="ProcessContext::CustomerPKey">
+        <CaseElse action="CreateNewCallWithCustomer" />
+        <CaseEmpty action="CreateNewCall" />
+      </Action>
+      <Action name="CreateNewCall" actionType="PROCESS" process="Call::CreateNewCallProcess">
+        <Parameters>
+          <Input name="callMetaPKey" value="ProcessContext::CallMetaPKey" />
+          <Input name="customerPKey" value=" " type="Literal" />
+          <Input name="dateFrom" value="ProcessContext::DateFrom" />
+          <Input name="timeFrom" value="ProcessContext::TimeFrom" />
+          <Input name="allDay" value="ProcessContext::AllDay" />
+          <Input name="responsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <!-- SF/CASDIF -->
+          <Input name="boSfReplicationCallbacks" value="ProcessContext::SfReplicationCallbacks" />
+        </Parameters>
+        <TransitionTo action="RefreshCurrentView_Decision" />
+      </Action>
+      <Action name="CreateNewCallWithCustomer" actionType="PROCESS" process="Call::CreateNewCallProcess">
+        <Parameters>
+          <Input name="callMetaPKey" value="ProcessContext::CallMetaPKey" />
+          <Input name="customerPKey" value="ProcessContext::CustomerPKey" />
+          <Input name="dateFrom" value="ProcessContext::DateFrom" />
+          <Input name="timeFrom" value="ProcessContext::TimeFrom" />
+          <Input name="allDay" value="ProcessContext::AllDay" />
+          <Input name="substitutedUsrPKey" value="ProcessContext::SubstitutedUsrPKey" />
+          <Input name="responsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="isManagedCustomer" value="ProcessContext::IsManagedCustomer" />
+          <Input name="isSubstituted" value="ProcessContext::IsSubstituted" />
+          <!-- SF/CASDIF -->
+          <Input name="boSfReplicationCallbacks" value="ProcessContext::SfReplicationCallbacks" />
+        </Parameters>
+        <TransitionTo action="RefreshCurrentView_Decision" />
+      </Action>
+      <Action name="OpenSetDate" actionType="PROCESS" process="Call::SetDateProcess">
+        <Parameters>
+          <Input name="currentDate" value="ProcessContext::currentDate" />
+          <Input name="returnDate" value="ProcessContext::currentDate" />
+          <Input name="AgendaOverview" value="ProcessContext::OverviewList" />
+        </Parameters>
+        <TransitionTo action="updateHeaderDateTitle" />
+        <ReturnValues>
+          <Return name="ProcessContext::currentDate" value="currentDate" />
+        </ReturnValues>
+      </Action>
+      <Action name="updateHeaderDateTitle" actionType="LOGIC" call="ProcessContext::OverviewList.chooseDailyViewTitle">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="userName" value="ProcessContext::UserName" />
+          <Input name="currentDate" value="ProcessContext::currentDate" />
+        </Parameters>
+        <Return name="ProcessContext::currentDateTitle" />
+        <TransitionTo action="RefreshCurrentView_Decision" />
+      </Action>
+      <Action name="CreateNewCallsViaTripList" actionType="PROCESS" process="Call::CreateNewCallViaTripListProcess">
+        <Parameters>
+          <Input name="Mode" value="Normal" type="Literal" />
+          <Input name="currentDate" value="ProcessContext::currentDate" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <TransitionTo action="RefreshCurrentView_Decision" />
+      </Action>
+      <Action name="CreateNewCallsViaJobLists" actionType="PROCESS" process="Call::JobListSideBar">
+        <Parameters>
+          <Input name="DateFrom" value="ProcessContext::currentDate" />
+          <Input name="TimeFrom" value="ProcessContext::currentTime" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CallMetaPKey" value="callMetaPKey" />
+          <Return name="ProcessContext::CustomerPKey" value="customerPKey" />
+          <Return name="ProcessContext::ButtonPressed" value="buttonPressed" />
+          <Return name="ProcessContext::JobListPKey" value="jobListPKey" />
+          <Return name="ProcessContext::SubstitutedUsrPKey" value="substitutedUsrPKey" />
+          <Return name="ProcessContext::IsManagedCustomer" value="isManagedCustomer" />
+          <Return name="ProcessContext::IsSubstituted" value="isSubstituted" />
+        </ReturnValues>
+        <TransitionTo action="ChooseCreationPropertiesFromJobLists_Decision" />
+      </Action>
+      <Action name="ChooseCreationPropertiesFromJobLists_Decision" actionType="DECISION" parameter="ProcessContext::ButtonPressed">
+        <Case value="createCall" action="ChooseCreationPropertiesFromJobLists" />
+        <CaseElse action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="ChooseCreationPropertiesFromJobLists" actionType="PROCESS" process="Call::CreateNewWizardProcess">
+        <Parameters>
+          <Input name="DateFrom" value="ProcessContext::currentDate" />
+          <Input name="TimeFrom" value="ProcessContext::currentTime" />
+          <Input name="CustomerPKey" value="ProcessContext::CustomerPKey" />
+          <Input name="CallMetaPKey" value="ProcessContext::CallMetaPKey" />
+          <Input name="JobListPKey" value="ProcessContext::JobListPKey" />
+          <Input name="Mode" value="JobListPlanning" type="Literal" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::DateFrom" value="dateFrom" />
+          <Return name="ProcessContext::TimeFrom" value="timeFrom" />
+          <Return name="ProcessContext::ButtonPressed" value="buttonPressed" />
+        </ReturnValues>
+        <TransitionTo action="CreateNewCall_Decision" />
+      </Action>
+      <Action name="CreateNewCallsViaManagedCustomers" actionType="PROCESS" process="Call::ManagedCustomersSideBar">
+        <Parameters>
+          <Input name="DateFrom" value="ProcessContext::currentDate" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CustomerPKey" value="customerPKey" />
+          <Return name="ProcessContext::ButtonPressed" value="buttonPressed" />
+        </ReturnValues>
+        <TransitionTo action="ChooseCreationPropertiesFromManagedCustomers" />
+      </Action>
+      <Action name="ChooseCreationPropertiesFromManagedCustomers_Decision" actionType="DECISION" parameter="ProcessContext::ButtonPressed">
+        <Case value="createCall" action="ChooseCreationPropertiesFromManagedCustomers" />
+        <CaseElse action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="ChooseCreationPropertiesFromManagedCustomers" actionType="PROCESS" process="Call::CreateNewWizardProcess">
+        <Parameters>
+          <Input name="DateFrom" value="ProcessContext::currentDate" />
+          <Input name="TimeFrom" value="ProcessContext::currentTime" />
+          <Input name="CustomerPKey" value="ProcessContext::CustomerPKey" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="Mode" value="CustomerPlanning" type="Literal" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::DateFrom" value="dateFrom" />
+          <Return name="ProcessContext::TimeFrom" value="timeFrom" />
+          <Return name="ProcessContext::ButtonPressed" value="buttonPressed" />
+          <Return name="ProcessContext::CallMetaPKey" value="callMetaPKey" />
+        </ReturnValues>
+        <TransitionTo action="CreateNewCall_Decision" />
+      </Action>
+      <Action name="ShowUserSelection" actionType="PROCESS" process="Call::ChooseUser">
+        <Parameters>
+          <Input name="DateFrom" value="ProcessContext::currentDate" />
+          <Input name="UserPKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="UserName" value="ProcessContext::UserName" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CurrentResponsiblePKey" value="UserPKey" />
+          <Return name="ProcessContext::UserName" value="UserName" />
+        </ReturnValues>
+        <TransitionTo action="SetChooseUserFlag" />
+      </Action>
+      <Action name="SetChooseUserFlag" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="ChooseUser" value="1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::ChooseUser" />
+        <TransitionTo action="SelectedUserViaChooseUser" />
+      </Action>
+      <Action name="SelectedUserViaChooseUser" actionType="LOGIC" call="ProcessContext::OverviewList.chooseDailyViewTitle">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="userName" value="ProcessContext::UserName" />
+          <Input name="currentDate" value="ProcessContext::currentDate" />
+        </Parameters>
+        <Return name="ProcessContext::currentDateTitle" />
+        <TransitionTo action="LoadChosenUserData" />
+      </Action>
+      <Action name="LoadChosenUserData" actionType="LOAD" type="LoCustomerOverview">
+        <TransitionTo action="RefreshCurrentView_Decision" />
+        <Parameters>
+          <Input name="asoName" value="AsoFindCustomers" type="Literal" />
+          <Input name="referenceUserPKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="considerSubstitutionLeadFollowUpTime" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerList" />
+      </Action>
+      <Action name="OpenCallPlanningCallMetaLookup" actionType="PROCESS" process="Call::MetaLookupProcess">
+        <Parameters>
+          <Input name="CompanyRequired" value="1" type="Literal" />
+          <Input name="CallMetaPKey" value="ProcessContext::CallPlanningMetaPKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CallPlanningMetaPKey" value="callMetaPKey" />
+        </ReturnValues>
+        <TransitionTo action="SetUserCallMetaPKey" />
+      </Action>
+      <Action name="SetUserCallMetaPKey" actionType="LOGIC" call="ApplicationContext::User.boUserSales.setClbMetaPKey">
+        <Parameters>
+          <Input name="clbMetaPKey" value="ProcessContext::CallPlanningMetaPKey" />
+        </Parameters>
+      </Action>
+      <Action name="AssignNewSidebar" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::newSidebarID" />
+        <TransitionTo action="ClearCurrentSidebarData" />
+        <Parameters>
+          <Input name="sidebarID" value="Event.sidebarID" />
+        </Parameters>
+      </Action>
+      <Action name="ClearCurrentSidebarData" actionType="DECISION" parameter="ProcessContext::currentSidebarID">
+        <Case value="JOBLIST" action="ClearJobListSidebarData" />
+        <Case value="CUSTOMER" action="ClearCustomerSidebarData" />
+        <Case value="TRIPLIST" action="ClearTripListSidebarData" />
+        <CaseElse action="ClearCurrentSidebarReferenceDate" />
+      </Action>
+      <Action name="ClearJobListSidebarData" actionType="LOGIC" call="ProcessContext::SidebarData_JobLists.removeAllItems">
+        <TransitionTo action="ClearCurrentSidebarReferenceDate" />
+      </Action>
+      <Action name="ClearCustomerSidebarData" actionType="LOGIC" call="ProcessContext::SidebarData_Customers.removeAllItems">
+        <TransitionTo action="ClearCurrentSidebarReferenceDate" />
+      </Action>
+      <Action name="ClearTripListSidebarData" actionType="LOGIC" call="ProcessContext::SidebarData_TripLists.removeAllItems">
+        <TransitionTo action="ClearCurrentSidebarReferenceDate" />
+      </Action>
+      <Action name="ClearCurrentSidebarReferenceDate" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::currentSidebarReferenceDate" />
+        <TransitionTo action="AssignCurrentSidebar" />
+        <Parameters>
+          <Input name="sidebarID" value="1800-01-01 00:00:00" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="AssignCurrentSidebar" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::currentSidebarID" />
+        <TransitionTo action="ReloadSidebarData_Decision" />
+        <Parameters>
+          <Input name="sidebarID" value="ProcessContext::newSidebarID" />
+        </Parameters>
+      </Action>
+      <Action name="ReloadSidebarData_Decision" actionType="DECISION" parameter="ProcessContext::currentSidebarID">
+        <Case value="JOBLIST" action="LoadJobListSidebarData" />
+        <Case value="CUSTOMER" action="CheckSidebarRefDateForCustomerSidebar" />
+        <Case value="TRIPLIST" action="CheckSidebarRefDateForTriplistSidebar" />
+        <CaseElse action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="CheckSidebarRefDateForCustomerSidebar" actionType="LOGIC" call="ProcessContext::OverviewList.isDateBetween">
+        <Return name="ProcessContext::currentSidebarReferenceDateCheckResult" />
+        <TransitionTo action="ReloadCustomerSidebarData_Decision" />
+        <Parameters>
+          <Input name="date" value="ProcessContext::currentSidebarReferenceDate" />
+          <Input name="start" value="ProcessContext::currentWeeklyViewStartDate" />
+          <Input name="end" value="ProcessContext::currentWeeklyViewEndDate" />
+        </Parameters>
+      </Action>
+      <Action name="ReloadCustomerSidebarData_Decision" actionType="DECISION" parameter="ProcessContext::currentSidebarReferenceDateCheckResult">
+        <Case value="0" action="LoadCustomerSidebarData" />
+        <CaseElse action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="CheckSidebarRefDateForTriplistSidebar" actionType="LOGIC" call="ProcessContext::OverviewList.isDateBetween">
+        <Return name="ProcessContext::currentSidebarReferenceDateCheckResult" />
+        <TransitionTo action="ReloadTriplistSidebarData_Decision" />
+        <Parameters>
+          <Input name="date" value="ProcessContext::currentSidebarReferenceDate" />
+          <Input name="start" value="ProcessContext::currentWeeklyViewStartDate" />
+          <Input name="end" value="ProcessContext::currentWeeklyViewEndDate" />
+        </Parameters>
+      </Action>
+      <Action name="ReloadTriplistSidebarData_Decision" actionType="DECISION" parameter="ProcessContext::currentSidebarReferenceDateCheckResult">
+        <Case value="0" action="LoadTripListSidebarData" />
+        <CaseElse action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="LoadCustomerSidebarData" actionType="LOAD" type="LoCustomerOverview">
+        <Return name="ProcessContext::SidebarData_Customers" />
+        <TransitionTo action="AssignCurrentSidebarReferenceDate" />
+        <Parameters>
+          <Input name="referenceDateFrom" value="ProcessContext::currentWeeklyViewStartDate" />
+          <Input name="referenceDateThru" value="ProcessContext::currentWeeklyViewEndDate" />
+          <Input name="referenceUserPKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+      </Action>
+      <Action name="LoadJobListSidebarData" actionType="LOAD" type="LoOpenJobLists">
+        <Parameters>
+          <Input name="referenceDateFrom" value="ProcessContext::currentWeeklyViewStartDate" />
+          <Input name="referenceDateThru" value="ProcessContext::currentWeeklyViewEndDate" />
+          <Input name="responsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::SidebarData_JobLists" />
+        <TransitionTo action="AssignCurrentSidebarReferenceDate" />
+      </Action>
+      <Action name="LoadTripListSidebarData" actionType="LOAD" type="LoTripList">
+        <Parameters>
+          <Input name="referenceDateFrom" value="ProcessContext::currentWeeklyViewStartDate" />
+          <Input name="referenceDateThru" value="ProcessContext::currentWeeklyViewEndDate" />
+          <Input name="responsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::SidebarData_TripLists" />
+        <TransitionTo action="AssignCurrentSidebarReferenceDate" />
+      </Action>
+      <Action name="AssignCurrentSidebarReferenceDate" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::currentSidebarReferenceDate" />
+        <Parameters>
+          <Input name="sidebarID" value="ProcessContext::currentWeeklyViewStartDate" />
+        </Parameters>
+      </Action>
+      <Action name="AssignDragDropParams" actionType="LOGIC" call="@params.valueOf">
+        <Return name="ProcessContext::DragAndDropEventParams" />
+        <TransitionTo action="ItemDropped_Decision" />
+      </Action>
+      <Action name="ItemDropped_Decision" actionType="DECISION" parameter="Event.view.itemId">
+        <Case value="OpenJobListList" action="CreateNewCallWithCustomerByDragAndDrop" />
+        <Case value="ManagedCustomersList" action="CallPlanningCallMetaLookup_Decision" />
+        <Case value="TripListList" action="CreateNewCallsViaTripListByDragAndDrop" />
+        <CaseElse action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="CreateNewCallWithCustomerByDragAndDrop" actionType="PROCESS" process="Call::CreateNewCallProcess">
+        <Parameters>
+          <Input name="callMetaPKey" value="ProcessContext::DragAndDropEventParams.clbMetaPKey" />
+          <Input name="customerPKey" value="ProcessContext::DragAndDropEventParams.customerPKey" />
+          <Input name="dateFrom" value="ProcessContext::DragAndDropEventParams.dateFrom" />
+          <Input name="timeFrom" value="ProcessContext::DragAndDropEventParams.timeFrom" />
+          <Input name="substitutedUsrPKey" value="ProcessContext::DragAndDropEventParams.substitutedUsrPKey" />
+          <Input name="isManagedCustomer" value="ProcessContext::DragAndDropEventParams.isManagedCustomer" />
+          <Input name="responsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="allDay" value="ProcessContext::DragAndDropEventParams.isAllDay" />
+          <Input name="Mode" type="Literal" value="JobListPlanning" />
+          <!-- SF/CASDIF -->
+          <Input name="boSfReplicationCallbacks" value="ProcessContext::SfReplicationCallbacks" />
+        </Parameters>
+        <TransitionTo action="RefreshCurrentView_Decision" />
+      </Action>
+      <Action name="CallPlanningCallMetaLookup_Decision" actionType="DECISION" parameter="ProcessContext::CallPlanningMetaPKey">
+        <CaseElse action="CreateNewCallWithCustomerByDragAndDropCustomer" />
+        <CaseEmpty action="OpenCallPlanningCallMetaLookupAndCreateCall" />
+      </Action>
+      <Action name="OpenCallPlanningCallMetaLookupAndCreateCall" actionType="PROCESS" process="Call::MetaLookupProcess">
+        <Parameters>
+          <Input name="CompanyRequired" value="1" type="Literal" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CallPlanningMetaPKey" value="callMetaPKey" />
+        </ReturnValues>
+        <TransitionTo action="SetUserCallMetaPKey2" />
+      </Action>
+      <Action name="SetUserCallMetaPKey2" actionType="LOGIC" call="ApplicationContext::User.boUserSales.setClbMetaPKey">
+        <TransitionTo action="CreateNewCallWithCustomerByDragAndDropCustomer" />
+        <Parameters>
+          <Input name="clbMetaPKey" value="ProcessContext::CallPlanningMetaPKey" />
+        </Parameters>
+      </Action>
+      <Action name="CreateNewCallWithCustomerByDragAndDropCustomer" actionType="PROCESS" process="Call::CreateNewCallProcess">
+        <Parameters>
+          <Input name="callMetaPKey" value="ProcessContext::CallPlanningMetaPKey" />
+          <Input name="dateFrom" value="ProcessContext::DragAndDropEventParams.dateFrom" />
+          <Input name="timeFrom" value="ProcessContext::DragAndDropEventParams.timeFrom" />
+          <Input name="customerPKey" value="ProcessContext::DragAndDropEventParams.pKey" />
+          <Input name="allDay" value="ProcessContext::DragAndDropEventParams.isAllDay" />
+          <Input name="responsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="substitutedUsrPKey" value="ProcessContext::DragAndDropEventParams.substitutedUsrPKey" />
+          <Input name="isManagedCustomer" value="ProcessContext::DragAndDropEventParams.isManagedCustomer" />
+          <Input name="Mode" type="Literal" value="CustomerPlanning" />
+          <!-- SF/CASDIF -->
+          <Input name="boSfReplicationCallbacks" value="ProcessContext::SfReplicationCallbacks" />
+        </Parameters>
+        <TransitionTo action="RefreshCurrentView_Decision" />
+      </Action>
+      <Action name="CreateNewCallsViaTripListByDragAndDrop" actionType="PROCESS" process="Call::CreateNewCallViaTripListProcess">
+        <Parameters>
+          <Input name="currentDate" value="ProcessContext::DragAndDropEventParams.dateFrom" />
+          <Input name="TripListPKey" value="ProcessContext::DragAndDropEventParams.pKey" />
+          <Input name="Mode" value="DragAndDrop" type="Literal" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="AllDay" value="ProcessContext::DragAndDropEventParams.isAllDay" />
+        </Parameters>
+        <TransitionTo action="RefreshCurrentView_Decision" />
+      </Action>
+      <Action name="ChooseCreationPropertiesAfterCustomerDragAndDrop" actionType="PROCESS" process="Call::CreateNewWizardProcess">
+        <Parameters>
+          <Input name="DateFrom" value="ProcessContext::DragAndDropEventParams.dateFrom" />
+          <Input name="TimeFrom" value="ProcessContext::DragAndDropEventParams.timeFrom" />
+          <Input name="CustomerPKey" value="ProcessContext::DragAndDropEventParams.pKey" />
+          <Input name="Mode" value="CustomerPlanning" type="Literal" />
+          <Input name="AllDay" value="ProcessContext::DragAndDropEventParams.isAllDay" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CallMetaPKey" value="callMetaPKey" />
+          <Return name="ProcessContext::CustomerPKey" value="customerPKey" />
+          <Return name="ProcessContext::DateFrom" value="dateFrom" />
+          <Return name="ProcessContext::TimeFrom" value="timeFrom" />
+          <Return name="ProcessContext::AllDay" value="allDay" />
+          <Return name="ProcessContext::ButtonPressed" value="buttonPressed" />
+          <Return name="ProcessContext::SubstitutedUsrPKey" value="substitutedUsrPKey" />
+          <Return name="ProcessContext::IsManagedCustomer" value="isManagedCustomer" />
+          <Return name="ProcessContext::IsSubstituted" value="isSubstituted" />
+        </ReturnValues>
+        <TransitionTo action="CreateNewCall_Decision" />
+      </Action>
+      <Action name="DisplayTraffic" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::DisplayTraffic" />
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="HideTraffic" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::DisplayTraffic" />
+        <Parameters>
+          <Input name="value" value="0" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="DisplayRoute" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::DisplayRoute" />
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="HideRoute" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::DisplayRoute" />
+        <Parameters>
+          <Input name="value" value="0" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="ExecuteBreak" actionType="PROCESS" process="DailyReport::ExecuteBreakProcess"></Action>
+      <Action name="ShowLoadMaskAndScanCustomer_External" actionType="LOGIC" call="Utils.addLoadMask">
+        <TransitionTo action="ScanCustomer_External" />
+      </Action>
+      <Action name="ScanCustomer_External" actionType="PROCESS" process="Customer::ScanCustomerProcess">
+        <TransitionTo action="ScanCustomer_Result_Decision" />
+        <Parameters>
+          <Input name="externalBarcode" value="event.code" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::ScanCustomer_CustomerPKey" value="CustomerPKey" />
+          <Return name="ProcessContext::ScanCustomer_CustomerId" value="CustomerId" />
+          <Return name="ProcessContext::ScanCustomer_Success" value="Success" />
+        </ReturnValues>
+      </Action>
+      <Action name="ShowLoadMaskAndScanCustomer" actionType="LOGIC" call="Utils.addLoadMask">
+        <TransitionTo action="ScanCustomer" />
+      </Action>
+      <Action name="ScanCustomer" actionType="PROCESS" process="Customer::ScanCustomerProcess">
+        <TransitionTo action="ScanCustomer_Result_Decision" />
+        <ReturnValues>
+          <Return name="ProcessContext::ScanCustomer_CustomerPKey" value="CustomerPKey" />
+          <Return name="ProcessContext::ScanCustomer_CustomerId" value="CustomerId" />
+          <Return name="ProcessContext::ScanCustomer_Success" value="Success" />
+        </ReturnValues>
+      </Action>
+      <Action name="ScanCustomer_Result_Decision" actionType="DECISION" parameter="ProcessContext::ScanCustomer_Success">
+        <Case value="1" action="GetFirstCallForCustomer" />
+        <CaseElse action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="GetFirstCallForCustomer" actionType="LOGIC" call="ProcessContext::OverviewList.getFirstCallByScannedCustomer">
+        <Return name="ProcessContext::ScanCustomer_FirstVisit" />
+        <TransitionTo action="ScanCustomer_FirstVisit_Decision" />
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::ScanCustomer_CustomerPKey" />
+        </Parameters>
+      </Action>
+      <Action name="ScanCustomer_FirstVisit_Decision" actionType="DECISION" parameter="ProcessContext::ScanCustomer_FirstVisit">
+        <CaseElse action="LoadCallForScannedCustomer" />
+        <CaseEmpty action="ScanCustomer_CallPlanningMetaPKey_Decision" />
+      </Action>
+      <Action name="LoadCallForScannedCustomer" actionType="PROCESS" process="Call::LoadCallProcess">
+        <Parameters>
+          <Input name="CallPKey" value="ProcessContext::ScanCustomer_FirstVisit" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <TransitionTo action="RefreshCurrentView_Decision" />
+      </Action>
+      <Action name="ScanCustomer_CallPlanningMetaPKey_Decision" actionType="DECISION" parameter="ProcessContext::CallPlanningMetaPKey">
+        <CaseElse action="AssignTemporaryTemplate" />
+        <CaseEmpty action="AssignDefaultTemplate" />
+      </Action>
+      <Action name="AssignDefaultTemplate" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::ScanCustomer_CallPlanningMetaPKey" />
+        <TransitionTo action="ValidateCallTemplateFound" />
+        <Parameters>
+          <Input name="value" value="ApplicationContext::User.boUserSales.clbMetaPKey" />
+        </Parameters>
+      </Action>
+      <Action name="AssignTemporaryTemplate" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::ScanCustomer_CallPlanningMetaPKey" />
+        <TransitionTo action="ValidateCallTemplateFound" />
+        <Parameters>
+          <Input name="value" value="ProcessContext::CallPlanningMetaPKey" />
+        </Parameters>
+      </Action>
+      <Action name="ValidateCallTemplateFound" actionType="DECISION" parameter="ProcessContext::ScanCustomer_CallPlanningMetaPKey">
+        <CaseEmpty action="noCallTemplateFound" />
+        <CaseElse action="CreateNewCallWizardScanning" />
+      </Action>
+      <Action actionType="CONFIRM" confirmType="Ok" name="noCallTemplateFound">
+        <Message messageId="CasClbNoCallTemplateForScanningFound"></Message>
+        <Cases>
+          <Case value="Ok" action="ShowCalendarView_Decision" />
+        </Cases>
+      </Action>
+      <Action name="CreateNewCallWizardScanning" actionType="PROCESS" process="Call::CreateNewWizardProcess">
+        <Parameters>
+          <Input name="CallMetaPKey" value="ProcessContext::ScanCustomer_CallPlanningMetaPKey" />
+          <Input name="CustomerPKey" value="ProcessContext::ScanCustomer_CustomerPKey" />
+          <Input name="Mode" value="Scanning" type="Literal" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <TransitionTo action="CreateNewCallAfterScan_Decision" />
+        <ReturnValues>
+          <Return name="ProcessContext::CallMetaPKey" value="callMetaPKey" />
+          <Return name="ProcessContext::CustomerPKey" value="customerPKey" />
+          <Return name="ProcessContext::DateFrom" value="dateFrom" />
+          <Return name="ProcessContext::TimeFrom" value="timeFrom" />
+          <Return name="ProcessContext::AllDay" value="allDay" />
+          <Return name="ProcessContext::ButtonPressed" value="buttonPressed" />
+          <Return name="ProcessContext::SubstitutedUsrPKey" value="substitutedUsrPKey" />
+          <Return name="ProcessContext::IsManagedCustomer" value="isManagedCustomer" />
+          <Return name="ProcessContext::IsSubstituted" value="isSubstituted" />
+        </ReturnValues>
+      </Action>
+      <Action name="CreateNewCallAfterScan_Decision" actionType="DECISION" parameter="ProcessContext::ButtonPressed">
+        <Case value="createCall" action="CreateNewCallWithScannedCustomer" />
+        <CaseElse action="ShowCalendarView_Decision" />
+      </Action>
+      <Action name="CreateNewCallWithScannedCustomer" actionType="PROCESS" process="Call::CreateNewCallProcess">
+        <Parameters>
+          <Input name="callMetaPKey" value="ProcessContext::CallMetaPKey" />
+          <Input name="customerPKey" value="ProcessContext::CustomerPKey" />
+          <Input name="dateFrom" value="ProcessContext::DateFrom" />
+          <Input name="timeFrom" value="ProcessContext::TimeFrom" />
+          <Input name="substitutedUsrPKey" value="ProcessContext::SubstitutedUsrPKey" />
+          <Input name="responsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="isManagedCustomer" value="ProcessContext::IsManagedCustomer" />
+          <Input name="isSubstituted" value="ProcessContext::IsSubstituted" />
+          <!-- SF/CASDIF -->
+          <Input name="boSfReplicationCallbacks" value="ProcessContext::SfReplicationCallbacks" />
+        </Parameters>
+        <TransitionTo action="LoadCallAfterScan" />
+        <ReturnValues>
+          <Return name="ProcessContext::ScanCustomer_CallPKey" value="callPKey" />
+        </ReturnValues>
+      </Action>
+      <Action name="LoadCallAfterScan" actionType="PROCESS" process="Call::LoadCallProcess">
+        <Parameters>
+          <Input name="CallPKey" value="ProcessContext::ScanCustomer_CallPKey" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <TransitionTo action="RefreshCurrentView_Decision" />
+      </Action>
+      <Action name="ShowAutomaticCallPlanning" actionType="PROCESS" process="Call::AutomaticPlanningProcess">
+        <Parameters>
+          <Input name="referenceDateFrom" value="ProcessContext::currentWeeklyViewStartDate" />
+          <Input name="referenceDateThru" value="ProcessContext::currentWeeklyViewEndDate" />
+          <Input name="referenceUserPKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="currentWeekStartDate" value="ProcessContext::currentWeekStartDate" />
+          <Input name="overviewList" value="ProcessContext::OverviewList" />
+        </Parameters>
+        <TransitionTo action="RefreshCurrentView_Decision" />
+      </Action>
+      <Action name="SetCreateTripListMode" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="TripListMode" value="CreateTripList" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::TripListMode" />
+        <TransitionTo action="CallTripListWizard" />
+      </Action>
+      <Action name="SetUpdateTripListMode" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="TripListMode" value="UpdateTripList" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::TripListMode" />
+        <TransitionTo action="CallTripListWizard" />
+      </Action>
+      <Action name="SetDeleteTripListMode" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="TripListMode" value="DeleteTripList" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::TripListMode" />
+        <TransitionTo action="CallTripListWizard" />
+      </Action>
+      <Action actionType="PROCESS" name="CallTripListWizard" process="Call::TripListWizardProcess">
+        <Parameters>
+          <Input name="referenceUserPKey" value="ProcessContext::CurrentResponsiblePKey" />
+          <Input name="overviewList" value="ProcessContext::OverviewList" />
+          <Input name="referenceDateFrom" value="ProcessContext::currentWeeklyViewStartDate" />
+          <Input name="referenceDateThru" value="ProcessContext::currentWeeklyViewEndDate" />
+          <Input name="tripListMode" value="ProcessContext::TripListMode" />
+        </Parameters>
+        <TransitionTo action="RefreshCurrentView_Decision" />
+      </Action>
+      <!-- Navigation -->
+      <Action actionType="LOGIC" name="NavigateToCustomer" call="ProcessContext::OverviewList.navigateToCustomer">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <!-- End of Navigation -->
+    </Actions>
+  </Body>
+  <ExternalEvents>
+    <Event name="barcodeEvent" action="ShowLoadMaskAndScanCustomer_External" />
+  </ExternalEvents>
+</Process>

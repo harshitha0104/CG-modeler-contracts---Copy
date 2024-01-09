@@ -1,0 +1,12 @@
+<ListItem name="LiProductBoM">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="id" type="DomId" dataSourceProperty="id" />
+    <SimpleProperty name="text1" type="DomText" dataSourceProperty="text1" />
+    <SimpleProperty name="ean" type="DomPrdNumber" dataSourceProperty="ean" />
+    <SimpleProperty name="prdType" type="DomPrdType" dataSourceProperty="prdType" />
+    <SimpleProperty name="quantity" type="DomDecimal" dataSourceProperty="quantity" />
+    <SimpleProperty name="validFrom" type="DomDate" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomValidThru" dataSourceProperty="validThru" />
+  </SimpleProperties>
+</ListItem>

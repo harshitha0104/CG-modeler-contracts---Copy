@@ -1,0 +1,160 @@
+<Process name="Order::PreOrderNavigationProcess" defaultAction="Backend_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="MainBO" type="BoOrder" />
+        <Declaration name="currentTabPage" type="String" />
+        <Declaration name="CurrentItemFilterId" type="String" />
+        <Declaration name="IsSfBackend" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoOrder" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="DetermineBackend" call="Utils.isSfBackend">
+        <Return name="ProcessContext::IsSfBackend" />
+      </Action>
+      <Action actionType="LOGIC" name="ResetDeliveryDateForReplenishment" call="ProcessContext::MainBO.resetDeliveryDate">
+        <Parameters></Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="Backend_Decision" actionType="DECISION" parameter="ProcessContext::IsSfBackend">
+        <Case value="true" action="StartSfNavigation" />
+        <CaseElse action="Navigation_Decision" />
+      </Action>
+      <Action name="Navigation_Decision" actionType="DECISION" parameter="ProcessContext::MainBO.message">
+        <CaseEmpty action="StartNavigation" />
+        <CaseElse action="StartMessageNavigation" />
+      </Action>
+      <Action actionType="NAVIGATION" name="StartMessageNavigation">
+        <Parameters name="ProcessContext::NavigationName">
+          <Processes defaultProcess="Message">
+            <Process id="Message" image="Envelope" label="message" defaultLabel="Message" process="Order::MessageTabProcess" action="StartMessageProcess" />
+            <Process id="ItemList" image="ShoppingCartItem" label="orderItems" defaultLabel="Items" process="Order::ItemListTabProcess" action="setCurrentTabName_itemList" />
+            <Process id="Notes" image="Note" label="notes" defaultLabel="Notes" process="Order::NotesTabProcess" action="Notes_Load_Decision" />
+            <Process id="Header" image="Info" label="orderHeader" defaultLabel="Header" process="Order::HeaderTabProcess" action="Workflow_Load_Decision" />
+          </Processes>
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_message" />
+      </Action>
+      <Action actionType="NAVIGATION" name="StartNavigation">
+        <Parameters name="ProcessContext::NavigationName">
+          <Processes defaultProcess="ItemList">
+            <Process id="ItemList" image="ShoppingCartItem" label="orderItems" defaultLabel="Items" process="Order::ItemListTabProcess" action="setCurrentTabName_itemList" />
+            <Process id="Notes" image="Note" label="notes" defaultLabel="Notes" process="Order::NotesTabProcess" action="Notes_Load_Decision" />
+            <Process id="Header" image="Info" label="orderHeader" defaultLabel="Header" process="Order::HeaderTabProcess" action="Workflow_Load_Decision" />
+          </Processes>
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_itemList" />
+      </Action>
+      <Action actionType="NAVIGATION" name="StartSfNavigation">
+        <Parameters name="ProcessContext::NavigationName">
+          <Processes defaultProcess="ItemList">
+            <Process id="ItemList" image="ShoppingCartItem" label="orderItems" defaultLabel="Items" process="Order::ItemListTabProcess" action="setCurrentTabName_itemList" />
+            <Process id="Notes" image="Note" label="notes" defaultLabel="Notes" process="Order::NotesTabProcess" action="Notes_Load_Decision" />
+            <Process id="Header" image="Info" label="orderHeader" defaultLabel="Header" process="Order::HeaderTabProcess" action="Workflow_Load_Decision" />
+          </Processes>
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_itemList" />
+      </Action>
+      <!-- Item list process -->
+      <Action actionType="LOGIC" name="setCurrentTabName_itemList" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_ItemList" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="StartItemListProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartItemListProcess" process="Order::ItemListTabProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::MainBO" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CurrentItemFilterId" value="currentItemFilterId" />
+        </ReturnValues>
+        <TransitionTo action="StoreCurrentItemFilterId_ItemTabManager" />
+      </Action>
+      <Action actionType="LOGIC" name="StoreCurrentItemFilterId_ItemTabManager" call="ProcessContext::MainBO.boItemTabManager.setCurrentItemFilterId">
+        <Parameters>
+          <Input name="value" value="ProcessContext::CurrentItemFilterId" />
+        </Parameters>
+      </Action>
+      <!-- On demand load of notes LO-->
+      <Action name="Notes_Load_Decision" actionType="DECISION" parameter="ProcessContext::MainBO.loNotes">
+        <CaseEmpty action="Load_Notes" />
+        <CaseElse action="setCurrentTabName_notes" />
+      </Action>
+      <Action name="Load_Notes" actionType="LOGIC" call="ProcessContext::MainBO.loadNotes">
+        <TransitionTo action="setCurrentTabName_notes" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_notes" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Notes" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="StartNotesProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartNotesProcess" process="Order::NotesTabProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::MainBO" />
+        </Parameters>
+      </Action>
+      <!-- On demand load of workflow BO-->
+      <Action name="Workflow_Load_Decision" actionType="DECISION" parameter="ProcessContext::MainBO.boWorkflow">
+        <CaseEmpty action="Load_Workflow" />
+        <CaseElse action="setCurrentTabName_header" />
+      </Action>
+      <Action name="Load_Workflow" actionType="LOGIC" call="ProcessContext::MainBO.loadWorkflow">
+        <TransitionTo action="setCurrentTabName_header" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_header" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Header" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="StartHeaderProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartHeaderProcess" process="Order::HeaderTabProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::MainBO" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="resetValidateForReleaseFlag" call="ProcessContext::MainBO.setValidateForRelease">
+        <Parameters>
+          <Input name="value" type="Literal" value="0" />
+        </Parameters>
+        <TransitionTo action="AfterValidationErrorUIRedirect_Decision" />
+      </Action>
+      <!-- Redirect decission for validation errors to stay on the page where the user was before the validation -->
+      <Action name="AfterValidationErrorUIRedirect_Decision" actionType="DECISION" parameter="ProcessContext::currentTabPage">
+        <Case value="tab_ItemList" action="StartItemListProcess" />
+        <Case value="tab_Notes" action="StartNotesProcess" />
+        <Case value="tab_Header" action="StartHeaderProcess" />
+        <Case value="tab_Message" action="StartMessageProcess" />
+        <CaseElse action="StartNavigation" />
+      </Action>
+      <!-- Message Tab Process -->
+      <Action actionType="LOGIC" name="setCurrentTabName_message" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Message" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="StartMessageProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartMessageProcess" process="Order::MessageTabProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::MainBO" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+  <ExitHandlers>
+    <ExitHandler handlerName="beforeExit1" type="Validate" name="ProcessContext::MainBO">
+      <OnValidationError transitionTo="resetValidateForReleaseFlag" />
+    </ExitHandler>
+  </ExitHandlers>
+</Process>

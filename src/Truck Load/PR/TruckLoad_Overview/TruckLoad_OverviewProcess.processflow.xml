@@ -1,0 +1,343 @@
+<Process name="TruckLoad::OverviewProcess" defaultAction="GetOverviewList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OverviewList" type="LoTruckLoadOverview" />
+        <Declaration name="ActiveObjectRelations" type="LoTmgTourObjectRelations" />
+        <Declaration name="CheckOutDocumentPKey" type="DomPKey" />
+        <Declaration name="CheckInDocumentPKey" type="DomPKey" />
+        <Declaration name="DocumentPKey" type="DomPKey" />
+        <Declaration name="SdoMetaPKey" type="DomPKey" />
+        <Declaration name="ButtonPressed" type="String" />
+        <!-- Template Lists for different Flyout modes -->
+        <Declaration name="CheckOutTemplates" type="LoTruckLoadTemplates" />
+        <Declaration name="CheckInTemplates" type="LoTruckLoadTemplates" />
+        <Declaration name="DocumentTemplates" type="LoTruckLoadTemplates" />
+        <Declaration name="DocumentTemplatesForCurrentStock" type="LoTruckLoadTemplates" />
+        <Declaration name="ContextMenuList" type="LoTruckLoadOverviewContextMenu" />
+        <Declaration name="AvailableTemplates" type="LoTruckLoadTemplates" />
+        <Declaration name="IsMultipleTemplatesAvailable" type="DomBool" />
+        <Declaration name="EtpWarehousePKey" type="DomPKey" />
+        <Declaration name="Set_ButtonPressed" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="currentTourPKey" type="DomPKey" />
+        <Input name="navigationMode" type="DomString" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="GetOverviewList" actionType="LOAD" type="LoTruckLoadOverview">
+        <Parameters>
+          <Input name="tmgMainPKey" value="ProcessContext::CurrentTourPKey" />
+          <Input name="usrMainPKey" value="ApplicationContext::User.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::OverviewList" />
+        <TransitionTo action="LoadTmgTourObjectRelations" />
+      </Action>
+      <!-- Directly load following infos because needed for button visibility -->
+      <Action name="LoadTmgTourObjectRelations" actionType="LOAD" type="LoTmgTourObjectRelations">
+        <Parameters>
+          <Input name="tmgMainPKey" value="ProcessContext::CurrentTourPKey" />
+        </Parameters>
+        <Return name="ProcessContext::ActiveObjectRelations" />
+        <TransitionTo action="ShowOverviewList" />
+      </Action>
+      <!-- PRIMARY OVERVIEW ACTIONS -->
+      <Action name="ShowOverviewList" actionType="VIEW">
+        <UIDescription>TruckLoad::OverviewUI</UIDescription>
+        <Events>
+          <!-- Grouped list events -->
+          <Event name="itemSelected" action="LoadBo" />
+          <Event name="checkOut" action="SetCheckOutMode" />
+          <Event name="checkIn" action="SetCheckInMode" />
+          <Event name="createNew" action="SetNewDocumentMode" />
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+          <Event name="reviewCurrentStock" action="SetReviewStockMode" />
+        </Events>
+      </Action>
+      <Action name="SetReviewStockMode" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::Set_ButtonPressed" />
+        <TransitionTo action="GetDocumentTemplatesForCurrentStock" />
+        <Parameters>
+          <Input name="value" value="ReviewStock" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="GetDocumentTemplatesForCurrentStock" actionType="LOAD" type="LoTruckLoadTemplates">
+        <Parameters>
+          <Input name="tmgTourObjectRelUsage" type="Literal" value="'SdoMeta.TruckInventory'" />
+        </Parameters>
+        <Return name="ProcessContext::DocumentTemplatesForCurrentStock" />
+        <TransitionTo action="SetFirstItemPKey" />
+      </Action>
+      <Action actionType="LOGIC" name="SetFirstItemPKey" call="ProcessContext::DocumentTemplatesForCurrentStock.getFirstItemPKey">
+        <Return name="ProcessContext::SdoMetaPKey" />
+        <TransitionTo action="SetWarehouseOfRunningTour_ForStock" />
+      </Action>
+      <Action actionType="LOGIC" name="SetWarehouseOfRunningTour_ForStock" call="Utils.identity">
+        <Parameters>
+          <Input name="pKey" value="ApplicationContext::CurrentTour.startEtpWarehousePKey" />
+        </Parameters>
+        <Return name="ProcessContext::EtpWarehousePKey" />
+        <TransitionTo action="CreateNewStockDocument" />
+      </Action>
+      <Action name="CreateNewStockDocument" actionType="PROCESS" process="TruckLoad::CreateProcess">
+        <Parameters>
+          <Input name="SdoMetaPKey" value="ProcessContext::SdoMetaPKey" />
+          <Input name="EtpWarehousePKey" value="ProcessContext::EtpWarehousePKey" />
+          <Input name="Mode" value="ProcessContext::Set_ButtonPressed" />
+        </Parameters>
+      </Action>
+      <!-- LOAD -->
+      <Action name="LoadBo" actionType="PROCESS" process="TruckLoad::LoadProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <!-- Create new Check-out document - START -->
+      <Action name="SetCheckOutMode" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::Set_ButtonPressed" />
+        <TransitionTo action="TryToGetPKeyOfInitialCheckOutDocument" />
+        <Parameters>
+          <Input name="value" value="CheckOut" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="TryToGetPKeyOfInitialCheckOutDocument" call="ProcessContext::OverviewList.getInitialDocPKeyByDocType">
+        <Parameters>
+          <Input name="documentType" type="Literal" value="ProductCheckOut" />
+        </Parameters>
+        <Return name="ProcessContext::CheckOutDocumentPKey" />
+        <TransitionTo action="IsCheckOutDocumentAvailableDecision" />
+      </Action>
+      <Action name="IsCheckOutDocumentAvailableDecision" actionType="DECISION" parameter="ProcessContext::CheckOutDocumentPKey">
+        <CaseEmpty action="LoadProductCheckOutTemplates" />
+        <CaseElse action="LoadCheckOutDocument" />
+      </Action>
+      <Action name="LoadCheckOutDocument" actionType="PROCESS" process="TruckLoad::LoadProcess">
+        <Parameters>
+          <Input name="MainPKey" value="ProcessContext::CheckOutDocumentPKey" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <Action name="LoadProductCheckOutTemplates" actionType="LOAD" type="LoTruckLoadTemplates">
+        <Parameters>
+          <Input name="tmgTourObjectRelUsage" type="Literal" value="'SdoMeta.ProductCheckOut'" />
+          <Input name="additionalCondition" type="Literal" value="AND TmgTourObjectRel.UsedForStartOfDay=#used#" />
+        </Parameters>
+        <Return name="ProcessContext::CheckOutTemplates" />
+        <TransitionTo action="CheckMultipleCheckoutTemplateAvailable" />
+      </Action>
+      <Action actionType="LOGIC" name="CheckMultipleCheckoutTemplateAvailable" call="ProcessContext::OverviewList.isMultipleCheckoutTemplateAvailable">
+        <Parameters>
+          <Input name="templates" type="LoTruckLoadTemplates" value="ProcessContext::CheckOutTemplates" />
+        </Parameters>
+        <Return name="ProcessContext::IsMultipleTemplatesAvailable" />
+        <TransitionTo action="ShowCreateCheckOutFlyout_Decision" />
+      </Action>
+      <Action name="ShowCreateCheckOutFlyout_Decision" actionType="DECISION" parameter="ProcessContext::IsMultipleTemplatesAvailable">
+        <Case value="1" action="ShowCreateCheckOutFlyout" />
+        <CaseElse action="SetFirstCheckoutItemPKey" />
+      </Action>
+      <Action actionType="LOGIC" name="SetFirstCheckoutItemPKey" call="ProcessContext::CheckOutTemplates.getFirstItemPKey">
+        <Return name="ProcessContext::SdoMetaPKey" />
+        <TransitionTo action="SetWarehouseOfRunningTour_ForCheckout" />
+      </Action>
+      <Action actionType="LOGIC" name="SetWarehouseOfRunningTour_ForCheckout" call="Utils.identity">
+        <Parameters>
+          <Input name="pKey" value="ApplicationContext::CurrentTour.startEtpWarehousePKey" />
+        </Parameters>
+        <Return name="ProcessContext::EtpWarehousePKey" />
+        <TransitionTo action="CreateNewCheckOutDocument" />
+      </Action>
+      <Action actionType="PROCESS" name="ShowCreateCheckOutFlyout" process="TruckLoad::CreateNewFlyoutProcess">
+        <Parameters>
+          <Input name="TemplateList" value="ProcessContext::CheckOutTemplates" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::SdoMetaPKey" value="sdoMetaPKey" />
+          <Return name="ProcessContext::ButtonPressed" value="buttonPressed" />
+          <Return name="ProcessContext::EtpWarehousePKey" value="etpWarehousePKey" />
+        </ReturnValues>
+        <TransitionTo action="CreateNewCheckOutDocument_Decision" />
+      </Action>
+      <Action name="CreateNewCheckOutDocument_Decision" actionType="DECISION" parameter="ProcessContext::ButtonPressed">
+        <Case value="createDocument" action="CreateNewCheckOutDocument" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <Action name="CreateNewCheckOutDocument" actionType="PROCESS" process="TruckLoad::CreateProcess">
+        <Parameters>
+          <Input name="SdoMetaPKey" value="ProcessContext::SdoMetaPKey" />
+          <Input name="EtpWarehousePKey" value="ProcessContext::EtpWarehousePKey" />
+          <Input name="Mode" value="ProcessContext::Set_ButtonPressed" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <!-- Create new Check-out document - END -->
+      <!-- Create new Check-in document - START -->
+      <Action name="SetCheckInMode" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::Set_ButtonPressed" />
+        <TransitionTo action="TryToGetPKeyOfInitialCheckInDocument" />
+        <Parameters>
+          <Input name="value" value="CheckIn" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="TryToGetPKeyOfInitialCheckInDocument" call="ProcessContext::OverviewList.getTruckLoadDocumentByPhaseAndUsage">
+        <Parameters>
+          <Input name="usage" type="Literal" value="SdoMeta.ProductCheckIn" />
+          <Input name="phase" type="Literal" value="Initial" />
+          <Input name="forcedFlagHandling" type="Literal" value="endOfDay" />
+        </Parameters>
+        <Return name="ProcessContext::CheckInDocumentPKey" />
+        <TransitionTo action="IsCheckInDocumentAvailableDecision" />
+      </Action>
+      <Action name="IsCheckInDocumentAvailableDecision" actionType="DECISION" parameter="ProcessContext::CheckInDocumentPKey">
+        <CaseEmpty action="LoadProductCheckInTemplates" />
+        <CaseElse action="LoadCheckInDocument" />
+      </Action>
+      <Action name="LoadCheckInDocument" actionType="PROCESS" process="TruckLoad::LoadProcess">
+        <Parameters>
+          <Input name="MainPKey" value="ProcessContext::CheckInDocumentPKey" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <Action name="LoadProductCheckInTemplates" actionType="LOAD" type="LoTruckLoadTemplates">
+        <Parameters>
+          <Input name="tmgTourObjectRelUsage" type="Literal" value="'SdoMeta.ProductCheckIn'" />
+          <Input name="additionalCondition" type="Literal" value="AND TmgTourObjectRel.UsedForEndOfDay=#used#" />
+        </Parameters>
+        <Return name="ProcessContext::CheckInTemplates" />
+        <TransitionTo action="CheckMultipleCheckinTemplateAvailable" />
+      </Action>
+      <Action actionType="LOGIC" name="CheckMultipleCheckinTemplateAvailable" call="ProcessContext::OverviewList.isMultipleCheckinTemplateAvailable">
+        <Parameters>
+          <Input name="templates" type="LoTruckLoadTemplates" value="ProcessContext::CheckInTemplates" />
+        </Parameters>
+        <Return name="ProcessContext::IsMultipleTemplatesAvailable" />
+        <TransitionTo action="ShowCreateCheckInFlyout_Decision" />
+      </Action>
+      <Action name="ShowCreateCheckInFlyout_Decision" actionType="DECISION" parameter="ProcessContext::IsMultipleTemplatesAvailable">
+        <Case value="1" action="ShowCreateCheckInFlyout" />
+        <CaseElse action="SetFirstCheckinItemPKey" />
+      </Action>
+      <Action actionType="LOGIC" name="SetFirstCheckinItemPKey" call="ProcessContext::CheckInTemplates.getFirstItemPKey">
+        <Return name="ProcessContext::SdoMetaPKey" />
+        <TransitionTo action="SetWarehouseOfRunningTour_ForCheckin" />
+      </Action>
+      <Action actionType="LOGIC" name="SetWarehouseOfRunningTour_ForCheckin" call="Utils.identity">
+        <Parameters>
+          <Input name="pKey" value="ApplicationContext::CurrentTour.startEtpWarehousePKey" />
+        </Parameters>
+        <Return name="ProcessContext::EtpWarehousePKey" />
+        <TransitionTo action="CreateNewCheckInDocument" />
+      </Action>
+      <Action actionType="PROCESS" name="ShowCreateCheckInFlyout" process="TruckLoad::CreateNewFlyoutProcess">
+        <Parameters>
+          <Input name="TemplateList" value="ProcessContext::CheckInTemplates" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::SdoMetaPKey" value="sdoMetaPKey" />
+          <Return name="ProcessContext::ButtonPressed" value="buttonPressed" />
+          <Return name="ProcessContext::EtpWarehousePKey" value="etpWarehousePKey" />
+        </ReturnValues>
+        <TransitionTo action="CreateNewCheckInDocument_Decision" />
+      </Action>
+      <Action name="CreateNewCheckInDocument_Decision" actionType="DECISION" parameter="ProcessContext::ButtonPressed">
+        <Case value="createDocument" action="CreateNewCheckInDocument" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <Action name="CreateNewCheckInDocument" actionType="PROCESS" process="TruckLoad::CreateProcess">
+        <Parameters>
+          <Input name="SdoMetaPKey" value="ProcessContext::SdoMetaPKey" />
+          <Input name="EtpWarehousePKey" value="ProcessContext::EtpWarehousePKey" />
+          <Input name="Mode" value="ProcessContext::Set_ButtonPressed" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <!-- Create new Check-in document - END -->
+      <!-- Create new document - START -->
+      <Action name="SetNewDocumentMode" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::Set_ButtonPressed" />
+        <TransitionTo action="GetDocumentTemplates" />
+        <Parameters>
+          <Input name="value" value="NewDocument" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="GetDocumentTemplates" actionType="LOAD" type="LoTruckLoadTemplates">
+        <Parameters>
+          <Input name="tmgTourObjectRelUsage" type="Literal" value="'SdoMeta.ProductCheckOut','SdoMeta.ProductCheckIn','SdoMeta.TruckAudit','SdoMeta.TckIvcTransferOutward'" />
+          <Input name="additionalCondition" type="Literal" value="AND TmgTourObjectRel.UsedForStartOfDay=#notUsed# AND TmgTourObjectRel.UsedForEndOfDay=#notUsed#" />
+        </Parameters>
+        <Return name="ProcessContext::DocumentTemplates" />
+        <TransitionTo action="ShowCreateNewFlyout" />
+      </Action>
+      <Action actionType="PROCESS" name="ShowCreateNewFlyout" process="TruckLoad::CreateNewFlyoutProcess">
+        <Parameters>
+          <Input name="TemplateList" value="ProcessContext::DocumentTemplates" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::SdoMetaPKey" value="sdoMetaPKey" />
+          <Return name="ProcessContext::ButtonPressed" value="buttonPressed" />
+          <Return name="ProcessContext::EtpWarehousePKey" value="etpWarehousePKey" />
+        </ReturnValues>
+        <TransitionTo action="CreateNewDocument_Decision" />
+      </Action>
+      <Action name="CreateNewDocument_Decision" actionType="DECISION" parameter="ProcessContext::ButtonPressed">
+        <Case value="createDocument" action="CreateNewDocument" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <Action name="CreateNewDocument" actionType="PROCESS" process="TruckLoad::CreateProcess">
+        <Parameters>
+          <Input name="SdoMetaPKey" value="ProcessContext::SdoMetaPKey" />
+          <Input name="EtpWarehousePKey" value="ProcessContext::EtpWarehousePKey" />
+          <Input name="Mode" value="ProcessContext::Set_ButtonPressed" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <Action name="LoadDocument" actionType="PROCESS" process="TruckLoad::LoadProcess">
+        <Parameters>
+          <Input name="MainPKey" value="ProcessContext::DocumentPKey" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <!-- Create new document - END -->
+      <!-- Truck Load ContextMenu Start-->
+      <Action actionType="LOAD" name="GetContextMenu" type="LoTruckLoadOverviewContextMenu">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="phase" value="Event.phase" />
+          <Input name="responsiblePKey" value="Event.responsiblePKey" />
+          <Input name="initiatorPKey" value="Event.initiatorPKey" />
+          <Input name="wfeWorkflowPKey" value="Event.wfeWorkflowPKey" />
+          <Input name="actualStatePKey" value="Event.actualStatePKey" />
+          <Input name="recipientPKey" value="Event.recipientPKey" />
+          <Input name="documentType" value="Event.documentType" />
+          <Input name="tmgMainPKey" value="Event.tmgMainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::ContextMenuList" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Cancel" action="Cancel" />
+        <Case value="Delete" action="Delete" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <Action name="Cancel" actionType="PROCESS" process="TruckLoad::CancelWizardProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <Action name="Delete" actionType="PROCESS" process="TruckLoad::DeleteWizardProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <!-- Truck Load ContextMenu END-->
+      <Action actionType="END" name="End" />
+    </Actions>
+  </Body>
+</Process>

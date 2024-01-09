@@ -1,0 +1,62 @@
+<BusinessObject name="BoTodo"  generateLoadMethod="false" generateCreateMethod="false" OERReference="SvcTodo" schemaVersion="1.1">
+  <DataSource name="DsBoTodo" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomText" storable="false" dataSourceProperty="text" />
+    <SimpleProperty name="classification" type="DomTaskType" storable="false" dataSourceProperty="classification" />
+    <SimpleProperty name="initiationDate" type="DomDate" storable="false" dataSourceProperty="initiationDate" />
+    <SimpleProperty name="dueDate" type="DomDate" storable="false" dataSourceProperty="dueDate" />
+    <SimpleProperty name="priority" type="DomABC" storable="false" dataSourceProperty="priority" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" storable="false" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="ownerPKey" type="DomPKey" storable="false" dataSourceProperty="ownerPKey" />
+    <SimpleProperty name="userAccountable" type="DomPKey" storable="false" dataSourceProperty="userAccountable" />
+    <SimpleProperty name="initiatorPKey" type="DomPKey" storable="false" dataSourceProperty="initiatorPKey" />
+    <SimpleProperty name="issuePhase" type="DomSvcIssuePhase" storable="false" dataSourceProperty="issuePhase" />
+    <SimpleProperty name="todoId" type="DomId" storable="false" dataSourceProperty="todoId" />
+    <SimpleProperty name="svcRequestMetaPKey" type="DomPKey" storable="false" dataSourceProperty="svcRequestMetaPKey" />
+    <SimpleProperty name="actualStatePKey" type="DomPKey" dataSourceProperty="actualStatePKey" />
+    <SimpleProperty name="nextStatePKey" type="DomPKey" dataSourceProperty="nextStatePKey" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="metaType" type="DomSvcMetaType" dataSourceProperty="metaType" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+  </SimpleProperties>
+  <NestedObjects>
+    <NestedObject name="boTodoNote" objectClass="BoTodoNote" dataSourceProperty="pKey" nestingProperty="svcTodoPKey" loadMode="LoadImmediate" />
+    <NestedObject name="boSvcRequestMeta" objectClass="BoSvcRequestMeta" dataSourceProperty="svcRequestMetaPKey" nestingProperty="pKey" loadMode="LoadImmediate" />
+    <NestedObject name="boWorkflow" objectClass="BoWorkflow" dataSourceProperty="wfeWorkflowPKey" nestingProperty="pKey" loadMode="LoadImmediate" />
+  </NestedObjects>
+  <ObjectLookups>
+    <ObjectLookup name="luResponsible" objectClass="LuUser" dataSourceProperty="responsiblePKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luOwner" objectClass="LuUser" dataSourceProperty="ownerPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luInitiator" objectClass="LuUser" dataSourceProperty="initiatorPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luTodoAttachmentCount" objectClass="LuTodoAttachmentCount" dataSourceProperty="pKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <ListObjects>
+    <ListObject name="loRecentState" objectClass="LoTodoRecentState" dataSourceProperty="pKey" listProperty="svcTodoPKey" loadMode="LoadImmediate" />
+    <ListObject name="loTodoAttachments" objectClass="LoTodoAttachments" dataSourceProperty="pKey" listProperty="svcTodoPKey" loadMode="LoadOnDemand" />
+    <ListObject name="loAtmAttachment" objectClass="LoAtmAttachment" dataSourceProperty="pKey" listProperty="referencePKey" loadMode="LoadOnDemand" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="setEARights" />
+    <Method name="checkButtonVisibility" />
+    <Method name="stateTransition" />
+    <Method name="doDelete" />
+    <Method name="copyAsync" />
+    <Method name="loadOnDemand" />
+    <Method name="updateAttachmentCount" />
+  </Methods>
+  <Validations>
+    <Validation name="validateNotEmpty" />
+    <Validation name="validateDueDate" />
+  </Validations>
+</BusinessObject>

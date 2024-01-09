@@ -1,0 +1,13 @@
+<ListItem name="LiBpaOpenItem">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="bpaCustomerPKey" type="DomPKey" dataSourceProperty="bpaCustomerPKey" />
+    <SimpleProperty name="amount" type="DomMoney" dataSourceProperty="amount" />
+    <SimpleProperty name="receiptId" type="DomId" dataSourceProperty="receiptId" />
+    <SimpleProperty name="receiptDate" type="DomDate" dataSourceProperty="receiptDate" />
+    <SimpleProperty name="debitCredit" type="DomBpaDebitCredit" dataSourceProperty="debitCredit" />
+    <SimpleProperty name="dueDate" type="DomDate" dataSourceProperty="dueDate" />
+    <SimpleProperty name="debitCreditIcon" type="DomString" dataSourceProperty="debitCreditIcon" />
+    <SimpleProperty name="currency" type="DomCurrency" dataSourceProperty="currency" />
+  </SimpleProperties>
+</ListItem>

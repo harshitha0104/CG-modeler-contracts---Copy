@@ -1,0 +1,19 @@
+<DataSource name="DsLoCustomerContactPartnerRelation" backendSystem="sf" businessObjectClass="LoCustomerContactPartnerRelation" external="false" editableEntity="Contact" readOnly="false" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contact" column="Id" />
+    <Attribute name="businessModified" table="Contact" column="LastModifiedDate" />
+    <DerivedAttribute name="salesOrg" value="'#SalesOrg#'" />
+    <Attribute name="fromPKey" table="Contact" column="AccountId" />
+    <Attribute name="toPKey" table="Contact" column="Id" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contact" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+          Contact.Id = #toPKey#
+        ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="toPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

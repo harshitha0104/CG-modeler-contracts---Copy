@@ -1,0 +1,64 @@
+<DataSource name="DsLuProductBasePrice" backendSystem="sf" businessObjectClass="LuProductBasePrice" external="false" editableEntity="Product2" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Product2" column="Id" />
+    <Attribute name="unitType" table="Unit_of_Measure__c" column="Unit_Type__c" />
+    <DerivedAttribute name="conditionContent" value="' '" />
+    <Attribute name="basePrice" table="Product_Condition__c" column="Value__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Product2" idAttribute="Id" />
+    <Entity name="Unit_of_Measure__c">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Unit_of_Measure__c.Product__c" comparator="eq" rightSideType="Attribute" rightSideValue="Product2.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Product_Condition__c">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product_Condition__c.Product__c" comparator="eq" rightSideType="Attribute" rightSideValue="Product2.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Condition_Template__c">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Condition_Template__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Product_Condition__c.Condition_Template__c" />
+          <Condition leftSideValue="Condition_Template__c.Value_Type__c" comparator="eq" rightSideType="Literal" rightSideValue="'Amount'" />
+          <Condition leftSideValue="Condition_Template__c.Customer_Reference__c" comparator="eq" rightSideType="Literal" rightSideValue="'0'" />
+          <Condition leftSideValue="Condition_Template__c.Product_Reference__c" comparator="eq" rightSideType="Literal" rightSideValue="'1'" />
+          <Condition leftSideValue="Condition_Template__c.Active__c" comparator="eq" rightSideType="Literal" rightSideValue="'1'" />
+          <Condition leftSideValue="Condition_Template__c.Price_Finding_Id__c" comparator="eq" rightSideType="Literal" rightSideValue="'ProductPrice'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="System_Setting__c" alias="PriceType">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product_Condition__c.Price_Type__c" comparator="eq" rightSideType="Attribute" rightSideValue="PriceType.Value__c" />
+          <Condition leftSideValue="PriceType.Name" comparator="eq" rightSideType="Literal" rightSideValue="'Default_Price_Type'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="System_Setting__c" alias="PriceListType">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product_Condition__c.Price_List_Type__c" comparator="eq" rightSideType="Attribute" rightSideValue="PriceListType.Value__c" />
+          <Condition leftSideValue="PriceListType.Name" comparator="eq" rightSideType="Literal" rightSideValue="'Default_Price_List_Type'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+    	Unit_of_Measure__c.Is_Price_Unit__c = '1' 
+		AND Product2.Id = #pKey#
+        AND Product2.Sales_Org__c = '#SalesOrg#'
+        AND #compareAsDate('Product_Condition__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')#
+        AND #compareAsDate('Product_Condition__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#
+	]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

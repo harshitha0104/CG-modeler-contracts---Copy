@@ -1,0 +1,33 @@
+<BusinessObject name="BoDailyReportCreateNewWizard" generateLoadMethod="true" generateCreateMethod="false" schemaVersion="1.1">
+  <DataSource name="DsBoDailyReportCreateNewWizard" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="usrDocMetaPKey" type="DomPKey" dataSourceProperty="usrDocMetaPKey" />
+    <SimpleProperty name="dateFrom" type="DomDate" />
+    <SimpleProperty name="uniquePerDay" type="DomBool" dataSourceProperty="uniquePerDay" />
+    <SimpleProperty name="allowPostdating" type="DomBool" dataSourceProperty="allowPostdating" />
+  </SimpleProperties>
+  <NestedObjects>
+    <NestedObject name="boUserDocMeta" objectClass="BoUserDocMeta" dataSourceProperty="usrDocMetaPKey" nestingProperty="pKey" loadMode="OnDemand" />
+  </NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+  </Methods>
+  <Validations>
+    <Validation name="validateNoOpenTimeCard" />
+    <Validation name="validatePostDating" />
+    <Validation name="validateUniquePerDay" />
+    <Validation name="validateNotEmpty" />
+  </Validations>
+</BusinessObject>

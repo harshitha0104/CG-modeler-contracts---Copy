@@ -1,0 +1,55 @@
+<DataSource name="DsLoOrderItemMetas" backendSystem="sf" businessObjectClass="LoOrderItemMetas" external="false" readOnly="true" editableEntity="Order_Item_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Order_Item_Template__c" column="Id" />
+    <Attribute name="active" table="Order_Item_Template__c" column="Active__c" />
+    <Attribute name="id" table="Order_Item_Template__c" column="Name" />
+    <Attribute name="quantitySuggestionPolicy" table="Order_Item_Template__c" column="Quantity_Suggestion_Policy__c" />
+    <Attribute name="text" table="Order_Item_Template__c" column="Description_#Language#__c" />
+    <Attribute name="shortText" table="Order_Item_Template__c" column="Short_Text__c" />
+    <DerivedAttribute name="prdProposalItemMetaPosition" value="' '" />
+    <Attribute name="useAssortmentSdoItem" table="Order_Item_Template__c" column="Assortment_Relation__c" />
+    <Attribute name="useClosedListing" table="Order_Item_Template__c" column="Closed_Listing__c" />
+    <Attribute name="quantityLogisticUnit" table="Order_Item_Template__c" column="Default_Logistic_Unit__c" />
+    <Attribute name="main" table="Order_Item_Order_Template_Association__c" column="Main__c" />
+    <Attribute name="checkUniqueness" table="Order_Item_Order_Template_Association__c" column="Check_Uniqueness__c" />
+    <Attribute name="useSpecialPrice" table="Order_Item_Template__c" column="User_Special_Price__c" />
+    <Attribute name="considerDeliveryState" table="Order_Item_Template__c" column="Consider_Delivery_State__c" />
+    <Attribute name="priceEffect" table="Order_Item_Template__c" column="Price_Effect__c" />
+    <Attribute name="saveZeroQuantity" table="Order_Item_Template__c" column="Save_Zero_Quantity__c" />
+    <Attribute name="checkMaxQuantity" table="Order_Item_Template__c" column="Check_Max_Quantity__c" />
+    <Attribute name="maxQuantity" table="Order_Item_Template__c" column="Max_Quantity__c" />
+    <Attribute name="checkQuotaOver" table="Order_Item_Template__c" column="Check_Quota_Overdraft__c" />
+    <Attribute name="checkUserInventoryOver" table="Order_Item_Template__c" column="Check_Inventory_Overdraft__c" />
+    <Attribute name="useQuota" table="Order_Item_Template__c" column="Use_Quota__c" />
+    <Attribute name="useUserInventory" table="Order_Item_Template__c" column="Use_Inventory__c" />
+    <Attribute name="excludeQuantityRounding" table="Order_Item_Template__c" column="Exclude_Order_Rounding__c" />
+    <Attribute name="calculationGroup" table="Order_Item_Template__c" column="Calculation_Group__c" />
+    <Attribute name="modifyPresetQuantity" table="Order_Item_Template__c" column="Modify_Quantity__c" />
+    <Attribute name="scanIncrementQuantity" table="Order_Item_Template__c" column="Scanning_Increment__c" />
+    <Attribute name="logisticCategory" table="Order_Item_Template__c" column="Logistic_Category__c" />
+    <Attribute name="uoMScanBehavior" table="Order_Item_Template__c" column="UoM_Scan_Behavior__c" />
+    <Attribute name="uoMScanDefaultUnit" table="Order_Item_Template__c" column="UoM_Scan_Default_Unit__c" />
+    <Attribute name="movementDirection" table="Order_Item_Template__c" column="Movement_Direction__c" />
+    <Attribute name="validFrom" table="Order_Item_Order_Template_Association__c" column="Valid_From__c" />
+    <Attribute name="validThru" table="Order_Item_Order_Template_Association__c" column="Valid_Thru__c" />
+    <DerivedAttribute name="modReasonRequired" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order_Item_Template__c" alias="" idAttribute="Id" />
+    <Entity name="Order_Item_Order_Template_Association__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Order_Item_Template__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Order_Item_Order_Template_Association__c.Order_Item_Template__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Order_Item_Order_Template_Association__c.Order_Template__c = #sdoMetaPKey#
+      ]]></QueryCondition>
+  <OrderCriteria/>
+  <GroupBy/>
+  <Parameters>
+    <Parameter name="sdoMetaPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

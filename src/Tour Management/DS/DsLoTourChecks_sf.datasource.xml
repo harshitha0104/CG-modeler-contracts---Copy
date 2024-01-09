@@ -1,0 +1,33 @@
+<DataSource name="DsLoTourChecks" backendSystem="sf" businessObjectClass="LoTourChecks" external="false" editableEntity="Tour_Tour_Check__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Tour_Tour_Check__c" column="Id" />
+    <Attribute name="tmgTourPKey" table="Tour_Tour_Check__c" column="Tour__c" />
+    <Attribute name="tmgCheckPKey" table="Tour_Tour_Check__c" column="Tour_Check__c" />
+    <Attribute name="value" table="Tour_Tour_Check__c" column="Answer__c" />
+    <Attribute name="usage" table="Tour_Tour_Check__c" column="Usage__c" />
+    <Attribute name="checkType" table="Tour_Tour_Check__c" column="Check_Type__c" />
+    <Attribute name="text" table="Tour_Check__c" column="Description_#Language#__c" />
+    <Attribute name="sort" table="Tour_Tour_Check__c" column="Sort__c" />
+    <DerivedAttribute name="checkDefinitionText" value="CASE WHEN Usage__c='S' AND Tour_Tour_Check__c.Check_Type__c='SecurityCheck' THEN 'Start of Day-Security Check' WHEN Usage__c='S' AND Tour_Tour_Check__c.Check_Type__c='VehicleCheck' THEN 'Start of Day-Vehicle Check' WHEN Usage__c='E' AND Tour_Tour_Check__c.Check_Type__c='SecurityCheck' THEN 'End of Day-Security Check' WHEN Usage__c='E' AND Tour_Tour_Check__c.Check_Type__c='VehicleCheck' THEN 'End of Day-Vehicle Check' END" />
+    <DerivedAttribute name="sortTextUI" value="CASE WHEN Usage__c='S' AND Tour_Tour_Check__c.Check_Type__c='SecurityCheck' THEN '1' WHEN Usage__c='S' AND Tour_Tour_Check__c.Check_Type__c='VehicleCheck' THEN '2' WHEN Usage__c='E' AND Tour_Tour_Check__c.Check_Type__c='SecurityCheck' THEN '3' WHEN Usage__c='E' AND Tour_Tour_Check__c.Check_Type__c='VehicleCheck' THEN '4' END" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tour_Tour_Check__c" alias="" idAttribute="Id" />
+    <Entity name="Tour_Check__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Tour_Tour_Check__c.Tour_Check__c" comparator="eq" rightSideType="Attribute" rightSideValue="Tour_Check__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Tour_Check__c.Active__c='1' AND Tour_Tour_Check__c.Tour__c=#tmgMainPKey#
+        ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Tour_Tour_Check__c" attribute="Sort__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="tmgMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

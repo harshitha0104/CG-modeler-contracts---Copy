@@ -1,0 +1,13 @@
+<ListItem name="LiRetailVisitKPIAttachment">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomAttachmentBlobPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="parentId" type="DomPKey" dataSourceProperty="parentId" />
+    <SimpleProperty name="creationDate" type="DomDate" dataSourceProperty="creationDate" />
+    <SimpleProperty name="creationTime" type="DomTime" dataSourceProperty="creationTime" />
+    <SimpleProperty name="fileName" type="DomFileName" dataSourceProperty="fileName" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+    <SimpleProperty name="attachmentText" type="DomText" dataSourceProperty="attachmentText" />
+    <SimpleProperty name="attachmentBlobPKey" type="DomAttachmentBlobPKey" dataSourceProperty="attachmentBlobPKey" />
+    <SimpleProperty name="attachmentBlob" type="DomBlob" dataSourceProperty="attachmentBlob" blobTable="retailVisitKPIAttachmentBlob" blobPKeyField="attachmentBlobPKey" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,16 @@
+<ListObject name="LoTodoAttachments" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoTodoAttachments" />
+  <Item objectClass="LiTodoAttachments" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="getCameraSettings" />
+    <Method name="capturePicture" />
+    <Method name="addItem" />
+    <Method name="deleteItem" />
+  </Methods>
+</ListObject>

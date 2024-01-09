@@ -1,0 +1,16 @@
+<DataSource name="DsLuSupervisorOfUser" backendSystem="sf" businessObjectClass="LuSupervisorOfUser" external="false" readOnly="true" editableEntity="User" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="User" column="Id" />
+    <Attribute name="supervisorPKey" table="User" column="ManagerId" />
+  </Attributes>
+  <Entities>
+    <Entity name="User" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        User.Id = #usrPKey#
+    ]]></QueryCondition>
+  <OrderCriteria/>
+  <Parameters>
+    <Parameter name="usrPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,465 @@
+<DataSource name="DsLoJobDefinitions" backendSystem="sf" businessObjectClass="LoJobDefinitions" external="true" readOnly="true" editableEntity="Job_DL_Job_Definition_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="jobDefinitionPKey" table="Job_DL_Job_Definition_Template__c" column="Id" />
+    <Attribute name="jobDefinitionMetaPKey" table="Job_Definition_Template__c" column="Id" />
+    <Attribute name="considerHistory" table="Job_Definition_List__c" column="Consider_History__c" />
+    <Attribute name="considerListing" table="Job_Definition_List__c" column="Consider_Listing__c" />
+    <Attribute name="considerProducts" table="Job_Definition_List__c" column="Consider_Products__c" />
+    <Attribute name="jobDefListPKey" table="Job_Definition_List__c" column="Id" />
+    <Attribute name="standardJobs" table="Job_Definition_List__c" column="Standard_Jobs__c" />
+    <Attribute name="jobDefinitionListText" table="Job_Definition_List__c" column="Description_#Language#__c" />
+    <Attribute name="jobDefinitionMetaText" table="Job_Definition_Template__c" column="Description_#Language#__c" />
+    <Attribute name="dataType" table="Data_Type__c" column="Data_Type__c" />
+    <Attribute name="useStepper" table="Job_Definition_Template__c" column="Use_Stepper__c" />
+    <Attribute name="stepSize" table="Job_Definition_Template__c" column="Step_Size__c" />
+    <Attribute name="considerMinValue" table="Job_Definition_Template__c" column="Consider_Min_Value__c" />
+    <Attribute name="minDatePolicy" table="Job_Definition_Template__c" column="Min_Date_Policy__c" />
+    <Attribute name="considerMaxValue" table="Job_Definition_Template__c" column="Consider_Max_Value__c" />
+    <Attribute name="decimalPlaces" table="Data_Type__c" column="Data_Length_Decimal_Places__c" />
+    <Attribute name="maxDatePolicy" table="Job_Definition_Template__c" column="Max_Date_Policy__c" />
+    <Attribute name="mandatory" table="Job_DL_Job_Definition_Template__c" column="Mandatory__c" />
+    <Attribute name="presetting" table="Job_DL_Job_Definition_Template__c" column="Presetting__c" />
+    <Attribute name="targetValueColumn" table="Job_Definition_Template__c" column="Target_Value_Column__c" />
+    <Attribute name="jobActionSuccess" table="Job_DL_Job_Definition_Template__c" column="Job_Action_Success__c" />
+    <Attribute name="sort" table="Job_DL_Job_Definition_Template__c" column="Sort__c" />
+    <Attribute name="dataWareHouseKey" table="Job_Definition_Template__c" column="Primary_Survey_Policy__c" />
+    <Attribute name="savePresetting" table="Job_Definition_Template__c" column="Save_Presetting__c" />
+    <Attribute name="jobListPKey" table="Job_List__c" column="Id" />
+    <Attribute name="jobMetaPKey" table="Job_Definition_Template__c" column="Job_Template__c" />
+    <Attribute name="validFrom" table="Job_Definition_List__c" column="Valid_From__c" />
+    <Attribute name="validThru" table="Job_Definition_List__c" column="Valid_Thru__c" />
+    <Attribute name="clbMainPKey" table="Job_List__c" column="Visit__c" />
+    <Attribute name="promotionDateFrom" table="Promotion__c" column="Date_From__c" />
+    <Attribute name="promotionDateThru" table="Promotion__c" column="Date_Thru__c" />
+    <Attribute name="promotionId" table="Job_Definition_List__c" column="Promotion__c" />
+    <Attribute name="promotionSlogan" table="Promotion__c" column="Slogan_#Language#__c" />
+    <DerivedAttribute name="jobMetaId" value="'Survey'" />
+    <DerivedAttribute name="dataLength" value="''" />
+    <DerivedAttribute name="toggleId" value="' '" />
+    <DerivedAttribute name="pOS" value="'0'" />
+    <DerivedAttribute name="minValue" value="'#MinDate#'" />
+    <DerivedAttribute name="maxValue" value="'#MaxDate#'" />
+    <DerivedAttribute name="isMatrixSurvey" value="'0'" />
+    <DerivedAttribute name="defaultValue" value="' '" />
+    <DerivedAttribute name="jdlDescriptionInitialized" value="'0'" />
+    <Attribute name="posMetaPKey" table="Job_DL_Job_Definition_Template__c" column="POS_Template__c" />
+    <Attribute name="posType" table="Job_DL_Job_Definition_Template__c" column="POS_Type__c" />
+    <Attribute name="pictureTaking" table="Job_Definition_Template__c" column="Picture_Taking__c" />
+    <Attribute name="conditionAnswers" table="Job_DL_Job_Definition_Template__c" column="Condition_Answers__c" />
+    <Attribute name="conditionOperator" table="Job_DL_Job_Definition_Template__c" column="Condition_Operator__c" />
+    <Attribute name="condition" table="Job_DL_Job_Definition_Template__c" column="Condition__c" />
+    <Attribute name="considerScore" table="Job_DL_Job_Definition_Template__c" column="Consider_Score__c" />
+    <Attribute name="score" table="Job_DL_Job_Definition_Template__c" column="Score__c" />
+    <Attribute name="scoreAnswers" table="Job_DL_Job_Definition_Template__c" column="Score_Relevant_Answers__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Job_DL_Job_Definition_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+jsonQuery = Utils.convertDsParamsOldToNew(jsonQuery);
+
+var validFrom = "";   
+var validThru = ""; 
+var ownerPKey = "";   
+var clbMainPKey = ""; 
+var bpaMainPKey = "";   
+var clbMetaPKey = ""; 
+
+if (Utils.isDefined(jsonQuery.validFrom)) {
+validFrom = Utils.convertForDBParam(jsonQuery.validFrom, 'DomDate');
+}
+if (Utils.isDefined(jsonQuery.validThru)) {
+validThru = Utils.convertForDBParam(jsonQuery.validThru, 'DomDate');
+}
+if (Utils.isDefined(jsonQuery.ownerPKey)) {
+ownerPKey = Utils.convertForDBParam(jsonQuery.ownerPKey, 'DomPKey');
+}
+if (Utils.isDefined(jsonQuery.clbMainPKey)) {
+clbMainPKey = Utils.convertForDBParam(jsonQuery.clbMainPKey, 'DomPKey');
+}
+if (Utils.isDefined(jsonQuery.bpaMainPKey)) {
+bpaMainPKey = Utils.convertForDBParam(jsonQuery.bpaMainPKey, 'DomPKey');
+}
+if (Utils.isDefined(jsonQuery.clbMetaPKey)) {
+clbMetaPKey = Utils.convertForDBParam(jsonQuery.clbMetaPKey, 'DomPKey');
+}
+var sqlParams = {validFrom, validThru, ownerPKey, clbMainPKey, bpaMainPKey, clbMetaPKey};
+var sqlStmt = "";
+sqlStmt+= "SELECT DISTINCT Job_DL_Job_Definition_Template__c.Id AS jobDefinitionPKey, ";
+sqlStmt+= "Job_Definition_List__c.Promotion__c as promotionId, ";
+sqlStmt+= "Promotion__c.Date_from__c as promotionDateFrom, ";
+sqlStmt+= "Promotion__c.Date_thru__c as promotionDateThru, ";
+sqlStmt+= "Promotion__c.slogan_#Language#__c as promotionSlogan, ";
+sqlStmt+= "   CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN '0' ";
+sqlStmt+= "     WHEN Data_Type__c.Data_Type__c = 'Date' THEN #dateAsStringLocaltime(#TodayAsDate#)# ";
+sqlStmt+= "     WHEN Data_Type__c.Data_Type__c = 'Toggle' THEN ";
+sqlStmt+= "       CASE WHEN substr(Data_Type__c.Name, 4) = 'Bool' THEN '0' ";
+sqlStmt+= "       ELSE ' ' ";
+sqlStmt+= "       END ";
+sqlStmt+= "     WHEN Data_Type__c.Data_Type__c = 'String' THEN ' ' ";
+sqlStmt+= "     END AS defaultValue, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Mandatory__c AS mandatory, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Condition_Answers__c AS conditionAnswers, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Condition_Operator__c AS conditionOperator, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Condition__c AS condition, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Consider_Score__c AS considerScore, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Score__c AS score, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Score_Relevant_Answers__c AS scoreAnswers, ";
+sqlStmt+= "Job_Definition_Template__c.Picture_Taking__c AS pictureTaking, ";
+sqlStmt+= "Job_Definition_List__c.Consider_History__c AS considerHistory, "; 
+sqlStmt+= "Job_Definition_List__c.Consider_Listing__c AS considerListing, ";
+sqlStmt+= "Job_Definition_List__c.Consider_Products__c AS considerProducts, "; 
+sqlStmt+= "Job_Definition_List__c.Id AS jobDefListPKey, ";
+sqlStmt+= "' ' AS jobListPKey, ";
+sqlStmt+= "'0' AS isMatrixSurvey, ";
+sqlStmt+= "Job_Definition_List__c.Standard_Jobs__c AS standardJobs, "; 
+sqlStmt+= "CASE WHEN Job_Template__c.Product_Reference__c = '0' THEN 'Question' ELSE 'Survey' END AS jobMetaId, ";
+sqlStmt+= "Job_Definition_Template__c.Job_Template__c AS jobMetaPKey, ";
+sqlStmt+= "Job_Definition_List__c.Description_#Language#__c AS jobDefinitionListText, ";
+sqlStmt+= "Job_Definition_Template__c.Description_#Language#__c AS jobDefinitionMetaText, ";
+sqlStmt+= "Job_Definition_List__c.Valid_From__c AS validFrom, ";
+sqlStmt+= "Job_Definition_List__c.Valid_Thru__c AS validThru, ";
+sqlStmt+= "Job_Definition_Template__c.Id AS jobDefinitionMetaPKey, ";
+sqlStmt+= "Data_Type__c.Data_Type__c AS dataType, ";
+sqlStmt+= "Data_Type__c.Data_Length__c || ',' || Data_Type__c.Data_Length_Decimal_Places__c AS dataLength, "
+sqlStmt+= "CASE WHEN (data_type__c.data_type__c = 'Toggle' AND Data_Type__c.Name like 'Dom%')  then substr(data_type__c.name, 4) else ' ' end AS toggleId, ";
+sqlStmt+= "Job_Definition_Template__c.Target_Value_Column__c AS targetValueColumn, ";
+sqlStmt+= "Job_Definition_Template__c.Use_Stepper__c AS useStepper, ";
+sqlStmt+= "Job_Definition_Template__c.Step_Size__c AS stepSize, ";
+sqlStmt+= "Job_Definition_Template__c.Consider_Min_Value__c AS considerMinValue, ";
+sqlStmt+= "CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN  ";
+sqlStmt+= "   CASE WHEN Job_Definition_Template__c.Consider_Min_Value__c = '1' THEN Job_Definition_Template__c.Min_Value__c ";
+sqlStmt+= "   ELSE '0.0' ";
+sqlStmt+= "   END ";
+sqlStmt+= " ELSE ";
+sqlStmt+= "   CASE WHEN Data_Type__c.Data_Type__c = 'Date' THEN ";
+sqlStmt+= "     CASE WHEN  Job_Definition_Template__c.Min_Date_Policy__c = 'Today' THEN #dateAsStringLocaltime(#TodayAsDate#)# ";
+sqlStmt+= "     WHEN  Job_Definition_Template__c.Min_Date_Policy__c = 'MinDate'  THEN #dateAsStringLocaltime('#MinDate#')# ";
+sqlStmt+= "     ELSE #dateAsStringLocaltime('#MinDate#')# ";
+sqlStmt+= "     END ";
+sqlStmt+= "   END ";
+sqlStmt+= " END AS minValue , ";
+sqlStmt+= " CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN ";
+sqlStmt+= "   CASE WHEN Job_Definition_Template__c.Consider_Max_Value__c = '1' THEN Job_Definition_Template__c.Max_Value__c ";
+sqlStmt+= "   ELSE '9999999' ";
+sqlStmt+= "   END ";
+sqlStmt+= " ELSE ";
+sqlStmt+= "   CASE WHEN Data_Type__c.Data_Type__c = 'Date' THEN ";
+sqlStmt+= "     CASE WHEN Job_Definition_Template__c.Max_Date_Policy__c= 'Today' THEN #dateAsStringLocaltime(#TodayAsDate#)# ";
+sqlStmt+= "     WHEN Job_Definition_Template__c.Max_Date_Policy__c= 'MaxDate' THEN #dateAsStringLocaltime('#MaxDate#')# ";
+sqlStmt+= "     WHEN Job_Definition_Template__c.Max_Date_Policy__c= 'NextYear' THEN date(#TodayAsDate#, 'unixepoch', 'localtime', '1 year') ";
+sqlStmt+= "     ELSE  #dateAsStringLocaltime('#MaxDate#')#  ";
+sqlStmt+= "     END ";
+sqlStmt+= "   END ";
+sqlStmt+= " END AS maxValue, ";
+sqlStmt+= "Job_Definition_Template__c.Min_Date_Policy__c AS minDatePolicy, ";
+sqlStmt+= "Job_Definition_Template__c.Consider_Max_Value__c AS considerMaxValue, ";         
+sqlStmt+= "Data_Type__c.Data_Length_Decimal_Places__c AS decimalPlaces, ";
+sqlStmt+= "Job_Definition_Template__c.Max_Date_Policy__c AS maxDatePolicy, ";   
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Presetting__c AS presetting, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Sort__c AS sort, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Job_Action_Success__c AS jobActionSuccess, ";
+sqlStmt+= "' ' AS clbMainPKey, ";
+sqlStmt+= "Job_Definition_Template__c.Primary_Survey_Policy__c AS dataWareHouseKey, ";
+sqlStmt+= "Job_Definition_Template__c.Save_Presetting__c AS savePresetting, ";
+sqlStmt+= "CASE  ";
+sqlStmt+= "		WHEN Job_Definition_Template__c.Measure_Type__c = 'POS' ";
+sqlStmt+= "			THEN '1' ";
+sqlStmt+= "		ELSE '0' ";
+sqlStmt+= "		END AS pOS, ";
+sqlStmt+= "'0' AS jdlDescriptionInitialized, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.POS_Template__c AS posMetaPKey, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.POS_Type__c AS posType ";
+sqlStmt+= "FROM Job_Definition_List__c, Data_Type__c ";
+sqlStmt+= "LEFT OUTER JOIN Job_Definition_List_Account__c ON Job_Definition_List__c.Id = Job_Definition_List_Account__c.Job_Definition_List__c AND Job_Definition_List_Account__c.Account__c = #bpaMainPKey# ";
+sqlStmt+= "LEFT OUTER JOIN Job_Definition_List_Account_Set__c ON Job_Definition_List__c.Id = Job_Definition_List_Account_Set__c.Job_Definition_List__c ";
+sqlStmt+= "LEFT OUTER JOIN Account_Set_Account__c ON Job_Definition_List_Account_Set__c.Account_set__c = Account_Set_Account__c.Account_set__c AND Account_Set_Account__c.Account_Set_Account__c = #bpaMainPKey# ";
+sqlStmt+= "INNER JOIN Job_DL_Job_Definition_Template__c  ON Job_Definition_List__c.Id = Job_DL_Job_Definition_Template__c.Job_Definition_List__c ";
+sqlStmt+= "AND Job_DL_Job_Definition_Template__c.Excluded__c = '0' ";
+sqlStmt+= "LEFT JOIN Job_Definition_Template__c ON Job_DL_Job_Definition_Template__c.Job_Definition_Template__c = Job_Definition_Template__c.Id AND Job_Definition_Template__c.Active__c = '1' ";
+sqlStmt+= "LEFT JOIN Job_Template__c ON Job_Definition_Template__c.Job_Template__c = Job_Template__c.Id ";
+sqlStmt+= "LEFT OUTER JOIN Promotion__c ON  Job_Definition_List__c.Promotion__c = Promotion__c.Id ";
+sqlStmt+= " AND Promotion__c.Active__c = '1' ";
+sqlStmt+= " AND Promotion__c.Phase__c = 'Committed' ";
+sqlStmt+= " AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #validFrom# , 'Date')# ";  
+sqlStmt+= " AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #validThru# , 'Date')# ";
+sqlStmt+= "WHERE (1 = 1) ";
+sqlStmt+= "AND Job_Definition_List__c.Active__c = '1' ";
+sqlStmt+= "AND Job_Definition_List__c.Approval_State__c <> 'Canceled' ";
+sqlStmt+= "AND Job_Definition_Template__c.Data_Type__c =  Data_Type__c.Id ";
+sqlStmt+= "AND ( ";
+sqlStmt+= "		Job_Template__c.Name = 'Question' ";
+sqlStmt+= "		OR Job_Template__c.Name = 'Survey' ";
+sqlStmt+= "		) ";
+
+/* Filter an Pos-Template and Pos-Type is not supported */
+
+sqlStmt+= "	AND Job_Definition_List__c.Standard_Jobs__c = '1' ";
+sqlStmt+= "	AND #compareAsDate('Job_Definition_List__c.Valid_From__c', 'Date','<=' , #validFrom# , 'Date')# ";
+sqlStmt+= "	AND #compareAsDate('Job_Definition_List__c.Valid_Thru__c', 'Date','>=' , #validThru# , 'Date')# ";
+sqlStmt+= "	AND (Job_Definition_List__c.Consider_Account__c ='1'  ";
+sqlStmt+= "	AND ((Job_Definition_List_Account__c.Account__c IS NOT NULL AND (Job_Definition_List_Account__c.Excluded__c = '0' AND Job_Definition_List_Account__c.isDeleted = '0')) ";
+sqlStmt+= "	OR (Job_Definition_List_Account_Set__c.Account_Set__c IS NOT NULL  ";
+sqlStmt+= "     AND (Job_Definition_List_Account__c.Account__c IS NULL ";
+sqlStmt+= "           OR (Job_Definition_List_Account__c.Account__c IS NOT NULL  ";
+sqlStmt+= "                AND (Job_Definition_List_Account__c.Excluded__c = '0' OR Job_Definition_List_Account__c.isDeleted = '1')))))) ";
+sqlStmt+= "	AND Job_Definition_List__c.Visit_Template__c = #clbMetaPKey# ";
+sqlStmt+= " AND ((Job_Definition_List_Account__c.Account__c = #bpaMainPKey# AND Job_Definition_List_Account__c.Account__c IS NOT NULL) ";
+sqlStmt+= "	OR (Account_Set_Account__c.Account_Set_Account__c = #bpaMainPKey# AND Account_Set_Account__c.Account_Set_Account__c IS NOT NULL)) ";
+sqlStmt+= " ";
+
+sqlStmt+= "UNION ALL ";
+
+sqlStmt+= "SELECT DISTINCT Job_DL_Job_Definition_Template__c.Id AS jobDefinitionPKey, ";
+sqlStmt+= "Job_Definition_List__c.Promotion__c as promotionId, ";
+sqlStmt+= "Promotion__c.Date_from__c as promotionDateFrom, ";
+sqlStmt+= "Promotion__c.Date_thru__c as promotionDateThru, ";
+sqlStmt+= "Promotion__c.slogan_#Language#__c as promotionSlogan, ";
+sqlStmt+= "   CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN '0' ";
+sqlStmt+= "     WHEN Data_Type__c.Data_Type__c = 'Date' THEN #dateAsStringLocaltime(#TodayAsDate#)# ";
+sqlStmt+= "     WHEN Data_Type__c.Data_Type__c = 'Toggle' THEN ";
+sqlStmt+= "       CASE WHEN substr(Data_Type__c.Name, 4) = 'Bool' THEN '0' ";
+sqlStmt+= "       ELSE ' ' ";
+sqlStmt+= "       END ";
+sqlStmt+= "     WHEN Data_Type__c.Data_Type__c = 'String' THEN ' ' ";
+sqlStmt+= "     END AS defaultValue, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Mandatory__c AS mandatory, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Condition_Answers__c AS conditionAnswers, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Condition_Operator__c AS conditionOperator, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Condition__c AS condition, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Consider_Score__c AS considerScore, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Score__c AS score, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Score_Relevant_Answers__c AS scoreAnswers, ";
+sqlStmt+= "Job_Definition_Template__c.Picture_Taking__c AS pictureTaking, ";
+sqlStmt+= "Job_Definition_List__c.Consider_History__c AS considerHistory, "; 
+sqlStmt+= "Job_Definition_List__c.Consider_Listing__c AS considerListing, ";
+sqlStmt+= "Job_Definition_List__c.Consider_Products__c AS considerProducts, "; 
+sqlStmt+= "Job_Definition_List__c.Id AS jobDefListPKey, ";
+sqlStmt+= "' ' AS jobListPKey, ";
+sqlStmt+= "'0' AS isMatrixSurvey, ";
+sqlStmt+= "Job_Definition_List__c.Standard_Jobs__c AS standardJobs, "; 
+sqlStmt+= "CASE WHEN Job_Template__c.Product_Reference__c = '0' THEN 'Question' ELSE 'Survey' END AS jobMetaId, ";
+sqlStmt+= "Job_Definition_Template__c.Job_Template__c AS jobMetaPKey, ";
+sqlStmt+= "Job_Definition_List__c.Description_#Language#__c AS jobDefinitionListText, ";
+sqlStmt+= "Job_Definition_Template__c.Description_#Language#__c AS jobDefinitionMetaText, ";
+sqlStmt+= "Job_Definition_List__c.Valid_From__c AS validFrom, ";
+sqlStmt+= "Job_Definition_List__c.Valid_Thru__c AS validThru, ";
+sqlStmt+= "Job_Definition_Template__c.Id AS jobDefinitionMetaPKey, ";
+sqlStmt+= "Data_Type__c.Data_Type__c AS dataType, ";
+sqlStmt+= "Data_Type__c.Data_Length__c || ',' || Data_Type__c.Data_Length_Decimal_Places__c AS dataLength, "
+sqlStmt+= "CASE WHEN (data_type__c.data_type__c = 'Toggle' AND Data_Type__c.Name like 'Dom%')  then substr(data_type__c.name, 4) else ' ' end AS toggleId, ";
+sqlStmt+= "Job_Definition_Template__c.Target_Value_Column__c AS targetValueColumn, ";
+sqlStmt+= "Job_Definition_Template__c.Use_Stepper__c AS useStepper, ";
+sqlStmt+= "Job_Definition_Template__c.Step_Size__c AS stepSize, ";
+sqlStmt+= "Job_Definition_Template__c.Consider_Min_Value__c AS considerMinValue, ";
+
+sqlStmt+= "CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN  ";
+sqlStmt+= "   CASE WHEN Job_Definition_Template__c.Consider_Min_Value__c = '1' THEN Job_Definition_Template__c.Min_Value__c ";
+sqlStmt+= "   ELSE '0.0' ";
+sqlStmt+= "   END ";
+sqlStmt+= " ELSE ";
+sqlStmt+= "   CASE WHEN Data_Type__c.Data_Type__c = 'Date' THEN ";
+sqlStmt+= "     CASE WHEN  Job_Definition_Template__c.Min_Date_Policy__c = 'Today' THEN #dateAsStringLocaltime(#TodayAsDate#)# ";
+sqlStmt+= "     WHEN  Job_Definition_Template__c.Min_Date_Policy__c = 'MinDate'  THEN #dateAsStringLocaltime('#MinDate#')# ";
+sqlStmt+= "     ELSE #dateAsStringLocaltime('#MinDate#')# ";
+sqlStmt+= "     END ";
+sqlStmt+= "   END ";
+sqlStmt+= " END AS minValue , ";
+sqlStmt+= " CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN ";
+sqlStmt+= "   CASE WHEN Job_Definition_Template__c.Consider_Max_Value__c = '1' THEN Job_Definition_Template__c.Max_Value__c ";
+sqlStmt+= "   ELSE '9999999' ";
+sqlStmt+= "   END ";
+sqlStmt+= " ELSE ";
+sqlStmt+= "   CASE WHEN Data_Type__c.Data_Type__c = 'Date' THEN ";
+sqlStmt+= "     CASE WHEN Job_Definition_Template__c.Max_Date_Policy__c= 'Today' THEN #dateAsStringLocaltime(#TodayAsDate#)# ";
+sqlStmt+= "     WHEN Job_Definition_Template__c.Max_Date_Policy__c= 'MaxDate' THEN #dateAsStringLocaltime('#MaxDate#')# ";
+sqlStmt+= "     WHEN Job_Definition_Template__c.Max_Date_Policy__c= 'NextYear' THEN date(#TodayAsDate#, 'unixepoch', 'localtime', '1 year') ";
+sqlStmt+= "     ELSE  #dateAsStringLocaltime('#MaxDate#')#  ";
+sqlStmt+= "     END ";
+sqlStmt+= "   END ";
+sqlStmt+= " END AS maxValue, ";
+sqlStmt+= "Job_Definition_Template__c.Min_Date_Policy__c AS minDatePolicy, ";
+sqlStmt+= "Job_Definition_Template__c.Consider_Max_Value__c AS considerMaxValue, ";         
+sqlStmt+= "Data_Type__c.Data_Length_Decimal_Places__c AS decimalPlaces, ";
+sqlStmt+= "Job_Definition_Template__c.Max_Date_Policy__c AS maxDatePolicy, ";   
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Presetting__c AS presetting, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Sort__c AS sort, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Job_Action_Success__c AS jobActionSuccess, ";
+sqlStmt+= "' ' AS clbMainPKey, ";
+sqlStmt+= "Job_Definition_Template__c.Primary_Survey_Policy__c AS dataWareHouseKey, ";
+sqlStmt+= "Job_Definition_Template__c.Save_Presetting__c AS savePresetting, ";
+sqlStmt+= "CASE  ";
+sqlStmt+= "		WHEN Job_Definition_Template__c.Measure_Type__c = 'POS' ";
+sqlStmt+= "			THEN '1' ";
+sqlStmt+= "		ELSE '0' ";
+sqlStmt+= "		END AS pOS, ";
+sqlStmt+= "'0' AS jdlDescriptionInitialized, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.POS_Template__c AS posMetaPKey, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.POS_Type__c AS posType ";
+sqlStmt+= "FROM Job_Definition_List__c, Data_Type__c ";
+sqlStmt+= " INNER JOIN Job_DL_Job_Definition_Template__c ON Job_Definition_List__c.Id = Job_DL_Job_Definition_Template__c.Job_Definition_List__c ";
+sqlStmt+= " AND Job_DL_Job_Definition_Template__c.Excluded__c = '0' ";
+sqlStmt+= " LEFT JOIN Job_Definition_Template__c ON Job_DL_Job_Definition_Template__c.Job_Definition_Template__c = Job_Definition_Template__c.Id AND Job_Definition_Template__c.Active__c = '1' ";
+sqlStmt+= " LEFT JOIN Job_Template__c ON Job_Definition_Template__c.Job_Template__c = Job_Template__c.Id ";
+sqlStmt+= " LEFT OUTER JOIN Promotion__c ON Job_Definition_List__c.Promotion__c = Promotion__c.Id ";
+sqlStmt+= "  AND Promotion__c.Active__c = '1' ";
+sqlStmt+= "  AND Promotion__c.Phase__c = 'Committed' ";
+sqlStmt+= " AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #validFrom# , 'Date')# ";  
+sqlStmt+= " AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #validThru# , 'Date')# ";
+sqlStmt+= " WHERE ";
+sqlStmt+= "  (1 = 1) ";
+sqlStmt+= "  AND Job_Definition_List__c.Active__c = '1' ";
+sqlStmt+= "  AND Job_Definition_List__c.Approval_State__c <> 'Canceled' ";
+sqlStmt+= "  AND Job_Definition_Template__c.Data_Type__c = Data_Type__c.Id ";
+sqlStmt+= "  AND ( ";
+sqlStmt+= "    Job_Template__c.Name = 'Question' ";
+sqlStmt+= "    OR Job_Template__c.Name = 'Survey' ";
+sqlStmt+= "  ) ";
+sqlStmt+= " AND Job_Definition_List__c.Standard_Jobs__c = '1' ";
+sqlStmt+= "	AND #compareAsDate('Job_Definition_List__c.Valid_From__c', 'Date','<=' , #validFrom# , 'Date')# ";
+sqlStmt+= "	AND #compareAsDate('Job_Definition_List__c.Valid_Thru__c', 'Date','>=' , #validThru# , 'Date')# ";
+sqlStmt+= " AND Job_Definition_List__c.Consider_Account__c = '0' ";
+sqlStmt+= "	AND Job_Definition_List__c.Visit_Template__c = #clbMetaPKey# ";
+sqlStmt+= " ";
+
+
+sqlStmt+= "UNION ALL ";
+
+
+sqlStmt+= " ";
+sqlStmt+= "SELECT Job_DL_Job_Definition_Template__c.Id AS jobDefinitionPKey, ";
+sqlStmt+= "Job_Definition_List__c.Promotion__c as promotionId, ";
+sqlStmt+= "Promotion__c.Date_from__c as promotionDateFrom, ";
+sqlStmt+= "Promotion__c.Date_thru__c as promotionDateThru, ";
+sqlStmt+= "Promotion__c.slogan_#Language#__c as promotionSlogan, ";
+sqlStmt+= "   CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN '0' ";
+sqlStmt+= "     WHEN Data_Type__c.Data_Type__c = 'Date' THEN #dateAsStringLocaltime(#TodayAsDate#)# ";
+sqlStmt+= "     WHEN Data_Type__c.Data_Type__c = 'Toggle' THEN ";
+sqlStmt+= "       CASE WHEN substr(Data_Type__c.Name, 4) = 'Bool' THEN '0' ";
+sqlStmt+= "       ELSE ' ' ";
+sqlStmt+= "       END ";
+sqlStmt+= "     WHEN Data_Type__c.Data_Type__c = 'String' THEN ' ' ";
+sqlStmt+= "     END AS defaultValue, ";   
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Mandatory__c AS mandatory, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Condition_Answers__c AS conditionAnswers, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Condition_Operator__c AS conditionOperator, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Condition__c AS condition, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Consider_Score__c AS considerScore, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Score__c AS score, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Score_Relevant_Answers__c AS scoreAnswers, ";
+sqlStmt+= "Job_Definition_Template__c.Picture_Taking__c AS pictureTaking, ";
+sqlStmt+= "Job_Definition_List__c.Consider_History__c AS considerHistory, "; 
+sqlStmt+= "Job_Definition_List__c.Consider_Listing__c AS considerListing, ";
+sqlStmt+= "Job_Definition_List__c.Consider_Products__c AS considerProducts, "; 
+sqlStmt+= "Job_Definition_List__c.Id AS jobDefListPKey, ";
+sqlStmt+= "Job_List__c.Id AS jobListPKey, ";
+sqlStmt+= "'0' AS isMatrixSurvey, ";
+sqlStmt+= "Job_Definition_List__c.Standard_Jobs__c AS standardJobs, ";
+sqlStmt+= "CASE WHEN Job_Template__c.Product_Reference__c = '0' THEN 'Question' ELSE 'Survey' END AS jobMetaId, ";
+sqlStmt+= "Job_Definition_Template__c.Id AS jobMetaPKey, ";
+sqlStmt+= "Job_Definition_List__c.Description_#Language#__c AS jobDefinitionListText, ";
+sqlStmt+= "Job_Definition_Template__c.Description_#Language#__c AS jobDefinitionMetaText, ";
+sqlStmt+= "Job_List__c.Valid_From__c AS validFrom, ";
+sqlStmt+= "Job_List__c.Valid_Thru__c AS validThru, ";
+sqlStmt+= "Job_Definition_Template__c.Id AS jobDefinitionMetaPKey, ";
+sqlStmt+= "Data_Type__c.Data_Type__c AS dataType, ";
+sqlStmt+= "Data_Type__c.Data_Length__c || ',' || Data_Type__c.Data_Length_Decimal_Places__c AS dataLength, "
+sqlStmt+= "CASE WHEN (data_type__c.data_type__c = 'Toggle' AND Data_Type__c.Name like 'Dom%') then substr(data_type__c.name, 4) else ' ' end AS toggleId, ";
+sqlStmt+= "Job_Definition_Template__c.Target_Value_Column__c AS targetValueColumn, ";
+sqlStmt+= "Job_Definition_Template__c.Use_Stepper__c AS useStepper, ";
+sqlStmt+= "Job_Definition_Template__c.Step_Size__c AS stepSize, ";
+sqlStmt+= "Job_Definition_Template__c.Consider_Min_Value__c AS considerMinValue, ";
+sqlStmt+= "CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN  ";
+sqlStmt+= "   CASE WHEN Job_Definition_Template__c.Consider_Min_Value__c = '1' THEN Job_Definition_Template__c.Min_Value__c ";
+sqlStmt+= "   ELSE '0.0' ";
+sqlStmt+= "   END ";
+sqlStmt+= " ELSE ";
+sqlStmt+= "   CASE WHEN Data_Type__c.Data_Type__c = 'Date' THEN ";
+sqlStmt+= "     CASE WHEN  Job_Definition_Template__c.Min_Date_Policy__c = 'Today' THEN #dateAsStringLocaltime(#TodayAsDate#)# ";
+sqlStmt+= "     WHEN  Job_Definition_Template__c.Min_Date_Policy__c = 'MinDate'  THEN #dateAsStringLocaltime('#MinDate#')# ";
+sqlStmt+= "     ELSE #dateAsStringLocaltime('#MinDate#')# ";
+sqlStmt+= "     END ";
+sqlStmt+= "   END ";
+sqlStmt+= " END AS minValue, ";
+sqlStmt+= " CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN ";
+sqlStmt+= "   CASE WHEN Job_Definition_Template__c.Consider_Max_Value__c = '1' THEN Job_Definition_Template__c.Max_Value__c ";
+sqlStmt+= "   ELSE '9999999' ";
+sqlStmt+= "   END ";
+sqlStmt+= " ELSE ";
+sqlStmt+= "   CASE WHEN Data_Type__c.Data_Type__c = 'Date' THEN ";
+sqlStmt+= "     CASE WHEN Job_Definition_Template__c.Max_Date_Policy__c = 'Today' THEN #dateAsStringLocaltime(#TodayAsDate#)# ";
+sqlStmt+= "     WHEN Job_Definition_Template__c.Max_Date_Policy__c = 'MaxDate' THEN #dateAsStringLocaltime('#MaxDate#')# ";
+sqlStmt+= "     WHEN Job_Definition_Template__c.Max_Date_Policy__c = 'NextYear' THEN date(#TodayAsDate#, 'unixepoch', 'localtime', '1 year') ";
+sqlStmt+= "     ELSE #dateAsStringLocaltime('#MaxDate#')#  ";
+sqlStmt+= "     END ";
+sqlStmt+= "   END ";
+sqlStmt+= " END AS maxValue, ";
+sqlStmt+= "Job_Definition_Template__c.Min_Date_Policy__c AS minDatePolicy, ";
+sqlStmt+= "Job_Definition_Template__c.Consider_Max_Value__c AS considerMaxValue, ";          
+sqlStmt+= "Data_Type__c.Data_Length_Decimal_Places__c AS decimalPlaces, ";
+sqlStmt+= "Job_Definition_Template__c.Max_Date_Policy__c AS maxDatePolicy, "; 
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Presetting__c AS presetting, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Sort__c AS sort, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.Job_Action_Success__c AS jobActionSuccess, ";
+sqlStmt+= "Job_List__c.Visit__c AS clbMainPKey, ";
+sqlStmt+= "Job_Definition_Template__c.Primary_Survey_Policy__c AS dataWareHouseKey, ";
+sqlStmt+= "Job_Definition_Template__c.Save_Presetting__c AS savePresetting, ";
+sqlStmt+= "CASE  ";
+sqlStmt+= "		WHEN Job_Definition_Template__c.Measure_Type__c = 'POS' ";
+sqlStmt+= "			THEN '1' ";
+sqlStmt+= "		ELSE '0' ";
+sqlStmt+= "		END AS pOS, ";
+sqlStmt+= "'0' AS jdlDescriptionInitialized, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.POS_Template__c AS posMetaPKey, ";
+sqlStmt+= "Job_DL_Job_Definition_Template__c.POS_Type__c AS posType ";
+sqlStmt+= "FROM Job_List__c, Data_Type__c ";
+sqlStmt+= "LEFT JOIN Job_Definition_List__c ON Job_List__c.Job_Definition_List__c = Job_Definition_List__c.Id ";
+sqlStmt+= "INNER JOIN Job_DL_Job_Definition_Template__c ON Job_Definition_List__c.Id = Job_DL_Job_Definition_Template__c.Job_Definition_List__c ";
+sqlStmt+= "AND Job_DL_Job_Definition_Template__c.Excluded__c = '0' ";
+sqlStmt+= "LEFT JOIN Job_Definition_Template__c ON Job_DL_Job_Definition_Template__c.Job_Definition_Template__c = Job_Definition_Template__c.Id AND Job_Definition_Template__c.Active__c = '1' ";
+sqlStmt+= "LEFT JOIN Job_Template__c ON Job_Definition_Template__c.Job_Template__c = Job_Template__c.Id ";
+sqlStmt+= "LEFT OUTER JOIN Promotion__c ON  Job_Definition_List__c.Promotion__c = Promotion__c.Id ";
+sqlStmt+= " AND Promotion__c.Active__c = '1' ";
+sqlStmt+= " AND Promotion__c.Phase__c = 'Committed' ";
+sqlStmt+= " AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #validFrom# , 'Date')# ";  
+sqlStmt+= " AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #validThru# , 'Date')# ";
+sqlStmt+= "WHERE (1 = 1) ";
+sqlStmt+= "AND Job_Definition_List__c.Active__c = '1' ";
+sqlStmt+= "AND Job_Definition_List__c.Approval_State__c <> 'Canceled' ";
+sqlStmt+= "AND ( ";
+sqlStmt+= "		Job_Template__c.Name = 'Survey' ";
+sqlStmt+= "		OR Job_Template__c.Name = 'Question' ";
+sqlStmt+= "		) ";
+
+/* Filter an Pos-Template and Pos-Type is not supported */
+
+sqlStmt+= "AND Job_List__c.Manager__c = #ownerPKey# ";
+sqlStmt+= "AND #compareAsDate('Job_List__c.Valid_From__c', 'Date','<=' , #validFrom# , 'Date')# ";
+sqlStmt+= "AND #compareAsDate('Job_List__c.Valid_Thru__c', 'Date','>=' , #validThru# , 'Date')# ";
+sqlStmt+= "AND ( ";
+sqlStmt+= "		Job_List__c.Visit__c = #clbMainPKey# ";
+sqlStmt+= "		OR Job_List__c.Visit__c  = ' ' ";
+sqlStmt+= "		OR Job_List__c.Visit__c  is NULL ";
+sqlStmt+= "		) ";
+sqlStmt+= "	AND Job_List__c.Account__c = #bpaMainPKey# ";
+sqlStmt+= "	AND Job_List__c.Done__c = '0' ";
+sqlStmt+= "	AND Job_Definition_List__c.Visit_Template__c = #clbMetaPKey# ";
+sqlStmt+= "	AND Job_Definition_Template__c.Data_Type__c =  Data_Type__c.Id ";
+
+return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+  ]]></Load>
+    <Update><![CDATA[
+   // Intended to be empty - This list object gets its items by business logic!
+   return undefined;
+  ]]></Update>
+    <Insert><![CDATA[
+   // Intended to be empty - This list object gets its items by business logic!
+   return undefined;   
+  ]]></Insert>
+    <Delete><![CDATA[
+   // Intended to be empty - This list object gets its items by business logic!
+   return undefined;  
+  ]]></Delete>
+  </Database>
+</DataSource>

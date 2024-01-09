@@ -1,0 +1,104 @@
+<Process name="AssetManagement::RegisterUnknownAssetProcess" defaultAction="ShowRegisterNewAsset_Decision" schemaVersion="1.1">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="FlyoutBO" type="BoFlyoutRegisterAsset" />
+        <Declaration name="serialNumber" type="String" />
+        <Declaration name="registerAsset" type="String" />
+        <Declaration name="scanned" type="DomBool" />
+        <Declaration name="result" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="CallPKey" type="String" />
+        <Input name="EAN" type="String" />
+        <Input name="loCallAssetOverview" type="LoCallAssetOverview" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="CREATE" name="CreateFlyoutBO" type="BoFlyoutRegisterAsset">
+        <Parameters>
+          <Input name="serialNumber" value="ProcessContext::EAN" />
+        </Parameters>
+        <Return name="ProcessContext::FlyoutBO" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowRegisterNewAsset_Decision" actionType="DECISION" parameter="ProcessContext::EAN">
+        <CaseEmpty action="ShowRegisterNewAsset" />
+        <CaseElse action="setRegisterAsset" />
+      </Action>
+      <Action actionType="View" name="ShowRegisterNewAsset">
+        <UIDescription>AssetManagement::RegisterUnknownAssetUI</UIDescription>
+        <Events>
+          <Event name="registerNewAsset" action="setRegisterAssetForEvent" />
+        </Events>
+      </Action>
+      <Action actionType="LOGIC" name="setRegisterAsset" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="yes" />
+        </Parameters>
+        <Return name="ProcessContext::registerAsset" />
+        <TransitionTo action="setScannedAsset" />
+      </Action>
+      <Action actionType="LOGIC" name="setScannedAsset" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::FlyoutBO.scanned" />
+        <TransitionTo action="setDirty" />
+      </Action>
+      <Action actionType="LOGIC" name="setRegisterAssetForEvent" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="String" value="Event.registerAsset" />
+        </Parameters>
+        <Return name="ProcessContext::registerAsset" />
+        <TransitionTo action="setDirty" />
+      </Action>
+      <Action actionType="LOGIC" name="setDirty" call="ProcessContext::FlyoutBO.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="5" />
+        </Parameters>
+        <TransitionTo action="WizardValidation" />
+      </Action>
+      <Action actionType="VALIDATION" name="WizardValidation">
+        <Validations>
+          <Validation name="ProcessContext::FlyoutBO.validateNotEmpty" />
+          <Validation name="ProcessContext::FlyoutBO.validateLength" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="ValidateMandatoryScannerRequired" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowRegisterNewAsset" />
+      </Action>
+      <Action actionType="END" name="EndCancel" />
+      <Action actionType="LOGIC" name="ValidateMandatoryScannerRequired" call="ProcessContext::FlyoutBO.validateScannerMandatory">
+        <Parameters>
+          <Input name="loCallAssetOverview" type="loCallAssetOverview" value="ProcessContext::loCallAssetOverview" />
+        </Parameters>
+        <Return name="ProcessContext::result" />
+        <TransitionTo action="ScanningMandatory_Decision" />
+      </Action>
+      <Action name="ScanningMandatory_Decision" actionType="DECISION" parameter="ProcessContext::result">
+        <Case value="back" action="resetSerialNumber" />
+        <Case value="discard" action="EndCancel" />
+        <Case value="valid" action="EndRegisterAsset" />
+        <CaseElse action="ShowRegisterNewAsset" />
+      </Action>
+      <Action actionType="END" name="EndRegisterAsset">
+        <ReturnValues>
+          <Return name="serialNumber" value="ProcessContext::FlyoutBO.serialNumber" />
+          <Return name="registerAsset" value="ProcessContext::registerAsset" />
+          <Return name="scanned" value="ProcessContext::FlyoutBO.scanned" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="LOGIC" name="resetSerialNumber" call="ProcessContext::FlyoutBO.getEmptySerialnumber">
+        <Return name="ProcessContext::FlyoutBO.serialNumber" />
+        <TransitionTo action="ShowRegisterNewAsset" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

@@ -1,0 +1,33 @@
+<UIDescription name="PromotionTemplate::AddTacticLookupUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="PrmTacticLookup" defaultLabel="Add Tactic" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="PrmTacticList" dataSource="ProcessContext::TacticList.Items[]">
+          <Items name="Items" itemPattern="PrmTacticListItem">
+            <Bindings>
+              <Binding target="Name" type="Text" binding=".text" bindingMode="ONE_WAY" />
+            </Bindings>
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemIdentifier" bindingId="Name" />
+              </Col>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="metaId" value=".metaId" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

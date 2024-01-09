@@ -1,0 +1,118 @@
+<Process name="Replenishment::OverviewProcess" defaultAction="ShowOverviewList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OverviewList" type="LoReplenishmentOverview" />
+        <Declaration name="SdoMetaPKey" type="DomPKey" />
+        <Declaration name="ButtonPressed" type="String" />
+        <Declaration name="EtpWarehousePKey" type="DomPKey" />
+        <Declaration name="ReplenishmentMetaList" type="LoReplenishmentMeta" />
+        <Declaration name="ContextMenuList" type="LoReplenishmentOverviewContextMenu" />
+        <Declaration name="luReplenishmentCustomer" type="LuReplenishmentCustomer" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetOverviewList" actionType="LOAD" type="LoReplenishmentOverview">
+        <Parameters>
+          <Input name="usrMainPKey" value="ApplicationContext::User.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::OverviewList" />
+      </Action>
+      <Action name="GetReplenishmentList" actionType="LOAD" type="LoReplenishmentMeta">
+        <Return name="ProcessContext::ReplenishmentMetaList" />
+      </Action>
+      <Action name="GetCustomer" actionType="LOAD" type="LuReplenishmentCustomer">
+        <Parameters>
+          <Input name="pKey" value="ApplicationContext::User.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::luReplenishmentCustomer" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <!-- PRIMARY OVERVIEW ACTIONS -->
+      <Action name="ShowOverviewList" actionType="VIEW">
+        <UIDescription>Replenishment::OverviewUI</UIDescription>
+        <Events>
+          <!-- Grouped list events -->
+          <Event name="itemSelected" action="LoadBo" />
+          <!-- Menu item events -->
+          <Event name="createNewReplenishment" action="CreateNewWizard" />
+          <!-- Context menu events -->
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+        </Events>
+      </Action>
+      <Action name="LoadBo" actionType="PROCESS" process="Order::LoadProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="ReloadOverviewList" />
+      </Action>
+      <!-- Actions for handling the CONTEXT MENUE -->
+      <Action actionType="LOAD" name="GetContextMenu" type="LoReplenishmentOverviewContextMenu">
+        <Parameters>
+          <Input name="phase" value="Event.phase" />
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="responsiblePKey" value="Event.responsiblePKey" />
+          <Input name="initiatorPKey" value="Event.initiatorPKey" />
+          <Input name="deletionAllowed" value="Event.deletionAllowed" />
+          <Input name="mobilityRelevant" value="Event.mobilityRelevant" />
+        </Parameters>
+        <Return name="ProcessContext::ContextMenuList" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Cancel" action="CancelReplenishment" />
+        <Case value="Delete" action="DeleteReplenishment" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <!-- WIZARD -->
+      <Action name="CreateNewWizard" actionType="PROCESS" process="Replenishment::CreateNewWizardProcess">
+        <Parameters>
+          <Input name="TemplateList" value="ProcessContext::ReplenishmentMetaList" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::SdoMetaPKey" value="sdoMetaPKey" />
+          <Return name="ProcessContext::ButtonPressed" value="buttonPressed" />
+          <Return name="ProcessContext::EtpWarehousePKey" value="etpWarehousePKey" />
+        </ReturnValues>
+        <TransitionTo action="CreateNewWizard_Result_Decision" />
+      </Action>
+      <!-- DESICIONS AFTER CREATE WIZARD -->
+      <Action name="CreateNewWizard_Result_Decision" actionType="DECISION" parameter="ProcessContext::ButtonPressed">
+        <CaseEmpty action="ShowOverviewList" />
+        <CaseElse action="CreateNewDocument" />
+      </Action>
+      <!-- CREATE -->
+      <Action name="CreateNewDocument" actionType="PROCESS" process="Order::CreateNewProcess">
+        <Parameters>
+          <Input name="SdoMetaPKey" value="ProcessContext::SdoMetaPKey" />
+          <Input name="OrdererPKey" value="ProcessContext::luReplenishmentCustomer.customerPKey" />
+          <Input name="EtpWarehousePKey" value="ProcessContext::EtpWarehousePKey" />
+        </Parameters>
+        <TransitionTo action="ReloadOverviewList" />
+      </Action>
+      <Action name="ReloadOverviewList" actionType="LOAD" type="LoReplenishmentOverview">
+        <Parameters>
+          <Input name="usrMainPKey" value="ApplicationContext::User.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::OverviewList" />
+      </Action>
+      <!-- CANCEL -->
+      <Action name="CancelReplenishment" actionType="PROCESS" process="Replenishment::CancelWizardProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="ReloadOverviewList" />
+      </Action>
+      <!-- DELETE -->
+      <Action name="DeleteReplenishment" actionType="PROCESS" process="Replenishment::DeleteWizardProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="ReloadOverviewList" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

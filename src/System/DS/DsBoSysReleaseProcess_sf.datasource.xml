@@ -1,0 +1,18 @@
+<DataSource name="DsBoSysReleaseProcess" backendSystem="sf" businessObjectClass="BoSysReleaseProcess" external="false" editableEntity="Signature_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Signature_Template__c" column="Id" />
+    <Attribute name="active" table="Signature_Template__c" column="Active__c" />
+    <Attribute name="attributeSet" table="Signature_Template__c" column="Attribute_Set__c" />
+    <Attribute name="captureLocation" table="Signature_Template__c" column="Capture_Location__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Signature_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        Signature_Template__c.Id = #pKey# AND Signature_Template__c.Active__c = '1'
+        ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,74 @@
+<Process name="DailyReport::FlyoutTimeEntryDetailProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CurrentDailyReport" type="BoUserDailyReport" />
+        <Declaration name="OriginalTimeEntry" type="Object" />
+        <Declaration name="UpdateStatus" type="DomString" />
+        <Declaration name="TimeEntryUpdatedList" type="LoUsrTimeEntry" />
+      </Declarations>
+      <Parameters>
+        <Input name="pKey" type="DomPKey" />
+        <Input name="tePKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="loadCurrentDailyReport" actionType="LOAD" type="BoUserDailyReport">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::pKey" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentDailyReport" />
+      </Action>
+      <Action name="copyForRollback" actionType="LOGIC" call="ProcessContext::CurrentDailyReport.loUsrTimeEntry.copyTimeEntryForRollback">
+        <Parameters>
+          <Input name="state" value="ProcessContext::CurrentDailyReport.phase" />
+          <Input name="workUsrTimeEntryMetaPKey" value="ProcessContext::CurrentDailyReport.boUserDocMeta.workUsrTimeEntryMetaPKey" />
+          <Input name="tePKey" value="ProcessContext::tePKey" />
+        </Parameters>
+        <Return name="ProcessContext::OriginalTimeEntry" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>DailyReport::FlyoutTimeEntryDetailUI</UIDescription>
+        <Events>
+          <Event name="updateTimeEntry" action="validateChanges" />
+        </Events>
+      </Action>
+      <Action actionType="VALIDATION" name="validateChanges">
+        <Validations>
+          <Validation name="ProcessContext::CurrentDailyReport.validateTimeEdit" />
+        </Validations>
+        <TransitionTo action="ValidationResultForEdit_Decision" />
+      </Action>
+      <Action name="ValidationResultForEdit_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="applyChanges" />
+        <Case value="validateDiscard" action="removeCurrent" />
+        <Case value="validateIgnore" action="removeCurrent" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action name="applyChanges" actionType="LOGIC" call="ProcessContext::CurrentDailyReport.loUsrTimeEntry.applyChanges">
+        <Parameters>
+          <Input name="originalObject" value="ProcessContext::OriginalTimeEntry" />
+        </Parameters>
+        <Return name="ProcessContext::TimeEntryUpdatedList" />
+        <TransitionTo action="refreshDurationsAndWorkingTime" />
+      </Action>
+      <Action name="refreshDurationsAndWorkingTime" actionType="LOGIC" call="ProcessContext::CurrentDailyReport.refreshDurationsAndWorkingTime">
+        <TransitionTo action="EndWithUpdate" />
+      </Action>
+      <Action actionType="END" name="EndWithUpdate">
+        <ReturnValues>
+          <Return name="Updated" type="Literal" value="1" />
+          <Return name="updatedTimeEntries" value="ProcessContext::TimeEntryUpdatedList" />
+        </ReturnValues>
+      </Action>
+      <Action name="removeCurrent" actionType="LOGIC" call="ProcessContext::CurrentDailyReport.loUsrTimeEntry.setCurrent">
+        <TransitionTo action="EndCancel" />
+      </Action>
+      <Action actionType="END" name="EndCancel" />
+    </Actions>
+  </Body>
+</Process>

@@ -1,0 +1,7 @@
+<ListItem name="LiMeSdoAssortment" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty id="true" name="prdMainPKey" type="DomPKey" storable="false" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="sdoAssortment" type="DomBool" storable="false" dataSourceProperty="sdoAssortment" />
+  </SimpleProperties>
+</ListItem>

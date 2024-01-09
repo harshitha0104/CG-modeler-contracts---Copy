@@ -1,0 +1,9 @@
+<ListItem name="LiSysSignatureAttribute">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="referencePKey" type="DomPKey" dataSourceProperty="referencePKey" />
+    <SimpleProperty name="referenceObjectPhase" type="DomString" dataSourceProperty="referenceObjectPhase" />
+    <SimpleProperty name="attribute" type="DomSysSignatureAttribute" dataSourceProperty="attribute" />
+    <SimpleProperty name="value" type="DomText" dataSourceProperty="value" /> 
+  </SimpleProperties>
+</ListItem>

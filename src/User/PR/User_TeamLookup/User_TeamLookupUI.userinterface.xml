@@ -1,0 +1,37 @@
+<UIDescription name="User::TeamLookupUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionDialogPage" selectFirstItemInList="false">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="UserLookupTitleId" defaultLabel="User" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="TeamUserList" sortBy="name" indexBar="true" searchable="true" dataSource="ProcessContext::TeamUserList.Items[]">
+          <Items name="Items" itemPattern="TeamUserOverviewItem">
+            <Bindings>
+              <Binding target="UserName" type="Text" binding=".name" bindingMode="ONE_WAY" />
+            </Bindings>
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemTitle" bindingId="UserName" />
+              </Col>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="userName" value=".name" />
+                <Param name="userAccountableId" value=".userAccountableId" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+          <SearchAttributes>
+            <SearchAttribute name="name" />
+          </SearchAttributes>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

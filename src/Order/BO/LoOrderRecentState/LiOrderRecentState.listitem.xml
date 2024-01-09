@@ -1,0 +1,9 @@
+<ListItem name="LiOrderRecentState" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="done" type="DomDate" storable="true" dataSourceProperty="done" />
+    <SimpleProperty name="sdoMainPKey" type="DomPKey" storable="true" dataSourceProperty="sdoMainPKey" />
+    <SimpleProperty name="usrMainPKey" type="DomPKey" storable="true" dataSourceProperty="usrMainPKey" />
+    <SimpleProperty name="wfeStatePKey" type="DomPKey" storable="true" dataSourceProperty="wfeStatePKey" />
+  </SimpleProperties>
+</ListItem>

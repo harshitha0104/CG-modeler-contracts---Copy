@@ -1,0 +1,24 @@
+<ListItem name="LiPrmCttProduct">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="prmContractPKey" type="DomPKey" dataSourceProperty="prmContractPKey" />
+    <SimpleProperty name="prdProductGroupName" type="DomText" dataSourceProperty="prdProductGroupName" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+    <SimpleProperty name="quantity" type="DomInteger" dataSourceProperty="quantity" />
+    <SimpleProperty name="specialPrice" type="DomMoney" dataSourceProperty="specialPrice" />
+    <SimpleProperty name="discount" type="DomDecimal" dataSourceProperty="discount" />
+    <SimpleProperty name="productId" type="DomId" dataSourceProperty="productId" />
+    <SimpleProperty name="prdgroupId" type="DomId" dataSourceProperty="prdgroupId" />
+    <SimpleProperty name="groupFlag" type="DomText" dataSourceProperty="groupFlag" />
+    <SimpleProperty name="referencePKey" type="DomPKey" dataSourceProperty="referencePKey" />
+    <SimpleProperty name="prdMetaType" type="DomPrdMetaType" dataSourceProperty="prdMetaType" />
+    <SimpleProperty name="manual" type="DomBool" dataSourceProperty="manual" />
+    <SimpleProperty name="sortId" type="DomId" />
+    <SimpleProperty name="dataType" type="DomString" storable="false" dataSourceProperty="dataType" />
+    <SimpleProperty name="useStepper" type="DomBool" storable="false" dataSourceProperty="useStepper" />
+    <SimpleProperty name="stepSize" type="DomDecimal" storable="false" dataSourceProperty="stepSize" />
+    <SimpleProperty name="minValue" type="DomString" storable="false" dataSourceProperty="minValue" />
+    <SimpleProperty name="maxValue" type="DomString" storable="false" dataSourceProperty="maxValue" />
+    <SimpleProperty name="formatType" type="DomString" storable="false" dataSourceProperty="formatType" />
+  </SimpleProperties>
+</ListItem>

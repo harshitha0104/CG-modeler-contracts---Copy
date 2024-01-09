@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ListObject name="LoTimeSlotContextMenu" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoTimeSlotContextMenu"/>
+  <Item objectClass="LiTimeSlotContextMenu"/> 
+  <Methods>
+  <Method name="beforeSaveAsync" />
+  <Method name="afterSaveAsync" />
+  <Method name="afterLoadAsync" />
+  <Method name="beforeLoadAsync" />
+  <Method name="afterDoValidateAsync" />
+  <Method name="beforeDoValidateAsync" />
+  <Method name="loadAsync" />
+  <Method name="saveAsync" />
+</Methods>  
+</ListObject>

@@ -1,0 +1,11 @@
+<LookupObject name="LuOverdueCustomersCount" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuOverdueCustomersCount" />
+  <SimpleProperties>
+    <SimpleProperty name="overdueCustomersCount" type="DomInteger" storable="true" dataSourceProperty="overdueCustomersCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

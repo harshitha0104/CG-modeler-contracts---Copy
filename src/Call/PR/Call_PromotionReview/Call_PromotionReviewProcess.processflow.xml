@@ -1,0 +1,191 @@
+<Process name="Call::PromotionReviewProcess" defaultAction="ShowView" schemaVersion="1.1">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="currentTabPage" type="String" />
+        <Declaration name="PromotionList" type="LoCallPromotions" />
+        <Declaration name="PromotionProductList" type="LoCallPromotionProducts" />
+        <Declaration name="luIconsCount" type="LuCallPromotionIconsCount" />
+        <Declaration name="luAttachmentCount" type="LuPrmAttachmentCount" />
+        <Declaration name="PromotionAttachmentList" type="LoPrmAttachment" />
+        <Declaration name="LuActivitiesCount" type="LuActivitiesCount" />
+        <Declaration name="activities" type="LoActivities" />
+        <Declaration name="CurrentDate" type="DomDate" />
+        <Declaration name="luSalesFolderCount" type="LuSalesFolderCount" />
+        <Declaration name="SalesFolderCallCustomerList" type="LoSalesFolderCallCustomer" />
+      </Declarations>
+      <Parameters>
+        <Input name="CallDate" type="String" />
+        <Input name="CustomerPKey" type="String" />
+        <Input name="LeadTime" type="String" />
+        <Input name="CustomerName" type="String" />
+        <Input name="CallDateThru" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="GetPromotionList" type="LoCallPromotions">
+        <Parameters>
+          <Input name="callDate" value="ProcessContext::CallDate" />
+          <Input name="customerPKey" value="ProcessContext::CustomerPKey" />
+          <Input name="leadTime" value="ProcessContext::LeadTime" />
+        </Parameters>
+        <Return name="ProcessContext::PromotionList" />
+      </Action>
+      <Action actionType="LOGIC" name="SetCurrentate" call="Utils.createAnsiDateToday">
+        <Return name="ProcessContext::CurrentDate" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Call::PromotionReview</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="actDependendFromTabName_Decision" />
+          <Event name="tabSelected" action="setCurrentTabName_Decision" />
+          <Event name="salesFolderSelected" action="LoadPromotions" />
+        </Events>
+      </Action>
+      <!-- BEGIN: Promotion Detail -->
+      <!-- Decision Point for selected Tab Pages -->
+      <Action name="setCurrentTabName_Decision" actionType="DECISION" parameter="Event.tabName">
+        <Case value="Products" action="setCurrentTabName_Products" />
+        <Case value="Attachments" action="setCurrentTabName_Attachments" />
+        <Case value="Activities" action="setCurrentTabName_Activities" />
+        <Case value="SalesFolder" action="setCurrentTabName_SalesFolder" />
+        <CaseEmpty action="setCurrentTabName_Info" />
+        <CaseElse action="setCurrentTabName_Info" />
+      </Action>
+      <Action name="actDependendFromTabName_Decision" actionType="DECISION" parameter="ProcessContext::currentTabPage">
+        <Case value="Products" action="LoadProducts" />
+        <Case value="Attachments" action="LoadAttachments" />
+        <Case value="Activities" action="LoadActivities" />
+        <Case value="SalesFolder" action="LoadSalesFolders" />
+        <CaseEmpty action="GetInfoTab" />
+        <CaseElse action="GetInfoTab" />
+      </Action>
+      <!-- BEGIN: Handling TabDecision -->
+      <Action actionType="LOGIC" name="setCurrentTabName_Info" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Info" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="GetInfoTab" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Products" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Products" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="LoadProducts" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Attachments" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Attachments" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="LoadAttachments" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Activities" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Activities" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="LoadActivities" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_SalesFolder" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="SalesFolder" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="LoadSalesFolders" />
+      </Action>
+      <!-- Info Tab -->
+      <Action name="GetInfoTab" actionType="LOAD" type="LoCallPromotions">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="callDate" value="ProcessContext::CallDate" />
+          <Input name="customerPKey" value="ProcessContext::CustomerPKey" />
+          <Input name="leadTime" value="ProcessContext::LeadTime" />
+        </Parameters>
+        <TransitionTo action="GetCounts" />
+      </Action>
+      <!-- Products Tab -->
+      <Action name="LoadProducts" actionType="LOAD" type="LoCallPromotionProducts">
+        <Parameters>
+          <Input name="PrmMainPKey" value="ProcessContext::PromotionList.Current.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::PromotionProductList" />
+        <TransitionTo action="GetCounts" />
+      </Action>
+      <!-- Attachments Tab -->
+      <Action name="LoadAttachments" actionType="LOAD" type="LoPrmAttachment">
+        <Parameters>
+          <Input name="prmPromotionPKey" value="ProcessContext::PromotionList.Current.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::PromotionAttachmentList" />
+        <TransitionTo action="GetCounts" />
+      </Action>
+      <!-- Activities Tab -->
+      <Action name="LoadActivities" actionType="LOAD" type="LoActivities">
+        <Parameters>
+          <Input name="cardDate" value="ProcessContext::CurrentDate" type="Binding" />
+          <Input name="limitDueToFormFactor" value="-1" type="Literal" />
+          <Input name="prmPromotionPKey" value="ProcessContext::PromotionList.Current.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::activities" />
+        <TransitionTo action="GetCounts" />
+      </Action>
+      <!-- Sales Folders Tab -->
+      <Action name="LoadSalesFolders" actionType="LOAD" type="LoSalesFolderCallCustomer">
+        <Parameters>
+          <Input name="currentCustomerPKey" value="ProcessContext::CustomerPKey" />
+          <Input name="callDate" value="ProcessContext::CallDate" />
+          <Input name="callDateThru" value="ProcessContext::CallDateThru" />
+          <Input name="prmPromotionPKey" value="ProcessContext::PromotionList.Current.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::SalesFolderCallCustomerList" />
+        <TransitionTo action="GetCounts" />
+      </Action>
+      <Action name="GetCounts" actionType="LOAD" type="LuCallPromotionIconsCount">
+        <Parameters>
+          <Input name="prmMainPKey" value="ProcessContext::PromotionList.Current.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::luIconsCount" />
+        <TransitionTo action="GetAttachmentCount" />
+      </Action>
+      <Action name="GetAttachmentCount" actionType="LOAD" type="LuPrmAttachmentCount">
+        <Parameters>
+          <Input name="prmPromotionPKey" value="ProcessContext::PromotionList.Current.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::luAttachmentCount" />
+        <TransitionTo action="GetActivitiesCount" />
+      </Action>
+      <Action name="GetActivitiesCount" actionType="LOAD" type="LuActivitiesCount">
+        <Parameters>
+          <Input name="cardDate" value="ProcessContext::CurrentDate" type="Binding" />
+          <Input name="limitDueToFormFactor" value="-1" type="Literal" />
+          <Input name="prmPromotionPKey" value="ProcessContext::PromotionList.Current.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::LuActivitiesCount" />
+        <TransitionTo action="GetSalesFoldersCount" />
+      </Action>
+      <Action name="GetSalesFoldersCount" actionType="LOAD" type="LuSalesFolderCount">
+        <Parameters>
+          <Input name="currentCustomerPKey" value="ProcessContext::CustomerPKey" />
+          <Input name="callDate" value="ProcessContext::CallDate" />
+          <Input name="callDateThru" value="ProcessContext::CallDateThru" />
+          <Input name="prmPromotionPKey" value="ProcessContext::PromotionList.Current.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::luSalesFolderCount" />
+      </Action>
+      <!-- END: Handling TabDecision -->
+      <Action name="LoadPromotions" actionType="PROCESS" process="SalesFolder::SalesFolderPromotionProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+          <Input name="SloganText" value="Event.sloganText" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

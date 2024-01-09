@@ -1,0 +1,11 @@
+<ListItem name="LiToDoOverviewContextMenu">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty id="true" name="id" type="DomPKey" storable="false" dataSourceProperty="id" />
+    <SimpleProperty name="actionImg" type="DomId" storable="false" dataSourceProperty="actionImg" />
+    <SimpleProperty name="actionId" type="DomId" storable="false" dataSourceProperty="actionId" />
+    <SimpleProperty name="processEvent" type="DomString" storable="false" dataSourceProperty="processEvent" />
+    <SimpleProperty name="actionEnabled" type="DomBool" storable="false" dataSourceProperty="actionEnabled" />
+    <SimpleProperty name="actionVisible" type="DomBool" storable="false" dataSourceProperty="actionVisible" />
+  </SimpleProperties>
+</ListItem>

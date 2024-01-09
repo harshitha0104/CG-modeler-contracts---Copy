@@ -1,0 +1,15 @@
+<LookupObject name="LuSvcRequestMeta" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuSvcRequestMeta" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="metaType" type="DomSvcMetaType" storable="false" dataSourceProperty="metaType" />
+    <SimpleProperty name="isPrivate" type="DomBool" dataSourceProperty="isPrivate" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="managementType" type="DomBpaManagementType" dataSourceProperty="managementType" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

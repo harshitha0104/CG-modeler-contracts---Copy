@@ -1,0 +1,69 @@
+<Datasource name="DsLoCustomerPOSRelation" objectClass="LoCustomerPOSRelation" backendSystem="sf" readOnly="false" external="true" editableEntity="POS__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="POS__c" column="Id" />
+    <Attribute name="posId" table="POS__c" column="Name" />
+    <Attribute name="customerPKey" table="POS__c" column="Account__c" />
+    <Attribute name="posMetaPKey" table="POS__c" column="POS_Template__c" />
+    <Attribute name="validFrom" table="POS__c" column="Valid_From__c" />
+    <Attribute name="validThru" table="POS__c" column="Valid_Thru__c" />
+    <Attribute name="posPKey" table="POS__c" column="Id" />
+    <DerivedAttribute name="name" value="POS__c.Description_#Language#__c || '  -  (' || POS_Template__c.Description_#Language#__c	 || ')'" />
+    <DerivedAttribute name="bpaRelMetaPKey" value="''" />
+    <DerivedAttribute name="salesOrg" value="'#SALESORG#'" />
+    <DerivedAttribute name="listingModule" value="' '" />
+    <DerivedAttribute name="text" value="'Location'" />
+    <DerivedAttribute name="mandatory" value="'0'" />
+    <DerivedAttribute name="mandatoryImage" value="' '" />
+    <DerivedAttribute name="continued" value="'0'" />
+    <Attribute name="posName" table="POS__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="POS__c" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+      var index = 0;
+	  var customerPKey = "";
+	  var posPKey = "";
+      var additionalCond = "";
+
+	  if(Utils.isDefined(jsonQuery.customerPKey)){
+        customerPKey =  Utils.convertForDBParam(jsonQuery.customerPKey, "DomPKey");
+        additionalCond += "AND POS__c.Account__c = #customerPKey# ";
+	  }
+	  if(Utils.isDefined(jsonQuery.posPKey)){
+        posPKey = Utils.convertForDBParam(jsonQuery.posPKey, "DomPKey");
+        additionalCond += "AND POS__c.Id = #posPKey# ";
+      }
+
+      var sqlParams = {customerPKey, posPKey};
+
+      var sqlStmt = "SELECT ";
+      sqlStmt += "POS__c.Id AS pKey, ";
+      sqlStmt += "POS__c.Description_#Language#__c || '  -  (' || POS_Template__c.Description_#Language#__c	 || ')'  AS name, ";
+      sqlStmt += "POS__c.Description_#Language#__c AS posName, ";
+      sqlStmt += "POS__c.Name AS posId, ";
+      sqlStmt += "'Location' AS text, ";
+      sqlStmt += "' ' AS listingModule, ";
+      sqlStmt += "POS__c.Valid_From__c AS validFrom, ";
+      sqlStmt += "POS__c.Valid_Thru__c AS validThru, ";
+      sqlStmt += "'0' as mandatory, ";
+      sqlStmt += "' ' AS mandatoryImage, ";
+      sqlStmt += "POS__c.Account__c AS customerPKey, ";
+      sqlStmt += "POS__c.Id as posPKey, ";
+      sqlStmt += "POS__c.POS_Template__c as posMetaPKey, ";
+      sqlStmt += "'#SALESORG#' as salesOrg, ";
+      sqlStmt += "CASE WHEN #compareAsDate('POS__c.Valid_Thru__c', 'Date',' >=' ,#TodayAsDate#, 'Date')# THEN '1' ELSE '0' END AS continued ";
+      sqlStmt += "FROM POS__c ";
+      sqlStmt += "INNER JOIN POS_Template__c ON POS__c.POS_Template__c = POS_Template__c.Id ";
+      sqlStmt += "WHERE ";
+      sqlStmt += "POS__c.IsDeleted = '0' ";
+      sqlStmt += "AND POS_Template__c.Sales_Org__c = '#SALESORG#' ";
+      sqlStmt += additionalCond;
+      sqlStmt += "ORDER BY name, text";
+
+      return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+	]]></Load>
+  </Database>
+</Datasource>

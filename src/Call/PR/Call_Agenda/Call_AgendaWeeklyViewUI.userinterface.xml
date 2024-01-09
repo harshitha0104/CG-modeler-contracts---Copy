@@ -1,0 +1,378 @@
+<UIDescription name="Call::AgendaWeeklyViewUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="MultiSectionPage" masterSectionFlex="10" multiSectionFlex="3">
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::weeklyHeader" />
+        <!-- CW-REQUIRED: remove title binding -->
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="createNewCall">
+          <Bindings>
+            <Binding type="Visible" target="Visible" call="ProcessContext::OverviewList.createButtonEditable" />
+            <Resource target="Text" type="Label" id="createNewCallId" defaultLabel="Create Call" />
+            <Resource target="Icon" type="Image" id="Plus_PB" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="createNewCall" />
+          </Events>
+        </MenuItem>
+        <!-- Break Button -->
+        <MenuItem directlyVisible="false" itemId="ShowJobListSidebar">
+          <Bindings>
+            <Binding type="Editable" target="Editable" call="ProcessContext::OverviewList.creationAllowed" />
+            <Resource target="Text" type="Label" id="createNewCallsViaJobListsId" defaultLabel="Plan Job Lists" />
+            <Resource target="Icon" type="Image" id="CheckListDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showSidebar">
+              <SelectArea name="mainArea.JobListPlanning" />
+              <ShowSection name="PlanningSection" />
+              <Params>
+                <Param name="sidebarID" value="JOBLIST" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+          <VisibilityRoles allRoles="true" />
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="ShowCustomerSidebar">
+          <Bindings>
+            <Binding type="Editable" target="Editable" call="ProcessContext::OverviewList.creationAllowed" />
+            <Resource target="Text" type="Label" id="createNewCallsViaManagedCustomersId" defaultLabel="Plan Customers" />
+            <Resource target="Icon" type="Image" id="UserTieDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showSidebar">
+              <SelectArea name="mainArea.CustomerPlanning" />
+              <ShowSection name="PlanningSection" />
+              <Params>
+                <Param name="sidebarID" value="CUSTOMER" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="automaticCallPlanning">
+          <Bindings>
+            <Resource target="Text" type="Label" id="automaticCallPlanningId" defaultLabel="Automatic planning" />
+            <Resource target="Icon" type="Image" id="CalendarClock24" defaultImage="CalendarClock24.png" />
+            <Binding type="Visible" target="Visible" binding="ProcessContext::IsAutoCallPlanVisibile"></Binding>
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="automaticCallPlanning" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="CreateTripList" backendSystem="sf">
+          <Bindings>
+            <Resource target="Text" type="Label" id="CreateTripListId" defaultLabel="Create Trip List" />
+            <Resource target="Icon" type="Image" id="CreateTripListIcon" defaultImage="CreateTripListIcon.png" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="createTripList" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="UpdateTripList" backendSystem="sf">
+          <Bindings>
+            <Resource target="Text" type="Label" id="UpdateTripListId" defaultLabel="Update Trip List" />
+            <Resource target="Icon" type="Image" id="UpdateTripListIcon" defaultImage="UpdateTripListIcon.png" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="updateTripList" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="DeleteTripList" backendSystem="sf">
+          <Bindings>
+            <Resource target="Text" type="Label" id="DeleteTripListId" defaultLabel="Delete Trip List" />
+            <Resource target="Icon" type="Image" id="DeleteTripListIcon" defaultImage="DeleteTripListIcon.png" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="deleteTripList" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="ShowTripListSidebar" backendSystem="both">
+          <Bindings>
+            <Binding type="Editable" target="Editable" call="ProcessContext::OverviewList.creationAllowed" />
+            <Resource target="Text" type="Label" id="createNewCallsViaTripListId" defaultLabel="Create Calls Via TripList" />
+            <Resource target="Icon" type="Image" id="TripDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showSidebar">
+              <SelectArea name="mainArea.TripListPlanning" />
+              <ShowSection name="PlanningSection" />
+              <Params>
+                <Param name="sidebarID" value="TRIPLIST" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="allCalls">
+          <Bindings>
+            <Resource target="Text" type="Label" id="AgendaSetFilterAllId" defaultLabel="All visits" />
+            <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="SetCallFilter">
+              <Params>
+                <Param name="filterValue" value="All" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="planCalls">
+          <Bindings>
+            <Resource target="Text" type="Label" id="OnlyAgendaSetFilterPlannedId" defaultLabel="Only Planned visits" />
+            <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="SetCallFilter">
+              <Params>
+                <Param name="filterValue" value="'Planned'" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="changeCallPlanningTemplate">
+          <Bindings>
+            <Resource target="Text" type="Label" id="AgendaChangeCallPlanningTemplate" defaultLabel="Set default call type" />
+            <Resource target="Icon" type="Image" id="SuitcaseItemDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="ChangeCallPlanningTemplate" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="changeUser">
+          <Bindings>
+            <Resource target="Text" type="Label" id="AgendaChooseUser" defaultLabel="Choose User" />
+            <Resource target="Icon" type="Image" id="ChangeUserDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="ChangeUser" />
+          </Events>
+          <VisibilityRoles allRoles="true" />
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="scanCustomer">
+          <Bindings>
+            <Binding type="Visible" target="Visible" call="ProcessContext::OverviewList.getButtonVisibility">
+              <Parameters>
+                <Input name="mode" type="Literal" value="btnScanCustomer" />
+              </Parameters>
+            </Binding>
+            <Resource target="Text" type="Label" id="scanCustomerId" defaultLabel="Scan Customer" />
+            <Resource target="Icon" type="Image" id="Barcode" defaultImage="Barcode" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="scanCustomer" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="dailyView">
+          <Bindings>
+            <Resource target="Text" type="Label" id="CallCalendarDailyView" defaultLabel="Daily view" />
+            <Resource target="Icon" type="Image" id="DayDarkGrey24" />
+            <Binding type="Visible" target="Visible" binding="ProcessContext::dailyVisibilty" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="SwitchCalendarView">
+              <Params>
+                <Param name="view" value="DayWithMap" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="tourView">
+          <Bindings>
+            <Resource target="Text" type="Label" id="CallCalendarTourView" defaultLabel="Tour view" />
+            <Resource target="Icon" type="Image" id="DayDarkGrey24" />
+            <Binding type="Visible" target="Visible" binding="ProcessContext::tourVisibilty" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="SwitchCalendarView">
+              <Params>
+                <Param name="view" value="DayWithMap" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+          <VisibilityRoles allRoles="true" />
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" Flex="3" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <CalendarControl name="AgendaCalendar" dataSource="ProcessContext::OverviewList.items[]" firstLine="Name" secondLine="TimeFrom" dateFromAttribute="DateFrom" dateThruAttribute="DateThru" timeFromAttribute="TimeFrom" timeThruAttribute="TimeThru" allDayAttribute="AllDay" backgroundColorAttribute="Color">
+          <Bindings>
+            <Binding target="DateRangeStartDate" binding="ProcessContext::CurrentDate" bindingMode="ONE_WAY" />
+          </Bindings>
+          <Settings dataSource="ProcessContext::UserSettings" keyAttribute="name" valueAttribute="value" />
+          <Items name="Items" itemPattern="CalendarItems">
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::ContextMenuList.items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+          </Items>
+          <Events>
+            <CalendarLongTapEvent event="longTap" />
+            <CalendarItemOverlappingOpeningEvent event="itemOverlappingOpening" />
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="customerOnDevice" value=".customerOnDevice" />
+              </Params>
+            </ItemSelectedEvent>
+            <ContextOpeningEvent event="contextMenuOpening">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="clbStatus" value=".clbStatus" />
+                <Param name="deleteAllowed" value=".deleteAllowed" />
+                <Param name="dateFrom" value=".dateFrom" />
+                <Param name="bpaMainPKey" value=".bpaMainPKey" />
+                <Param name="responsiblePKey" value=".responsiblePKey" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="contextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="dateFrom" value=".dateFrom" />
+                <Param name="timeFrom" value=".timeFrom" />
+                <Param name="dateThru" value=".dateThru" />
+                <Param name="timeThru" value=".timeThru" />
+                <Param name="customerOnDevice" value=".customerOnDevice" />
+              </Params>
+            </ContextSelectedEvent>
+            <CalendarDateRangeChangedEvent event="DateRangeChanged" />
+            <CalendarItemResizeEvent event="itemResize">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </CalendarItemResizeEvent>
+            <CalendarItemMoveEvent event="itemMove">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </CalendarItemMoveEvent>
+            <CalendarItemOverlappingOpeningEvent event="itemOverlappingOpening" />
+            <CalendarDropEvent event="itemDropped">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="jobListPKey" value=".jobListPKey" />
+                <Param name="customerPKey" value=".customerPKey" />
+                <Param name="clbMetaPKey" value=".clbMetaPKey" />
+                <Param name="isManagedCustomer" value=".managed" />
+                <Param name="substitutedUsrPKey" value=".substitutedUsrPKey" />
+                <Param name="text" value=".text" />
+              </Params>
+            </CalendarDropEvent>
+          </Events>
+        </CalendarControl>
+        <MenuItems>
+          <MenuItem directlyVisible="true" itemId="SetDateId">
+            <Bindings>
+              <Resource target="Text" type="Label" id="AgendaSetDateId" defaultLabel="Set Date" />
+              <Resource target="Icon" type="Image" id="CalendarGrey24" defaultImage="CalendarGrey24.png" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="setDate" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+      </Area>
+    </Section>
+    <Section sectionName="PlanningSection" sectionPattern="SingleAreaSection" directlyVisible="false">
+      <Area areaPattern="MultiArea" areaName="mainArea">
+        <Area areaName="JobListPlanning" areaPattern="SingleElementArea">
+          <GroupedButtonList name="OpenJobListList" searchable="true" groupBy="jobDefinitionListText" hasBorder="true" dataSource="ProcessContext::SidebarData_JobLists.Items[]">
+            <Bindings>
+              <Resource target="Title" type="Label" id="OpenJobListListSidebarTitle" defaultLabel="Job Lists" />
+            </Bindings>
+            <Items name="Items" itemPattern="CallOpenJobListsSidebarTemplate">
+              <ItemListLayout>
+                <Col>
+                  <Row layoutType="itemName" bindingId="customerName" />
+                  <Row layoutType="itemNameSecondary" bindingId="customerAddress" />
+                </Col>
+              </ItemListLayout>
+              <Bindings>
+                <Binding target="customerName" type="Text" binding=".customerName" bindingMode="ONE_WAY" />
+                <Binding target="customerAddress" type="Text" binding=".customerAddress" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+            <Events>
+              <ItemSelectedEvent event="SidebarJobListSelected">
+                <Params>
+                  <Param name="jobListPKey" value=".pKey" />
+                  <Param name="customerPKey" value=".customerPKey" />
+                  <Param name="clbMetaPKey" value=".clbMetaPKey" />
+                </Params>
+              </ItemSelectedEvent>
+            </Events>
+            <SearchAttributes>
+              <SearchAttribute name="jobDefinitionListText" />
+              <SearchAttribute name="customerName" />
+              <SearchAttribute name="customerAddress" />
+              <SearchAttribute name="customerId" />
+            </SearchAttributes>
+          </GroupedButtonList>
+        </Area>
+        <Area areaName="CustomerPlanning" areaPattern="SingleElementArea">
+          <GroupedButtonList name="ManagedCustomersList" searchable="true" hasBorder="true" dataSource="ProcessContext::SidebarData_Customers.Items[]">
+            <Bindings>
+              <Resource target="Title" type="Label" id="ManagedCustomersListSidebarTitle" defaultLabel="Customers" />
+            </Bindings>
+            <Items name="Items" itemPattern="ManagedCustomersSidebarTemplate">
+              <ItemListLayout>
+                <Col>
+                  <Row layoutType="itemName" bindingId="customerName" />
+                  <Row layoutType="itemNameSecondary" bindingId="customerAddress" />
+                </Col>
+              </ItemListLayout>
+              <Bindings>
+                <Binding target="customerName" type="Text" binding=".name" bindingMode="ONE_WAY" />
+                <Binding target="customerAddress" type="Text" binding=".mainAddress" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+            <Events>
+              <ItemSelectedEvent event="SidebarCustomerSelected">
+                <Params>
+                  <Param name="customerPKey" value=".pKey" />
+                </Params>
+              </ItemSelectedEvent>
+            </Events>
+            <SearchAttributes>
+              <SearchAttribute name="Name" />
+              <SearchAttribute name="CustomerId" />
+              <SearchAttribute name="MainAddress" />
+            </SearchAttributes>
+          </GroupedButtonList>
+        </Area>
+        <Area areaName="TripListPlanning" areaPattern="SingleElementArea">
+          <GroupedButtonList name="TripListList" hasBorder="true" dataSource="ProcessContext::SidebarData_TripLists.Items[]">
+            <Bindings>
+              <Resource target="Title" type="Label" id="TripListListSidebarTitle" defaultLabel="TripLists" />
+            </Bindings>
+            <Items name="Items" itemPattern="TripListSidebarTemplate">
+              <ItemListLayout>
+                <Col width="3em" height="1.6em" layoutType="Image" bindingId="metaType" />
+                <Col flex="1" layoutType="itemName" bindingId="tripListName" />
+              </ItemListLayout>
+              <Bindings>
+                <Binding target="tripListName" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                <Binding target="metaType" type="Image" binding=".metaType.imageId" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+            <Events>
+              <ItemSelectedEvent event="SidebarTripListSelected">
+                <Params>
+                  <Param name="tripListPkey" value=".pKey" />
+                </Params>
+              </ItemSelectedEvent>
+            </Events>
+          </GroupedButtonList>
+        </Area>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

@@ -1,0 +1,11 @@
+<ListItem name="LiPromotionForSalesFolder">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="sloganText" type="DomText" dataSourceProperty="sloganText" />
+    <SimpleProperty name="dateFrom" type="DomDate" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" dataSourceProperty="dateThru" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+    <SimpleProperty name="dateText" type="DomText" />
+  </SimpleProperties>
+</ListItem>

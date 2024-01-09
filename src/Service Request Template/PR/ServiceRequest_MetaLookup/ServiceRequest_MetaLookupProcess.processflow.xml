@@ -1,0 +1,56 @@
+<Process name="ServiceRequest::MetaLookupProcess" defaultAction="LoadList_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="WizardHeaderLabel" type="DomText" />
+      </Declarations>
+      <Parameters>
+        <Input name="MetaType" type="String" />
+        <Input name="IssueType" type="String" />
+        <Input name="SvcRequestMetaPKey" type="String" />
+        <Input name="SvcRequestMetaList" type="LoSvcRequestMeta" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="LoadList_Decision" actionType="DECISION" parameter="ProcessContext::SvcRequestMetaList">
+        <CaseEmpty action="GetSvcRequestMetaList" />
+        <CaseElse action="GetWizardHeaderLabel" />
+      </Action>
+      <Action actionType="LOAD" name="GetSvcRequestMetaList" type="LoSvcRequestMeta">
+        <Parameters>
+          <Input name="metaType" value="ProcessContext::MetaType" />
+          <Input name="issueType" value="ProcessContext::IssueType" />
+        </Parameters>
+        <Return name="ProcessContext::SvcRequestMetaList" />
+        <TransitionTo action="GetWizardHeaderLabel" />
+      </Action>
+      <Action actionType="LOGIC" name="GetWizardHeaderLabel" call="ProcessContext::SvcRequestMetaList.defineWizardHeaderLabel">
+        <Parameters>
+          <Input name="metaType" value="ProcessContext::MetaType" />
+          <Input name="issueType" value="ProcessContext::IssueType" />
+        </Parameters>
+        <Return name="ProcessContext::WizardHeaderLabel" />
+        <TransitionTo action="ShowView" />
+      </Action>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>ServiceRequest::MetaLookupUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="EndWithReturnValues" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="EndWithReturnValues">
+        <ReturnValues>
+          <Return name="svcRequestMetaPKey" value="Event.pKey" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="svcRequestMetaPKey" value="ProcessContext::SvcRequestMetaPKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

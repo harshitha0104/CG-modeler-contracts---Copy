@@ -1,0 +1,35 @@
+<BusinessObject name="BoPromotionDetail" schemaVersion="1.1">
+  <DataSource name="DsBoPromotionDetail" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" id="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="dateFrom" type="DomDate" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" dataSourceProperty="dateThru" />
+    <SimpleProperty name="sloganText" type="DomText" dataSourceProperty="sloganText" />
+    <SimpleProperty name="groupText" type="DomText" dataSourceProperty="groupText" />
+    <SimpleProperty name="annotationText" type="DomText" dataSourceProperty="annotationText" />
+  </SimpleProperties>
+  <ObjectLookups>
+    <ObjectLookup name="luAttachmentcount" objectClass="LuAttachmentcount" dataSourceProperty="pKey" lookupProperty="pKey" />
+    <ObjectLookup name="luTacticCount" objectClass="LuTacticCount" dataSourceProperty="pKey" lookupProperty="tacticParentPKey" />
+  </ObjectLookups>
+  <NestedObjects />
+  <ListObjects>
+    <ListObject name="loAttachment" objectClass="LoPrmSalesAttachment" dataSourceProperty="pKey" listProperty="prmPromotionPKey" />
+    <ListObject name="loIconAttachment" objectClass="LoPrmDetailIconAttachment" dataSourceProperty="pKey" listProperty="prmPromotionPKey" />
+    <ListObject name="loTactics" objectClass="LoSalesFolderTactic" dataSourceProperty="pKey" listProperty="tacticParentPKey" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="setPageTitle" />
+  </Methods>
+  <Validations />
+</BusinessObject>

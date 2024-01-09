@@ -1,0 +1,37 @@
+<DataSource name="DsLoBpaUsrCallSettings" backendSystem="sf" businessObjectClass="LoBpaUsrCallSettings" external="false" editableEntity="Account_Visit_Setting__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Visit_Setting__c" column="Id" />
+    <Attribute name="customerPKey" table="Account_Visit_Setting__c" column="Account__c" />
+    <Attribute name="validFrom" table="Account_Visit_Setting__c" column="Valid_From__c" />
+    <Attribute name="validThru" table="Account_Visit_Setting__c" column="Valid_Thru__c" />
+    <Attribute name="clbMetaPKey" table="Account_Visit_Setting__c" column="Visit_Template__c" />
+    <Attribute name="managementType" table="Account_Visit_Setting__c" column="Management_Type__c" />
+    <DerivedAttribute name="initialYear" value="''" />
+    <Attribute name="frequency" table="Account_Visit_Setting__c" column="Frequency__c" />
+    <Attribute name="overdueCheck" table="Account_Visit_Setting__c" column="Overdue_Check__c" />
+    <Attribute name="overdueDate" table="Account_Visit_Setting__c" column="Overdue_Date__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Visit_Setting__c" alias="" idAttribute="Id" />
+    <Entity name="Account_Manager__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Account_Manager__c.Account__c" comparator="eq" rightSideType="Attribute" rightSideValue="Account_Visit_Setting__c.Account__c" />
+          <Condition leftSideValue="Account_Manager__c.Management_Type__c" comparator="eq" rightSideType="Attribute" rightSideValue="Account_Visit_Setting__c.Management_Type__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Account_Visit_Setting__c.Active__c='1'  
+  AND Account_Visit_Setting__c.Account__c = #customerPKey#
+  AND Account_Visit_Setting__c.Visit_Template__c = #clbMetaPKey#
+  AND #compareAsDate('Account_Visit_Setting__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')#
+  AND #compareAsDate('Account_Visit_Setting__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="customerPKey" type="TEXT" />
+    <Parameter name="clbMetaPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,24 @@
+<DataSource name="DsLuSysToggleItemText" businessObjectClass="LuSysToggleItemText" external="false" editableEntity="SysToggleItem" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="SysToggleItem" column="PKey" />
+    <Attribute name="text" table="SysToggleItemText" column="Text" />
+  </Attributes>
+  <Entities>
+    <Entity name="SysToggleItem" alias="" idAttribute="PKey" />
+    <Entity name="SysToggleItemText" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SysToggleItem.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="SysToggleItemText.SysToggleItemPKey"></Condition>
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  	SysToggleItem.Code = #code#
+    AND SysToggleItemText.Language = '#LANGUAGE#'
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="code" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,110 @@
+<DataSource name="DsLoMeProductInformation" backendSystem="sf" businessObjectClass="LoMeProductInformation" external="false" readOnly="true" editableEntity="Product2" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Product2" column="Id" />
+    <Attribute name="text1" table="Product2" column="Description_1_#Language#__c" />
+    <Attribute name="prdId" table="Product2" column="Consumer_Goods_Product_Code__c" />
+    <Attribute name="shortId" table="Product2" column="Product_Short_Code__c" />
+    <Attribute name="taxClassification" table="Product2" column="Tax_Classification__c" />
+    <Attribute name="simplePricingBasePrice" table="Product_Condition__c" column="Value__c" />
+    <Attribute name="foreignProduct" table="Product2" column="Competitive_Product__c" />
+    <DerivedAttribute name="deliveryState" value="CASE WHEN #compareAsDate('Product2.Delivery_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')# AND  #compareAsDate('Product2.Delivery_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'Available' ELSE 'NotAvailable' END" />
+    <DerivedAttribute name="fieldState" value="CASE WHEN #compareAsDate('Product2.Field_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')# AND  #compareAsDate('Product2.Field_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'Available' ELSE 'NotAvailable' END" />
+    <Attribute name="eAN" table="Product2" column="GTIN__c" />
+    <DerivedAttribute name="newState" value="CASE WHEN #compareAsDate('Product2.New_Item_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')# AND  #compareAsDate('Product2.New_Item_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'Available' ELSE 'NotAvailable' END" />
+    <Attribute name="piecesPerSmallestUnitForBasePrice" table="PriceUnit" column="Pieces_per_Smallest_Unit__c" />
+    <Attribute name="orderQuantityLogisticUnit" table="OrderUnit" column="Unit_Type__c" />
+    <Attribute name="orderPiecesPerSmallestUnit" table="OrderUnit" column="Pieces_per_Smallest_Unit__c" />
+    <Attribute name="consumerQuantityLogisticUnit" table="ConsumerUnit" column="Unit_Type__c" />
+    <Attribute name="consumerPiecesPerSmallestUnit" table="ConsumerUnit" column="Pieces_per_Smallest_Unit__c" />
+    <Attribute name="priceQuantityLogisticUnit" table="PriceUnit" column="Unit_Type__c" />
+    <Attribute name="pricePiecesPerSmallestUnit" table="PriceUnit" column="Pieces_per_Smallest_Unit__c" />
+    <Attribute name="groupText" table="ProductGroup" column="Description_1_#Language#__c" />
+    <Attribute name="groupId" table="ProductGroup" column="Consumer_Goods_Product_Code__c" />
+    <Attribute name="category" table="Product2" column="Category__c" />
+    <Attribute name="text2" table="Product2" column="Description_2_#Language#__c" />
+    <Attribute name="prdType" table="Product2" column="Product_Type__c" />
+    <DerivedAttribute name="criterion1" value="''" />
+    <DerivedAttribute name="criterion2" value="''" />
+    <DerivedAttribute name="criterion3" value="''" />
+    <DerivedAttribute name="criterion4" value="''" />
+    <DerivedAttribute name="criterion5" value="''" />
+    <DerivedAttribute name="criterion6" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="Product2" alias="" idAttribute="Id" />
+    <Entity name="Unit_of_Measure__c" alias="PriceUnit">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product2.Id" comparator="eq" rightSideType="Attribute" rightSideValue="PriceUnit.Product__c" />
+          <Condition leftSideValue="PriceUnit.Is_Price_Unit__c" comparator="eq" rightSideType="Literal" rightSideValue="'1'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Unit_of_Measure__c" alias="OrderUnit">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product2.Id" comparator="eq" rightSideType="Attribute" rightSideValue="OrderUnit.Product__c" />
+          <Condition leftSideValue="OrderUnit.Is_Order_Unit__c" comparator="eq" rightSideType="Literal" rightSideValue="'1'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Unit_of_Measure__c" alias="ConsumerUnit">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product2.Id" comparator="eq" rightSideType="Attribute" rightSideValue="ConsumerUnit.Product__c" />
+          <Condition leftSideValue="ConsumerUnit.Is_Consumer_Unit__c" comparator="eq" rightSideType="Literal" rightSideValue="'1'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Product2" alias="ProductGroup">
+      <Join Type="left outer">
+        <ComplexJoin><![CDATA[
+            Product2.#criterionAttribute# = ProductGroup.Consumer_Goods_Product_Code__c AND ProductGroup.Sales_Org__c = '#SalesOrg#'
+            ]]></ComplexJoin>
+      </Join>
+    </Entity>
+    <Entity name="Product_Condition__c" alias="">
+      <Join Type="left outer">
+        <ComplexJoin><![CDATA[
+     Product2.Id = Product_Condition__c.Product__c
+           AND #compareAsDate('Product_Condition__c.Valid_From__c', 'Date','<=' ,#commitDate#, 'Date')#
+            AND #compareAsDate('Product_Condition__c.Valid_Thru__c', 'Date','>=' ,#commitDate#, 'Date')#
+   AND (PriceUnit.Order_Ability__c = '1' OR ConsumerUnit.Order_Ability__c = '1' OR OrderUnit.Order_Ability__c = '1')
+   AND EXISTS (SELECT NULL FROM System_Setting__c WHERE System_Setting__c.Value__c = Product_Condition__c.Price_Type__c AND System_Setting__c.Name = 'Default_Price_Type' AND System_Setting__c.IsDeleted <> '1')
+            AND EXISTS (SELECT NULL FROM System_Setting__c WHERE System_Setting__c.Value__c = Product_Condition__c.Price_List_Type__c AND System_Setting__c.Name = 'Default_Price_List_Type' AND System_Setting__c.IsDeleted <> '1')
+        ]]></ComplexJoin>
+      </Join>
+    </Entity>
+    <Entity name="Condition_Template__c">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="Condition_Template__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Product_Condition__c.Condition_Template__c" />
+          <Condition leftSideValue="Condition_Template__c.Value_Type__c" comparator="eq" rightSideType="Literal" rightSideValue="'Amount'" />
+          <Condition leftSideValue="Condition_Template__c.Customer_Reference__c" comparator="eq" rightSideType="Literal" rightSideValue="'0'" />
+          <Condition leftSideValue="Condition_Template__c.Product_Reference__c" comparator="eq" rightSideType="Literal" rightSideValue="'1'" />
+          <Condition leftSideValue="Condition_Template__c.Active__c" comparator="eq" rightSideType="Literal" rightSideValue="'1'" />
+          <Condition leftSideValue="Condition_Template__c.Price_Finding_Id__c" comparator="eq" rightSideType="Literal" rightSideValue="'ProductPrice'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+                #addCond_ProductState#
+                #addCond_FieldState#
+                #addCond_NewState#
+                #addCond_ForeignProduct# 
+                AND Product2.Sales_Org__c = '#SalesOrg#'
+        ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Product2" attribute="Id" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="commitDate" baseType="Date" type="INTEGER" />
+    <Parameter name="criterionAttribute" treatAs="sqlSnippet" />
+    <!--Parameter name="addCond_criterionFilterValue" /-->
+    <Parameter name="addCond_ProductState" treatAs="sqlSnippet" />
+    <Parameter name="addCond_FieldState" treatAs="sqlSnippet" />
+    <Parameter name="addCond_NewState" treatAs="sqlSnippet" />
+    <Parameter name="addCond_ForeignProduct" treatAs="sqlSnippet" />
+  </Parameters>
+</DataSource>

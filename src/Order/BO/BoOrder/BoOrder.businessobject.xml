@@ -1,0 +1,354 @@
+<BusinessObject name="BoOrder" generateLoadMethod="false" generateCreateMethod="false" OERReference="SdoMain">
+  <DataSource name="DsBoOrder" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" id="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="orderId" type="DomId" dataSourceProperty="orderId" />
+    <SimpleProperty name="commitDate" type="DomDate" dataSourceProperty="commitDate" />
+    <SimpleProperty name="deliveryDate" type="DomDate" dataSourceProperty="deliveryDate">
+      <Events>
+        <Event name="onChanged" eventHandler="onHeaderDeliveryDateChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="phase" type="DomSdoPhase" dataSourceProperty="phase" />
+    <SimpleProperty name="phaseText" type="DomString" />
+    <SimpleProperty name="totalValue" type="DomMoney" dataSourceProperty="totalValue" />
+    <SimpleProperty name="totalValueReceipt" type="DomMoney" dataSourceProperty="totalValueReceipt" />
+    <SimpleProperty name="grossTotalValue" type="DomMoney" dataSourceProperty="grossTotalValue" />
+    <SimpleProperty name="grossTotalValueReceipt" type="DomMoney" dataSourceProperty="grossTotalValueReceipt" />
+    <SimpleProperty name="merchandiseValue" type="DomMoney" dataSourceProperty="merchandiseValue" />
+    <SimpleProperty name="merchandiseValueReceipt" type="DomMoney" dataSourceProperty="merchandiseValueReceipt" />
+    <SimpleProperty name="deliveryRecipientPKey" type="DomPKey" dataSourceProperty="deliveryRecipientPKey" />
+    <SimpleProperty name="ordererPKey" type="DomPKey" dataSourceProperty="ordererPKey" />
+    <SimpleProperty name="customerOrderId" type="DomId" dataSourceProperty="customerOrderId" />
+    <SimpleProperty name="cancelReason" type="DomSdoCancelReason" dataSourceProperty="cancelReason" />
+    <SimpleProperty name="sdoMetaPKey" type="DomPKey" dataSourceProperty="sdoMetaPKey" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="initiatorPKey" type="DomPKey" dataSourceProperty="initiatorPKey" />
+    <SimpleProperty name="ownerPKey" type="DomPKey" dataSourceProperty="ownerPKey" />
+    <SimpleProperty name="clbMainPKey" type="DomPKey" dataSourceProperty="clbMainPKey" />
+    <SimpleProperty name="currency" type="DomCurrency" dataSourceProperty="currency" />
+    <SimpleProperty name="billToCustomerPKey" type="DomPKey" dataSourceProperty="billToCustomerPKey" />
+    <SimpleProperty name="payerCustomerPKey" type="DomPKey" dataSourceProperty="payerCustomerPKey" />
+    <SimpleProperty name="releaseTime" type="DomDateTime" dataSourceProperty="releaseTime" />
+    <SimpleProperty name="brokerCustomerPKey" type="DomPKey" dataSourceProperty="brokerCustomerPKey" />
+    <SimpleProperty name="initiationDate" type="DomDate" dataSourceProperty="initiationDate" />
+    <SimpleProperty name="ivcRef1PKey" type="DomPKey" dataSourceProperty="ivcRef1PKey" />
+    <SimpleProperty name="ivcRef2PKey" type="DomPKey" dataSourceProperty="ivcRef2PKey" />
+    <SimpleProperty name="ivcRef3PKey" type="DomPKey" dataSourceProperty="ivcRef3PKey" />
+    <SimpleProperty name="ivcRef4PKey" type="DomPKey" dataSourceProperty="ivcRef4PKey" />
+    <SimpleProperty name="ivcRef5PKey" type="DomPKey" dataSourceProperty="ivcRef5PKey" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="actualStatePKey" type="DomPKey" dataSourceProperty="actualStatePKey" />
+    <SimpleProperty name="nextStatePKey" type="DomPKey" dataSourceProperty="nextStatePKey" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="sf_mobilityRelease" type="DomBool" dataSourceProperty="sf_mobilityRelease" />
+    <SimpleProperty name="distribChannel" type="DomDistribChannel" dataSourceProperty="distribChannel" />
+    <SimpleProperty name="division" type="DomSysIntDivision" dataSourceProperty="division" />
+    <SimpleProperty name="isCancel" type="DomString" />
+    <SimpleProperty name="etpWarehousePKey" type="DomPKey" dataSourceProperty="etpWarehousePKey" />
+    <SimpleProperty name="headerDiscount" type="DomDecimal" dataSourceProperty="headerDiscount">
+      <Events>
+        <Event name="onChanged" eventHandler="onHeaderDiscountChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="docTaType" type="DomBpaPaymentPolicy" dataSourceProperty="docTaType" />
+    <SimpleProperty name="paymentReason" type="DomSdoPaymentReason" dataSourceProperty="paymentReason">
+      <Events>
+        <Event name="onChanged" eventHandler="onPaymentReasonChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="orgPhase" type="DomSdoPhase" />
+    <SimpleProperty name="validateForRelease" type="DomBool" />
+    <SimpleProperty name="releaseValidationDone" type="DomBool" />
+    <SimpleProperty name="setPhaseInBeforeSave" type="DomBool" />
+    <SimpleProperty name="callInContext_clbMainPKey" type="DomPKey" />
+    <SimpleProperty name="callOutOfStockProducts" type="Object" />
+    <SimpleProperty name="cndCpCalculationSchemaPKey" type="DomPKey" dataSourceProperty="cndCpCalculationSchemaPKey" />
+    <SimpleProperty name="calculationStatus" type="DomSdoCalculationStatus" dataSourceProperty="calculationStatus" />
+    <SimpleProperty name="calculationTime" type="DomDateTime" dataSourceProperty="calculationTime" />
+    <SimpleProperty name="pricingDate" type="DomDate" dataSourceProperty="pricingDate" />
+    <SimpleProperty name="isRoundingOn" type="DomBool" dataSourceProperty="isRoundingOn" />
+    <SimpleProperty name="isRoundingToggleChanged" type="DomBool" dataSourceProperty="isRoundingToggleChanged" />
+    <SimpleProperty name="firstCalculation" type="DomBool" />
+    <SimpleProperty name="sdoConditionsJson" type="DomString" />
+    <SimpleProperty name="pricingJSON" type="Object" />
+    <SimpleProperty name="asn" type="DomString" dataSourceProperty="asn" />
+    <SimpleProperty name="invoiceId" type="DomId" dataSourceProperty="invoiceId" />
+    <SimpleProperty name="message" type="DomLongDescription" dataSourceProperty="message" />
+    <SimpleProperty name="documentType" type="DomSdoSubType" dataSourceProperty="documentType" />
+    <SimpleProperty name="totalShippedQuantity" type="DomDecimal" dataSourceProperty="totalShippedQuantity" />
+    <SimpleProperty name="totalReturnedQuantity" type="DomDecimal" dataSourceProperty="totalReturnedQuantity" />
+    <SimpleProperty name="emptiesTotalText" type="DomString" />
+    <SimpleProperty name="emptiesTotalAmount" type="DomString" />
+    <SimpleProperty name="emptiesTotalCurrency" type="DomString" />
+    <SimpleProperty name="paidAmount" type="DomMoney" dataSourceProperty="paidAmount" />
+    <SimpleProperty name="paidAmountReceipt" type="DomMoney" dataSourceProperty="paidAmountReceipt">
+      <Events>
+        <Event name="onChanged" eventHandler="onPaidAmountReceiptChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="absolutePaidAmount" type="DomMoney" dataSourceProperty="absolutePaidAmount" />
+    <SimpleProperty name="paidAmountCurrency" type="DomCurrency" dataSourceProperty="paidAmountCurrency" />
+    <SimpleProperty name="paymentMethod" type="DomPaymentMethod" dataSourceProperty="paymentMethod">
+      <Events>
+        <Event name="onChanged" eventHandler="onPaymentMethodChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="paymentMethodText" type="DomString" />
+    <SimpleProperty name="totalPaidAmount" type="DomMoney" />
+    <SimpleProperty name="balance" type="DomMoney" />
+    <SimpleProperty name="debitCredit" type="DomBpaDebitCredit" dataSourceProperty="debitCredit" />
+    <SimpleProperty name="allowedPaymentMethods" type="Object" />
+    <SimpleProperty name="tmgMainPKey" type="DomPKey" dataSourceProperty="tmgMainPKey" />
+    <SimpleProperty name="storedSysReleasePKey" type="DomPKey" />
+    <SimpleProperty name="sysReleaseProcessStepsExists" type="DomBool" />
+    <SimpleProperty name="splittingOption" type="DomBool" dataSourceProperty="splittingOption" />
+    <SimpleProperty name="splittingRule" type="DomSdoSplittingRule" dataSourceProperty="splittingRule" />
+    <SimpleProperty name="splittingParentSdoMainPKey" type="DomPKey" dataSourceProperty="splittingParentSdoMainPKey" />
+    <SimpleProperty name="itemListEventBuffer" type="Object" />
+    <SimpleProperty name="itemListEventBufferingActive" type="DomString" />
+    <SimpleProperty name="eventTimer" type="Object" />
+    <SimpleProperty name="releaseProcessBo" type="Object" />
+    <SimpleProperty name="releaseGeolocationLatitude" type="DomDecimal" dataSourceProperty="releaseGeolocationLatitude" />
+    <SimpleProperty name="releaseGeolocationLongitude" type="DomDecimal" dataSourceProperty="releaseGeolocationLongitude" />
+    <!-- CGCloud only: Holds the SdoCondition records of onPrem as JSON -->
+    <SimpleProperty name="pricingInformation" type="DomLongText" />
+    <!-- needs to be Object in order to work with null values -->
+    <SimpleProperty name="selectedPromotionPKey" type="Object" />
+    <SimpleProperty name="promotionCount" type="DomInteger" />
+    <SimpleProperty name="isInvalidOrder" type="DomBool" />
+    <SimpleProperty name="selectedRewards" type="DomString" />
+    <SimpleProperty name="simplePricingCalculator" type="Object" />
+    <SimpleProperty name="orderStatus" type="DomString" />
+    <SimpleProperty name="groupQuickFilterCache" type="DomString" />
+    <SimpleProperty name="categoryQuickFilterCache" type="DomString" />
+    <SimpleProperty name="pricingInfo1" type="DomDecimal" dataSourceProperty="pricingInfo1" />
+    <SimpleProperty name="pricingInfo2" type="DomDecimal" dataSourceProperty="pricingInfo2" />
+    <SimpleProperty name="pricingInfo3" type="DomDecimal" dataSourceProperty="pricingInfo3" />
+    <SimpleProperty name="pricingInfo4" type="DomDecimal" dataSourceProperty="pricingInfo4" />
+    <SimpleProperty name="pricingInfo5" type="DomDecimal" dataSourceProperty="pricingInfo5" />
+    <SimpleProperty name="pricingInfo6" type="DomDecimal" dataSourceProperty="pricingInfo6" />
+    <SimpleProperty name="pricingInfo7" type="DomDecimal" dataSourceProperty="pricingInfo7" />
+    <SimpleProperty name="pricingInfo8" type="DomDecimal" dataSourceProperty="pricingInfo8" />
+    <SimpleProperty name="pricingInfo9" type="DomDecimal" dataSourceProperty="pricingInfo9" />
+    <SimpleProperty name="pricingInfo10" type="DomDecimal" dataSourceProperty="pricingInfo10" />
+    <SimpleProperty name="isNextStateRelease" type="DomBool" />
+    <SimpleProperty name="isOrderPaymentRelevant" type="DomBool" />
+    <SimpleProperty name="isPaymentCollected" type="DomBool">
+      <Events>
+        <Event name="onChanged" eventHandler="onIsPaymentCollectedChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="syncStatus" type="DomInteger" dataSourceProperty="syncStatus" />
+    <SimpleProperty name="isNotReadyForHurdleEvaluation" type="DomBool" />
+    <SimpleProperty name="productForAddDict" type="Object" />
+  </SimpleProperties>
+  <ObjectLookups>
+    <ObjectLookup name="luOrderer" objectClass="LuOrderer" dataSourceProperty="ordererPKey" lookupProperty="pKey" />
+    <ObjectLookup name="luDeliveryRecipient" objectClass="LuDeliveryRecipient" dataSourceProperty="deliveryRecipientPKey" lookupProperty="pKey" />
+    <ObjectLookup name="luBrokerCustomer" objectClass="LuCustomer" dataSourceProperty="brokerCustomerPKey" lookupProperty="pKey" />
+    <ObjectLookup name="luOwner" objectClass="LuUser" dataSourceProperty="ownerPKey" lookupProperty="pKey" />
+    <ObjectLookup name="luResponsible" objectClass="LuUser" dataSourceProperty="responsiblePKey" lookupProperty="pKey" />
+    <ObjectLookup name="luTour" objectClass="LuTourInformation" dataSourceProperty="tmgMainPKey" lookupProperty="pKey" />
+    <ObjectLookup name="luEtpWarehouse" objectClass="LuEtpWarehouse" dataSourceProperty="etpWarehousePKey" lookupProperty="pKey" />
+  </ObjectLookups>
+  <NestedObjects>
+    <NestedObject name="hurdleEvaluationHelper" objectClass="BoHurdleEvaluationHelper" dataSourceProperty="empty" nestingProperty="empty" />
+    <NestedObject name="boOrderMeta" objectClass="BoOrderMeta" dataSourceProperty="sdoMetaPKey" nestingProperty="pKey" />
+    <NestedObject name="boWorkflow" objectClass="BoWorkflow" dataSourceProperty="wfeWorkflowPKey" nestingProperty="pKey" />
+    <NestedObject name="boItemTabManager" objectClass="BoItemTabManager" dataSourceProperty="empty" nestingProperty="empty" />
+  </NestedObjects>
+  <ListObjects>
+    <ListObject name="LoItems" objectClass="LoOrderItems" dataSourceProperty="pKey" listProperty="sdoMainPKey" />
+    <ListObject name="LoPrintItems" objectClass="LoOrderItems" dataSourceProperty="pKey" listProperty="sdoMainPKey" />
+    <ListObject name="loNotes" objectClass="LoOrderNotes" dataSourceProperty="pKey" listProperty="sdoMainPKey" />
+    <ListObject name="loRecentState" objectClass="LoOrderRecentState" dataSourceProperty="pKey" listProperty="sdoMainPKey" />
+    <ListObject name="loItemFilter" objectClass="LoItemFilter" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loInventories" objectClass="LoInventory" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loInventoryTransactions" objectClass="LoInventoryTransaction" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loProductForAdd" objectClass="LoProductForAdd" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loSdoConditions" objectClass="LoSdoConditions" dataSourceProperty="pKey" listProperty="sdoMainPKey" />
+    <ListObject name="loOrderAttachment" objectClass="LoOrderAttachment" dataSourceProperty="pKey" listProperty="sdoMainPKey" />
+    <ListObject name="loEmptiesForPrintout" objectClass="LoEmptiesForPrintout" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loEmptiesInformation" objectClass="LoEmptiesInformation" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loEmptiesBom" objectClass="LoEmptiesBom" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loPayments" objectClass="LoOrderPayments" dataSourceProperty="pKey" listProperty="sdoMainPKey" />
+    <ListObject name="loSysSignatureAttribute" objectClass="LoSysSignatureAttribute" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loSysSignatureBlob" objectClass="LoSysSignatureBlob" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loGeoLocation" objectClass="LoCallLocation" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loSplittingGroups" objectClass="LoSplittingGroupResult" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="LoSuggestedQuantity" objectClass="LoSuggestedQuantity" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="LoSelectablePromotion" objectClass="LoSelectablePromotion" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="LoProductQuickFilter" objectClass="LoProductQuickFilter" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="LoProductCategoryFilter" objectClass="LoProductCategoryFilter" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="LoFastOrderProducts" objectClass="LoFastOrderProducts" dataSourceProperty="empty" listProperty="empty" />
+  </ListObjects>
+  <Methods>
+    <Method name="createAsync" />
+    <Method name="loadAsync" />
+    <Method name="loadWorkflow" />
+    <Method name="loadNotes" />
+    <Method name="loadItemTabManager" />
+    <Method name="loadPayments" />
+    <Method name="saveAsync" />
+    <Method name="deleteOrder" />
+    <Method name="setEARight" />
+    <Method name="getJsonQueryForLoItems" />
+    <Method name="getJsonQueryForProductForAdd" />
+    <Method name="getJsonQueryForLoLogisticUnit" />
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="holdBack" />
+    <Method name="determinePrintId" />
+    <Method name="release" />
+    <Method name="cancel" />
+    <Method name="preparePrint" />
+    <Method name="setItemFilterCounts" />
+    <Method name="setItemFilterCountsByCategory" />
+    <Method name="validateScannedProduct" />
+    <Method name="validateScannedUoM" />
+    <Method name="validateScannedItem" />
+    <Method name="prepareOrder" />
+    <Method name="presetDeliveryDate" />
+    <Method name="checkDeliveryDate" />
+    <Method name="presetOrderRoles" />
+    <Method name="calculateItemValue" />
+    <Method name="calculateOrderValue" />
+    <Method name="updateItemUnit" />
+    <Method name="onOrderItemChanged" />
+    <Method name="onHeaderDiscountChanged" />
+    <Method name="onHeaderDeliveryDateChanged" />
+    <Method name="updateItemFilterBasketCount" />
+    <Method name="updateItemFilterCountAfterAdd" />
+    <Method name="updateItemFilterTotalValue" />
+    <Method name="resetCurrentItemFilter" />
+    <Method name="isHierarchyViewEnabled" />
+    <Method name="isScanProductDetailVisible" />
+    <Method name="isPrintPreviewVisible" />
+    <Method name="setIvcRefPKeys" />
+    <Method name="setInventoryBalanceOfItem" />
+    <Method name="processInventoryActions" />
+    <Method name="addMessageToContainer" />
+    <Method name="checkResponsibleEqUser" />
+    <Method name="checkRoundingOptionButtonVisibility" />
+    <Method name="roundOrderItemQuantity" />
+    <Method name="toggleRoundingOrder" />
+    <Method name="checkRoundingOptionButtonEditability" />
+    <Method name="isCPCalculationEnabled" />
+    <Method name="isCpCalculationButtonVisible" />
+    <Method name="processForcedRecalc" />
+    <Method name="checkOutdated" />
+    <Method name="releaseButtonActive" />
+    <Method name="setItemErpIds" />
+    <Method name="resetFreeItems" />
+    <Method name="loadProductForAdd" />
+    <Method name="releaseSupportedDocTType" />
+    <Method name="onPaymentReasonChanged" />
+    <Method name="resetCalculationResult" />
+    <Method name="deleteAllFreeItems" />
+    <Method name="calculateEmptiesForPrintout" />
+    <Method name="validateDeliveryItemsAfterSelect" />
+    <Method name="processValidateReasonCode" />
+    <Method name="reasonCodeItemValidation" />
+    <Method name="summarizeUoMMovement" />
+    <Method name="createPayments" />
+    <Method name="setInventoryBalanceOfPayment" />
+    <Method name="determineSysReleaseProcessPKey" />
+    <Method name="getReleaseTitle" />
+    <Method name="isReleaseInformationVisible" />
+    <Method name="releaseButtonVisible" />
+    <Method name="cancelRelease" />
+    <Method name="storeSysReleaseProcessPKey" />
+    <Method name="loadOrderItems" />
+    <Method name="computeFreeQuantity" />
+    <Method name="addMissingUoMsForAllItems" />
+    <Method name="ebBufferItemListEvents" />
+    <Method name="ebFireItemListEvents" />
+    <Method name="ebHandleItemListEvents" />
+    <Method name="ebForceItemListEvents" />
+    <Method name="isSelectablePromotionFilterVisible" />
+    <!-- Complex Pricing -->
+    <Method name="cpDetermineCalculationSchema" />
+    <Method name="cpCalculate" />
+    <Method name="cpGetRelevantOrderAttributes" />
+    <Method name="cpAddAndUpdateFreeItems" />
+    <Method name="cpCreateSdoConditionRecords" />
+    <Method name="cpGetVariantItemVariables" />
+    <Method name="cpGetVariantOrderVariables" />
+    <Method name="cpAttachDebugJSON" />
+    <Method name="cpCreateSdoConditions" />
+    <Method name="cpHandleCalculateResult" />
+    <Method name="createPricingInformationForList" />
+    <Method name="cpPrepareContext" />
+    <Method name="executeRequestsAsync" />
+    <!-- Splitting Invoice -->
+    <Method name="determineSplittingOption" />
+    <Method name="determineSplittingRule" />
+    <Method name="determineItemSplittingGroups" />
+    <Method name="invoiceSplittingRule_DeliveryReturn" />
+    <Method name="invoiceSplittingRule_DelRetPrdType" />
+    <Method name="isSplittingEnabled" />
+    <Method name="updateItemSplittingGroupAfterAdd" />
+    <Method name="executeSplitting" />
+    <Method name="esCreateItemSplittingData" />
+    <Method name="esSetHeaderAttributes" />
+    <Method name="esDetermineSplittingGroups" />
+    <Method name="esCreateSplittingDocumentItems" />
+    <Method name="esSetSignatureAttributes" />
+    <Method name="esGetMainDocHeaderAttributes" />
+    <Method name="esCopyNotes" />
+    <Method name="esCreateReleaseBoBeforeSplitting" />
+    <Method name="esCopySignatures" />
+    <Method name="esStoreParentSignatures" />
+    <Method name="resetDeliveryDate" />
+    <Method name="isGroupingEnabled" />
+    <Method name="esCreateSplittedOrder" />
+    <Method name="getFirstSplittingGroup" />
+    <Method name="removeCurrentSplittingGroup" />
+    <Method name="assignSuggestedQuantity" />
+    <Method name="isSuggestedVisible" />
+    <Method name="confirmEditedItemQuantity" />
+    <Method name="copyBo" />
+    <Method name="loadForCancel" />
+    <Method name="loadForDelete" />
+    <Method name="isAddProductEnabled" />
+    <Method name="filterHurdlesAndRewards" />
+    <Method name="isHurdlesAndRewardsVisible" />
+    <Method name="storeRewardInformation" />
+    <Method name="restoreRewardInformation" />
+    <Method name="handleFreeItemsFromReward" />
+    <Method name="createAuditTrailJSON" />
+    <Method name="rewardGroupExistsInOrder" />
+    <Method name="updateRewardGroupSatisfactionCounter" />
+    <Method name="filterProductsByQuickFilter" />
+    <Method name="checkQuickFilterVisibility" />
+    <Method name="prepareRegisterQuickFilterList" />
+    <Method name="prepareCategoryQuickFilterList" />
+    <Method name="fetchProductsRelevantForReward" />
+    <Method name="useMergeEngine" />
+    <Method name="isFastOrderButtonVisible" />
+    <Method name="prepareFastOrderProducts" />
+    <Method name="applyFastOrderQuantity" />
+    <Method name="createPricingInfoJson" />
+    <Method name="checkEditModeCalculationNeeded" />
+    <Method name="determinePaymentMethods" />
+    <Method name="onPaidAmountReceiptChanged" />
+    <Method name="handlePaidAmountReceiptChanged" />
+    <Method name="onIsPaymentCollectedChanged" />
+    <Method name="handleIsPaymentCollectedChanged" />
+    <Method name="onPaymentMethodChanged" />
+    <Method name="handlePaymentMethodChanged" />
+    <Method name="createPrintInvoicePDF" />
+    <Method name="isShowPrintVisible" />
+    <Method name="isOrderSyncable" />
+  </Methods>
+  <Validations>
+    <Validation name="validateOrderValue" />
+    <Validation name="validateDeliveryDate" />
+    <Validation name="validateOrderItem" />
+    <Validation name="validateOrder" />
+    <Validation name="validateInventory" />
+    <Validation name="validatePaymentMethod" />
+    <Validation name="validatePaymentCollected" />
+  </Validations>
+</BusinessObject>

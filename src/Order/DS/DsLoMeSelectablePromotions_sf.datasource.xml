@@ -1,0 +1,419 @@
+<DataSource name="DsLoMeSelectablePromotions" backendSystem="sf" businessObjectClass="LoMeSelectablePromotions" external="true" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="productPkey" table="Order_Item__c" column="Id" />
+    <Attribute name="promotionPkey" table="Order_Item__c" column="Promotion__c" />
+    <DerivedAttribute name="promoted" value="'1'" />
+    <Attribute name="groupName" table="Tactic_Product__c" column="Group_Name__c" />
+    <Attribute name="groupSort" table="Tactic_Product__c" column="Group_Sort__c" />
+    <Attribute name="groupIdSort" table="Tactic_Product__c" column="Group_Id__c" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+var newParams = Utils.convertDsParamsOldToNew(jsonQuery);
+var specialOrderHandling = "";
+var addCond = "";
+var commitDate = "";
+var sqlStmt = "";
+var customerPKey  = "";
+var mainItemTemplate  = "";
+var sdoMainPKey  = "";
+
+if(Utils.isDefined(jsonQuery.specialOrderHandling)){
+	specialOrderHandling = Utils.convertForDB(jsonQuery.specialOrderHandling, "DomText");
+}
+if(specialOrderHandling === "No"){
+	addCond = "AND Promotion_Template__c.Special_Order_Relevant__c = 0 ";
+}
+if(specialOrderHandling === "ExclusiveSpecialOrder"){
+	addCond = "AND Promotion_Template__c.Special_Order_Relevant__c = 1 ";
+}
+
+
+
+if(Utils.isDefined(jsonQuery.commitDate)){
+	commitDate = Utils.convertForDBParam(jsonQuery.commitDate, "DomDate");
+}
+if(Utils.isDefined(jsonQuery.sdoMainPKey)){
+	sdoMainPKey = Utils.convertForDBParam(jsonQuery.sdoMainPKey, "DomPKey");
+}
+if(Utils.isDefined(jsonQuery.customerPKey)){
+	customerPKey = Utils.convertForDBParam(jsonQuery.customerPKey, "DomPKey");
+}
+if(Utils.isDefined(jsonQuery.mainItemTemplate)){
+	mainItemTemplate = Utils.convertForDBParam(jsonQuery.mainItemTemplate, "DomPKey");
+}
+var sqlParams={commitDate,sdoMainPKey,customerPKey,mainItemTemplate};
+
+var persistedItemsStmt = " SELECT Order_Item__c.Id AS pKey, ";
+persistedItemsStmt += " Order_Item__c.Order__c AS sdoMainPKey,";
+persistedItemsStmt += " Order_Item__c.Order_Item_Template__c AS sdoItemMetaPKey,";
+persistedItemsStmt += " Order_Item__c.Parent_Order_Item__c AS sdoParentItemPKey,";
+persistedItemsStmt += " Order_Item__c.Parent_Type__c AS parentType,";
+persistedItemsStmt += " Order_Item__c.Quantity__c AS quantity,";
+persistedItemsStmt += " Order_Item__c.Discount__c AS discount,";
+persistedItemsStmt += " Order_Item__c.Product__c AS prdMainPKey,";
+persistedItemsStmt += " CASE WHEN Order_Item__c.UoM__c = 'ConsumerUnit' THEN 'ConsumerUnit' WHEN Order_Item__c.UoM__c = 'Layer' THEN 'Layer' WHEN Order_Item__c.UoM__c = 'Pallet' THEN 'Pallet' WHEN Order_Item__c.UoM__c = 'SalesUnit' THEN 'SalesUnit' ELSE 'ConsumerUnit' END AS quantityLogisticUnit,";
+persistedItemsStmt += " Unit_Of_Measure__c.Pieces_per_Smallest_Unit__c AS piecesPerSmallestUnit,";
+persistedItemsStmt += " CASE WHEN Order_Item_Template__c.Price_Effect__c = '-1' THEN '-1' WHEN Order_Item_Template__c.Price_Effect__c = '0' THEN '0' WHEN Order_Item_Template__c.Price_Effect__c = '1' THEN '1' ELSE '-1' END AS priceEffect,";
+persistedItemsStmt += " Order_Item_Template__c.Save_Zero_Quantity__c AS saveZeroQuantity,";
+persistedItemsStmt += " Order_Item_Template__c.Short_Text__c AS shortType,";
+persistedItemsStmt += " Order_Item_Template__c.Description_Language_1__c AS type,";
+persistedItemsStmt += " Order_Item__c.Listed__c AS listed,";
+persistedItemsStmt += " Order_Item__c.History__c AS history,";
+persistedItemsStmt += " Order_Item__c.Out_Of_Stock__c AS outOfStock,";
+persistedItemsStmt += " Order_Item_Template__c.Calculation_Group__c AS calculationGroup,";
+persistedItemsStmt += " Order_Item__c.Price__c AS price,";
+persistedItemsStmt += " Order_Item__c.Price_Receipt__c AS priceReceipt,";
+persistedItemsStmt += " Order_Item__c.Value__c AS value,";
+persistedItemsStmt += " Order_Item__c.Value_Receipt__c AS valueReceipt,";
+persistedItemsStmt += " Order_Item__c.Price__c AS basePrice,";
+persistedItemsStmt += " Order_Item__c.Base_Price__c AS basePriceReceipt,";
+persistedItemsStmt += " Order_Item__c.Gross_Value_Receipt__c AS grossValueReceipt,";
+persistedItemsStmt += " Order_Item__c.Special_Price__c AS specialPrice,";
+persistedItemsStmt += " Order_Item__c.Special_Price_Receipt__c AS specialPriceReceipt,";
+persistedItemsStmt += " Order_Item__c.Erp_Id__c AS erpId,";
+persistedItemsStmt += " Order_Item__c.Suggested_Quantity__c AS suggestedQuantity,";
+persistedItemsStmt += " Order_Item__c.Free_Item_Creation_Step__c AS freeItemCreationStep,";
+persistedItemsStmt += " Order_Item__c.Promotion_Reward__c AS rewardPKey,";
+persistedItemsStmt += " Unit_Of_Measure__c.Is_Order_Unit__c AS isOrderUnit,";
+persistedItemsStmt += " Unit_Of_Measure__c.Sort__c AS sort,";
+persistedItemsStmt += " Order_Item__c.Pricing_Information__c AS pricingInformation,";
+persistedItemsStmt += " CASE WHEN Order_Item_Template__c.Movement_Direction__c = 'In' THEN 'In' WHEN Order_Item_Template__c.Movement_Direction__c = 'None' THEN 'None' WHEN Order_Item_Template__c.Movement_Direction__c = 'Out' THEN 'Out' ELSE 'In' END AS movementDirection,";
+persistedItemsStmt += " Order_Item__c.Promotion__c AS promotionPKey,";
+persistedItemsStmt += " 1 AS promoted,";
+persistedItemsStmt += " '0' AS grossValue,";
+persistedItemsStmt += " Order_Item__c.Product__c || Order_Item__c.Order_Item_Template__c || Order_Item__c.Promotion__c AS refPKey,";
+persistedItemsStmt += " Order_Item__c.Pricing_Info_1__c AS pricingInfo1,";
+persistedItemsStmt += " Order_Item__c.Pricing_Info_2__c AS pricingInfo2,";
+persistedItemsStmt += " Order_Item__c.Pricing_Info_3__c AS pricingInfo3,";
+persistedItemsStmt += " Order_Item__c.Pricing_Info_4__c AS pricingInfo4 ";
+persistedItemsStmt += " Order_Item__c.Pricing_Info_5__c AS pricingInfo5,";
+persistedItemsStmt += " Order_Item__c.Pricing_Info_6__c AS pricingInfo6,";
+persistedItemsStmt += " Order_Item__c.Pricing_Info_7__c AS pricingInfo7,";
+persistedItemsStmt += " Order_Item__c.Pricing_Info_8__c AS pricingInfo8 ";
+persistedItemsStmt += " Order_Item__c.Pricing_Info_9__c AS pricingInfo9,";
+persistedItemsStmt += " Order_Item__c.Pricing_Info_10__c AS pricingInfo10 ";
+persistedItemsStmt += " FROM Order_Item__c";
+persistedItemsStmt += " LEFT OUTER JOIN Product2 ON Order_Item__c.Product__c = Product2.Id AND Product2.Sales_Org__c = '#SalesOrg#' ";
+persistedItemsStmt += " AND Product2.IsDeleted <> '1' ";
+persistedItemsStmt += " INNER JOIN Order_Item_Template__c ON Order_Item__c.Order_Item_Template__c = Order_Item_Template__c.Id ";
+persistedItemsStmt += " AND Order_Item__c.IsDeleted <> '1' ";
+persistedItemsStmt += " AND Order_Item_Template__c.IsDeleted <> '1' ";
+persistedItemsStmt += " INNER JOIN Unit_Of_Measure__c ON Order_Item__c.Product__c = Unit_Of_Measure__c.Product__c ";
+persistedItemsStmt += " AND Order_Item__c.UoM__c = Unit_Of_Measure__c.Unit_Type__c ";
+persistedItemsStmt += " AND Unit_of_Measure__c.Order_Ability__c = '1' ";
+persistedItemsStmt += " AND Unit_Of_Measure__c.IsDeleted <> '1' ";
+persistedItemsStmt += " WHERE 1 = 1 ";
+persistedItemsStmt += " AND Order_Item__c.Order__c = '#sdoMainPKey#' ";
+persistedItemsStmt += " AND Order_Item__c.Promotion__c <> ' '";
+
+//load promotion items via promotion store
+var promotionsStmt = " SELECT Product2.Id AS prdMainPKey, ";
+promotionsStmt += " Promotion__c.Id AS promotionPKey, ";
+promotionsStmt += " '1' AS promoted, ";
+promotionsStmt += " Tactic_Product__c.Classification__c AS productClassifications, ";
+promotionsStmt += " Tactic_Product__c.Group_Name__c AS groupName, ";
+promotionsStmt += " Tactic_Product__c.Group_Sort__c AS groupSort, ";
+promotionsStmt += " Tactic_Product__c.Group_Id__c AS groupIdSort, ";
+promotionsStmt += " Tactic_Product__c.Promoted_Price__c AS promotedPrice, ";
+promotionsStmt += " Tactic_Product__c.Id AS tacticProductPKey, ";
+promotionsStmt += " Tactic_Product__c.Default_Value__c AS defaultValue, ";
+promotionsStmt += " Tactic_Product__c.Max_Value__c AS maxValue, ";
+promotionsStmt += " Product2.Description_1_#Language#__c AS text1, ";
+promotionsStmt += " CASE WHEN Promotion_Template__c.Special_Order_Relevant__c = 1 THEN '1' ELSE '0' END AS specialPromoted, ";
+promotionsStmt += " CASE WHEN Promotion_Template__c.Special_Order_Relevant__c = 1 THEN Tactic_Product__c.Quantity__c ELSE 0 END AS specialQuantity ";
+promotionsStmt += " FROM Product2 JOIN Tactic_Product__c ON Product2.Id = Tactic_Product__c.Product__c ";
+promotionsStmt += " JOIN Tactic__c ON Tactic__c.Id = Tactic_Product__c.Tactic__c ";
+promotionsStmt += " JOIN Promotion__c ON Promotion__c.Id = Tactic__c.Promotion__c ";
+promotionsStmt += " JOIN Promotion_Template__c ON Promotion_Template__c.Id = Promotion__c.Promotion_Template__c ";
+promotionsStmt += " JOIN Promotion_Store__c ON Promotion_Store__c.Promotion__c = Promotion__c.Id ";
+promotionsStmt += " JOIN Product_Template__c ON Product_Template__c.Id = Product2.Product_Template__c ";
+promotionsStmt += " JOIN RecordType ON RecordType.Id = Product_Template__c.RecordTypeId ";
+promotionsStmt += " AND RecordType.DeveloperName <> 'Product_Group' ";
+promotionsStmt += " WHERE ";
+promotionsStmt += " Product2.Sales_Org__c = '#SalesOrg#' ";
+promotionsStmt += " AND Promotion_store__c.Store__c = '#customerPKey#' ";
+promotionsStmt += " AND Promotion_Template__c.Selectable_Promotion__c = '1' ";
+promotionsStmt +=   addCond;
+promotionsStmt += " AND Tactic__c.Included__c  = '1' ";
+promotionsStmt += " AND Tactic_Product__c.IsDeleted = '0' ";
+promotionsStmt += " AND Tactic_Product__c.Included__c = '1' ";
+promotionsStmt += " AND Promotion__c.Active__c = '1' ";
+promotionsStmt += " AND Promotion__c.Phase__c = 'Committed' ";
+promotionsStmt += " AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' ,#commitDate#, 'Date')# ";  
+promotionsStmt += " AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' ,#commitDate#, 'Date')# ";
+promotionsStmt += " AND EXISTS (SELECT NULL FROM Tactic__c WHERE Tactic__c.Promotion__c = Promotion__c.Id AND #compareAsDate('Tactic__c.Date_From__c', 'Date','<=' ,#commitDate#, 'Date')# AND #compareAsDate('Tactic__c.Date_Thru__c', 'Date','>=' ,#commitDate#, 'Date')# ) ";
+
+promotionsStmt += "UNION ";
+
+//load promotion items via customer set
+promotionsStmt += " SELECT ";
+promotionsStmt += " Product2.Id AS prdMainPKey, ";
+promotionsStmt += " Promotion__c.Id AS promotionPKey, ";
+promotionsStmt += " '1' AS promoted, ";
+promotionsStmt += " Tactic_Product__c.Classification__c AS productClassifications, ";
+promotionsStmt += " Tactic_Product__c.Group_Name__c AS groupName, ";
+promotionsStmt += " Tactic_Product__c.Group_Sort__c AS groupSort, ";
+promotionsStmt += " Tactic_Product__c.Group_Id__c AS groupIdSort, ";
+promotionsStmt += " Tactic_Product__c.Promoted_Price__c AS promotedPrice, ";
+promotionsStmt += " Tactic_Product__c.Id AS tacticProductPKey, ";
+promotionsStmt += " Tactic_Product__c.Default_Value__c AS defaultValue, ";
+promotionsStmt += " Tactic_Product__c.Max_Value__c AS maxValue, ";
+promotionsStmt += " Product2.Description_1_#Language#__c AS text1, ";
+promotionsStmt += " CASE WHEN Promotion_Template__c.Special_Order_Relevant__c = 1 THEN '1' ELSE '0' END AS specialPromoted, ";
+promotionsStmt += " CASE WHEN Promotion_Template__c.Special_Order_Relevant__c = 1 THEN Tactic_Product__c.Quantity__c ELSE 0 END AS specialQuantity ";
+promotionsStmt += " FROM Product2 JOIN Tactic_Product__c ON Product2.Id = Tactic_Product__c.Product__c ";
+promotionsStmt += " JOIN Tactic__c ON Tactic__c.Id = Tactic_Product__c.Tactic__c ";
+promotionsStmt += " JOIN Promotion__c ON Promotion__c.Id = Tactic__c.Promotion__c ";
+promotionsStmt += " JOIN Promotion_Template__c ON Promotion_Template__c.Id = Promotion__c.Promotion_Template__c ";
+promotionsStmt += " JOIN Account_Set_Account__c ON Account_Set_Account__c.Account_Set__c = Promotion__c.Anchor_Account_Set__c ";
+promotionsStmt += " JOIN Product_Template__c ON Product_Template__c.Id = Product2.Product_Template__c ";
+promotionsStmt += " JOIN RecordType ON RecordType.Id = Product_Template__c.RecordTypeId ";
+promotionsStmt += " AND RecordType.DeveloperName <> 'Product_Group' ";
+promotionsStmt += " WHERE ";
+promotionsStmt += " Product2.Sales_Org__c = '#SalesOrg#' ";
+promotionsStmt += " AND Account_Set_Account__c.Account_Set_Account__c = '#customerPKey#' ";
+promotionsStmt += " AND Promotion_Template__c.Selectable_Promotion__c = '1' ";
+promotionsStmt +=   addCond;
+promotionsStmt += " AND Tactic__c.Included__c  = '1' ";
+promotionsStmt += " AND Tactic_Product__c.IsDeleted = '0' ";
+promotionsStmt += " AND Tactic_Product__c.Included__c = '1' ";
+promotionsStmt += " AND Promotion__c.Active__c = '1' ";
+promotionsStmt += " AND Promotion__c.Phase__c = 'Committed' ";
+promotionsStmt += " AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' ,#commitDate#, 'Date')# ";  
+promotionsStmt += " AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' ,#commitDate#, 'Date')# ";
+promotionsStmt += " AND EXISTS (SELECT NULL FROM Tactic__c WHERE Tactic__c.Promotion__c = Promotion__c.Id AND #compareAsDate('Tactic__c.Date_From__c', 'Date','<=' ,#commitDate#, 'Date')# AND #compareAsDate('Tactic__c.Date_Thru__c', 'Date','>=' ,#commitDate#, 'Date')# ) ";
+promotionsStmt += " GROUP BY prdMainPKey, promotionPKey ";
+
+
+var selectedColumns = " pKey, ";
+selectedColumns += " sdoMainPKey,";
+selectedColumns += " sdoItemMetaPKey,";
+selectedColumns += " sdoParentItemPKey,";
+selectedColumns += " parentType,";
+selectedColumns += " quantity,";
+selectedColumns += " discount,";
+selectedColumns += " prdMainPKey,";
+selectedColumns += " quantityLogisticUnit,";
+selectedColumns += " piecesPerSmallestUnit,";
+selectedColumns += " priceEffect,";
+selectedColumns += " saveZeroQuantity,";
+selectedColumns += " shortType,";
+selectedColumns += " type,";
+selectedColumns += " listed,";
+selectedColumns += " history,";
+selectedColumns += " outOfStock,";
+selectedColumns += " calculationGroup,";
+selectedColumns += " price,";
+selectedColumns += " priceReceipt,";
+selectedColumns += " value,";
+selectedColumns += " valueReceipt,";
+selectedColumns += " basePrice,";
+selectedColumns += " basePriceReceipt,";
+selectedColumns += " grossValueReceipt,";
+selectedColumns += " specialPrice,";
+selectedColumns += " specialPriceReceipt,";
+selectedColumns += " erpId,";
+selectedColumns += " suggestedQuantity,";
+selectedColumns += " freeItemCreationStep,";
+selectedColumns += " isOrderUnit,";
+selectedColumns += " sort,";
+selectedColumns += " pricingInformation,";
+selectedColumns += " movementDirection,";
+selectedColumns += " rewardPKey,";
+selectedColumns += " promotionPKey,";
+selectedColumns += " promoted,";
+selectedColumns += " grossValue,";
+selectedColumns += " refPKey,";
+selectedColumns += " persistedItem, ";
+selectedColumns += " productClassifications, ";
+selectedColumns += " groupName, ";
+selectedColumns += " groupSort, ";
+selectedColumns += " groupIdSort, ";
+selectedColumns += " specialPromoted, ";
+selectedColumns += " specialQuantity, ";
+selectedColumns += " IFNULL(pricingInfo1, 0) as pricingInfo1, ";
+selectedColumns += " IFNULL(pricingInfo2, 0) as pricingInfo2, ";
+selectedColumns += " IFNULL(pricingInfo3, 0) as pricingInfo3, ";
+selectedColumns += " IFNULL(pricingInfo4, 0) as pricingInfo4, ";
+selectedColumns += " IFNULL(pricingInfo5, 0) as pricingInfo5, ";
+selectedColumns += " IFNULL(pricingInfo6, 0) as pricingInfo6, ";
+selectedColumns += " IFNULL(pricingInfo7, 0) as pricingInfo7, ";
+selectedColumns += " IFNULL(pricingInfo8, 0) as pricingInfo8, ";
+selectedColumns += " IFNULL(pricingInfo9, 0) as pricingInfo9, ";
+selectedColumns += " IFNULL(pricingInfo10, 0) as pricingInfo10, ";
+selectedColumns += " promotedPrice, ";
+selectedColumns += " tacticProductPKey, ";
+selectedColumns += " text1, ";
+selectedColumns += " defaultValue, ";
+selectedColumns += " maxValue ";
+
+var selectedColumnsProposedItemsTable = "";
+selectedColumnsProposedItemsTable += " null as pKey,";
+selectedColumnsProposedItemsTable += " null as sdoMainPKey,";
+selectedColumnsProposedItemsTable += " null as sdoItemMetaPKey,";
+selectedColumnsProposedItemsTable += " null as sdoParentItemPKey,";
+selectedColumnsProposedItemsTable += " null as parentType,";
+selectedColumnsProposedItemsTable += " null as quantity,";
+selectedColumnsProposedItemsTable += " null as discount,";
+selectedColumnsProposedItemsTable += " promotions.prdMainPKey as prdMainPKey,";
+selectedColumnsProposedItemsTable += " null as quantityLogisticUnit,";
+selectedColumnsProposedItemsTable += " null as piecesPerSmallestUnit,";
+selectedColumnsProposedItemsTable += " null as priceEffect,";
+selectedColumnsProposedItemsTable += " null as saveZeroQuantity,";
+selectedColumnsProposedItemsTable += " null as shortType,";
+selectedColumnsProposedItemsTable += " null as type,";
+selectedColumnsProposedItemsTable += " null as listed,";
+selectedColumnsProposedItemsTable += " null as history,";
+selectedColumnsProposedItemsTable += " null as outOfStock,";
+selectedColumnsProposedItemsTable += " null as calculationGroup,";
+selectedColumnsProposedItemsTable += " null as price,";
+selectedColumnsProposedItemsTable += " null as priceReceipt,";
+selectedColumnsProposedItemsTable += " null as value,";
+selectedColumnsProposedItemsTable += " null as valueReceipt,";
+selectedColumnsProposedItemsTable += " null as basePrice,";
+selectedColumnsProposedItemsTable += " null as basePriceReceipt,";
+selectedColumnsProposedItemsTable += " null as grossValueReceipt,";
+selectedColumnsProposedItemsTable += " null as specialPrice,";
+selectedColumnsProposedItemsTable += " null as specialPriceReceipt,";
+selectedColumnsProposedItemsTable += " null as erpId,";
+selectedColumnsProposedItemsTable += " promotions.specialQuantity as suggestedQuantity,";
+selectedColumnsProposedItemsTable += " null as freeItemCreationStep,";
+selectedColumnsProposedItemsTable += " null as isOrderUnit,";
+selectedColumnsProposedItemsTable += " null as sort,";
+selectedColumnsProposedItemsTable += " null as pricingInformation,";
+selectedColumnsProposedItemsTable += " null as movementDirection,";
+selectedColumnsProposedItemsTable += " null as rewardPKey,";
+selectedColumnsProposedItemsTable += " promotions.promotionPKey as promotionPKey,";
+selectedColumnsProposedItemsTable += " promotions.promoted as promoted,";
+selectedColumnsProposedItemsTable += " null as grossValue,";
+selectedColumnsProposedItemsTable += " null as refPKey,";
+selectedColumnsProposedItemsTable += " null as persistedItem, ";
+selectedColumnsProposedItemsTable += " promotions.productClassifications as productClassifications, ";
+selectedColumnsProposedItemsTable += " promotions.groupName AS groupName, ";
+selectedColumnsProposedItemsTable += " promotions.groupSort AS groupSort, ";
+selectedColumnsProposedItemsTable += " promotions.groupIdSort AS groupIdSort, ";
+selectedColumnsProposedItemsTable += " promotions.specialPromoted AS specialPromoted, ";
+selectedColumnsProposedItemsTable += " promotions.specialQuantity AS specialQuantity, ";
+selectedColumnsProposedItemsTable += " null as pricingInfo1,";
+selectedColumnsProposedItemsTable += " null as pricingInfo2,";
+selectedColumnsProposedItemsTable += " null as pricingInfo3,";
+selectedColumnsProposedItemsTable += " null as pricingInfo4, ";
+selectedColumnsProposedItemsTable += " null as pricingInfo5,";
+selectedColumnsProposedItemsTable += " null as pricingInfo6,";
+selectedColumnsProposedItemsTable += " null as pricingInfo7,";
+selectedColumnsProposedItemsTable += " null as pricingInfo8, ";
+selectedColumnsProposedItemsTable += " null as pricingInfo9,";
+selectedColumnsProposedItemsTable += " null as pricingInfo10, ";
+selectedColumnsProposedItemsTable += " promotions.promotedPrice as promotedPrice, ";
+selectedColumnsProposedItemsTable += " promotions.tacticProductPKey as tacticProductPKey, ";
+selectedColumnsProposedItemsTable += " promotions.text1 as text1, ";
+selectedColumnsProposedItemsTable += " promotions.defaultValue as defaultValue, ";
+selectedColumnsProposedItemsTable += " promotions.maxValue as maxValue ";
+
+var selectedColumnsPersistedItemsTable = " persistedItems.pKey as pKey, ";
+selectedColumnsPersistedItemsTable += " persistedItems.sdoMainPKey as sdoMainPKey,";
+selectedColumnsPersistedItemsTable += " persistedItems.sdoItemMetaPKey as sdoItemMetaPKey,";
+selectedColumnsPersistedItemsTable += " persistedItems.sdoParentItemPKey as sdoParentItemPKey,";
+selectedColumnsPersistedItemsTable += " persistedItems.parentType as parentType,";
+selectedColumnsPersistedItemsTable += " persistedItems.quantity as quantity,";
+selectedColumnsPersistedItemsTable += " persistedItems.discount as discount,";
+selectedColumnsPersistedItemsTable += " IFNULL(persistedItems.prdMainPKey,promotions.prdMainPKey) as prdMainPKey,";
+selectedColumnsPersistedItemsTable += " persistedItems.quantityLogisticUnit as quantityLogisticUnit,";
+selectedColumnsPersistedItemsTable += " persistedItems.piecesPerSmallestUnit as piecesPerSmallestUnit,";
+selectedColumnsPersistedItemsTable += " persistedItems.priceEffect as priceEffect,";
+selectedColumnsPersistedItemsTable += " persistedItems.saveZeroQuantity as saveZeroQuantity,";
+selectedColumnsPersistedItemsTable += " persistedItems.shortType as shortType,";
+selectedColumnsPersistedItemsTable += " persistedItems.type as type,";
+selectedColumnsPersistedItemsTable += " persistedItems.listed as listed,";
+selectedColumnsPersistedItemsTable += " persistedItems.history as history,";
+selectedColumnsPersistedItemsTable += " persistedItems.outOfStock as outOfStock,";
+selectedColumnsPersistedItemsTable += " persistedItems.calculationGroup as calculationGroup,";
+selectedColumnsPersistedItemsTable += " persistedItems.price as price,";
+selectedColumnsPersistedItemsTable += " persistedItems.priceReceipt as priceReceipt,";
+selectedColumnsPersistedItemsTable += " persistedItems.value as value,";
+selectedColumnsPersistedItemsTable += " persistedItems.valueReceipt as valueReceipt,";
+selectedColumnsPersistedItemsTable += " persistedItems.basePrice as basePrice,";
+selectedColumnsPersistedItemsTable += " persistedItems.basePriceReceipt as basePriceReceipt,";
+selectedColumnsPersistedItemsTable += " persistedItems.grossValueReceipt as grossValueReceipt,";
+selectedColumnsPersistedItemsTable += " persistedItems.specialPrice as specialPrice,";
+selectedColumnsPersistedItemsTable += " persistedItems.specialPriceReceipt as specialPriceReceipt,";
+selectedColumnsPersistedItemsTable += " persistedItems.erpId as erpId,";
+selectedColumnsPersistedItemsTable += " CASE WHEN persistedItems.isOrderUnit = 1 THEN promotions.specialQuantity ELSE 0 END AS suggestedQuantity,";
+selectedColumnsPersistedItemsTable += " persistedItems.freeItemCreationStep as freeItemCreationStep,";
+selectedColumnsPersistedItemsTable += " persistedItems.isOrderUnit as isOrderUnit,";
+selectedColumnsPersistedItemsTable += " persistedItems.sort as sort,";
+selectedColumnsPersistedItemsTable += " persistedItems.pricingInformation as pricingInformation,";
+selectedColumnsPersistedItemsTable += " persistedItems.movementDirection as movementDirection,";
+selectedColumnsPersistedItemsTable += " persistedItems.rewardPKey as rewardPKey,";
+selectedColumnsPersistedItemsTable += " IFNULL(persistedItems.promotionPKey, promotions.promotionPKey) as promotionPKey,";
+selectedColumnsPersistedItemsTable += " IFNULL(persistedItems.promoted, promotions.promoted) as promoted,";
+selectedColumnsPersistedItemsTable += " persistedItems.grossValue as grossValue,";
+selectedColumnsPersistedItemsTable += " persistedItems.refPKey as refPKey,";
+selectedColumnsPersistedItemsTable += " CASE WHEN persistedItems.pKey IS NULL THEN '0' ELSE '1' END as persistedItem, ";
+selectedColumnsPersistedItemsTable += " promotions.productClassifications as productClassifications, ";
+selectedColumnsPersistedItemsTable += " promotions.groupName AS groupName, ";
+selectedColumnsPersistedItemsTable += " promotions.groupSort AS groupSort, ";
+selectedColumnsPersistedItemsTable += " promotions.groupIdSort AS groupIdSort, ";
+selectedColumnsPersistedItemsTable += " promotions.specialPromoted AS specialPromoted, ";
+selectedColumnsPersistedItemsTable += " CASE WHEN persistedItems.isOrderUnit = 1 THEN promotions.specialQuantity ELSE 0 END AS specialQuantity, ";
+selectedColumnsPersistedItemsTable += " persistedItems.pricingInfo1 AS pricingInfo1, ";
+selectedColumnsPersistedItemsTable += " persistedItems.pricingInfo2 AS pricingInfo2, ";
+selectedColumnsPersistedItemsTable += " persistedItems.pricingInfo3 AS pricingInfo3, ";
+selectedColumnsPersistedItemsTable += " persistedItems.pricingInfo4 AS pricingInfo4, ";
+selectedColumnsPersistedItemsTable += " persistedItems.pricingInfo5 AS pricingInfo5, ";
+selectedColumnsPersistedItemsTable += " persistedItems.pricingInfo6 AS pricingInfo6, ";
+selectedColumnsPersistedItemsTable += " persistedItems.pricingInfo7 AS pricingInfo7, ";
+selectedColumnsPersistedItemsTable += " persistedItems.pricingInfo8 AS pricingInfo8, ";
+selectedColumnsPersistedItemsTable += " persistedItems.pricingInfo9 AS pricingInfo9, ";
+selectedColumnsPersistedItemsTable += " persistedItems.pricingInfo10 AS pricingInfo10, ";
+selectedColumnsPersistedItemsTable += " promotions.promotedPrice AS promotedPrice, ";
+selectedColumnsPersistedItemsTable += " promotions.tacticProductPKey as tacticProductPKey, ";
+selectedColumnsPersistedItemsTable += " promotions.text1 AS text1, ";
+selectedColumnsPersistedItemsTable += " promotions.defaultValue as defaultValue, ";
+selectedColumnsPersistedItemsTable += " promotions.maxValue as maxValue ";
+
+if (!jsonQuery.useMergeEngine) {
+  sqlStmt += " SELECT " + selectedColumnsProposedItemsTable;
+  sqlStmt += " FROM (" + promotionsStmt + ") AS promotions ";
+}
+else {
+  if (jsonQuery.considerSelectablePromotion == "1") {
+    //tables to fetch the persisted items and the proposed items of an order
+    sqlStmt += " WITH persistedItemsTable AS ( ";
+    sqlStmt += "    SELECT " + selectedColumnsPersistedItemsTable;
+    sqlStmt += "    FROM (" + persistedItemsStmt + ") AS persistedItems ";
+    sqlStmt += "    LEFT JOIN (" + promotionsStmt + ") AS promotions USING(prdMainPKey,promotionPKey) ";
+    sqlStmt += " ), ";
+    sqlStmt += " proposedItemsTable AS ( ";
+    sqlStmt += "    SELECT " + selectedColumnsProposedItemsTable;
+    sqlStmt += "    FROM (" + promotionsStmt + ") AS promotions ";
+    sqlStmt += " ) ";
+  
+    sqlStmt += " SELECT " + selectedColumns;
+    sqlStmt += " FROM persistedItemsTable ";
+  
+    sqlStmt += " UNION ALL ";
+  
+    sqlStmt += " SELECT " + selectedColumns;
+    sqlStmt += " FROM proposedItemsTable ";
+    //not exists must be used to check if a proposed item is not already existing as persisted item 
+    sqlStmt += " WHERE NOT EXISTS ( ";
+    sqlStmt += " 	SELECT NULL ";
+    sqlStmt += " 	FROM persistedItemsTable ";
+    sqlStmt += " 	WHERE persistedItemsTable.prdMainPKey = proposedItemsTable.prdMainPKey ";
+    sqlStmt += " 	AND persistedItemsTable.promotionPKey = proposedItemsTable.promotionPKey ";
+    sqlStmt += " 	AND persistedItemsTable.sdoItemMetaPKey = '#mainItemTemplate#' ";
+    sqlStmt += " ) ";
+  }
+  else {
+    sqlStmt = persistedItemsStmt;
+  }
+}
+   sqlStmt += " ORDER BY prdMainPKey ";
+   return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+  ]]></Load>
+  </Database>
+</DataSource>

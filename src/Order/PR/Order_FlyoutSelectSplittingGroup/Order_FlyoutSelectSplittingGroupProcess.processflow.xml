@@ -1,0 +1,26 @@
+<Process name="Order::FlyoutSelectSplittingGroupProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations />
+      <Parameters>
+        <Input name="loSplittingGroups" type="LoSplittingGroupResult" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Order::FlyoutSelectSplittingGroupUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="SelectSplittingGroup" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="SelectSplittingGroup">
+        <ReturnValues>
+          <Return name="splittingGroup" value="Event.splittingGroup" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

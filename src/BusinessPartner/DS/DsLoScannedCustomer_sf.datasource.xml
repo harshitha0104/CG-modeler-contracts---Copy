@@ -1,0 +1,52 @@
+<DataSource name="DsLoScannedCustomer" backendSystem="sf" businessObjectClass="LoScannedCustomer" external="true" editableEntity="Account" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account" column="Id" />
+    <Attribute name="name" table="Account" column="Name" />
+    <Attribute name="name2" table="Account" column="Name_2__c" />
+    <Attribute name="id" table="Account" column="Account_Number__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[  
+
+      var customerId = "";
+
+       if(Utils.isDefined(jsonQuery.id)) {
+       	  customerId = Utils.convertForDBParam(jsonQuery.id, 'DomId');
+       }
+      var sqlParams = {customerId};
+
+      var sqlStmt = "";      
+      sqlStmt += " SELECT Account.Id AS pKey";
+      sqlStmt += " 	,Account.Name AS name";
+      sqlStmt += " 	,Account.Name_2__c AS name2";
+      sqlStmt += " 	,Account.Account_Number__c AS id";
+      sqlStmt += " FROM Account";
+      sqlStmt += " INNER JOIN Account_Manager__c ON Account.Id = Account_Manager__c.Account__c";
+      sqlStmt += " 	AND Account_Manager__c.User__c = '#UserPKey#'";
+      sqlStmt += " 	AND Account_Manager__c.Valid_From__c <= #TodayAsDate#";
+      sqlStmt += " 	AND Account_Manager__c.Valid_Thru__c >= #TodayAsDate#";
+      sqlStmt += " 	AND Account.IsDeleted <> '1'";
+      sqlStmt += " 	AND Account_Manager__c.IsDeleted <> '1'";
+      sqlStmt += " LEFT JOIN (";
+      sqlStmt += " 	Substitution__c AS SubBpaRel INNER JOIN Substitution__c AS SubMain ON SubBpaRel.Substitution__c = SubMain.Id";
+      sqlStmt += " 		AND SubMain.Substituted__c = '#UserPKey#'";
+      sqlStmt += " 		AND SubMain.Active__c = 1";
+      sqlStmt += " 		AND SubMain.IsDeleted <> '1'";
+      sqlStmt += " 	) ON Account.Id = SubBpaRel.Account__c";
+      sqlStmt += " 	AND SubBpaRel.Active__c = 1";
+      sqlStmt += " 	AND SubBpaRel.Valid_From__c <= #TodayAsDate#";
+      sqlStmt += " 	AND SubBpaRel.Valid_Thru__c >= #TodayAsDate#";
+      sqlStmt += " 	AND SubBpaRel.IsDeleted <> '1'";
+      sqlStmt += " WHERE Account.Account_Number__c = #customerId# ";
+      sqlStmt += " LIMIT 1";
+      
+      return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+    ]]></Load>
+    <Update><![CDATA[
+      return undefined;
+    ]]></Update>
+  </Database>
+</DataSource>

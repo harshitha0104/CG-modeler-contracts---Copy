@@ -1,0 +1,150 @@
+<DataSource name="DsLoTruckLoadOverview" businessObjectClass="LoTruckLoadOverview" external="true" readOnly="true" editableEntity="SdoMain" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="SdoMain" column="PKey" />
+    <Attribute name="phase" table="SdoMain" column="Phase" />
+    <Attribute name="documentType" table="SdoMain" column="DocumentType" />
+    <Attribute name="commitDate" table="SdoMain" column="CommitDate" />
+    <Attribute name="releaseTime" table="SdoMain" column="ReleaseTime" />
+    <Attribute name="documentId" table="SdoMain" column="Id" />
+    <Attribute name="responsiblePKey" table="SdoMain" column="ResponsiblePKey" />
+    <Attribute name="initiatorPKey" table="SdoMain" column="InitiatorPKey" />
+    <Attribute name="wfeWorkflowPKey" table="SdoMain" column="WfeWorkflowPKey" />
+    <Attribute name="actualStatePKey" table="SdoMain" column="ActualStatePKey" />
+    <Attribute name="sdoMetaPKey" table="SdoMain" column="SdoMetaPKey" />
+    <DerivedAttribute name="sortOrder" value="'0'" />
+    <DerivedAttribute name="sortReleaseTime" value="' '" />
+    <Attribute name="usedForStartOfDay" table="TmgTourObjectRel" column="UsedForStartOfDay" />
+    <Attribute name="usedForEndOfDay" table="TmgTourObjectRel" column="UsedForEndOfDay" />
+    <Attribute name="usage" table="TmgTourObjectRel" column="Usage" />
+    <Attribute name="metaText" table="SdoText" column="Text" />
+    <Attribute name="grossTotalValueReceipt" table="SdoMain" column="GrossTotalValueReceipt" />
+    <Attribute name="currency" table="SdoMain" column="Currency" />
+    <Attribute name="senderPKey" table="SdoMain" column="SenderPKey" />
+    <Attribute name="recipientPKey" table="SdoMain" column="RecipientPKey" />
+    <Attribute name="inwardTransferDocumentPKey" table="SdoMain" column="InwardTransferDocumentPKey" />
+    <Attribute name="tmgMainPKey" table="SdoMain" column="TmgMainPKey" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[     
+
+			var tmgMainPKey = "";
+
+			if(Utils.isDefined(jsonQuery.tmgMainPKey)){
+             	tmgMainPKey = Utils.convertForDBParam(jsonQuery.tmgMainPKey, "DomPKey");
+            }
+			if(ApplicationContext.get('user').hasRole('TourUser') && Utils.isEmptyString(tmgMainPKey)){ 
+				tmgMainPKey = "'NoTourSelected'";
+			} 
+
+			var sqlParams = {tmgMainPKey};
+
+			var sqlStmt = "SELECT SdoMain.PKey AS pKey,SdoMain.DocumentType As documentType,  ";
+			sqlStmt += "SdoMain.Phase As phase, SdoMain.CommitDate As commitDate, ";
+			sqlStmt += "SdoMain.ReleaseTime As releaseTime, SdoMain.Id As documentId,  ";
+			sqlStmt += "SdoMain.TmgMainPKey As tmgMainPKey,  ";
+			sqlStmt += "SdoMain.ResponsiblePKey As responsiblePKey, SdoMain.InitiatorPKey As initiatorPKey,  ";
+			sqlStmt += "SdoMain.WfeWorkflowPKey As wfeWorkflowPKey, SdoMain.ActualStatePKey As actualStatePKey,  ";
+			sqlStmt += "SdoMain.SdoMetaPKey As sdoMetaPKey, SdoText.Text As metaText, ";
+			sqlStmt += "SdoMain.Currency As currency, SdoMain.GrossTotalValueReceipt As grossTotalValueReceipt, ";
+			sqlStmt += "SdoMain.SenderPKey As senderPKey, SdoMain.RecipientPKey As recipientPKey, SdoMain.InwardTransferDocumentPKey As inwardTransferDocumentPKey, ";
+			sqlStmt += "TmgTourObjectRel.UsedForStartOfDay As usedForStartOfDay, ";
+			sqlStmt += "TmgTourObjectRel.UsedForEndOfDay As usedForEndOfDay, TmgTourObjectRel.Usage As usage, ";
+			sqlStmt += "CASE SdoMain.Phase WHEN 'Initial' THEN '0' WHEN 'Released' THEN '1' WHEN 'Canceled' THEN '2' ELSE '3' END As sortOrder, ";
+			sqlStmt += "CASE SdoMain.Phase WHEN 'Released' THEN SdoMain.ReleaseTime ELSE ' ' END As sortReleaseTime, ";
+			sqlStmt += "'0' As InwardDocsCount ";
+			sqlStmt += "FROM SdoMain ";
+			sqlStmt += "INNER JOIN SdoMeta ON ";
+			sqlStmt += "SdoMain.SdoMetaPKey = SdoMeta.PKey ";
+			sqlStmt += "INNER JOIN SdoText ON ";
+			sqlStmt += "SdoMeta.PKey = SdoText.AppPKey ";
+			sqlStmt += "INNER JOIN TmgTourObjectRel ON ";
+			sqlStmt += "SdoMain.SdoMetaPKey = TmgTourObjectRel.ObjectMetaPKey ";
+			sqlStmt += "WHERE (1=1) AND SdoMain.TmgMainPKey = #tmgMainPKey# ";
+			sqlStmt += "AND TmgTourObjectRel.TmgTourPKey = #tmgMainPKey# ";
+			sqlStmt += "AND SdoMeta.MetaType = 'TruckLoad' ";
+			sqlStmt += "AND SdoText.Language = '#Language#' ";
+			sqlStmt += "GROUP BY SdoMain.PKey ";
+
+			sqlStmt += " UNION ALL ";
+
+			sqlStmt += "SELECT SdoMain.PKey AS pKey,SdoMain.DocumentType As documentType,  ";
+			sqlStmt += "SdoMain.Phase As phase, SdoMain.CommitDate As commitDate, ";
+			sqlStmt += "SdoMain.ReleaseTime As releaseTime, SdoMain.Id As documentId,  ";
+			sqlStmt += "SdoMain.TmgMainPKey As tmgMainPKey,  ";
+			sqlStmt += "SdoMain.ResponsiblePKey As responsiblePKey, SdoMain.InitiatorPKey As initiatorPKey,  ";
+			sqlStmt += "SdoMain.WfeWorkflowPKey As wfeWorkflowPKey, SdoMain.ActualStatePKey As actualStatePKey,  ";
+			sqlStmt += "SdoMain.SdoMetaPKey As sdoMetaPKey, SdoText.Text As metaText, ";
+			sqlStmt += "SdoMain.Currency As currency, SdoMain.GrossTotalValueReceipt As grossTotalValueReceipt, ";
+			sqlStmt += "SdoMain.SenderPKey As senderPKey, SdoMain.RecipientPKey As recipientPKey, SdoMain.InwardTransferDocumentPKey As inwardTransferDocumentPKey, ";
+			sqlStmt += "TmgTourObjectRel.UsedForStartOfDay As usedForStartOfDay, ";
+			sqlStmt += "TmgTourObjectRel.UsedForEndOfDay As usedForEndOfDay, TmgTourObjectRel.Usage As usage, ";
+			sqlStmt += "CASE SdoMain.Phase WHEN 'Initial' THEN '0' WHEN 'Released' THEN '1' WHEN 'Canceled' THEN '2' ELSE '3' END As sortOrder, ";
+			sqlStmt += "CASE SdoMain.Phase WHEN 'Released' THEN SdoMain.ReleaseTime ELSE ' ' END As sortReleaseTime, ";
+			sqlStmt += "(SELECT COUNT(*) FROM TmgTourObjectRel WHERE TmgTourObjectRel.TmgTourPKey = #tmgMainPKey# AND TmgTourObjectRel.Usage='SdoMeta.TckIvcTransferInward') As ";
+			sqlStmt += "InwardDocsCount  ";
+			sqlStmt += "FROM SdoMain ";
+			sqlStmt += "INNER JOIN SdoMeta ON ";
+			sqlStmt += "SdoMain.SdoMetaPKey = SdoMeta.PKey ";
+			sqlStmt += "INNER JOIN SdoText ON ";
+			sqlStmt += "SdoMeta.PKey = SdoText.AppPKey ";
+			sqlStmt += "INNER JOIN TmgTourObjectRel ON ";
+			sqlStmt += "SdoMain.SdoMetaPKey = TmgTourObjectRel.ObjectMetaPKey ";
+			sqlStmt += "WHERE (1=1) AND SdoMain.Phase = 'Released' ";
+			sqlStmt += "AND SdoMeta.MetaType = 'TruckLoad' ";
+			sqlStmt += "AND SdoMeta.SdoSubType = 'TruckIvcTransferOutward' ";
+			sqlStmt += "AND SdoMain.RecipientPKey  = '#UserPKey#' ";       
+			sqlStmt += "AND SdoText.Language = '#Language#' ";
+			sqlStmt += "AND TRIM(SdoMain.InwardTransferDocumentPKey) = '' ";
+			sqlStmt += "GROUP BY SdoMain.PKey ";
+			sqlStmt += "HAVING InwardDocsCount > 0 ";
+
+			sqlStmt += " UNION ALL ";
+
+			sqlStmt += "SELECT SdoMain.PKey AS pKey,SdoMain.DocumentType As documentType,  ";
+			sqlStmt += "SdoMain.Phase As phase, SdoMain.CommitDate As commitDate, ";
+			sqlStmt += "SdoMain.ReleaseTime As releaseTime, SdoMain.Id As documentId,  ";
+			sqlStmt += "SdoMain.TmgMainPKey As tmgMainPKey,  ";
+			sqlStmt += "SdoMain.ResponsiblePKey As responsiblePKey, SdoMain.InitiatorPKey As initiatorPKey,  ";
+			sqlStmt += "SdoMain.WfeWorkflowPKey As wfeWorkflowPKey, SdoMain.ActualStatePKey As actualStatePKey,  ";
+			sqlStmt += "SdoMain.SdoMetaPKey As sdoMetaPKey, SdoText.Text As metaText, ";
+			sqlStmt += "SdoMain.Currency As currency, SdoMain.GrossTotalValueReceipt As grossTotalValueReceipt, ";
+			sqlStmt += "SdoMain.SenderPKey As senderPKey, SdoMain.RecipientPKey As recipientPKey, SdoMain.InwardTransferDocumentPKey As inwardTransferDocumentPKey, ";
+			sqlStmt += "TmgTourObjectRel.UsedForStartOfDay As usedForStartOfDay, ";
+			sqlStmt += "TmgTourObjectRel.UsedForEndOfDay As usedForEndOfDay, TmgTourObjectRel.Usage As usage, ";
+			sqlStmt += "CASE SdoMain.Phase WHEN 'Initial' THEN '0' WHEN 'Released' THEN '1' WHEN 'Canceled' THEN '2' ELSE '3' END As sortOrder, ";
+			sqlStmt += "CASE SdoMain.Phase WHEN 'Released' THEN SdoMain.ReleaseTime ELSE ' ' END As sortReleaseTime, ";
+			sqlStmt += "(SELECT COUNT(*) FROM TmgTourObjectRel WHERE TmgTourObjectRel.TmgTourPKey = #tmgMainPKey# AND TmgTourObjectRel.Usage='SdoMeta.TckIvcTransferInward') As ";
+			sqlStmt += "InwardDocsCount  ";
+			sqlStmt += "FROM SdoMain ";
+			sqlStmt += "INNER JOIN SdoMeta ON ";
+			sqlStmt += "SdoMain.SdoMetaPKey = SdoMeta.PKey ";
+			sqlStmt += "INNER JOIN SdoText ON ";
+			sqlStmt += "SdoMeta.PKey = SdoText.AppPKey ";
+			sqlStmt += "INNER JOIN TmgTourObjectRel ON ";
+			sqlStmt += "SdoMain.SdoMetaPKey = TmgTourObjectRel.ObjectMetaPKey ";
+			sqlStmt += "WHERE (1=1) AND SdoMain.Phase = 'Canceled' ";
+			sqlStmt += "AND SdoMeta.MetaType = 'TruckLoad' ";
+			sqlStmt += "AND SdoMain.InitiatorPKey <> '#UserPKey#' ";
+			sqlStmt += "AND SdoMeta.SdoSubType = 'TruckIvcTransferInward' ";
+			sqlStmt += "AND SdoMain.SenderPKey  = '#UserPKey#' ";       
+			sqlStmt += "AND SdoText.Language = '#Language#' ";
+			sqlStmt += "AND TRIM(SdoMain.InwardTransferDocumentPKey) = '' ";
+			sqlStmt += "GROUP BY SdoMain.PKey ";
+			sqlStmt += "HAVING InwardDocsCount > 0 ";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+    <Update><![CDATA[ 
+			// Intended to be empty     
+			return undefined;
+		]]></Update>
+    <Insert><![CDATA[     
+			// Intended to be empty     
+			return undefined;
+		]]></Insert>
+    <Delete><![CDATA[      
+			// Intended to be empty     
+			return undefined;
+		]]></Delete>
+  </Database>
+</DataSource>

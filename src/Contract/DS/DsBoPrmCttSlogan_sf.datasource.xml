@@ -1,0 +1,19 @@
+<DataSource name="DsBoPrmCttSlogan" backendSystem="sf" businessObjectClass="BoPrmCttSlogan" distinct="false" readonly="false" external="false" editableEntity="Contract__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contract__c" column="Id" />
+    <Attribute name="text" table="Contract__c" column="Description_#Language#__c" />
+    <DerivedAttribute name="prmContractPKey" value="Contract__c.Id" />
+    <DerivedAttribute name="salesOrg" value="'#SalesOrg#'" />
+    <DerivedAttribute name="language" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contract__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   Contract__c.Id = #prmContractPKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="prmContractPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

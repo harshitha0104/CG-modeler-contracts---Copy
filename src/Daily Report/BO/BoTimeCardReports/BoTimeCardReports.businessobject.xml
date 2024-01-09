@@ -1,0 +1,33 @@
+<BusinessObject name="BoTimeCardReports" generateCreateMethod="false" schemaVersion="1.1">
+  <DataSource name="DsBoTimeCardReports" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+  </SimpleProperties>
+  <NestedObjects>
+    <NestedObject name="chartHelper" objectClass="BoChartHelper" dataSourceProperty="empty" nestingProperty="empty" loadMode="LoadImmediate" />
+  </NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="buildUserList" />
+    <Method name="checkTimeCardDataAvailable" />
+    <Method name="checkReloadChart" />
+    <!-- Reporting methods -->
+    <Method name="initializeTimeCardReport" />
+    <Method name="prepareDataForTimeCardReport" />
+    <Method name="refreshTimeCardReport" />
+    <Method name="inputChangedForTimeCardReport" />
+  </Methods>
+</BusinessObject>

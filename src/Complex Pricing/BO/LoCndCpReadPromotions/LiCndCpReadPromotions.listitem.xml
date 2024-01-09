@@ -1,0 +1,13 @@
+<ListItem name="LiCndCpReadPromotions">
+  <SimpleProperties>
+    <SimpleProperty name="PKey" type="DomPKey" storable="false" dataSourceProperty="PKey" />
+    <SimpleProperty name="ValidFrom" type="DomDate" storable="false" dataSourceProperty="ValidFrom" />
+    <SimpleProperty name="ValidThru" type="DomValidThru" storable="false" dataSourceProperty="ValidThru" />
+    <SimpleProperty name="CustomerPKey" type="DomPKey" storable="false" dataSourceProperty="CustomerPKey" />
+    <SimpleProperty name="PrmMainPKey" type="DomPKey" storable="false" dataSourceProperty="PrmMainPKey" />
+    <SimpleProperty name="PromotionPrmMainPKey" type="DomPKey" storable="false" dataSourceProperty="PromotionPrmMainPKey" />
+    <SimpleProperty name="ConsiderBpaSet" type="DomBool" storable="false" dataSourceProperty="ConsiderBpaSet" />
+    <SimpleProperty name="ConsiderPrdMain" type="DomBool" storable="false" dataSourceProperty="ConsiderPrdMain" />
+    <SimpleProperty name="MobilityEntity" type="DomRpsTableName" storable="false" dataSourceProperty="MobilityEntity" />
+  </SimpleProperties>
+</ListItem>

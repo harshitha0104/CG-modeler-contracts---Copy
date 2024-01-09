@@ -1,0 +1,17 @@
+<DataSource name="DsLuTourCheck" backendSystem="sf" businessObjectClass="LuTourCheck" external="false" editableEntity="Tour_Check__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Tour_Check__c" column="Id" />
+    <Attribute name="checkType" table="Tour_Check__c" column="Check_Type__c" />
+    <Attribute name="text" table="Tour_Check__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tour_Check__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[       
+        Tour_Check__c.Id=#pKey#
+          ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

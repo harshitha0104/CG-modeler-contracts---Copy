@@ -1,0 +1,10 @@
+<LookupObject name="LuTacticCount" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuTacticCount" />
+  <SimpleProperties>
+    <SimpleProperty name="salesFolderTacticCount" type="DomInteger" dataSourceProperty="salesFolderTacticCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

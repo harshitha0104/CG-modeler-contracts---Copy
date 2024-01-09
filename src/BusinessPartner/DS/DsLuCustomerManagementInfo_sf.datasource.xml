@@ -1,0 +1,109 @@
+<DataSource name="DsLuCustomerManagementInfo" backendSystem="sf" businessObjectClass="LuCustomerManagementInfo" external="true" distinct="true" readOnly="true" editableEntity="Account" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+       var referenceDate ="";
+       var referenceUserPKey ="";
+       var customerPKey ="";
+
+       if (Utils.isDefined(jsonQuery)){
+            var newParams = jsonQuery;
+            if (Utils.isOldParamsFormat(newParams)){
+                newParams = Utils.convertDsParamsOldToNew(newParams);
+            }
+        }
+        if (Utils.isDefined(newParams.referenceDate)){
+		   referenceDate = Utils.convertForDBParam(newParams.referenceDate,'DomDate');
+        }
+        if (Utils.isDefined(newParams.referenceUserPKey)){
+		   referenceUserPKey = Utils.convertForDBParam(newParams.referenceUserPKey,"DomPKey");
+        }
+        if (Utils.isDefined(newParams.customerPKey)){
+		   customerPKey = Utils.convertForDBParam(newParams.customerPKey,"DomPKey");
+        }
+
+        var sqlParams = {referenceDate,referenceUserPKey,customerPKey};
+
+        var sqlStmt = "SELECT DISTINCT Account.Id AS pKey,";
+        sqlStmt += "#referenceUserPKey# AS referenceUsrMainPKey, ";
+        sqlStmt += "CASE WHEN Account_Manager__c.Id IS NULL THEN '0' ELSE '1' END AS isManaged, ";
+        
+        sqlStmt += "CASE WHEN Substituted.PKey IS NULL THEN '0' ELSE '1' END AS isSubstituted, ";
+        sqlStmt += "Substituted.subMainUsrMainPKey AS substitutedUsrMainPKey, Substituted.subMainUsrName AS substitutedUsrName, ";
+        sqlStmt += "CASE WHEN Substituted.PKey IS NOT NULL THEN Substituted.subBpaRelValidFrom ELSE #dateAsStringLocaltime('#MinDate#')# END AS substitutedFrom, ";
+        sqlStmt += "CASE WHEN Substituted.PKey IS NOT NULL THEN Substituted.subBpaRelValidThru ELSE #dateAsStringLocaltime('#MaxDate#')# END AS substitutedThru, ";
+        sqlStmt += "CASE WHEN Substituted.PKey IS NOT NULL THEN Substituted.PKey ELSE ' ' END AS substitutedSubMainPKey, ";
+        sqlStmt += "CASE WHEN (Substituted.subBpaRelValidFrom > #TodayAsDate# OR Substituted.subBpaRelValidThru < #TodayAsDate#) THEN '1' ELSE '0' END AS substitutedInLeadFollowUpTime, ";
+
+        sqlStmt += "CASE WHEN HasSubstitute.PKey IS NULL THEN '0' ELSE '1' END AS hasSubstitute, ";
+        sqlStmt += "HasSubstitute.subBpaRelUsrMainPKey AS hasSubstituteUsrMainPKey, HasSubstitute.subMainUsrName AS hasSubstituteUsrName, ";
+        sqlStmt += "CASE WHEN HasSubstitute.PKey IS NOT NULL THEN HasSubstitute.subBpaRelValidFrom ELSE #dateAsStringLocaltime('#MinDate#')# END AS hasSubstituteFrom, ";
+        sqlStmt += "CASE WHEN HasSubstitute.PKey IS NOT NULL THEN HasSubstitute.subBpaRelValidThru ELSE #dateAsStringLocaltime('#MaxDate#')# END AS hasSubstituteThru, ";
+        sqlStmt += "CASE WHEN HasSubstitute.PKey IS NOT NULL THEN HasSubstitute.PKey ELSE ' ' END AS hasSubstituteSubMainPKey, ";
+        sqlStmt += "CASE WHEN (HasSubstitute.subBpaRelValidFrom > #TodayAsDate# OR HasSubstitute.subBpaRelValidThru < #TodayAsDate#) THEN '1' ELSE '0' END AS hasSubstituteInLeadFollowUpTime, ";
+        
+        sqlStmt += "CASE WHEN Substituted.subMainUsrName IS NOT NULL THEN Substituted.subMainUsrName ELSE HasSubstitute.subMainUsrName END AS combinedSubstitutedName, ";
+        sqlStmt += "CASE WHEN Substituted.subBpaRelUsrName IS NOT NULL THEN Substituted.subBpaRelUsrName ELSE HasSubstitute.subBpaRelUsrName END AS combinedSubstituteName, ";
+        sqlStmt += "Account_Manager__c.Valid_From__c as managementRelationValidFrom, Account_Manager__c.Valid_Thru__c as managementRelationValidThru ";
+        
+        sqlStmt += "FROM Account ";
+        sqlStmt += "LEFT OUTER JOIN Account_Manager__c ON Account_Manager__c.Account__c = Account.Id ";
+        sqlStmt += "AND Account_Manager__c.User__c = #referenceUserPKey# ";
+        sqlStmt += "AND #compareAsDate('Account_Manager__c.Valid_From__c', 'Date','<=', #referenceDate#, 'Date')# ";
+        sqlStmt += "AND #compareAsDate('Account_Manager__c.Valid_Thru__c', 'Date','>=', #referenceDate#, 'Date')# ";
+
+        sqlStmt += "LEFT OUTER JOIN ";
+
+                sqlStmt += "(SELECT SubMain.Id AS PKey, SubBpaRel.Account__c AS BpaMainPKey, SubMain.Substituted__c AS subMainUsrMainPKey, ";
+                sqlStmt += "SubMainUser.Name AS subMainUsrName, ";
+                sqlStmt += "SubBpaRel.Valid_From__c AS subBpaRelValidFrom, SubBpaRel.Valid_Thru__c AS subBpaRelValidThru, ";
+                sqlStmt += "SubBpaRelUser.Name AS subBpaRelUsrName ";
+                sqlStmt += "FROM Substitution__c AS SubBpaRel, Substitution__c AS SubMain, User AS SubMainUser, User AS SubBpaRelUser ";
+                sqlStmt += "WHERE ";
+                sqlStmt += "SubMain.Id = SubBpaRel.Substitution__c ";
+                sqlStmt += "AND SubMain.Active__c = '1' ";
+                sqlStmt += "AND SubBpaRel.Active__c = '1' ";
+                sqlStmt += "AND SubMainUser.Id = SubMain.Substituted__c ";
+                sqlStmt += "AND SubMain.Sales_Org__c = '#SalesOrg#' ";
+                sqlStmt += "AND (SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400) <= #referenceDate# ";
+                sqlStmt += "AND (SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400) >= #referenceDate# ";
+                sqlStmt += "AND (SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400) <= #referenceDate# ";
+                sqlStmt += "AND (SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400) >= #referenceDate# ";
+                if (!Utils.isEmptyString(newParams.referenceUserPKey)) {
+                    sqlStmt += "AND SubBpaRel.Substitute__c = #referenceUserPKey# ";
+                }
+                sqlStmt += "AND SubBpaRel.Substitute__c = SubBpaRelUser.Id) Substituted ";
+                sqlStmt += "ON Substituted.BpaMainPKey = Account.Id ";
+
+                sqlStmt += "LEFT OUTER JOIN ";
+
+                sqlStmt += "(SELECT SubMain.Id AS PKey, SubBpaRel.Account__c AS BpaMainPKey, SubBpaRel.Substitute__c AS subBpaRelUsrMainPKey, ";
+                sqlStmt += "SubMainUser.Name AS subMainUsrName, ";
+                sqlStmt += "SubBpaRel.Valid_From__c AS subBpaRelValidFrom, SubBpaRel.Valid_Thru__c AS subBpaRelValidThru, ";
+                sqlStmt += "SubBpaRelUser.Name AS subBpaRelUsrName ";
+                sqlStmt += "FROM Substitution__c AS SubBpaRel, Substitution__c AS SubMain, User AS SubMainUser, User AS SubBpaRelUser "; 
+                sqlStmt += "WHERE ";
+                sqlStmt += "SubMain.Id = SubBpaRel.Substitution__c ";
+                sqlStmt += "AND SubMain.Active__c = '1' ";
+                sqlStmt += "AND SubBpaRel.Active__c = '1' ";
+                sqlStmt += "AND SubBpaRelUser.Id = SubBpaRel.Substitute__c ";
+                sqlStmt += "AND SubMain.Sales_Org__c = '#SalesOrg#' ";
+                sqlStmt += "AND SubBpaRel.Valid_From__c <= #referenceDate# ";
+                sqlStmt += "AND SubBpaRel.Valid_Thru__c >= #referenceDate# ";
+                sqlStmt += "AND SubMain.Valid_From__c <= #referenceDate# ";
+                sqlStmt += "AND SubMain.Valid_Thru__c >= #referenceDate# ";
+                if (!Utils.isEmptyString(newParams.referenceUserPKey)) {
+                    sqlStmt += "AND SubMain.Substituted__c = #referenceUserPKey# ";
+                }
+                sqlStmt += "AND SubMain.Substituted__c = SubMainUser.Id) HasSubstitute ";
+                sqlStmt += "ON HasSubstitute.BpaMainPKey = Account.Id ";
+        
+        sqlStmt += "WHERE Account.Id = #customerPKey# ";
+        sqlStmt += "AND ( (IsManaged='0' AND HasSubstitute = '0' AND IsSubstituted='0') OR ";
+        sqlStmt += "IsManaged = '1' OR (HasSubstitute='1' AND HasSubstituteFrom <= #referenceDate# AND HasSubstituteThru >= #referenceDate#) ";
+        sqlStmt += "OR (IsSubstituted='1' AND SubstitutedFrom <= #referenceDate# AND SubstitutedThru >= #referenceDate#)) ";
+        
+	    return Utils.replaceMacrosParam(sqlStmt, sqlParams); 
+		]]></Load>
+  </Database>
+</DataSource>

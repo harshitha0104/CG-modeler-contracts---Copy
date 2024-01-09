@@ -1,0 +1,134 @@
+<UIDescription name="Call::QuestionTabUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::MainBO.luCustomer.name" />
+        <!-- CW-REQUIRED: remove title binding -->
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="FilteredViewAreaSection">
+      <Area areaName="filterArea" areaPattern="FilterElementArea">
+        <ImageSelector name="POSSelector" type="FilterElement" dataSource="ProcessContext::MainBO.boJobManager.loPOS.ItemObjects[]" filter="true">
+          <Events>
+            <ItemSelectedEvent event="posSelected">
+              <Params>
+                <Param name="posId" value=".posId" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+          <Items>
+            <Bindings>
+              <Binding target="Image" type="Image" binding=".imageId" bindingMode="ONE_WAY" />
+              <Binding target="Text" type="Text" binding=".name" bindingMode="ONE_WAY" />
+              <!--<Binding target="Info" type="Text" binding=".questionCount" bindingMode="ONE_WAY" />-->
+            </Bindings>
+          </Items>
+        </ImageSelector>
+      </Area>
+      <Area areaName="viewArea" areaPattern="SingleElementArea">
+        <MenuItems>
+          <MenuItem directlyVisible="false" itemId="addQuestion">
+            <Bindings>
+              <Resource target="Text" type="Label" id="addQuestionId" defaultLabel="Add Question" />
+              <Resource target="Icon" type="Image" id="PlusDarkGrey24" defaultImage="PlusDarkGrey24.png" />
+              <Binding type="Visible" target="Visible" call="ProcessContext::MainBO.getButtonVisibility">
+                <Parameters>
+                  <Input name="token" type="Literal" value="btnQuestionsAddQuestion" />
+                </Parameters>
+              </Binding>
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="addQuestion" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <GroupedList name="QuestionsList" searchable="false" groupBy="jobDefinitionListText" hasBorder="true" master="true" flex="true" itemAnimation="leftToRight" dataSource="ProcessContext::MainBO.boJobManager.loQuestions.Items[]">
+          <Items name="Items" itemPattern="QuestionListItem">
+            <ItemListLayout>
+              <Tablet>
+                <Default>
+                  <Col height="1em" width="1em" layoutType="Image" bindingId="done" />
+                  <Col width="2em" height="0.1em" layoutType="Image itemRight" bindingId="mandatoryIcon" />
+                  <Col width="27em" layoutType="itemName" bindingId="label" />
+                  <Col height="1em" width="1.5em" layoutType="itemSecondary" bindingId="cameraIcon" />
+                  <Col width="9em" layoutType="Dynamic itemRight" bindingId="question" />
+                </Default>
+                <Apple>
+                  <Col height="1em" width="1em" layoutType="Image" bindingId="done" />
+                  <Col width="2em" height="0.1em" layoutType="Image itemRight" bindingId="mandatoryIcon" />
+                  <Col width="27em" layoutType="itemName" bindingId="label" />
+                  <Col height="1em" width="1.5em" layoutType="itemSecondary" bindingId="cameraIcon" />
+                  <Col width="9em" layoutType="Dynamic itemRight" bindingId="question" />
+                </Apple>
+                <Android>
+                  <Col height="1em" width="1em" layoutType="Image" bindingId="done" />
+                  <Col width="2em" height="0.1em" layoutType="Image itemRight" bindingId="mandatoryIcon" />
+                  <Col width="27em" layoutType="itemName" bindingId="label" />
+                  <Col height="1em" width="1.5em" layoutType="itemSecondary" bindingId="cameraIcon" />
+                  <Col width="9em" layoutType="Dynamic itemRight" bindingId="question" />
+                </Android>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col height="1em" width="1em" layoutType="Image" bindingId="done" />
+                  <Col width="0.1em" height="0.1em" layoutType="Image itemRight" bindingId="mandatoryIcon" />
+                  <Col flex="1" layoutType="itemName" bindingId="label" />
+                  <Col height="0.7em" width="1.5em" layoutType="itemSecondary" bindingId="cameraIcon" />
+                  <Col width="9em" layoutType="Dynamic itemRight" bindingId="question" />
+                </Default>
+                <Apple>
+                  <Col height="1em" width="1em" layoutType="Image" bindingId="done" />
+                  <Col width="0.1em" height="0.1em" layoutType="Image itemRight" bindingId="mandatoryIcon" />
+                  <Col flex="1" layoutType="itemNameSmall" bindingId="label" />
+                  <Col height="0.7em" width="1.5em" layoutType="itemSecondary" bindingId="cameraIcon" />
+                  <Col width="9em" layoutType="Dynamic itemRight" bindingId="question" />
+                </Apple>
+                <Android>
+                  <Col height="1em" width="1em" layoutType="Image" bindingId="done" />
+                  <Col width="0.1em" height="0.1em" layoutType="Image itemRight" bindingId="mandatoryIcon" />
+                  <Col flex="1" layoutType="itemNameSmall" bindingId="label" />
+                  <Col height="0.7em" width="1.5em" layoutType="itemSecondary" bindingId="cameraIcon" />
+                  <Col width="9em" layoutType="Dynamic itemRight" bindingId="question" />
+                </Android>
+              </Phone>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="done" type="Combo" binding=".done" toggleId="JobDone" bindingMode="TWO_WAY" />
+              <Binding target="question" type="Dynamic" allowInitialValueEmpty="true" binding=".value" typeField="dataType" minBinding="minValue" maxBinding="maxValue" stepSizeBinding="stepSize" stepperEnabledBinding="useStepper" toggleId="toggleId" bindingMode="TWO_WAY" />
+              <Binding target="label" type="Text" binding=".questionText" bindingMode="ONE_WAY" />
+              <Binding target="mandatoryIcon" type="Image" binding=".mandatoryImageId" bindingMode="ONE_WAY" />
+              <Binding target="cameraIcon" type="Button" binding=".cameraIcon" bindingMode="TWO_WAY" imageType=".svg" longPressMenuId="longPressMenuOption" badgeText=".pictureCount" />
+            </Bindings>
+            <LongPressMenu name="longPressMenuOption" dataSource="ProcessContext::contextMenuList">
+              <Items name="LongPressMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" imageType=".svg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                  <Binding type="Visible" target="Visible" binding=".actionVisible" />
+                </Bindings>
+              </Items>
+            </LongPressMenu>
+          </Items>
+          <Events>
+            <ListButtonPressedEvent event="buttonPressed">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ListButtonPressedEvent>
+            <LongPressMenuOpeningEvent event="openingEventHandler">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </LongPressMenuOpeningEvent>
+            <LongPressMenuSelectedEvent event="selectedEventHandler">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </LongPressMenuSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

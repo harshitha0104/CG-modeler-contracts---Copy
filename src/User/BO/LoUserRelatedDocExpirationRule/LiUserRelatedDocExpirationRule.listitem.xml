@@ -1,0 +1,12 @@
+<ListItem name="LiUserRelatedDocExpirationRule">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="reminderRuleType" type="DomUsrReminderRuleType" storable="false" dataSourceProperty="reminderRuleType" />
+    <SimpleProperty name="documentType" type="DomUsrRelatedDocumentType" storable="false" dataSourceProperty="documentType" />
+    <SimpleProperty name="expirationDate" type="DomValidThru" storable="false" dataSourceProperty="expirationDate" />
+    <SimpleProperty name="startTimeOffset" type="DomInteger" storable="false" dataSourceProperty="startTimeOffset" />
+    <SimpleProperty name="duration" type="DomInteger" storable="false" dataSourceProperty="duration" />
+    <SimpleProperty name="messageTitle" type="DomText" storable="false" dataSourceProperty="messageTitle" />
+    <SimpleProperty name="messageContent" type="DomText" storable="false" dataSourceProperty="messageContent" />
+  </SimpleProperties>
+</ListItem>

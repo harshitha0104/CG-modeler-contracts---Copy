@@ -1,0 +1,42 @@
+<Process name="Call::InfoTabProcess" defaultAction="ShowCallInfo" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="MainBO" type="BoCall" />
+        <Declaration name="LoActivitiesOfCall" type="LoActivitiesOfCall" />
+      </Declarations>
+      <Parameters>
+        <Input name="CallPKey" type="String" />
+        <Input name="ResponsiblePKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadBo" actionType="LOAD" type="BoCall">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CallPKey" />
+          <Input name="referenceUserPKey" value="ProcessContext::ResponsiblePKey" />
+          <Input name="mode" type="Literal" value="CallInfo" />
+        </Parameters>
+        <Return name="ProcessContext::MainBO" />
+      </Action>
+      <Action name="LoadActivities" actionType="LOAD" type="LoActivitiesOfCall">
+        <Parameters>
+          <Input name="clbMainPKey" value="ProcessContext::CallPKey" />
+        </Parameters>
+        <Return name="ProcessContext::LoActivitiesOfCall" />
+      </Action>
+      <Action name="setEARights" actionType="LOGIC" call="ProcessContext::LoActivitiesOfCall.setEARights">
+        <Parameters>
+          <Input name="bpaMainPKey" value="ProcessContext::MainBO.bpaMainPKey" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowCallInfo">
+        <UIDescription>Call::InfoTabUI</UIDescription>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

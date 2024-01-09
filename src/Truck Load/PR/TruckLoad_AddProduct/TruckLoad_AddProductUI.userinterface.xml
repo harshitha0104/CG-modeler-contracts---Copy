@@ -1,0 +1,49 @@
+<UIDescription name="TruckLoad::AddProductUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="AddProductId" defaultLabel="Add Product" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="ProductList" groupBy="groupingAttribute" indexBar="true" searchable="true" dataSource="ProcessContext::ProductList.Items[]">
+          <Items name="Items" itemPattern="WarehouseProductItems">
+            <Bindings>
+              <Binding target="Description" type="Text" binding=".text1" bindingMode="ONE_WAY" />
+              <Binding target="PrdId" type="Text" binding=".prdId" bindingMode="ONE_WAY" />
+              <Binding target="EAN" type="Text" binding=".eAN" bindingMode="ONE_WAY" />
+              <Resource target="PrdIdLabel" type="Label" id="prdIdLabelId" defaultLabel="Prd No." />
+              <Resource target="EANLabel" type="Label" id="eANLabelId" defaultLabel="EAN" />
+            </Bindings>
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemTitle" bindingId="Description" />
+                <Row>
+                  <Col layoutType="itemSecondary" width="4em" bindingId="PrdIdLabel" />
+                  <Col layoutType="itemSecondary" width="8em" bindingId="PrdId" />
+                </Row>
+                <Row>
+                  <Col layoutType="itemSecondary" width="4em" bindingId="EANLabel" />
+                  <Col layoutType="itemSecondary" width="8em" bindingId="EAN" />
+                </Row>
+              </Col>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="prdMainPKey" value=".prdProductPKey" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+          <SearchAttributes>
+            <SearchAttribute name="prdId" />
+            <SearchAttribute name="text1" />
+            <SearchAttribute name="eAN" />
+          </SearchAttributes>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

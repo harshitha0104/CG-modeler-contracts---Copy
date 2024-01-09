@@ -1,0 +1,70 @@
+<DataSource name="DsBoTourMeta" backendSystem="sf" businessObjectClass="BoTourMeta" external="false" editableEntity="Tour_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Tour_Template__c" column="Id" />
+    <Attribute name="businessModified" table="Tour_Template__c" column="LastModifiedDate" />
+    <Attribute name="salesOrg" table="Tour_Template__c" column="Sales_Org__c" />
+    <Attribute name="id" table="Tour_Template__c" column="Name" />
+    <Attribute name="considerMileage" table="Tour_Template__c" column="Consider_Mileage__c" />
+    <Attribute name="considerVehicle" table="Tour_Template__c" column="Consider_Vehicle__c" />
+    <Attribute name="considerVehicleStatus" table="Tour_Template__c" column="Consider_Vehicle_Status__c" />
+    <Attribute name="active" table="Tour_Template__c" column="Active__c" />
+    <Attribute name="syncOptions" table="Tour_Template__c" column="Sync_Options__c" />
+    <Attribute name="considerMultipleWarehouses" table="Tour_Template__c" column="Consider_Multiple_Warehouses__c" />
+    <Attribute name="text" table="Tour_Template__c" column="Description_#Language#__c" />
+    <!-- Derived Attributes / not supported in CGCloud Backend -->
+    <DerivedAttribute name="uiGroup" type="String" value="' '" />
+    <DerivedAttribute name="note" type="String" value="' '" />
+    <DerivedAttribute name="considerSealCheck" type="String" value="'None'" />
+    <DerivedAttribute name="cashHandlingRequired" type="String" value="'0'" />
+    <DerivedAttribute name="expressCheckOutAllowed" type="String" value="'0'" />
+    <DerivedAttribute name="palletCheckOutAllowed" type="String" value="'0'" />
+    <DerivedAttribute name="countingGroupCheckOutAllowed" type="String" value="'0'" />
+    <DerivedAttribute name="deleteCallAllowed" type="String" value="'0'" />
+    <DerivedAttribute name="reorgMode" type="String" value="'None'" />
+    <DerivedAttribute name="reorgPeriodType" type="String" value="'Year'" />
+    <DerivedAttribute name="reorgOffset" type="String" value="0" />
+    <DerivedAttribute name="sealCheckPresettingPolicy" type="String" value="'Prepopulated'" />
+    <DerivedAttribute name="displaySealWarning" type="String" value="'0'" />
+    <DerivedAttribute name="deliveryListPreviewPrintout" type="String" value="'0'" />
+    <DerivedAttribute name="printUIGroup" type="String" value="' '" />
+    <DerivedAttribute name="agendaScanBehavior" type="String" value="'StartCreateCall'" />
+    <DerivedAttribute name="coDriverRequired" type="String" value="'ZeroOrMore'" />
+    <DerivedAttribute name="cashCheckInRequired" type="String" value="'Optional'" />
+    <DerivedAttribute name="multipleCashCheckInAllowed" type="String" value="'0'" />
+    <DerivedAttribute name="defaultCurrency" type="String" value="'USD'" />
+    <DerivedAttribute name="advancedUOMAllowed" type="String" value="'0'" />
+    <DerivedAttribute name="creationPlatform" type="String" value="'Both'" />
+    <DerivedAttribute name="userGuidance" type="String" value="' '" />
+    <DerivedAttribute name="tSRLevelOfDetail" type="String" value="'Aggregated'" />
+    <DerivedAttribute name="tSRShowTourInfo" type="String" value="'0'" />
+    <DerivedAttribute name="tSRShowVisitInfo" type="String" value="'0'" />
+    <DerivedAttribute name="tSRShowInventoryInfo" type="String" value="'0'" />
+    <DerivedAttribute name="tSRShowDeliveryDocInfo" type="String" value="'0'" />
+    <DerivedAttribute name="tSRShowSalesDocInfo" type="String" value="'0'" />
+    <DerivedAttribute name="tSRShowCashInfo" type="String" value="'0'" />
+    <DerivedAttribute name="previewPrintout" type="String" value="'0'" />
+    <DerivedAttribute name="inclDSDActivities" type="String" value="'0'" />
+    <DerivedAttribute name="inclPreSalesActivities" type="String" value="'0'" />
+    <DerivedAttribute name="inclMerchActivities" type="String" value="'0'" />
+    <DerivedAttribute name="inclOffRouteActivities" type="String" value="'0'" />
+    <DerivedAttribute name="considerDistributionOffset" type="String" value="'0'" />
+    <DerivedAttribute name="distributionFromOffsetInternal" value="99999" />
+    <DerivedAttribute name="distributionThruOffsetInternal" value="-99999" />
+    <DerivedAttribute name="distributionFromOffset" value="0" />
+    <DerivedAttribute name="distributionThruOffset" value="0" />
+    <DerivedAttribute name="usrDocMetaPKey" type="String" value="' '" />
+    <DerivedAttribute name="sysNumberPKey" type="String" value="' '" />
+    <DerivedAttribute name="mobilityStartUserGuidance" type="String" value="' '" />
+    <DerivedAttribute name="mobilityEndUserGuidance" type="String" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tour_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+ Tour_Template__c.Id = #pKey#
+ ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,7 @@
+<ListObject name="LoVisitOverviewContextMenu" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoVisitOverviewContextMenu"/>
+  <Item objectClass="LiVisitOverviewContextMenu"/>
+  <Methods>
+    <Method name="loadAsync"/>
+  </Methods>
+</ListObject>

@@ -1,0 +1,33 @@
+<UIDescription name="TruckLoad::FlyoutSelectRecipientDriverUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TruckLoadFlyoutSelectRecipientTitleId" defaultLabel="Recipient" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="UserList" dataSource="ProcessContext::UserList.Items[]">
+          <Items name="Items" itemPattern="TruckLoadFlyoutSelectCoDriver_UserListItem">
+            <Bindings>
+              <Binding target="Name" type="Text" binding=".name" bindingMode="ONE_WAY" />
+            </Bindings>
+            <MenuItems></MenuItems>
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemValueSmall" bindingId="Name" />
+              </Col>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

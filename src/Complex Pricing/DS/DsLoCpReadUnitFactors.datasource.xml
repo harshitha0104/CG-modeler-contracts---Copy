@@ -1,0 +1,33 @@
+<Datasource name="DsLoCpReadUnitFactors" objectClass="LoCpReadUnitFactors" businessObjectClass="LoCpReadUnitFactors" readOnly="true" external="true" editableEntity="PrdLogistic" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+				var productPKey = "";
+				if (Utils.isDefined(jsonParams.ProductPKey)){
+                    productPKey = Utils.convertForDBParam(jsonParams.ProductPKey, "DomPKey");
+                }
+				var sqlParams = {productPKey};
+				var sql = "";
+                sql += "SELECT ";
+                sql += "PiecesPerSmallestUnit, IsOrderUnit, IsConsumerUnit, ";
+				sql += "IsPriceUnit, CndCpVolume, CndCpWeight ";
+                sql += "FROM ";
+                sql += "PrdLogistic ";
+                sql += "WHERE ";
+                sql += "ProductPKey=#productPKey# ";               
+                return Utils.replaceMacrosParam(sql, sqlParams);
+
+         ]]></Load>
+    <Update><![CDATA[
+            // Intended to be empty
+            return undefined;
+                    ]]></Update>
+    <Insert><![CDATA[   
+                        // Intended to be empty     
+            return undefined;           
+                    ]]></Insert>
+    <Delete><![CDATA[
+              // Intended to be empty
+              return undefined;  
+                    ]]></Delete>
+  </Database>
+</Datasource>

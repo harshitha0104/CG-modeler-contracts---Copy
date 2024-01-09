@@ -1,0 +1,39 @@
+<Process name="Product::LookupProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="ProductList" type="LoProductOverview" />
+      </Declarations>
+      <Parameters>
+        <Input name="PrdStateType" type="String" />
+        <Input name="filterOnlyProducts" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="GetProductList" type="LoProductOverview">
+        <Parameters>
+          <Input name="prdStateType" value="ProcessContext::PrdStateType" />
+          <Input name="filterOnlyProducts" value="ProcessContext::filterOnlyProducts" />
+          <Input name="asoName" value="AsoProductOverview" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::ProductList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Product::Lookup</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="End" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="ProductPKey" value="Event.pKey" />
+          <Return name="ProductId" value="Event.id" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

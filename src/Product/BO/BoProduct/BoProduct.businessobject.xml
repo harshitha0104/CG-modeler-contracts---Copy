@@ -1,0 +1,44 @@
+<BusinessObject name="BoProduct" generateLoadMethod="false" schemaVersion="1.1">
+  <DataSource name="DsBoProduct" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="text1" type="DomText" dataSourceProperty="text1" />
+    <SimpleProperty name="id" type="DomPrdNumber" dataSourceProperty="id" />
+    <SimpleProperty name="shortId" type="DomPrdNumber" dataSourceProperty="shortId" />
+    <SimpleProperty name="ean" type="DomPrdNumber" dataSourceProperty="ean" />
+    <SimpleProperty name="foreignProduct" type="DomBool" dataSourceProperty="foreignProduct" />
+    <SimpleProperty name="prdType" type="DomPrdType" dataSourceProperty="prdType" />
+    <SimpleProperty name="taxClassification" type="DomTaxClassification" dataSourceProperty="taxClassification" />
+    <SimpleProperty name="category" type="DomPrdCategory" dataSourceProperty="category" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups>
+    <ObjectLookup name="luProductBasePrice" objectClass="LuProductBasePrice" dataSourceProperty="pKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luPrdUsageIcon" objectClass="LuPrdUsageIcon" dataSourceProperty="pKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <ListObjects>
+    <ListObject name="loProductHierarchy" objectClass="LoProductHierarchy" dataSourceProperty="pKey" listProperty="ProductPKey" loadMode="LoadImmediate" />
+    <ListObject name="loPrdStateForMasterData" objectClass="LoPrdStateForMasterData" dataSourceProperty="pKey" listProperty="ProductPKey" loadMode="LoadImmediate" />
+    <ListObject name="loLogistics" objectClass="LoLogistics" dataSourceProperty="pKey" listProperty="ProductPKey" loadMode="LoadImmediate" />
+    <ListObject name="loPrdAttachments" objectClass="LoPrdAttachments" dataSourceProperty="pKey" listProperty="ProductPKey" loadMode="LoadImmediate" />
+    <ListObject name="loPrdUsageIcon" objectClass="LoPrdAttachments" dataSourceProperty="pKey" listProperty="ProductPKey" loadMode="OnDemand" />
+    <ListObject name="loProductBoM" objectClass="LoProductBoM" dataSourceProperty="pKey" listProperty="ProductPKey" loadMode="LoadImmediate" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadOnDemand" />
+    <Method name="setEARights" />
+    <Method name="checkLogisticsTabVisible" />
+    <Method name="checkPrdUsageIconVisibility" />
+    <Method name="checkBoMTabVisible" />
+  </Methods>
+</BusinessObject>

@@ -1,0 +1,32 @@
+<Process name="VisitGuide::ShowVisitMap" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+      </Declarations>
+      <Parameters>
+          <Input name="CardVisits_VisitList" type="Object" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="InitializeDisplayTrafficWithUserSetting" actionType="LOGIC" call="ApplicationContext::User.boUserSettings.getClbDisplayTrafficInMapMobility">
+        <Return name="ProcessContext::DisplayTraffic" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>VisitGuide::ShowVisitMap</UIDescription>
+        <Events>
+          <Event name="Customer_MarkerClicked" action="CardVisitGuide_ShowCustomers" />
+        </Events>
+      </Action>
+
+      <Action actionType="PROCESS" name="CardVisitGuide_ShowCustomers" process="Customer::ReviewCaptureProcess">
+        <Parameters>
+          <Input name="CustomerPKey" value="Event.CustomerPKey" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

@@ -1,0 +1,27 @@
+<DataSource name="DsLoProductInfoByPKeyList" businessObjectClass="LoProductInfoByPKeyList" external="false" editableEntity="PrdProduct" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="PrdProduct" column="PKey" />
+    <Attribute name="prdId" table="PrdProduct" column="Id" />
+    <Attribute name="eAN" table="PrdProduct" column="EAN" />
+    <Attribute name="text1" table="PrdDescription" column="Text1" />
+  </Attributes>
+  <Entities>
+    <Entity name="PrdProduct" alias="" />
+    <Entity name="PrdDescription" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="PrdProduct.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="PrdDescription.ProductPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+     PrdProduct.PKey IN (#prdPKeyList#)
+     ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="PrdDescription" attribute="Text1" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="prdPKeyList" type="LIST" />
+  </Parameters>
+</DataSource>

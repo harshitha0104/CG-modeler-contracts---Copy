@@ -1,0 +1,19 @@
+<DataSource name="DsBoPosMeta" backendSystem="sf" businessObjectClass="BoPosMeta" external="false" editableEntity="POS_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="POS_Template__c" column="Id" />
+    <Attribute name="id" table="POS_Template__c" column="Name" />
+    <Attribute name="active" table="POS_Template__c" column="Active__c" />
+    <Attribute name="metaType" table="POS_Template__c" column="POS_Type__c" />
+    <Attribute name="text" table="POS_Template__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="POS_Template__c" alias="" />
+  </Entities>
+  <QueryCondition><![CDATA[
+	POS_Template__c.Id = #pKey# 
+        ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

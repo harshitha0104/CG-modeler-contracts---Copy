@@ -1,0 +1,30 @@
+<UIDescription name="ServiceRequest::MetaLookupUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" type="Text" binding="ProcessContext::WizardHeaderLabel" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="SvcRequestMetaList" dataSource="ProcessContext::SvcRequestMetaList.Items[]">
+          <Items name="Items" itemPattern="SvcRequestMetaCreateNew">
+            <ItemListLayout>
+              <Col layoutType="itemTitle" bindingId="Text" />
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="Text" type="Text" binding=".text" bindingMode="ONE_TIME" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

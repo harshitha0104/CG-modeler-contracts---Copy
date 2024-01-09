@@ -1,0 +1,12 @@
+<ListItem name="LiDataTypesForPicklistCache">
+  <SimpleProperties>
+    <SimpleProperty name="toggleId" type="DomText" storable="false" dataSourceProperty="toggleId" />
+    <SimpleProperty name="hasEmpty" type="DomBool" storable="false" dataSourceProperty="hasEmpty" />
+    <SimpleProperty name="isDefault" type="DomBool" storable="false" dataSourceProperty="isDefault" />
+    <SimpleProperty name="code" type="DomText" storable="false" dataSourceProperty="code" />
+    <SimpleProperty name="text" type="DomText" storable="false" dataSourceProperty="text" />
+    <SimpleProperty name="shortText" type="DomText" storable="false" dataSourceProperty="shortText" />
+    <SimpleProperty name="imageId" type="DomText" storable="false" dataSourceProperty="imageId" />
+    <SimpleProperty name="sortOrder" type="DomText" storable="false" dataSourceProperty="sortOrder" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,26 @@
+<DataSource name="DsLoVisitAssessmentTask" backendSystem="sf" businessObjectClass="LoVisitAssessmentTask" external="false" editableEntity="AssessmentTask" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="AssessmentTask" column="Id" />
+    <Attribute name="visitId" table="AssessmentTask" column="ParentId" />
+    <Attribute name="name" table="AssessmentTask" column="Name" />
+    <Attribute name="status" table="AssessmentTask" column="Status" />
+    <Attribute name="taskType" table="AssessmentTask" column="TaskType" />
+    <Attribute name="isRequired" table="AssessmentTask" column="IsRequired" />
+    <DerivedAttribute name="isMandatory" value="CASE AssessmentTask.isRequired WHEN '1' THEN '| Mandatory' ELSE '' END" />
+    <DerivedAttribute name="statusImage" value="CASE AssessmentTask.Status WHEN 'Completed' THEN 'Done' ELSE 'ChevronRight' END" />
+    <DerivedAttribute name="visibleInUI" value="CASE AssessmentTask.TaskType WHEN 'Other' THEN '1' WHEN 'InventoryCheck' THEN '1'  ELSE '0' END" />
+  </Attributes>
+  <Entities>
+    <Entity name="AssessmentTask" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+	AssessmentTask.ParentId = '#visitId#'
+]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="AssessmentTask" attribute="SequenceNumber" direction="ASC" />
+    <OrderCriterion entity="AssessmentTask" attribute="Name" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="visitId" type="TEXT" />
+  </Parameters>
+</DataSource>

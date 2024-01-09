@@ -1,0 +1,31 @@
+<DataSource name="DsLoMeSdoAssortment" backendSystem="sf" businessObjectClass="LoMeSdoAssortment" external="false" editableEntity="AssortmentProduct" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="prdMainPKey" table="AssortmentProduct" column="ProductId" />
+    <DerivedAttribute name="sdoAssortment" value="'1'" />
+  </Attributes>
+  <Entities>
+    <Entity name="AssortmentProduct" alias="" idAttribute="Id" />
+    <Entity name="Product_Assortment_Order_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product_Assortment_Order_Template__c.Product_Assortment__c" comparator="eq" rightSideType="Attribute" rightSideValue="AssortmentProduct.AssortmentId" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        #compareAsDate('AssortmentProduct.Valid_From__c', 'Date','<=' ,#commitDate#, 'Date')#
+        AND #compareAsDate('AssortmentProduct.Valid_Thru__c', 'Date','>=' ,#commitDate#, 'Date')#
+		AND AssortmentProduct.Active__c = '1'
+        AND Product_Assortment_Order_Template__c.Order_Template__c = '#sdoMetaPKey#'
+		#addCond_productPKeys#
+    ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="AssortmentProduct" attribute="ProductId" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="commitDate" baseType="Date" type="INTEGER" />
+    <Parameter name="sdoMetaPKey" type="TEXT" />
+    <Parameter name="addCond_productPKeys" treatAs="sqlSnippet" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,88 @@
+<DataSource name="DsLoContactPartner" backendSystem="sf" businessObjectClass="LoContactPartner" external="true" readOnly="true" editableEntity="Contact" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contact" column="Id" />
+    <Attribute name="bpaContactPartnerPKey" table="Contact" column="Id" />
+    <Attribute name="salutation" table="Contact" column="Salutation" />
+    <Attribute name="name" table="Contact" column="Name" />
+    <Attribute name="firstName" table="Contact" column="FirstName" />
+    <Attribute name="lastName" table="Contact" column="LastName" />
+    <Attribute name="jobTitle" table="Contact" column="Job_Title__c" />
+    <Attribute name="mainFunction" table="Contact" column="Main_Function__c" />
+    <Attribute name="phone1" table="Contact" column="Phone" />
+    <Attribute name="phone2" table="Contact" column="MobilePhone" />
+    <Attribute name="email1" table="Contact" column="Email" />
+    <Attribute name="fax1" table="Contact" column="Fax" />
+    <Attribute name="toPKey" table="Contact" column="Id" />
+    <Attribute name="department" table="Contact" column="Department" />
+    <DerivedAttribute name="contactPartnerName" value="' '" />
+    <DerivedAttribute name="mainAddress" value="' '" />
+    <DerivedAttribute name="mediaPath" value="' '" />
+    <DerivedAttribute name="fileType" value="' '" />
+    <DerivedAttribute name="bpaMetaPKey" value="' '" />
+    <DerivedAttribute name="emailEditable" value="'0'" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+    var customerPKey = "";
+
+    if(Utils.isDefined(jsonQuery.customerPKey)){
+     customerPKey = Utils.convertForDBParam(jsonQuery.customerPKey, "DomPKey");
+    }
+
+   var sqlParams = {customerPKey};
+   var sqlStmt = "";
+
+   sqlStmt += "SELECT pKey ";
+   sqlStmt += ",bpaContactPartnerPKey ";
+   sqlStmt += ",salutation ";
+   sqlStmt += ",name ";
+   sqlStmt += ",lastName ";
+   sqlStmt += ",jobTitle ";
+   sqlStmt += ",mainFunction ";
+   sqlStmt += ",mainAddress ";
+   sqlStmt += ",phone1 ";
+   sqlStmt += ",phone2 ";
+   sqlStmt += ",email1 ";
+   sqlStmt += ",fax1 ";
+   sqlStmt += ",toPKey ";
+   sqlStmt += ",department ";
+   sqlStmt += ",contactPartnerName ";
+   sqlStmt += ",fileType ";
+   sqlStmt += ",mediaPath ";
+   sqlStmt += "FROM ";
+
+   sqlStmt += "(SELECT Contact.Id as pKey ";
+   sqlStmt += ",Contact.Id as bpaContactPartnerPKey ";
+   sqlStmt += ",Contact.Salutation as salutation";
+   sqlStmt += ",Contact.Name as name ";
+   sqlStmt += ",Contact.LastName as lastName ";
+   sqlStmt += ",Contact.Job_Title__c as jobTitle";
+   sqlStmt += ",Contact.Main_Function__c as mainFunction ";
+   sqlStmt += ",Contact.Mailing_Street__c || ', ' || Contact.Mailing_Postal_Code__c || ' ' || Contact.Mailing_City__c || ', ' || Contact.Mailing_Country__c as mainAddress ";
+   sqlStmt += ",Contact.Phone as phone1 ";
+   sqlStmt += ",Contact.MobilePhone as phone2 ";
+   sqlStmt += ",Contact.Email as email1 ";
+   sqlStmt += ",Contact.Fax as fax1 ";
+   sqlStmt += ",Contact.Id as toPKey ";
+   sqlStmt += ",Contact.Department as department ";
+   sqlStmt += ",Contact.Salutation || ' ' || Contact.Name as contactPartnerName ";
+   sqlStmt += ",replace( SF_File.PathOnClient, rtrim(SF_File.PathOnClient,replace(SF_File.PathOnClient, '.', '')),'') as fileType ";
+   sqlStmt += ",CASE SF_File.Usage__c WHEN 'Icon' THEN SF_File.VersionData ELSE ' ' END as mediaPath ";
+   sqlStmt += "FROM Contact ";
+   sqlStmt += "LEFT OUTER JOIN SF_FileLink ON SF_FileLink.ParentId = Contact.Id ";
+   sqlStmt += "AND SF_FileLink.IsDeleted <> '1' ";
+   sqlStmt += "LEFT OUTER JOIN SF_File ON SF_FileLink.FileId = SF_File.Id ";
+   sqlStmt += "AND SF_File.Usage__c = 'Icon' ";
+   sqlStmt += "AND SF_File.IsDeleted <> '1' ";
+   sqlStmt += "WHERE 1=1 ";
+   sqlStmt += "AND Contact.AccountId = #customerPKey# ";
+   sqlStmt += "AND Contact.IsDeleted <> '1' ";
+   sqlStmt += "ORDER BY Contact.Id AND SF_File.CreatedDate) ";
+
+   sqlStmt += "GROUP BY pKey";
+
+   return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+  ]]></Load>
+  </Database>
+</DataSource>

@@ -1,0 +1,23 @@
+<ListItem name="LiUsrDailyReportOverview" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="reportId" type="DomId" dataSourceProperty="reportId" />
+    <SimpleProperty name="type" type="DomText" dataSourceProperty="type" />
+    <SimpleProperty name="usrDocMetaPKey" type="DomText" dataSourceProperty="usrDocMetaPKey" />
+    <!-- Text of UsrDocMetaPKey -->
+    <SimpleProperty name="phase" type="DomUsrDocPhase" dataSourceProperty="phase" />
+    <SimpleProperty name="dateFrom" type="DomDate" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="initiationDate" type="DomDate" dataSourceProperty="initiationDate" />
+    <SimpleProperty name="user" type="DomText" />
+    <SimpleProperty name="hours" type="DomText" dataSourceProperty="hours" />
+    <SimpleProperty name="minutes" type="DomText" dataSourceProperty="minutes" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="actualStatePKey" type="DomPKey" dataSourceProperty="actualStatePKey" />
+    <SimpleProperty name="responsibleName" type="DomText" dataSourceProperty="responsibleName" />
+    <SimpleProperty name="ownerPKey" type="DomText" dataSourceProperty="ownerPKey" />
+    <SimpleProperty name="mobilityRelevant" type="DomBool" storable="true" dataSourceProperty="mobilityRelevant" />
+    <SimpleProperty name="approvable" type="DomBool" storable="false" dataSourceProperty="approvable" />
+    <SimpleProperty name="ownerName" type="DomText" dataSourceProperty="ownerName" />
+    <SimpleProperty name="uiGroup" type="DomText" dataSourceProperty="uiGroup" />
+  </SimpleProperties>
+</ListItem>

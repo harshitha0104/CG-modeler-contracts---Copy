@@ -1,0 +1,66 @@
+<Process name="Order::CreateNewWizardProcess" defaultAction="HasNoOrderRole" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OrderMetaList" type="LoOrderMeta" />
+        <Declaration name="HasNoOrderRole" type="String" />
+        <Declaration name="BoOrderRole" type="BoOrderRole" />
+      </Declarations>
+      <Parameters>
+        <Input name="OrdererPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="LoadOrderRole" type="BoOrderRole">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::OrdererPKey" />
+        </Parameters>
+        <Return name="ProcessContext::BoOrderRole" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <!-- Order Role Check -->
+      <Action name="HasNoOrderRole" actionType="LOGIC" call="Utils.isEmptyString">
+        <Parameters>
+          <Input name="orderRoleId" value="ProcessContext::BoOrderRole.pKey" />
+        </Parameters>  
+        <Return name="ProcessContext::HasNoOrderRole" />
+        <TransitionTo action="OrderRoleDecision" />
+      </Action>
+      <Action name="OrderRoleDecision" actionType="DECISION" parameter="ProcessContext::HasNoOrderRole">
+        <Case value="true" action="Message_SalesFolderDataNotOnDevice" />
+        <Case value="false" action="GetTemplateList" />
+        <CaseElse action="Message_SalesFolderDataNotOnDevice" />
+        <CaseEmpty  action="Message_SalesFolderDataNotOnDevice"/>
+      </Action>
+      <!-- Message -->
+      <Action name="Message_SalesFolderDataNotOnDevice" actionType="CONFIRM" confirmType="Ok">
+        <Message messageId="CasMessageNoOrdererRole" />
+        <Cases>
+          <Case value="Ok" action="End" />
+        </Cases>
+      </Action>
+      <!-- Order Templates -->
+      <Action name="GetTemplateList" actionType="LOAD" type="LoOrderMeta">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::OrdererPKey" />
+        </Parameters>
+        <Return name="ProcessContext::OrderMetaList" />
+        <TransitionTo action="ShowView" />
+      </Action>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Order::CreateNewWizard</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="End" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="orderMetaPKey" value="Event.pKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

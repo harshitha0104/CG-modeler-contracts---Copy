@@ -1,0 +1,58 @@
+<Datasource name="DsLoVisitsByDate" objectClass="LoVisitsByDate" backendSystem="sf" external="true" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="combinedAddress" value="''" />
+    <Attribute name="pKey" table="Visit" column="Id" />
+    <Attribute name="name" table="Visit" column="Name" />
+    <Attribute name="priority" table="Visit" column="VisitPriority" />
+    <Attribute name="plannedStartDate" table="Visit" column="PlannedStartDate" />
+    <Attribute name="plannedStartTime" table="Visit" column="PlannedStartTime" />
+    <Attribute name="retailStoreName" table="RetailStore" column="Name" />
+    <Attribute name="country" table="RetailStore" column="Country" />
+    <Attribute name="visitStatus" table="Visit" column="Status" />
+    <Attribute name="city" table="RetailStore" column="City" />
+    <Attribute name="street" table="RetailStore" column="Street" />
+    <Attribute name="postalCode" table="RetailStore" column="PostalCode" />
+    <Attribute name="state" table="RetailStore" column="State" />
+    <Attribute name="retailStoreLongitude" table="RetailStore" column="Longitude" />
+    <Attribute name="retailStoreLatitude" table="RetailStore" column="Latitude" />
+    <!-- Visitor Address-->
+    <Attribute name="visitorCity" table="Address" column="City" />
+    <Attribute name="visitorStreet" table="Address" column="Street" />
+    <Attribute name="visitorPostalCode" table="Address" column="PostalCode" />
+    <Attribute name="latitude" table="RetailStore" column="Latitude" />
+    <Attribute name="longitude" table="RetailStore" column="Longitude" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var currentDate = Utils.convertForDBParam(Utils.convertDate2Ansi(Utils.createDateToday()), 'DomDate');
+			var numberOfVisits = 7;
+
+			if (Utils.isDefined(jsonQuery.cardDate)){
+				currentDate = Utils.convertForDBParam(jsonQuery.cardDate, 'DomDate');
+			}
+
+			var sqlParams = {currentDate};
+
+            var sqlStmt = "SELECT Visit.Id as pKey, Visit.Status as visitStatus, Visit.name as name, #toggleMapping('Visit', 'VisitPriority')# as priority, RetailStore.name as retailStoreName,RetailStore.city as city,RetailStore.country as country,"; 
+            sqlStmt += "RetailStore.street as street, RetailStore.postalCode as postalCode, RetailStore.state as state, RetailStore.Longitude as retailStoreLongitude, RetailStore.Latitude as retailStoreLatitude,"
+            sqlStmt += "(CASE WHEN RetailStore.Street != ' ' OR RetailStore.City != ' ' OR RetailStore.PostalCode != ' ' THEN RetailStore.Street ELSE Address.Street END) AS visitorStreet,"
+            sqlStmt += "(CASE WHEN RetailStore.Street != ' ' OR RetailStore.City != ' ' OR RetailStore.PostalCode != ' ' THEN RetailStore.City ELSE Address.City END) AS visitorCity,"
+            sqlStmt += "(CASE WHEN RetailStore.Street != ' ' OR RetailStore.City != ' ' OR RetailStore.PostalCode != ' ' THEN RetailStore.PostalCode ELSE Address.PostalCode END) AS visitorPostalCode,"
+            sqlStmt += "(CASE  WHEN  RetailStore.longitude == 0 THEN Location.longitude WHEN RetailStore.longitude != 0 THEN RetailStore.longitude END) AS longitude,(CASE  WHEN  RetailStore.latitude == 0 THEN Location.latitude WHEN RetailStore.latitude != 0 THEN RetailStore.latitude END) AS latitude, " 
+            sqlStmt += "#dateAsUnixepochLocaltime('Visit.PlannedVisitStartTime')# AS plannedStartDate, Visit.PlannedVisitStartTime AS plannedStartTime FROM Visit "; 
+            sqlStmt += "INNER JOIN RetailStore ON Visit.PlaceId = RetailStore.Id ";
+            sqlStmt += "LEFT JOIN Location ON RetailStore.locationId = Location.Id "; 
+            sqlStmt += "LEFT OUTER JOIN Address ON Location.VisitorAddressId = Address.Id ";
+            sqlStmt += "WHERE Visit.VisitorId = '#UserPKey#' ";
+            sqlStmt += "AND #compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','=',#currentDate#, 'Date')# ";
+			sqlStmt += "AND ( Visit.status = 'Planned' OR Visit.status = 'InProgress' ) ";
+			sqlStmt += "AND Visit.IsDeleted = '0' " ;
+	 		sqlStmt += "AND Visit.Visit_Template__c = ' ' ";
+            sqlStmt += "Order By Visit.PlannedVisitStartTime asc ";
+
+            return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+		]]></Load>
+  </Database>
+</Datasource>

@@ -1,0 +1,10 @@
+<LookupObject name="LuAttachmentcount" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuAttachmentcount" />
+  <SimpleProperties>
+    <SimpleProperty name="salesFolderAttachmentCount" type="DomInteger" dataSourceProperty="salesFolderAttachmentCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

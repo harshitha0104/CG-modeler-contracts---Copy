@@ -1,0 +1,13 @@
+<ListItem name="LiTmgMetaCheckRel">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="businessModified" type="DomBusinessModified" dataSourceProperty="businessModified" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="tmgMetaPKey" type="DomPKey" dataSourceProperty="tmgMetaPKey" />
+    <SimpleProperty name="tmgCheckPKey" type="DomPKey" dataSourceProperty="tmgCheckPKey" />
+    <SimpleProperty name="tmgTourPKey" type="DomPKey" />
+    <SimpleProperty name="sort" type="DomInteger" storable="false" dataSourceProperty="sort" />
+    <SimpleProperty name="usage" type="DomTmgCheckUsage" storable="false" dataSourceProperty="usage" />
+    <SimpleProperty name="value" type="DomBool"/>
+  </SimpleProperties>
+</ListItem>

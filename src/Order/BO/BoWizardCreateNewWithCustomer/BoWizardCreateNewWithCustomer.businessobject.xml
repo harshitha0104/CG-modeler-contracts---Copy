@@ -1,0 +1,19 @@
+<BusinessObject name="BoWizardCreateNewWithCustomer"  generateLoadMethod="true">
+  <DataSource name="DsBoWizardCreateNewWithCustomer" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="orderMetaPKey" type="DomPKey" storable="false" dataSourceProperty="orderMetaPKey" />
+    <SimpleProperty name="ordererPKey" type="DomPKey" storable="false" dataSourceProperty="ordererPKey" />
+  </SimpleProperties>
+  <ObjectLookups>
+    <ObjectLookup name="luOrderer" objectClass="LuOrderer" dataSourceProperty="ordererPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luOrderMeta" objectClass="LuOrderMeta" dataSourceProperty="orderMetaPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <Methods>
+    <Method name="afterCreateAsync" />
+    <Method name="setEARights" />
+  </Methods>
+  <Validations>
+    <Validation name="validateNotEmpty" />
+  </Validations>
+</BusinessObject>

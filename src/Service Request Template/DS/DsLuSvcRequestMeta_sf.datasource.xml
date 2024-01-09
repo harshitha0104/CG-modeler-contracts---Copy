@@ -1,0 +1,20 @@
+<DataSource name="DsLuSvcRequestMeta" backendSystem="sf" businessObjectClass="LuSvcRequestMeta" readOnly="true" external="false" editableEntity="Account_Task_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Task_Template__c" column="Id" />
+    <DerivedAttribute name="metaType" value="'Issue'" />
+    <DerivedAttribute name="isPrivate" value="'0'" />
+    <Attribute name="wfeWorkflowPKey" table="Account_Task_Template__c" column="Workflow__c" />
+    <Attribute name="text" table="Account_Task_Template__c" column="Description_#Language#__c" />
+    <Attribute name="managementType" table="Account_Task_Template__c" column="Management_Type__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Task_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+      Account_Task_Template__c.Id= #pKey#
+       ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,15 @@
+<ListObject name="LoRewards" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoRewards" />
+  <Item objectClass="LiRewards" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="getRewardIds" />
+    <Method name="generateProductsCounterStringForReward" />
+    <Method name="getProductsSelectionTitle" />
+  </Methods>
+</ListObject>

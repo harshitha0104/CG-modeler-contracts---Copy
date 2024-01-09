@@ -1,0 +1,49 @@
+<DataSource name="DsLoCallAttachments" backendSystem="sf" editableEntity="SF_File" businessObjectClass="LoCallAttachments" external="false" distinct="false" readOnly="false" schemaVersion="2.0" linkedEntityAttributeName="clbMainPKey">
+  <Attributes>
+    <Attribute name="pKey" table="SF_FileLink" column="Id" />
+    <Attribute name="clbMainPKey" table="SF_FileLink" column="ParentId" />
+    <DateTimeAttribute dateName="creationDate" timeName="creationTime" table="SF_File" column="CreatedDate" />
+    <Attribute name="fileName" table="SF_File" column="PathOnClient" />
+    <DerivedAttribute name="fileType" value="replace(SF_File.PathOnClient, rtrim(SF_File.PathOnClient, replace(SF_File.PathOnClient, '.', '')), '')" />
+    <Attribute name="fileSize" table="SF_File" column="ContentSize" />
+    <Attribute name="latitude" table="SF_File" column="Geolocation__Latitude__s" />
+    <Attribute name="longitude" table="SF_File" column="Geolocation__Longitude__s" />
+    <Attribute name="subjectTag" table="SF_File" column="Description" />
+    <Attribute name="typeTag" table="SF_File" column="POS_Type_Tag__c" />
+    <Attribute name="areaTag" table="SF_File" column="Area_Tag__c" />
+    <Attribute name="competitorTag" table="SF_File" column="Competitor_Tag__c" />
+    <Attribute name="attachmentBlobPKey" table="SF_File" column="Id" />
+    <DerivedAttribute name="attachmentText" value="''" />
+    <Attribute name="attachmentBlob" table="SF_File" column="VersionData" />
+    <DerivedAttribute name="isTagged" value="CASE WHEN (TRIM(SF_File.Description) &lt;&gt; '' OR SF_File.POS_Type_Tag__c &lt;&gt; ' ' OR SF_File.Area_Tag__c &lt;&gt; ' ' OR SF_File.Competitor_Tag__c &lt;&gt; 0) THEN 1 ELSE 0 END" />
+    <DerivedAttribute name="locationDeviation" value="' '" />
+    <DerivedAttribute name="attachmentTextPKey" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="SF_File" alias="" idAttribute="Id" />
+    <Entity name="SF_FileLink" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SF_File.Id" comparator="eq" rightSideType="Attribute" rightSideValue="SF_FileLink.FileId" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Visit_Job__c" alias="">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="Visit_Job__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="SF_FileLink.ParentId" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        SF_FileLink.ParentId = #callPKey#
+        OR (Visit_Job__c.Visit__c = #callPKey#
+        #callJobRestriction#)
+      ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="callPKey" type="TEXT" />
+    <Parameter name="callJobRestriction" treatAs="sqlSnippet" />
+  </Parameters>
+</DataSource>

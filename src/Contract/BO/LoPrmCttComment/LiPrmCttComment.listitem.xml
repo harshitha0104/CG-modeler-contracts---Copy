@@ -1,0 +1,9 @@
+<ListItem name="LiPrmCttComment">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomLongText" dataSourceProperty="text" />
+    <SimpleProperty name="usage" type="DomTxtUsage" dataSourceProperty="usage" />
+    <SimpleProperty name="prmContractPKey" type="DomPKey" dataSourceProperty="prmContractPKey" />
+    <SimpleProperty name="language" type="DomLanguage" storable="true" dataSourceProperty="language" />
+  </SimpleProperties>
+</ListItem>

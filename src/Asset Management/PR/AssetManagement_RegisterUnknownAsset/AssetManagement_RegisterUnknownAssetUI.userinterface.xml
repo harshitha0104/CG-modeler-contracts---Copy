@@ -1,0 +1,36 @@
+<UIDescription name="AssetManagement::RegisterUnknownAssetUI" schemaVersion="1.1">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="RegisterAssetLabelId" defaultLabel="Register Asset" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="UnknownAssetSurvey">
+          <Bindings>
+            <Resource target="Text" type="Label" id="DoneAssetId" defaultLabel="Done" />
+            <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="registerNewAsset">
+              <Params>
+                <Param name="registerAsset" value="yes" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="SerialNumberEntry">
+          <InputArea name="SerialNumber" editable="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="SerialNumberId" defaultLabel="Serial Number" />
+              <Binding target="Value" binding="ProcessContext::FlyoutBO.serialNumber" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

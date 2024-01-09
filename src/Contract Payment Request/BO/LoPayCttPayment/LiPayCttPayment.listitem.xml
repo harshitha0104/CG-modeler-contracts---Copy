@@ -1,0 +1,16 @@
+<ListItem name="LiPayCttPayment" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="businessModified" type="DomDate" storable="false" dataSourceProperty="businessModified" />
+    <SimpleProperty name="payText" type="DomString" storable="true" dataSourceProperty="payText" />
+    <SimpleProperty name="customerName" type="DomString" storable="true" dataSourceProperty="customerName" />
+    <SimpleProperty name="customerPKey" type="DomPKey" storable="true" dataSourceProperty="customerPKey" />
+    <SimpleProperty name="reqinitiatorName" type="DomString" storable="true" dataSourceProperty="reqinitiatorName" />
+    <SimpleProperty name="dateInitiation" type="DomDate" storable="false" dataSourceProperty="dateInitiation" />
+    <SimpleProperty name="phase" type="DomPayPhase" storable="false" dataSourceProperty="phase" />
+    <SimpleProperty name="ownerPKey" type="DomPKey" storable="false" dataSourceProperty="ownerPKey" />
+    <SimpleProperty name="paymentType" type="DomPKey" storable="false" dataSourceProperty="paymentType" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" storable="false" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="responsibleUserName" type="DomString" storable="false" dataSourceProperty="responsibleUserName" />
+  </SimpleProperties>
+</ListItem>

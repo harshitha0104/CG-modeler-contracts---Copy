@@ -1,0 +1,47 @@
+<BusinessObject name="BoWizardTripList" schemaVersion="1.1">
+  <DataSource name="DsBoWizardTripList" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="tplMainPKey" type="DomPKey" dataSourceProperty="tplMainPKey" />
+    <SimpleProperty name="description" type="DomText" dataSourceProperty="description" />
+    <SimpleProperty name="type" type="DomTplMetaType" dataSourceProperty="type">
+      <Events>
+        <Event name="onChanged" eventHandler="onTypeChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="validFrom" type="DomDate" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomValidThru" dataSourceProperty="validThru" />
+    <SimpleProperty name="responsibleUser" type="DomText" dataSourceProperty="responsibleUser" />
+    <SimpleProperty name="dayOfWeek" type="DomTplDayOfWeek" dataSourceProperty="dayOfWeek" />
+    <SimpleProperty name="mode" type="DomText" dataSourceProperty="mode" />
+  </SimpleProperties>
+  <ObjectLookups>
+    <ObjectLookup name="tripListLookup" objectClass="LuTripList" dataSourceProperty="tplMainPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+    <Method name="onTypeChanged" />
+    <Method name="loadTripListLookup" />
+    <Method name="setEARights" />
+    <Method name="getButtonVisibility" />
+    <Method name="getButtonEditability" />
+    <Method name="setTripListWizardTitle" />
+  </Methods>
+  <Validations>
+    <Validation name="validateNotEmpty" />
+    <Validation name="validateDateRange" />
+    <Validation name="validateDayValue" />
+  </Validations>
+</BusinessObject>

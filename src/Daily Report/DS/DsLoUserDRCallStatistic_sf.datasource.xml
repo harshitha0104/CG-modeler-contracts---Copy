@@ -1,0 +1,60 @@
+<DataSource name="DsLoUserDRCallStatistic" backendSystem="sf" businessObjectClass="LoUserDRCallStatistic" external="false" editableEntity="User_Document_Template_Activity__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="clbMetaPKey" table="User_Document_Template_Activity__c" column="Activity__c" />
+    <Attribute name="callType" table="Visit_Template__c" column="Meta_Type__c" />
+    <Attribute name="clbText" table="Visit_Template__c" column="Description_#Language#__c" />
+    <DerivedAttribute name="allDay" value="IFNULL(Visit.IsAllDayEvent__c,Event.IsAllDayEvent)" />
+    <DerivedAttribute name="SumAllDayCalls" value="Sum(IFNULL(Visit.IsAllDayEvent__c,Event.IsAllDayEvent))" />
+    <DerivedAttribute name="hours" value="CASE WHEN (CAST(SUM(IFNULL(Visit.Duration_In_Minutes__c,Event.DurationInMinutes))/60 as int) &gt; -1 AND IFNULL(Visit.IsAllDayEvent__c,Event.IsAllDayEvent) = 0) THEN CAST(SUM(IFNULL(Visit.Duration_In_Minutes__c,Event.DurationInMinutes))/60 as int) WHEN IFNULL(Visit.IsAllDayEvent__c,Event.IsAllDayEvent) &lt;&gt; 0 THEN CAST((Sum(IFNULL(Visit.IsAllDayEvent__c,Event.IsAllDayEvent)) * 480)/60 as int) ELSE 0 END" />
+    <DerivedAttribute name="minutes" value="CASE WHEN (CAST(SUM(IFNULL(Visit.Duration_In_Minutes__c,Event.DurationInMinutes)) % 60 as int) &gt; -1 AND IFNULL(Visit.IsAllDayEvent__c,Event.IsAllDayEvent) = 0) THEN CAST(SUM(IFNULL(Visit.Duration_In_Minutes__c,Event.DurationInMinutes)) % 60 as int) ELSE 0 END " />
+    <DerivedAttribute name="duration" value="CASE WHEN (CAST(SUM(IFNULL(Visit.Duration_In_Minutes__c,Event.DurationInMinutes)) as int) &gt; -1 AND IFNULL(Visit.IsAllDayEvent__c,Event.IsAllDayEvent) = '0') THEN CAST(SUM(IFNULL(Visit.Duration_In_Minutes__c,Event.DurationInMinutes)) as int) WHEN IFNULL(Visit.IsAllDayEvent__c,Event.IsAllDayEvent) &lt;&gt; '0' THEN CAST(Sum(IFNULL(Visit.IsAllDayEvent__c,Event.IsAllDayEvent)) * 480 as int) ELSE 0 END" />
+    <DerivedAttribute name="hasCalls" value="CASE WHEN CAST(SUM(IFNULL(Visit.Duration_In_Minutes__c,Event.DurationInMinutes)) as int) &gt; -1 THEN 1 ELSE 0 END" />
+  </Attributes>
+  <Entities>
+    <Entity name="User_Document_Template_Activity__c" alias="" idAttribute="Id" />
+    <Entity name="Visit_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="User_Document_Template_Activity__c.Activity__c" comparator="eq" rightSideType="Attribute" rightSideValue="Visit_Template__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Visit" alias="">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="User_Document_Template_Activity__c.Activity__c" comparator="eq" rightSideType="Attribute" rightSideValue="Visit.Visit_Template__c" />
+          <Condition leftSideValue="Visit.PlannedVisitStartTime" leftSideType="DateTime" comparator="eq" comparatorType="Date" rightSideValue="#dateFrom#" rightSideType="DateTime" />
+          <Condition leftSideValue="Visit.Responsible__c" comparator="eq" rightSideType="Parameter" rightSideValue="'#ownerPKey#'" />
+        </SimpleJoin>
+        <ComplexJoin><![CDATA[
+             (Visit.Status = 'Planned' Or Visit.Status = 'Completed')
+          ]]></ComplexJoin>
+      </Join>
+    </Entity>
+    <Entity name="Event" alias="">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="Visit_Template__c.Name" comparator="eq" rightSideType="Attribute" rightSideValue="Event.Type" />
+          <Condition leftSideValue="Event.StartDateTime" leftSideType="DateTime" comparator="eq" comparatorType="Date" rightSideValue="#dateFrom#" rightSideType="DateTime" />
+          <Condition leftSideValue="Event.OwnerId" comparator="eq" rightSideType="Parameter" rightSideValue="'#ownerPKey#'" />
+          <Condition leftSideValue="Event.WhatId" comparator="eq" rightSideType="Literal" rightSideValue="' '" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        User_Document_Template_Activity__c.User_Document_Template__c = #usrDocMetaPKey#
+        ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Visit_Template__c" attribute="Description_#Language#__c" direction="ASC" />
+  </OrderCriteria>
+  <GroupBy>
+    <GroupByCriterion entity="User_Document_Template_Activity__c" attribute="Activity__c" />
+    <GroupByCriterion entity="Visit" attribute="IsAllDayEvent__c" />
+  </GroupBy>
+  <Parameters>
+    <Parameter name="dateFrom" type="INTEGER" />
+    <Parameter name="usrDocMetaPKey" type="TEXT" />
+    <Parameter name="ownerPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

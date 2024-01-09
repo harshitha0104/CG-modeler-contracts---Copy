@@ -1,0 +1,37 @@
+<Datasource name="DsLuPrimaryAssessmentIndicatorDefinition" objectClass="LuPrimaryAssessmentIndicatorDefinition" external="true" backendSystem="sf" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+   var assessmentTaskId = "";
+
+   if (Utils.isDefined(jsonQuery.assessmentTaskId)){
+    assessmentTaskId = jsonQuery.assessmentTaskId;
+   }
+
+
+   var sqlParams = {assessmentTaskId};
+
+   var sqlStmt = "SELECT AssessmentIndicatorDefinition.id AS id, ";
+            sqlStmt +=    "AssessmentIndicatorDefinition.dataType as dataType, ";
+            sqlStmt +=    "CASE WHEN DisplayOrder is Null THEN 99999 else DisplayOrder END as derivedDisplayOrder ";
+            sqlStmt +=    "FROM AssessmentTask ";
+            sqlStmt +=    "inner JOIN RetailVisitKpi ON RetailVisitKpi.AssessmentTaskId = AssessmentTask.Id ";
+            sqlStmt +=    "AND (AssessmentTask.IsDeleted <> '1'OR AssessmentTask.IsDeleted IS NULL) ";
+            sqlStmt +=    "AND (RetailVisitKpi.IsDeleted <> '1'OR RetailVisitKpi.IsDeleted IS NULL) ";
+            sqlStmt +=    "inner JOIN AssessmentIndicatorDefinition ON RetailVisitKpi.AssessmentIndDefinitionId = AssessmentIndicatorDefinition.Id ";
+            sqlStmt +=    "AND (AssessmentIndicatorDefinition.IsDeleted <> '1'OR AssessmentIndicatorDefinition.IsDeleted IS NULL) ";
+            sqlStmt +=    "WHERE ";
+            sqlStmt +=    "1 = 1 ";
+            sqlStmt +=    "and AssessmentTask.id = '#assessmentTaskId#' ";
+            sqlStmt +=    "ORDER BY ";
+            sqlStmt +=    "derivedDisplayOrder ASC, ";
+            sqlStmt +=    "AssessmentIndicatorDefinition.Name ASC Limit 1 ";
+
+   return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+  ]]></Load>
+  </Database>
+</Datasource>
+
+
+

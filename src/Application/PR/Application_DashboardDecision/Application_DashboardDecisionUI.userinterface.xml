@@ -1,0 +1,38 @@
+<UIDescription name="Application::DashboardDecisionUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionPage">
+    <Section sectionName="masterSection" sectionPattern="DashboardSection" showInfoArea="true">
+      <Bindings>
+        <Resource target="LogoIcon" type="Image" id="LogoSalesforce" />
+        <Resource target="AltLogoIcon" type="Image" id="EmptyImage" />
+      </Bindings>
+      <Area areaName="welcomeArea" areaPattern="WelcomeArea">
+        <Welcome name="Welcome">
+          <Bindings>
+            <Resource target="Welcome" type="Label" id="welcome" defaultLabel="Welcome" />
+            <Binding target="User" type="Text" binding="ApplicationContext::User.name" bindingMode="ONE_WAY" />
+          </Bindings>
+        </Welcome>
+      </Area>
+      <Area areaName="buttonGridArea" areaPattern="ButtonGridArea">
+        <ImageButton name="SalesRepButton">
+          <Bindings>
+            <Resource target="Image" type="Image" id="MenuClipboard" />
+            <Resource target="Text" type="Label" id="SalesRepDashboardId" defaultLabel="Retail" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="openSalesRepDashboard" />
+          </Events>
+        </ImageButton>
+        <ImageButton name="PromotionApproverButton">
+          <Bindings>
+            <Resource target="Image" type="Image" id="MenuTag" />
+            <Resource target="Text" type="Label" id="PrmApproverDashboardId" defaultLabel="TPM" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="openPromotionApproverDashboard" />
+          </Events>
+        </ImageButton>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

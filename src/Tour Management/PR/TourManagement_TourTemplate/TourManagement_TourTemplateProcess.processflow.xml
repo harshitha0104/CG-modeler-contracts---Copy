@@ -1,0 +1,30 @@
+<Process name="TourManagement::TourTemplateProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="TemplateList" type="LoTourTemplate" />
+        <Declaration name="TemplateId" type="DomId" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetTemplateList" actionType="LOAD" type="LoTourTemplate">
+        <Return name="ProcessContext::TemplateList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>TourManagement::TourTemplateUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="AssignTemplateId" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="AssignTemplateId">
+        <ReturnValues>
+          <Return name="templatePKey" value="Event.pKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

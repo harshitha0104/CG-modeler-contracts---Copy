@@ -1,0 +1,97 @@
+<DataSource name="DsBoOrderMeta" backendSystem="sf" businessObjectClass="BoOrderMeta" external="false" editableEntity="Order_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Order_Template__c" column="Id" />
+    <Attribute name="active" table="Order_Template__c" column="Active__c" />
+    <Attribute name="creationPlatform" table="Order_Template__c" column="Creation_Platform__c" />
+    <Attribute name="id" table="Order_Template__c" column="Name" />
+    <Attribute name="minOrderValue" table="Order_Template__c" column="Min_Order_Value__c" />
+    <Attribute name="maxOrderValue" table="Order_Template__c" column="Max_Order_Value__c" />
+    <Attribute name="disposalListProposal" table="Order_Template__c" column="Disposal_List_Proposal__c" />
+    <Attribute name="considerFieldStatus" table="Order_Template__c" column="Consider_Field_Availability__c" />
+    <Attribute name="considerListing" table="Order_Template__c" column="Consider_Listing__c" />
+    <Attribute name="considerPromotion" table="Order_Template__c" column="Consider_Promotion__c" />
+    <Attribute name="filterByBpaAssortment" table="Order_Template__c" column="Selling_Assortment_Filter__c" />
+    <Attribute name="filterBySdoAssortment" table="Order_Template__c" column="Sales_Document_Assortment_Filter__c" />
+    <Attribute name="useBpaAssortment" table="Order_Template__c" column="Customer_Selling_Assortment__c" />
+    <Attribute name="useSalesDocAssortment" table="Order_Template__c" column="Sales_Document_Assortment__c" />
+    <Attribute name="text" table="Order_Template__c" column="Description_#Language#__c" />
+    <Attribute name="listing" table="Order_Template__c" column="Listing_Finding__c" />
+    <DerivedAttribute name="listingWithModules" value="'None'" />
+    <Attribute name="allowForeignProducts" table="Order_Template__c" column="Allow_Competitor_Products__c" />
+    <Attribute name="deliveryDatePolicy" table="Order_Template__c" column="Delivery_Date_Calculation__c" />
+    <Attribute name="considerSunday" table="Order_Template__c" column="Consider_Sunday__c" />
+    <Attribute name="considerSaturday" table="Order_Template__c" column="Consider_Saturday__c" />
+    <Attribute name="considerLeadTime" table="Order_Template__c" column="Consider_Lead_Time__c" />
+    <Attribute name="leadTime" table="Order_Template__c" column="Min_Lead_Time__c" />
+    <Attribute name="maxLeadTime" table="Order_Template__c" column="Max_Lead_Time__c" />
+    <Attribute name="checkDeliveryDate" table="Order_Template__c" column="Check__c" />
+    <Attribute name="editDeliveryDate" table="Order_Template__c" column="Manual_Adjustment__c" />
+    <DerivedAttribute name="considerNewProducts" value="'0'" />
+    <Attribute name="considerOutOfStock" table="Order_Template__c" column="Consider_OoS__c" />
+    <Attribute name="addHistoryItem" table="Order_Template__c" column="Add_Former_Items__c" />
+    <Attribute name="considerMaxHistoryDays" table="Order_Template__c" column="Consider_History_In_Days__c" />
+    <Attribute name="cancelReasonRequired" table="Order_Template__c" column="Cancel_Reason_Required__c" />
+    <Attribute name="ivcRefPKey1Usage" table="Order_Template__c" column="Inventory_Reference_1__c" />
+    <Attribute name="ivcRefPKey2Usage" table="Order_Template__c" column="Inventory_Reference_2__c" />
+    <Attribute name="ivcRefPKey3Usage" table="Order_Template__c" column="Inventory_Reference_3__c" />
+    <Attribute name="ivcRefPKey4Usage" table="Order_Template__c" column="Inventory_Reference_4__c" />
+    <Attribute name="ivcRefPKey5Usage" table="Order_Template__c" column="Inventory_Reference_5__c" />
+    <Attribute name="ivcTAReceiver" table="Order_Template__c" column="Transaction_Receiver__c" />
+    <Attribute name="brokerRequired" table="Order_Template__c" column="Wholesaler_Required__c" />
+    <Attribute name="hideBroker" table="Order_Template__c" column="Hide_Wholesaler__c" />
+    <Attribute name="wfeWorkflowPKey" table="Order_Template__c" column="Workflow__c" />
+    <Attribute name="displayIvcBalance" table="Order_Template__c" column="Consider_Stock__c" />
+    <Attribute name="deletionAllowed" table="Order_Template__c" column="Deletion_Allowed__c" />
+    <Attribute name="mobilityRelevant" table="Order_Template__c" column="Mobility_Relevant__c" />
+    <Attribute name="syncOptions" table="Order_Template__c" column="Sync_Options__c" />
+    <Attribute name="itemListOption" table="Order_Template__c" column="List_Option__c" />
+    <Attribute name="flatItemListGrouping" table="Order_Template__c" column="Flat_Item_List_Grouping__c" />
+    <Attribute name="sysNumberPKey" table="Order_Template__c" column="System_Number__c" />
+    <Attribute name="docNumberGenBehavior" table="Order_Template__c" column="Id_Generation__c" />
+    <Attribute name="cpPricingType" table="Order_Template__c" column="Pricing_Type__c" />
+    <Attribute name="cpPricingDate" table="Order_Template__c" column="Pricing_Date__c" />
+    <Attribute name="computePrice" table="Order_Template__c" column="Compute_Price__c" />
+    <Attribute name="recalculationRequired" table="Order_Template__c" column="Recalculation_Required__c" />
+    <Attribute name="notifyOutdatedCalculation" table="Order_Template__c" column="Notify_Outdated_Calculation__c" />
+    <Attribute name="quantityRounding" table="Order_Template__c" column="Quantity_Rounding__c" />
+    <Attribute name="barcodeScanBehavior" table="Order_Template__c" column="Barcode_Scan_Behavior__c" />
+    <Attribute name="sysReleaseProcessPKey" table="Order_Template__c" column="Signature_Template__c" />
+    <Attribute name="captureReleaseTime" table="Order_Template__c" column="Capture_Release_Time__c" />
+    <Attribute name="considerItemModReason" table="Order_Template__c" column="Consider_Modification_Reason__c" />
+    <Attribute name="considerQuantitySuggestion" table="Order_Template__c" column="Consider_Quantity_Suggestion__c" />
+    <Attribute name="docInvoiceNumberGenBehavior" table="Order_Template__c" column="Invoice_Id_Generation__c" />
+    <Attribute name="reportPolicy" table="Order_Template__c" column="Report__c" />
+    <Attribute name="sdoSubType" table="Order_Template__c" column="Document_Type__c" />
+    <Attribute name="considerInventory" table="Order_Template__c" column="Consider_Inventory__c" />
+    <Attribute name="itemInputRequired" table="Order_Template__c" column="Item_Input_Required__c" />
+    <Attribute name="prdCheckInPolicy" table="Order_Template__c" column="Product_Check_In_Policy__c" />
+    <Attribute name="docTaType" table="Order_Template__c" column="Document_Transaction_Type__c" />
+    <Attribute name="considerBpaDocTaType" table="Order_Template__c" column="Use_Customer_Document_TA_Type__c" />
+    <Attribute name="cndCpCalculationSchemaPKey" table="Order_Template__c" column="Calculation_Schema__c" />
+    <Attribute name="paymentModReasonRequired" table="Order_Template__c" column="Payment_Modification_Reason__c" />
+    <DerivedAttribute name="splittingOption" value="'No'" />
+    <DerivedAttribute name="splittingRule" value="''" />
+    <DerivedAttribute name="usrNotificationMetaPKey" value="''" />
+    <DerivedAttribute name="numberOfHistValues" value="Order_Template__c.Number_Of_Historic_Quantities__c" />
+    <DerivedAttribute name="filterByCurrentInventory" value="'0'" />
+    <Attribute name="itemPresettingPolicy" table="Order_Template__c" column="Item_Presetting_Policy__c" />
+    <DerivedAttribute name="generatePricingLog" value="CASE Generate_Pricing_Log__c WHEN ' ' THEN 'Yes' ELSE Generate_Pricing_Log__c END" />
+    <DerivedAttribute name="generatePricingInformation" value="CASE Generate_Pricing_Information__c WHEN ' ' THEN 'No' ELSE Generate_Pricing_Information__c END" />
+    <Attribute name="considerSelectablePromotion" table="Order_Template__c" column="Consider_Selectable_Promotion__c" />
+    <Attribute name="promotionFilterSelection" table="Order_Template__c" column="Promotion_Filter_Selection__c" />
+    <Attribute name="specialOrderHandling" table="Order_Template__c" column="Special_Order_Handling__c" />
+    <DerivedAttribute name="generateRewardsLog" value="CASE Generate_Rewards_Log__c WHEN ' ' THEN 'Yes' ELSE Generate_Rewards_Log__c END" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+  Order_Template__c.Id = #pKey#
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Order_Template__c" attribute="Id" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

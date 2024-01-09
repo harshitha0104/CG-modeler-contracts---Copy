@@ -1,0 +1,27 @@
+<DataSource name="DsLuUsrReminderRuleById" businessObjectClass="LuUsrReminderRuleById" external="false" editableEntity="UsrReminderRule" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="conditionThreshold" table="UsrReminderRule" column="ConditionThreshold" />
+    <Attribute name="conditionActivityType" table="UsrReminderRule" column="ConditionActivityType" />
+    <Attribute name="conditionUserExitId" table="UsrReminderRule" column="ConditionUserExitId" />
+    <Attribute name="messageTitle" table="UsrReminderRuleText" column="Title" />
+    <Attribute name="messageContent" table="UsrReminderRuleText" column="Message" />
+  </Attributes>
+  <Entities>
+    <Entity name="UsrReminderRule" />
+    <Entity name="UsrReminderRuleText" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="UsrReminderRule.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="UsrReminderRuleText.UsrReminderRulePKey" />
+          <Condition leftSideValue="UsrReminderRuleText.Language" comparator="eq" rightSideType="Parameter" rightSideValue="'#Language#'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        UsrReminderRule.Id = #ruleId#
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="ruleId" type="TEXT" />
+  </Parameters>
+</DataSource>

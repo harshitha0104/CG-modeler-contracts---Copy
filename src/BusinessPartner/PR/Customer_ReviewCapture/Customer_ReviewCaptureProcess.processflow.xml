@@ -1,0 +1,1004 @@
+<Process name="Customer::ReviewCaptureProcess" defaultAction="ShowCustomerList_Decision_From_InputParam" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CustomerList" type="LoCustomerOverview" />
+        <Declaration name="CustomerCallList" type="LoCustomerCall" />
+        <Declaration name="CustomerRelationList" type="LoBpaRelation" />
+        <Declaration name="CustomerDetail" type="BoCustomer" />
+        <Declaration name="ContactPartnerDetail" type="BoContactPartner" />
+        <Declaration name="POSDetail" type="BoPos" />
+        <Declaration name="PosName" type="String" />
+        <Declaration name="PosMetaPKey" type="String" />
+        <Declaration name="PosGeometryPKey" type="String" />
+        <Declaration name="BpaMetaPKey" type="String" />
+        <Declaration name="BpaMetaName" type="String" />
+        <Declaration name="ExistingBpaPosMetaPKey" type="String" />
+        <Declaration name="CreateNew_ButtonPressed" type="String" />
+        <Declaration name="CreateNewCustomer_ButtonPressed" type="String" />
+        <Declaration name="MainAddress" type="LiBpaAddress" />
+        <Declaration name="ContextMenuList" type="LoBpaContextMenu" />
+        <Declaration name="boCustomerReports" type="BoCustomerReports" />
+        <Declaration name="ContactMainAddress" type="LoContactPartnerAddress" />
+        <Declaration name="CurrentAddress" type="LuCurrentAddress" />
+        <Declaration name="SortBy" type="String" />
+        <Declaration name="SortPossible" type="String" />
+        <Declaration name="IsEditable" type="DomBool" />
+        <Declaration name="IsPOSValidForDeletion" type="String" />
+        <Declaration name="CurrentResponsiblePKey" type="DomPKey" />
+        <!-- Time Slot Params -->
+        <Declaration name="OperatingHour" type="BoOperatingHour" />
+        <Declaration name="TimeSlot" type="BoTimeSlot" />
+        <Declaration name="TimeSlotContextMenu" type="LoTimeSlotContextMenu" />
+        <Declaration name="IsOperatingHourAvailable" type="DomBool" />
+        <Declaration name="AccountOperatingHourEnabled" type="LuSysSettingById" />
+      </Declarations>
+      <Parameters>
+        <Input name="CustomerPKey" type="String" />
+        <Input name="CardOverdue" type="DomBool" />
+      </Parameters>
+    </ProcessContext>
+    <!-- Entry actions are executed sequentially in the order listed here. -->
+    <EntryActions>
+      <Action name="AssignResponsible" actionType="LOGIC" call="ApplicationContext::User.getPKey">
+        <Return name="ProcessContext::CurrentResponsiblePKey" />
+      </Action>
+      <!-- Reload team list of user (could be changed via background sync)
+      Param 1 means including current user into teamlist -->
+      <Action actionType="LOGIC" name="LoadTeamOfUser" call="ApplicationContext::User.loadTeamOfUser">
+        <Parameters>
+          <Input name="includeCurrentUser" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+      <Action name="CreateCustomerReportsBo" actionType="CREATE" type="BoCustomerReports">
+        <Parameters>
+          <Input name="containerName" value="CustomerRevenueReportContainer" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::boCustomerReports" />
+      </Action>
+      <Action actionType="LOAD" name="GetCustomerList" type="LoCustomerOverview">
+        <Parameters>
+          <Input name="cardOverdue" value="ProcessContext::CardOverdue" />
+          <Input name="referenceUserPKey" value="ProcessContext::CurrentResponsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerList" />
+      </Action>
+      <Action actionType="LOGIC" name="SetOverdueButtonEditability" call="ProcessContext::CustomerList.getButtonEditability">
+        <Parameters>
+          <Input name="cardOverdue" value="ProcessContext::CardOverdue" />
+        </Parameters>
+        <Return name="ProcessContext::IsEditable" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowCustomerList_Decision_From_InputParam" actionType="DECISION" parameter="ProcessContext::CustomerPKey">
+        <CaseElse action="SetCurrentByPKey" />
+        <CaseEmpty action="ShowCustomerList" />
+      </Action>
+      <Action name="SetCurrentByPKey" actionType="LOGIC" call="ProcessContext::CustomerList.setCustomerByPKey">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CustomerPKey" />
+        </Parameters>
+        <TransitionTo action="ShowCustomerList" />
+      </Action>
+      <!-- Show GUI and handle events -->
+      <Action actionType="VIEW" name="ShowCustomerList">
+        <UIDescription>Customer::ReviewCapture</UIDescription>
+        <Events>
+          <!-- Handle Selected Events -->
+          <Event name="itemSelected" action="CustomerListMasterDetail" />
+          <Event name="tabSelected" action="TabDecision" />
+          <Event name="contactPartnerSelected" action="LoadContactPartnerDetail" />
+          <Event name="addressSelected" action="SetCurrentAddress" />
+          <Event name="posSelected" action="SetCurrentRelLoadPOSDetail" />
+          <!--Account Harmonization: obsolete <Event name="openingHoursSelected" action="SetCurrentOpeningHours" /> -->
+          <!-- Handle Overview Events -->
+          <!-- Accept Events -->
+          <Event name="acceptContactChanges" action="ValidateContactPartner" />
+          <!--Account Harmonization: obsolete <Event name="acceptOpeningHourChanges" action="ValidateOpeningHours" /> -->
+          <Event name="acceptPOSChanges" action="ValidateCustomerPOSRelation" />
+          <Event name="acceptAddressChanges" action="SaveLoCustomerAddress" />
+          <!-- Cancel Events -->
+          <!--Account Harmonization: obsolete <Event name="cancelOpeningHourChanges" action="CancelOpeningHourChanges" /> -->
+          <Event name="cancelAddressChanges" action="CancelAddressChanges" />
+          <!-- Handle New Object Events -->
+          <Event name="newContact" action="ValidateContactBeforeComplete" />
+          <Event name="addContact" action="AddExistingContactPartner_LU" />
+          <!--Account Harmonization: obsolete <Event name="newOpeningHour" action="CreateNewOpeningHour" /> -->
+          <Event name="newPOS" action="ValidatePOSBeforeComplete" />
+          <Event name="newAddress" action="CreateNewAddress" />
+          <Event name="createNewCustomer" action="SaveValidateCustomerAndShowCreateWizard" />
+          <!-- Handle functional Events -->
+          <Event name="updateGeoCoordinates" action="UpdateGeoCoordinates" />
+          <Event name="navigatePressed" action="NavigateToCustomer" />
+          <!-- Handle ContextMenu Events -->
+          <!--Account Harmonization: obsolete <Event name="contextMenuOpeningHoursOpened" action="LoadOpeningHoursContextMenuList" /> -->
+          <!--Account Harmonization: obsolete <Event name="contextMenuItemOpeningHoursSelected" action="ContextMenuResultDecision" /> -->
+          <Event name="contextMenuAddressOpened" action="LoadAddressContextMenuList" />
+          <Event name="contextMenuItemAddressSelected" action="ContextMenuResultDecision" />
+          <Event name="contextMenuContactOpened" action="LoadContactContextMenuList" />
+          <Event name="contextMenuItemContactSelected" action="ContextMenuResultDecision" />
+          <Event name="contextMenuPOSOpened" action="LoadPOSContextMenuList" />
+          <Event name="contextMenuItemPOSSelected" action="ContextMenuResultDecision" />
+          <Event name="phonePressed" action="StartPhoneCall" />
+          <Event name="smsPressed" action="StartSMS" />
+          <Event name="mailPressed" action="StartMail" />
+          <Event name="contactPartnerPhone1Pressed" action="StartContactPartnerPhone1Call" />
+          <Event name="contactPartnerSms1Pressed" action="StartContactPartnerPhone1SMS" />
+          <Event name="contactPartnerPhone2Pressed" action="StartContactPartnerPhone2Call" />
+          <Event name="contactPartnerSms2Pressed" action="StartContactPartnerPhone2SMS" />
+          <Event name="contactPartnerMailPressed" action="StartContactPartnerMail" />
+          <Event name="sortByDistance" action="Validate_BeforeSortByDistance" />
+          <Event name="sortByAlphabet" action="Validate_BeforeSortByAlphabet" />
+          <!-- Operating Hour / Time Slot Handling -->
+          <Event name="timeSlotSelected" action="LoadTimeSlot" />
+          <Event name="newTimeSlot" action="CreateTimeSlot" />
+          <Event name="acceptTimeSlotChanges" action="ValidateTimeSlot" />
+          <Event name="timeSlotContextMenuOpened" action="LoadTimeSlotContextMenu" />
+          <Event name="timeSlotContextMenuItemSelected" action="ContextMenuResultDecision" />
+        </Events>
+      </Action>
+      <!-- ContextMenu Decision -->
+      <Action name="ContextMenuResultDecision" actionType="DECISION" parameter="Event.selected">
+        <!--Account Harmonization: obsolete <Case value="DeleteOpeningHour" action="DeleteOpeningHour" /> -->
+        <Case value="DeleteAddress" action="DeleteAddress" />
+        <Case value="DeleteContact" action="DeleteContact" />
+        <Case value="DeletePOS" action="DeletePOS" />
+        <Case value="DiscontinuePOS" action="DiscontinuePOS" />
+        <Case value="DeleteTimeSlot" action="DeleteTimeSlot" />
+        <CaseElse action="ShowCustomerList" />
+      </Action>
+      <Action name="SaveValidateCustomerAndShowCreateWizard" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::CustomerDetail.validateCustomer" />
+          <Validation name="ProcessContext::ContactPartnerDetail.validateContactPartner" />
+        </Validations>
+        <TransitionTo action="CreateValidationResult_Decision" />
+      </Action>
+      <Action name="CreateValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="CustomerListMasterDetail.create" />
+        <Case value="validateDiscard" action="UnModifyAndDisplayCustomerList" />
+        <CaseElse action="ShowCustomerList" />
+      </Action>
+      <Action name="UnModifyAndDisplayCustomerList" actionType="LOGIC" call="ProcessContext::CustomerDetail.resetObjectStatus">
+        <TransitionTo action="UnModifyContactPartner" />
+      </Action>
+      <Action name="UnModifyContactPartner" actionType="LOGIC" call="ProcessContext::ContactPartnerDetail.resetObjectStatus">
+        <TransitionTo action="CustomerListMasterDetail.create" />
+      </Action>
+      <!-- BEGIN: Customer Overview -->
+      <Action name="CustomerListMasterDetail" actionType="MASTER_DETAIL_HANDLER">
+        <MasterList name="ProcessContext::CustomerList">
+          <!--RELOAD|UPDATE|NONE-->
+          <ItemUnselected type="RELOAD" />
+        </MasterList>
+        <DetailObject name="ProcessContext::CustomerDetail" objectClass="BoCustomer">
+          <!--type="DIRTY|ALWAYS|NEVER" confirmation="TRUE|FALSE" validate="TRUE|FALSE" -->
+          <Save type="DIRTY" confirmation="FALSE" validate="FALSE" />
+          <Create autoSave="FALSE">
+            <WizardProcess name="Customer::CreateCustomerWizardProcess" submitParameter="ProcessContext::CreateNewCustomer_ButtonPressed">
+              <Parameters />
+              <ReturnValues>
+                <Return name="ProcessContext::BpaMetaName" value="bpaMetaName" />
+                <Return name="ProcessContext::BpaMetaPKey" value="bpaMetaPKey" />
+                <Return name="ProcessContext::CreateNewCustomer_ButtonPressed" value="buttonPressed" />
+              </ReturnValues>
+            </WizardProcess>
+          </Create>
+        </DetailObject>
+        <TransitionTo action="SortCustomersList_Decision" />
+      </Action>
+      <Action name="SortCustomersList_Decision" actionType="DECISION" parameter="ProcessContext::SortBy">
+        <Case value="Distance" action="LoadCurrentAddressListAndSort" />
+        <CaseElse action="removeBlankItem" />
+      </Action>
+      <!-- Start -Sort Customer list  -->
+      <!-- Sorting when new customer created -->
+      <Action name="Validate_BeforeSortByDistance" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::CustomerDetail.validateCustomer" />
+          <Validation name="ProcessContext::ContactPartnerDetail.validateContactPartner" />
+        </Validations>
+        <TransitionTo action="SortByDistance_Decision" />
+      </Action>
+      <Action name="SortByDistance_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="SaveBeforeSortByDistance" />
+        <Case value="validateDiscard" action="UnModifyandSortCustomerByDistance" />
+        <CaseElse action="ShowCustomerList" />
+      </Action>
+      <Action name="SaveBeforeSortByDistance" actionType="SAVE">
+        <Parameters>
+          <Input name="boCustomer" value="ProcessContext::CustomerDetail" />
+        </Parameters>
+        <TransitionTo action="SetSortByDistance" />
+      </Action>
+      <Action name="UnModifyandSortCustomerByDistance" actionType="LOGIC" call="ProcessContext::CustomerDetail.resetObjectStatus">
+        <TransitionTo action="ReLoadCustomerListAndSortByDistance" />
+      </Action>
+      <Action actionType="LOAD" name="ReLoadCustomerListAndSortByDistance" type="LoCustomerOverview">
+        <Parameters>
+          <Input name="cardOverdue" value="ProcessContext::CardOverdue" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerList" />
+        <TransitionTo action="SetSortByDistance" />
+      </Action>
+      <Action name="Validate_BeforeSortByAlphabet" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::CustomerDetail.validateCustomer" />
+          <Validation name="ProcessContext::ContactPartnerDetail.validateContactPartner" />
+        </Validations>
+        <TransitionTo action="SortByAlphabet_Decision" />
+      </Action>
+      <Action name="SortByAlphabet_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="SaveBeforeSortByAlphabet" />
+        <Case value="validateDiscard" action="UnModifyandSortCustomerByAlphabet" />
+        <CaseElse action="ShowCustomerList" />
+      </Action>
+      <Action name="UnModifyandSortCustomerByAlphabet" actionType="LOGIC" call="ProcessContext::CustomerDetail.resetObjectStatus">
+        <TransitionTo action="SetSortByAlphabet" />
+      </Action>
+      <Action name="SaveBeforeSortByAlphabet" actionType="SAVE">
+        <Parameters>
+          <Input name="boCustomer" value="ProcessContext::CustomerDetail" />
+        </Parameters>
+        <TransitionTo action="SetSortByAlphabet" />
+      </Action>
+      <Action name="SetSortByDistance" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="Distance" type="String" />
+        </Parameters>
+        <Return name="ProcessContext::SortBy" />
+        <TransitionTo action="LoadCurrentAddressListAndSort" />
+      </Action>
+      <Action name="SetSortByAlphabet" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="Alphabet" type="String" />
+        </Parameters>
+        <Return name="ProcessContext::SortBy" />
+        <TransitionTo action="ReLoadCustomerList" />
+      </Action>
+      <Action actionType="LOAD" name="ReLoadCustomerList" type="LoCustomerOverview">
+        <Parameters>
+          <Input name="cardOverdue" value="ProcessContext::CardOverdue" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerList" />
+        <TransitionTo action="SetFirstItemAsCurrent" />
+      </Action>
+      <Action actionType="LOAD" name="LoadCurrentAddressListAndSort" type="LuCurrentAddress">
+        <Return name="ProcessContext::CurrentAddress" />
+        <TransitionTo action="CurrentAddress_Found_Decision" />
+      </Action>
+      <Action name="CurrentAddress_Found_Decision" actionType="DECISION" parameter="ProcessContext::CurrentAddress.isAddressFound">
+        <Case value="Yes" action="sortListByDistance" />
+        <Case value="No" action="ShowWarning" />
+        <CaseElse action="ShowWarning" />
+      </Action>
+      <Action name="sortListByDistance" actionType="LOGIC" call="ProcessContext::CustomerList.sortCustomersByDistance">
+        <Parameters>
+          <Input name="currentLatitude" value="ProcessContext::CurrentAddress.latitude" />
+          <Input name="currentLongitude" value="ProcessContext::CurrentAddress.longitude" />
+        </Parameters>
+        <TransitionTo action="SetFirstItemAsCurrent" />
+      </Action>
+      <Action name="ShowWarning" actionType="LOGIC" call="ProcessContext::CustomerList.displayWarning">
+        <TransitionTo action="SetSortByAlphabet" />
+      </Action>
+      <!-- End -Sort Customer list  -->
+      <Action name="removeBlankItem" actionType="LOGIC" call="ProcessContext::CustomerList.removeBlankItem">
+        <TransitionTo action="ClearContactPartnerDetail" />
+      </Action>
+      <Action name="SetFirstItemAsCurrent" actionType="LOGIC" call="ProcessContext::CustomerList.setFirstItemAsCurrent">
+        <Parameters>
+          <Input name="sortBy" value="ProcessContext::SortBy" />
+          <Input name="CustomerPKey" value="ProcessContext::CustomerPKey" />
+        </Parameters>
+        <TransitionTo action="ClearCustomerPKey" />
+      </Action>
+      <Action actionType="LOGIC" name="ClearCustomerPKey" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerPKey" />
+        <TransitionTo action="TabDecision" />
+      </Action>
+      <!-- END: Customer Overview -->
+      <!-- BEGIN: Customer Detail -->
+      <!-- Decision Point for selected Tab Pages -->
+      <Action name="TabDecision" actionType="DECISION" parameter="Event.tabName">
+        <Case value="Map" action="GetMainAddress" />
+        <!--Account Harmonization: obsolete <Case value="OpeningHours" action="LoadLoOpeningTime" /> -->
+        <Case value="OpenHours" action="LoadIsOperatingHourEnabledSetting" />
+        <Case value="Contact" action="LoadLoContactPartner" />
+        <Case value="POS" action="LoadLoCustomerPOSRelation" />
+        <Case value="Address" action="FilterAdditionalAddresses" />
+        <Case value="Call" action="LoadCallCustomerDetail" />
+        <Case value="Roles" action="LoadRoleObjects" />
+        <Case value="Relations" action="LoadCustomerRelationDetail" />
+        <Case value="Attachments" action="LoadLoAttachment" />
+        <Case value="Revenue" action="HideChartToolTip" />
+        <Case value="OpenItems" action="LoadCustomerOpenItems" />
+        <CaseElse action="ShowCustomerList" />
+      </Action>
+      <!-- BEGIN: Handling TabDecision -->
+      <!-- Revenue Tab -->
+      <Action name="HideChartToolTip" actionType="LOGIC" call="ProcessContext::boCustomerReports.chartHelper.hideChartToolTip">
+        <Parameters>
+          <Input name="containerName" value="CustomerRevenueReportContainer" type="Literal" />
+        </Parameters>
+      </Action>
+      <!-- Map Tab -->
+      <Action name="GetMainAddress" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoCustomerAddress.getMainAddress">
+        <Return name="ProcessContext::MainAddress" />
+      </Action>
+      <!-- OpeningTime Tab -->
+      <!--Account Harmonization: obsolete
+      <Action name="LoadLoOpeningTime" actionType="LOGIC" call="ProcessContext::CustomerDetail.loadLoOpeningTimeAsync">
+        <Parameters>
+          <Input name="bReload" type="Literal" value="0" />
+        </Parameters>
+      </Action>
+      Account Harmonization: obsolete-->
+      <!-- Open Hours Tab -->
+      <Action actionType="LOAD" name="LoadIsOperatingHourEnabledSetting" type="LuSysSettingById">
+        <Parameters>
+          <Input name="iD" type="Literal" value="AccountOperatingHourEnabled" />
+        </Parameters>
+        <Return name="ProcessContext::AccountOperatingHourEnabled" />
+        <TransitionTo action="LoadLoOpenHours" />
+      </Action>
+      <Action name="LoadLoOpenHours" actionType="LOGIC" call="ProcessContext::CustomerDetail.loadLoOpenHoursAsync">
+        <TransitionTo action="ClearTimeSlotDetail" />
+      </Action>
+      <Action name="ClearTimeSlotDetail" actionType="LOGIC" call="BoFactory.instantiate">
+        <Return name="ProcessContext::TimeSlot" />
+        <Parameters>
+          <Input name="name" type="Literal" value="BoTimeSlot" />
+        </Parameters>
+      </Action>
+      <!-- Contact Tab -->
+      <Action name="LoadLoContactPartner" actionType="LOGIC" call="ProcessContext::CustomerDetail.loadLoContactPartnerAsync">
+        <Parameters>
+          <Input name="bReload" type="Literal" value="0" />
+        </Parameters>
+        <TransitionTo action="ClearContactPartnerDetail" />
+      </Action>
+      <Action name="ClearContactPartnerDetail" actionType="LOGIC" call="BoFactory.instantiate">
+        <Return name="ProcessContext::ContactPartnerDetail" />
+        <Parameters>
+          <Input name="clear" type="Literal" value="BoContactPartner" />
+        </Parameters>
+      </Action>
+      <!-- POS Tab -->
+      <Action name="LoadLoCustomerPOSRelation" actionType="LOGIC" call="ProcessContext::CustomerDetail.loadLoCustomerPOSRelationAsync">
+        <Parameters>
+          <Input name="bReload" type="Literal" value="0" />
+        </Parameters>
+      </Action>
+      <!-- Address Tab -->
+      <Action name="FilterAdditionalAddresses" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoCustomerAddress.setFilter">
+        <Parameters>
+          <Input name="fieldName" type="Literal" value="main" />
+          <Input name="value" type="Literal" value="0" />
+          <Input name="op" type="Literal" value="EQ" />
+        </Parameters>
+      </Action>
+      <!-- Roles Tab -->
+      <Action name="LoadRoleObjects" actionType="LOGIC" call="ProcessContext::CustomerDetail.loadRoleObjectsAsync">
+        <Parameters>
+          <Input name="bReload" type="Literal" value="0" />
+        </Parameters>
+        <TransitionTo action="SetEARightsForRolesTab" />
+      </Action>
+      <Action name="SetEARightsForRolesTab" actionType="LOGIC" call="ProcessContext::CustomerDetail.setEARights">
+        <Parameters>
+          <Input name="mode" type="Literal" value="roles" />
+        </Parameters>
+      </Action>
+      <!-- Call Tab -->
+      <Action name="LoadCallCustomerDetail" actionType="LOAD" type="LoCustomerCall">
+        <Parameters>
+          <Input name="bpaMainPKey" value="ProcessContext::CustomerDetail.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerCallList" />
+      </Action>
+      <!-- Relation Tab -->
+      <Action name="LoadCustomerRelationDetail" actionType="LOAD" type="LoBpaRelation">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::CustomerDetail.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerRelationList" />
+      </Action>
+      <!-- Attachment Tab -->
+      <Action name="LoadLoAttachment" actionType="LOGIC" call="ProcessContext::CustomerDetail.loadLoAttachmentAsync">
+        <Parameters>
+          <Input name="bReload" type="Literal" value="0" />
+        </Parameters>
+      </Action>
+      <!-- OpenItems Tab -->
+      <Action name="LoadCustomerOpenItems" actionType="LOGIC" call="ProcessContext::CustomerDetail.loadLoBpaOpenItemAsync">
+        <Parameters>
+          <Input name="bReload" type="Literal" value="0" />
+        </Parameters>
+      </Action>
+      <!-- END: Handling TabDecision -->
+      <!-- BEGIN:   Handling Events -->
+      <!-- Main Tab -->
+      <Action name="UpdateGeoCoordinates" actionType="LOGIC" call="ProcessContext::CustomerDetail.updateGeoCoordinates">
+        <Return name="ProcessContext::MainAddress" />
+      </Action>
+      <!-- Opening Hours Tab -->
+      <!--Account Harmonization: obsolete
+      <Action name="CreateNewOpeningHour" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoCustomerOpeningTime.addItem">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::CustomerDetail.pKey" />
+        </Parameters>
+      </Action>
+      Account Harmonization: obsolete -->
+      <!-- Cancel Changes   Todo: Only cancel of create new works, for canceling changes of existing items original values were needed-->
+      <!--Account Harmonization: obsolete
+      <Action name="CancelOpeningHourChanges" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmCancelMsg" />
+        <Cases>
+          <Case value="Yes" action="RemoveCreatedOpeningHour" />
+          <Case value="No" action="ShowCustomerList" />
+        </Cases>
+      </Action>
+      <Action name="RemoveCreatedOpeningHour" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoCustomerOpeningTime.cancel">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CustomerDetail.LoCustomerOpeningTime.current.pKey" />
+        </Parameters>
+      </Action>
+      Account Harmonization: obsolete -->
+      <!-- DELETE -->
+      <!--Account Harmonization: obsolete
+      <Action name="DeleteOpeningHour" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmDeletionMsg" />
+        <Cases>
+          <Case value="Yes" action="DeleteOpeningHourFinal" />
+          <Case value="No" action="ShowCustomerList" />
+        </Cases>
+      </Action>
+      <Action name="DeleteOpeningHourFinal" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoCustomerOpeningTime.deleteItem">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <Action name="SetCurrentOpeningHours" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoCustomerOpeningTime.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      Account Harmonization: obsolete -->
+      <!-- Validation Opening Hour after click Done Button   -->
+      <!--Account Harmonization: obsolete
+      <Action name="ValidateOpeningHours" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::CustomerDetail.validateCustomerOpeningTime" />
+        </Validations>
+        <TransitionTo action="ValidateOpeningHours_Decision" />
+      </Action>
+      <Action name="ValidateOpeningHours_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="UpdateOpenDays" />
+        <Case value="validateDiscard" action="ReloadLoOpeningTime" />
+        <CaseElse action="ShowCustomerList" />
+      </Action>
+      <Action name="UpdateOpenDays" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoCustomerOpeningTime.setOpenDaysForItem">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CustomerDetail.LoCustomerOpeningTime.current.pKey" />
+        </Parameters>
+
+      </Action>
+      <Action name="LoadOpeningHoursContextMenuList" actionType="LOAD" type="LoBpaContextMenu">
+        <Parameters>
+          <Input name="context" type="Literal" value="OpeningHours" />
+        </Parameters>
+        <Return name="ProcessContext::ContextMenuList" />
+      </Action>
+      Account Harmonization: obsolete -->
+      <!-- #############  Opening Hour start  ############# -->
+      <!-- CREATE START-->
+      <Action name="CreateTimeSlot" actionType="CREATE" type="BoTimeSlot">
+        <Parameters>
+          <Input name="listTimeSlots" type="Binding" value="ProcessContext::CustomerDetail.loOpenHours" />
+          <Input name="operatingHoursId" type="Binding" value="ProcessContext::CustomerDetail.operatingHoursId" />
+        </Parameters>
+        <Return name="ProcessContext::TimeSlot" />
+      </Action>
+      <!-- Validation Time Slot after click Done Button -->
+      <Action name="ValidateTimeSlot" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::TimeSlot.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidateTimeSlot_Decision" />
+      </Action>
+      <Action name="ValidateTimeSlot_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="AddOrUpdateTimeSlot" />
+        <Case value="validateDiscard" action="ClearTimeSlot" />
+        <CaseElse action="ShowCustomerList" />
+      </Action>
+      <Action name="AddOrUpdateTimeSlot" actionType="LOGIC" call="ProcessContext::CustomerDetail.loOpenHours.addOrUpdateTimeSlot">
+        <Parameters>
+          <Input name="timeSlot" value="ProcessContext::TimeSlot" />
+        </Parameters>
+        <TransitionTo action="ClearTimeSlot" />
+      </Action>
+      <Action name="ClearTimeSlot" actionType="CREATE" type="BoTimeSlot">
+        <Return name="ProcessContext::TimeSlot" />
+      </Action>
+      <!-- CREATE END-->
+      <!-- LOAD START -->
+      <Action name="LoadTimeSlot" actionType="CREATE" type="BoTimeSlot">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="listTimeSlots" type="Binding" value="ProcessContext::CustomerDetail.loOpenHours" />
+          <Input name="operatingHoursId" type="Binding" value="ProcessContext::CustomerDetail.operatingHoursId" />
+          <Input name="dayOfWeek" value="Event.dayOfWeek" />
+          <Input name="startTime" value="Event.startTime" />
+          <Input name="endTime" value="Event.endTime" />
+        </Parameters>
+        <Return name="ProcessContext::TimeSlot" />
+        <TransitionTo action="SetEARightForTimeSlot" />
+      </Action>
+      <Action name="SetEARightForTimeSlot" actionType="LOGIC" call="ProcessContext::TimeSlot.setEARights">
+        <Parameters>
+          <Input name="timeSlotEditable" type="Binding" value="ProcessContext::AccountOperatingHourEnabled.value" />
+        </Parameters>
+      </Action>
+      <!-- LOAD END -->
+      <!-- DELETE START-->
+      <Action name="DeleteTimeSlot" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmDeletionMsg" />
+        <Cases>
+          <Case value="Yes" action="DeleteTimeSlotItem" />
+          <Case value="No" action="ShowCustomerList" />
+        </Cases>
+      </Action>
+      <Action name="DeleteTimeSlotItem" actionType="LOGIC" call="ProcessContext::CustomerDetail.loOpenHours.deleteItem">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="ShowCustomerList" />
+      </Action>
+      <!-- DELETE END-->
+      <!-- RELOAD START -->
+      <Action name="ReloadLoOpeningTime" actionType="LOGIC" call="ProcessContext::CustomerDetail.loadLoOpenHoursAsync">
+        <Parameters>
+          <Input name="bReload" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+      <!-- RELOAD END -->
+      <!-- CONTEXT MENU START -->
+      <Action name="LoadTimeSlotContextMenu" actionType="LOAD" type="LoTimeSlotContextMenu">
+        <Parameters>
+          <Input name="timeSlotEditable" type="Binding" value="ProcessContext::AccountOperatingHourEnabled.value" />
+        </Parameters>
+        <Return name="ProcessContext::TimeSlotContextMenu" />
+      </Action>
+      <!-- CONTEXT MENU END -->
+      <!-- #############  Opening Hour end  ############# -->
+      <!-- Contact Tab -->
+      <Action name="LoadContactPartnerDetail" actionType="LOAD" type="BoContactPartner">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::ContactPartnerDetail" />
+        <TransitionTo action="LoadContactMainAddress" />
+      </Action>
+      <Action name="LoadContactMainAddress" actionType="LOGIC" call="ProcessContext::ContactPartnerDetail.LoContactPartnerAddress.getMainAddress">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::ContactMainAddress" />
+      </Action>
+      <!-- SF/CASDIF: not available in CW: new object needed -->
+      <Action name="ValidateContactBeforeComplete" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::CustomerDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidateContactBeforeCompleteResult_Decision" />
+      </Action>
+      <Action name="ValidateContactBeforeCompleteResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="CreateContactPartner" />
+        <Case value="validateDiscard" action="UnModifyAndDisplayCustomerList" />
+        <CaseElse action="ShowCustomerList" />
+      </Action>
+      <Action name="CreateContactPartner" actionType="CREATE" type="BoContactPartner">
+        <Parameters>
+          <Input name="CustomerPKey" value="ProcessContext::CustomerDetail.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::ContactPartnerDetail" />
+        <TransitionTo action="LoadContactMainAddressForNewContact" />
+      </Action>
+      <Action name="LoadContactMainAddressForNewContact" actionType="LOGIC" call="ProcessContext::ContactPartnerDetail.LoContactPartnerAddress.getMainAddress">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CustomerDetail.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::ContactMainAddress" />
+      </Action>
+      <Action actionType="PROCESS" name="AddExistingContactPartner_LU" process="Customer::ContactPartnerLookupProcess">
+        <ReturnValues>
+          <Return name="ProcessContext::addContactPartnerPKey" value="pKey" />
+        </ReturnValues>
+        <TransitionTo action="AddExistingContactPartner_Decision" />
+      </Action>
+      <Action name="AddExistingContactPartner_Decision" actionType="DECISION" parameter="ProcessContext::addContactPartnerPKey">
+        <CaseEmpty action="ShowCustomerList" />
+        <CaseElse action="AddExistingContactPartner_Load" />
+      </Action>
+      <Action name="AddExistingContactPartner_Load" actionType="LOAD" type="BoContactPartner">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::addContactPartnerPKey" />
+          <Input name="customerPKey" value="ProcessContext::CustomerDetail.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::TempContactPartner" />
+        <TransitionTo action="AddExistingContactPartner_CheckExisting" />
+      </Action>
+      <Action name="AddExistingContactPartner_CheckExisting" actionType="LOGIC" call="ProcessContext::CustomerDetail.checkExistingContactPartner">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::addContactPartnerPKey" />
+        </Parameters>
+        <Return name="ProcessContext::ContactPartnerExists" />
+        <TransitionTo action="AddExistingContactPartner_CheckExisting_Decision" />
+      </Action>
+      <Action name="AddExistingContactPartner_CheckExisting_Decision" actionType="DECISION" parameter="ProcessContext::ContactPartnerExists">
+        <Case value="valid" action="AddExistingContactPartner_Add" />
+        <CaseElse action="ClearTempContactPartner" />
+      </Action>
+      <Action name="AddExistingContactPartner_Add" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoContactPartner.addItem">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::TempContactPartner.pKey" />
+          <Input name="salutation" value="ProcessContext::TempContactPartner.salutation" />
+          <Input name="lastName" value="ProcessContext::TempContactPartner.lastName" />
+          <Input name="firstName" value="ProcessContext::TempContactPartner.firstName" />
+          <Input name="phone1" value="ProcessContext::TempContactPartner.phone1" />
+          <Input name="phone2" value="ProcessContext::TempContactPartner.phone2" />
+          <Input name="cpPKey" value="ProcessContext::TempContactPartner.pKey" />
+          <Input name="mainFunctionText" value="ProcessContext::TempContactPartner.mainFunction" />
+        </Parameters>
+        <TransitionTo action="AddExistingContactPartner_Save" />
+      </Action>
+      <Action name="AddExistingContactPartner_Save" actionType="LOGIC" call="ProcessContext::CustomerDetail.addExistingContactPartner">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::addContactPartnerPKey" />
+          <Input name="contactPartner" value="ProcessContext::TempContactPartner" />
+        </Parameters>
+        <TransitionTo action="ClearTempContactPartner" />
+      </Action>
+      <Action name="ClearTempContactPartner" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="undefined" />
+        </Parameters>
+        <Return name="ProcessContext::TempContactPartner" />
+      </Action>
+      <!-- Delete Contact Partner -->
+      <Action name="DeleteContact" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmDeletionMsg" />
+        <Cases>
+          <Case value="Yes" action="StoreContactPKeyForDelete" />
+          <Case value="No" action="ShowCustomerList" />
+        </Cases>
+      </Action>
+      <Action name="StoreContactPKeyForDelete" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::deleteContactPartnerPKey" />
+        <TransitionTo action="DeleteContactFinal" />
+      </Action>
+      <Action name="DeleteContactFinal" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoContactPartner.deleteItem">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::deleteContactPartnerPKey" />
+        </Parameters>
+        <TransitionTo action="DeleteExistingContactPartner_Save" />
+        <Return name="ProcessContext::deleteContactPartnerPKey" />
+      </Action>
+      <Action name="DeleteExistingContactPartner_Save" actionType="LOGIC" call="ProcessContext::CustomerDetail.deleteExistingContactPartner">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::deleteContactPartnerPKey" />
+        </Parameters>
+      </Action>
+      <Action name="LoadContactContextMenuList" actionType="LOAD" type="LoBpaContextMenu">
+        <Parameters>
+          <Input name="context" type="Literal" value="Contact" />
+        </Parameters>
+        <Return name="ProcessContext::ContextMenuList" />
+      </Action>
+      <!-- Address Tab -->
+      <Action name="SetCurrentAddress" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoCustomerAddress.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <Action name="CreateNewAddress" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoCustomerAddress.addItem">
+        <Parameters>
+          <Input name="referencePKey" value="ProcessContext::CustomerDetail.pKey" />
+          <Input name="main" type="Literal" value="0" />
+        </Parameters>
+      </Action>
+      <!-- Cancel Changes   Todo: Only cancel of create new works, for canceling changes of existing items original values were needed-->
+      <Action name="CancelAddressChanges" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmCancelMsg" />
+        <Cases>
+          <Case value="Yes" action="RemoveCreatedAddress" />
+          <Case value="No" action="ShowCustomerList" />
+        </Cases>
+      </Action>
+      <Action name="RemoveCreatedAddress" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoCustomerAddress.deleteItem">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CustomerDetail.LoCustomerAddress.current.pKey" />
+        </Parameters>
+      </Action>
+      <!-- DELETE -->
+      <Action name="DeleteAddress" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmDeletionMsg" />
+        <Cases>
+          <Case value="Yes" action="DeleteAddressFinal" />
+          <Case value="No" action="ShowCustomerList" />
+        </Cases>
+      </Action>
+      <Action name="DeleteAddressFinal" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoCustomerAddress.deleteItem">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <Action name="LoadAddressContextMenuList" actionType="LOAD" type="LoBpaContextMenu">
+        <Parameters>
+          <Input name="context" type="Literal" value="Address" />
+        </Parameters>
+        <Return name="ProcessContext::ContextMenuList" />
+      </Action>
+      <!-- POS Tab -->
+      <Action name="SetCurrentRelLoadPOSDetail" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoCustomerPOSRelation.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="LoadPOSDetail" />
+      </Action>
+      <Action name="LoadPOSDetail" actionType="LOAD" type="BoPos">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CustomerDetail.LoCustomerPOSRelation.Current.posPKey" />
+        </Parameters>
+        <Return name="ProcessContext::POSDetail" />
+      </Action>
+      <Action actionType="VALIDATION" name="ValidatePOSBeforeComplete">
+        <Validations>
+          <Validation name="ProcessContext::CustomerDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidatePOSBeforeCompleteResult_Decision" />
+      </Action>
+      <Action name="ValidatePOSBeforeCompleteResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="AssignNewPOSWizard" />
+        <CaseElse action="ShowCustomerList" />
+      </Action>
+      <Action actionType="PROCESS" name="AssignNewPOSWizard" process="Customer::AssignNewPOSWizardProcess">
+        <Parameters>
+          <Input name="loCustomerPOSRelation" value="ProcessContext::CustomerDetail.LoCustomerPOSRelation" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::PosName" value="posName" />
+          <Return name="ProcessContext::PosMetaPKey" value="posMetaPKey" />
+          <Return name="ProcessContext::PosGeometryPKey" value="posGeometryPKey" />
+          <Return name="ProcessContext::CreateNew_ButtonPressed" value="buttonPressed" />
+        </ReturnValues>
+        <TransitionTo action="AssignNewPOSWizard_Decision" />
+      </Action>
+      <Action name="AssignNewPOSWizard_Decision" actionType="DECISION" parameter="ProcessContext::CreateNew_ButtonPressed">
+        <CaseEmpty action="ShowCustomerList" />
+        <CaseElse action="CreatePOS" />
+      </Action>
+      <Action name="CreatePOS" actionType="CREATE" type="BoPos">
+        <Parameters>
+          <Input name="name" value="ProcessContext::PosName" />
+          <Input name="bpaPosMetaPKey" value="ProcessContext::PosMetaPKey" />
+          <Input name="bpaPosGeometryPKey" value="ProcessContext::PosGeometryPKey" />
+          <Input name="customerPKey" value="ProcessContext::CustomerDetail.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::POSDetail" />
+        <TransitionTo action="ValidatePosRelationBeforeSave" />
+      </Action>
+      <!-- POS Delete-->
+      <Action name="DeletePOS" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoCustomerPOSRelation.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="CheckIfPOSCanBeDeleted" />
+      </Action>
+      <Action name="CheckIfPOSCanBeDeleted" actionType="LOGIC" call="ProcessContext::CustomerDetail.validatePOSDeletion">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::IsPOSValidForDeletion" />
+        <TransitionTo action="IsPOSValidForDeletion_Decision" />
+      </Action>
+      <Action name="IsPOSValidForDeletion_Decision" actionType="DECISION" parameter="ProcessContext::IsPOSValidForDeletion">
+        <Case value="valid" action="DeletePOSCheckMandatory" />
+        <CaseElse action="ShowCustomerList" />
+      </Action>
+      <Action name="DeletePOSCheckMandatory" actionType="DECISION" parameter="ProcessContext::CustomerDetail.LoCustomerPOSRelation.Current.mandatory">
+        <Case value="1" action="NoPosDeletionAllowed" />
+        <Case value="0" action="ConfirmDeletion" />
+        <CaseElse action="ShowCustomerList" />
+      </Action>
+      <Action name="NoPosDeletionAllowed" actionType="CONFIRM" confirmType="Yes">
+        <Message messageId="CasBpaPOSNoDeletionAllowedMsg" />
+        <Cases>
+          <Case value="Ok" action="ShowCustomerList" />
+        </Cases>
+      </Action>
+      <Action name="ConfirmDeletion" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmDeletionMsg" />
+        <Cases>
+          <Case value="Yes" action="DeletePOSFinal" />
+          <Case value="No" action="ShowCustomerList" />
+        </Cases>
+      </Action>
+      <Action name="DeletePOSFinal" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoCustomerPOSRelation.deleteItem">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <!-- Discontinue POS -->
+      <Action name="DiscontinuePOS" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmDiscontinueMsg" />
+        <Cases>
+          <Case value="Yes" action="DiscontinuePOSFinal" />
+          <Case value="No" action="ShowCustomerList" />
+        </Cases>
+      </Action>
+      <Action name="DiscontinuePOSFinal" actionType="LOGIC" call="ProcessContext::CustomerDetail.LoCustomerPOSRelation.discontinue">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <!-- POS Context Menu -->
+      <Action name="LoadPOSContextMenuList" actionType="LOAD" type="LoBpaContextMenu">
+        <Parameters>
+          <Input name="context" type="Literal" value="POS" />
+          <Input name="continued" value="Event.continued" />
+        </Parameters>
+        <Return name="ProcessContext::ContextMenuList" />
+      </Action>
+      <!-- Validation Contact Partner after click Done Button -->
+      <Action name="ValidateContactPartner" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::ContactPartnerDetail.validateContactPartner" />
+          <Validation name="ProcessContext::CustomerDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidateContactPartner_Decision" />
+      </Action>
+      <Action name="ValidateContactPartner_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="SaveReloadLoContactPartner" />
+        <Case value="validateDiscard" action="ClearValidatedContactPartner" />
+        <CaseElse action="ShowCustomerList" />
+      </Action>
+      <!-- Save ContactPartner and refresh LoContactPartner -->
+      <Action name="SaveReloadLoContactPartner" actionType="SAVE">
+        <TransitionTo action="ClearValidatedContactPartner" />
+      </Action>
+      <Action name="ClearValidatedContactPartner" actionType="LOGIC" call="BoFactory.instantiate">
+        <Parameters>
+          <Input name="clear" type="Literal" value="BoContactPartner" />
+        </Parameters>
+        <Return name="ProcessContext::ContactPartnerDetail" />
+        <TransitionTo action="ReloadLoContactPartner" />
+      </Action>
+      <Action name="ReloadLoContactPartner" actionType="LOGIC" call="ProcessContext::CustomerDetail.loadLoContactPartnerAsync">
+        <Parameters>
+          <Input name="bReload" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+      <!-- Validation POS after click Done Button -->
+      <Action name="ValidateCustomerPOSRelation" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::POSDetail.validatePos" />
+          <Validation name="ProcessContext::CustomerDetail.validatePos" />
+        </Validations>
+        <TransitionTo action="ValidateCustomerPOSRelation_Decision" />
+      </Action>
+      <Action name="ValidateCustomerPOSRelation_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="SaveReloadLoCustomerPOSRelation" />
+        <Case value="validateDiscard" action="ReloadLoCustomerPOSRelation" />
+        <CaseElse action="ShowCustomerList" />
+      </Action>
+      <!-- Save and Reload LoCustomerPOSRelation -->
+      <Action name="ValidatePosRelationBeforeSave" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::POSDetail.validatePos" />
+          <!--<Validation name="ProcessContext::CustomerDetail.validatePos" />-->
+        </Validations>
+        <TransitionTo action="ValidatePosRelationBeforeSave_Decision" />
+      </Action>
+      <Action name="ValidatePosRelationBeforeSave_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="SaveReloadLoCustomerPOSRelation" />
+        <Case value="validateDiscard" action="ReloadLoCustomerPOSRelation" />
+        <CaseElse action="ShowCustomerList" />
+      </Action>
+      <Action name="SaveReloadLoCustomerPOSRelation" actionType="SAVE">
+        <TransitionTo action="ReloadLoCustomerPOSRelation" />
+      </Action>
+      <Action name="ReloadLoCustomerPOSRelation" actionType="LOGIC" call="ProcessContext::CustomerDetail.loadLoCustomerPOSRelationAsync">
+        <Parameters>
+          <Input name="bReload" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+      <!-- Save LoCustomerAddress -->
+      <Action name="SaveLoCustomerAddress" actionType="SAVE">
+        <TransitionTo action="ShowCustomerList" />
+      </Action>
+      <!-- Save and Reload LoOpeningTime -->
+      <!--Account Harmonization: obsolete
+      <Action name="ValidateBeforeSaveOpeningTime" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::CustomerDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidateBeforeSaveOpeningTime_Decision" />
+      </Action>
+      <Action name="ValidateBeforeSaveOpeningTime_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="SaveReloadLoOpeningTime" />
+        <CaseElse action="ShowCustomerList" />
+      </Action>
+      <Action name="SaveReloadLoOpeningTime" actionType="SAVE">
+        <TransitionTo action="ReloadLoOpeningTime" />
+      </Action>
+      <Action name="ReloadLoOpeningTime" actionType="LOGIC" call="ProcessContext::CustomerDetail.loadLoOpeningTimeAsync">
+        <Parameters>
+          <Input name="bReload" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+      Account Harmonization: obsolete -->
+      <!-- PhoneCall -->
+      <Action name="StartPhoneCall" actionType="LOGIC" call="ProcessContext::CustomerDetail.processPhoneCall">
+        <Parameters>
+          <Input name="Dial" value="ProcessContext::CustomerDetail.phone1" />
+        </Parameters>
+      </Action>
+      <Action name="StartSMS" actionType="LOGIC" call="ProcessContext::CustomerDetail.processSmsSending">
+        <Parameters>
+          <Input name="Dial" value="ProcessContext::CustomerDetail.phone1" />
+          <Input name="Message" type="Literal" value=" " />
+        </Parameters>
+      </Action>
+      <Action name="StartMail" actionType="LOGIC" call="ProcessContext::CustomerDetail.sendMail">
+        <Parameters>
+          <Input name="Mail" value="ProcessContext::CustomerDetail.email1" />
+        </Parameters>
+      </Action>
+      <Action name="StartContactPartnerPhone1Call" actionType="LOGIC" call="ProcessContext::CustomerDetail.processPhoneCall">
+        <Parameters>
+          <Input name="Dial" value="ProcessContext::ContactPartnerDetail.phone1" />
+        </Parameters>
+      </Action>
+      <Action name="StartContactPartnerPhone1SMS" actionType="LOGIC" call="ProcessContext::CustomerDetail.processSmsSending">
+        <Parameters>
+          <Input name="Dial" value="ProcessContext::ContactPartnerDetail.phone1" />
+          <Input name="Message" type="Literal" value=" " />
+        </Parameters>
+      </Action>
+      <Action name="StartContactPartnerPhone2Call" actionType="LOGIC" call="ProcessContext::CustomerDetail.processPhoneCall">
+        <Parameters>
+          <Input name="Dial" value="ProcessContext::ContactPartnerDetail.phone2" />
+        </Parameters>
+      </Action>
+      <Action name="StartContactPartnerPhone2SMS" actionType="LOGIC" call="ProcessContext::CustomerDetail.processSmsSending">
+        <Parameters>
+          <Input name="Dial" value="ProcessContext::ContactPartnerDetail.phone2" />
+          <Input name="Message" type="Literal" value=" " />
+        </Parameters>
+      </Action>
+      <Action name="StartContactPartnerMail" actionType="LOGIC" call="ProcessContext::CustomerDetail.sendMail">
+        <Parameters>
+          <Input name="Mail" value="ProcessContext::ContactPartnerDetail.email1" />
+        </Parameters>
+      </Action>
+      <!-- END:   Handling Events -->
+      <!-- END: Customer Detail -->
+      <!-- Navigation -->
+      <Action actionType="LOGIC" name="NavigateToCustomer" call="ProcessContext::CustomerDetail.navigateToCustomer">
+        <Parameters />
+      </Action>
+      <!-- End of Navigation -->
+    </Actions>
+  </Body>
+</Process>

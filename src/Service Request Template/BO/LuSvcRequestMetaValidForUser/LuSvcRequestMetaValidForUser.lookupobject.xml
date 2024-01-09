@@ -1,0 +1,10 @@
+<LookupObject name="LuSvcRequestMetaValidForUser" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuSvcRequestMetaValidForUser" />
+  <SimpleProperties>
+    <SimpleProperty name="validForUser" type="DomBool" dataSourceProperty="validForUser" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

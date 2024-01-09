@@ -1,0 +1,256 @@
+<DataSource name="DsLoVisitRetailVisitKPI" backendSystem="sf" businessObjectClass="LoVisitRetailVisitKPI" external="true" editableEntity="RetailVisitKpi" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="RetailVisitKpi" column="Id" />
+    <Attribute name="productName" table="Product2" column="Name" />
+    <Attribute name="productCode" table="Product2" column="ProductCode" />
+    <Attribute name="productDescription" table="Product2" column="Description" />
+    <!-- ProductId is derived because we use it for productId and productCategoryId / do not save this -->
+    <DerivedAttribute name="productId" table="RetailVisitKpi" column="ProductId" />
+    <Attribute name="productCategoryName" table="ProductCategory" column="Name" />
+    <Attribute name="assessmentIndicatorDefinitionId" table="AssessmentIndicatorDefinition" column="Id" />
+    <Attribute name="question" table="AssessmentIndicatorDefinition" column="Name" />
+    <DerivedAttribute name="toggleId" value="' '" />
+    <Attribute name="aidDataType" table="AssessmentIndicatorDefinition" column="DataType" />
+    <Attribute name="assessmentTaskId" table="RetailVisitKpi" column="AssessmentTaskId" />
+    <Attribute name="isAssessmentTaskRequired" table="AssessmentTask" column="IsRequired" />
+    <DerivedAttribute name="primaryDisplayOrder" value="0" />
+    <Attribute name="displayOrder" table="RetailVisitKpi" column="DisplayOrder" />
+    <Attribute name="actualIntegerValue" table="RetailVisitKpi" column="ActualIntegerValue" />
+    <Attribute name="targetIntegerValue" table="RetailVisitKpi" column="TargetIntegerValue" />
+    <Attribute name="actualBooleanValue" table="RetailVisitKpi" column="ActualBooleanValue" />
+    <Attribute name="targetBooleanValue" table="RetailVisitKpi" column="TargetBooleanValue" />
+    <Attribute name="actualDateTime" table="RetailVisitKpi" column="ActualDateTimeValue" />
+    <!--<DateTimeAttribute dateName="targetDate" timeName="targetTime" table="RetailVisitKpi" column="TargetDateTimeValue" />-->
+    <DerivedAttribute name="targetDate" />
+    <DerivedAttribute name="targetTime" />
+    <Attribute name="actualDecimalValue" table="RetailVisitKpi" column="ActualDecimalValue" />
+    <Attribute name="targetDecimalValue" table="RetailVisitKpi" column="TargetDecimalValue" />
+    <Attribute name="actualStringValue" table="RetailVisitKpi" column="ActualStringValue" />
+    <Attribute name="targetStringValue" table="RetailVisitKpi" column="TargetStringValue" />
+    <Attribute name="customContextRecordName" table="RetailVisitKpi" column="CustomContextRecordName" />
+    <DerivedAttribute name="inStoreLocationName" value="' '" />
+    <DerivedAttribute name="actualValue" />
+    <DerivedAttribute name="targetValue" />
+    <!-- TODO  Must be translatable, can be done if DS becomes external in case of Product Groups -->
+    <DerivedAttribute name="groupText" value="' '" />
+    <DerivedAttribute name="sortAttribute" value="' '" />
+    <DerivedAttribute name="sortAttribute" value="' '" />
+    <DerivedAttribute name="customGroupName" value="' '" />
+    <!-- Dynamic control handling -->
+    <DerivedAttribute name="dataType" />
+    <DerivedAttribute name="formatType" value="' '" />
+    <DerivedAttribute name="stepSize" value="' '" />
+    <DerivedAttribute name="mediaPath" value="' '" />
+    <DerivedAttribute name="fileType" value="' '" />
+    <Attribute name="gtin" table="Product2" column="GTIN__c" />
+    <DerivedAttribute name="minValue" value="' '" />
+    <DerivedAttribute name="maxValue" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="RetailVisitKpi" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+     var assessmentTaskId = "";
+
+    if(Utils.isDefined(jsonQuery.assessmentTaskId)){
+     assessmentTaskId =  Utils.convertForDBParam(jsonQuery.assessmentTaskId, "DomPKey");
+    }
+    var kpiGroupTextAdditional = Utils.convertForDBParam(Localization.resolve("PrimaryRetailVisitKPI_GroupTextAdditional"));
+
+   var sqlParams = {assessmentTaskId, kpiGroupTextAdditional};
+   var sqlStmt = "";
+   
+
+   //########################
+   //# Product related KPIs or #
+   //# Product Group related KPIs                                 #
+   //# If KPI has filled productId and filled productCategoryId   #
+   //# the product is shown not the product category 
+   //########################
+   sqlStmt += "SELECT RetailVisitKpi.Id as pKey ";
+   sqlStmt += ",Product2.Name as productName ";
+   sqlStmt += ",Product2.ProductCode as productCode";
+   sqlStmt += ",Product2.Description as productDescription";
+   sqlStmt += ",Product2.GTIN__c as gtin";
+   sqlStmt += ",RetailVisitKpi.ProductId as productId ";
+   sqlStmt += ",AssessmentIndicatorDefinition.Id as assessmentIndicatorDefinitionId ";
+   sqlStmt += ",AssessmentIndicatorDefinition.Name as question ";
+   sqlStmt += ",AssessmentIndicatorDefinition.DataType as aidDataType ";
+   sqlStmt += ",AssessmentTask.SequenceNumber ";
+   sqlStmt += ",AssessmentTask.Name ";
+   sqlStmt += ",AssessmentIndicatorDefinition.Name ";
+   sqlStmt += ",RetailVisitKpi.AssessmentTaskId as assessmentTaskId ";
+   sqlStmt += ",AssessmentTask.IsRequired as isAssessmentTaskRequired ";
+   sqlStmt += ",ifnull(RetailVisitKpi.PrimaryDisplayOrder,999999999) as primaryDisplayOrder";
+   sqlStmt += ",RetailVisitKpi.DisplayOrder as displayOrder";
+   sqlStmt += ",RetailVisitKpi.ActualIntegerValue as actualIntegerValue ";
+   sqlStmt += ",RetailVisitKpi.TargetIntegerValue as targetIntegerValue ";
+   sqlStmt += ",RetailVisitKpi.ActualBooleanValue as actualBooleanValue ";
+   sqlStmt += ",RetailVisitKpi.TargetBooleanValue as targetBooleanValue ";
+   sqlStmt += ",RetailVisitKpi.ActualDateTimeValue as actualDateTime";
+   sqlStmt += ",RetailVisitKpi.ActualDecimalValue as actualDecimalValue";
+   sqlStmt += ",RetailVisitKpi.TargetDecimalValue as targetDecimalValue ";
+   sqlStmt += ",RetailVisitKpi.ActualStringValue as actualStringValue ";
+   sqlStmt += ",RetailVisitKpi.TargetStringValue as targetStringValue ";
+   sqlStmt += ",RetailVisitKpi.CustomContextRecordName as customContextRecordName "; 
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Boolean' THEN 'NullableBoolean' WHEN AssessmentIndicatorDefinition.DataType == 'Number' THEN 'NullableDecimal' WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN 'NullableDecimal'  WHEN AssessmentIndicatorDefinition.DataType == 'String' THEN 'NullableString' WHEN AssessmentIndicatorDefinition.DataType == 'DateTime' THEN 'NullableDateTime' ELSE AssessmentIndicatorDefinition.DataType END as dataType ";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Boolean' THEN 'Bool' ELSE ' ' END as toggleId";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN '0.2' ELSE '0.0' END as formatType";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN 0.1 ELSE 1 END as stepSize";
+   sqlStmt += ",CASE WHEN InStoreLocation.Name is Null THEN 'Store' ELSE InStoreLocation.Name END as inStoreLocationName";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Boolean' THEN CASE WHEN RetailVisitKpi.actualBooleanValue == ' ' THEN '0' ELSE RetailVisitKpi.actualBooleanValue END ELSE   Case WHEN AssessmentIndicatorDefinition.DataType == 'Number' THEN  RetailVisitKpi.actualIntegerValue WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN RetailVisitKpi.actualDecimalValue   WHEN AssessmentIndicatorDefinition.DataType == 'DateTime' THEN RetailVisitKpi.actualDateTimeValue   WHEN AssessmentIndicatorDefinition.DataType == 'Percentage' THEN RetailVisitKpi.actualIntegerValue  WHEN AssessmentIndicatorDefinition.DataType == 'String' THEN RetailVisitKpi.actualStringValue  WHEN AssessmentIndicatorDefinition.DataType == 'Picklist' THEN RetailVisitKpi.actualStringValue ELSE AssessmentIndicatorDefinition.DataType END  END as actualValue ";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Boolean' THEN RetailVisitKpi.targetBooleanValue  WHEN AssessmentIndicatorDefinition.DataType == 'Number' THEN  RetailVisitKpi.targetIntegerValue WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN RetailVisitKpi.targetDecimalValue   WHEN AssessmentIndicatorDefinition.DataType == 'DateTime' THEN RetailVisitKpi.targetDateTimeValue   WHEN AssessmentIndicatorDefinition.DataType == 'Percentage' THEN RetailVisitKpi.targetIntegerValue  WHEN AssessmentIndicatorDefinition.DataType == 'String' THEN RetailVisitKpi.targetStringValue  WHEN AssessmentIndicatorDefinition.DataType == 'Picklist' THEN RetailVisitKpi.targetStringValue ELSE AssessmentIndicatorDefinition.DataType END as targetValue ";
+   sqlStmt += " ,CASE WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN  '-9999999999999.99999' WHEN AssessmentIndicatorDefinition.DataType  == 'Number' THEN '-999999999' END AS minValue ";
+   sqlStmt += " ,CASE WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN  '9999999999999.99999' WHEN AssessmentIndicatorDefinition.DataType  == 'Number' THEN '999999999' END AS maxValue ";
+   sqlStmt += ",ProductCategory.Name as productCategoryName";
+   sqlStmt += ",#kpiGroupTextAdditional# as groupText ";
+   sqlStmt += ",RetailVisitKpi.CustomContextRecordName ||', '|| Product2.Name as customGroupName";
+   sqlStmt += ",'ZZZ' as sortAttribute";
+   sqlStmt += ",date(RetailVisitKpi.TargetDateTimeValue,'unixepoch', 'localtime') as targetDate ";
+   sqlStmt += ",substr(time(RetailVisitKpi.TargetDateTimeValue,'unixepoch', 'localtime'),1,5) as targetTime ";
+   sqlStmt += ",replace( SF_File.PathOnClient, rtrim(SF_File.PathOnClient,replace(SF_File.PathOnClient, '.', '')),'') as fileType ";
+   sqlStmt += ",CASE SF_File.Usage__c WHEN 'Icon' THEN SF_File.VersionData ELSE ' ' END as mediaPath ";
+   sqlStmt += "FROM RetailVisitKpi ";
+   sqlStmt += "INNER JOIN AssessmentTask ON RetailVisitKpi.AssessmentTaskId = AssessmentTask.Id AND (RetailVisitKpi.IsDeleted <> '1' OR RetailVisitKpi.IsDeleted IS NULL) AND (AssessmentTask.IsDeleted <> '1' OR AssessmentTask.IsDeleted IS NULL) ";
+   sqlStmt += "INNER JOIN AssessmentIndicatorDefinition ON RetailVisitKpi.AssessmentIndDefinitionId = AssessmentIndicatorDefinition.Id AND (AssessmentIndicatorDefinition.IsDeleted <> '1' OR AssessmentIndicatorDefinition.IsDeleted IS NULL)  ";
+   sqlStmt += "INNER JOIN Product2 ON RetailVisitKpi.ProductId = Product2.Id AND (Product2.IsDeleted <> '1' OR Product2.IsDeleted IS NULL)";
+   sqlStmt += "LEFT OUTER JOIN InStoreLocation ON RetailVisitKpi.InStoreLocationId = InStoreLocation.Id AND (InStoreLocation.IsDeleted <> '1' OR InStoreLocation.IsDeleted IS NULL) ";
+   sqlStmt += "LEFT OUTER JOIN ProductCategoryProduct ON Product2.Id = ProductCategoryProduct.ProductId AND ProductCategoryProduct.IsDeleted <> '1' ";
+   sqlStmt += "LEFT OUTER JOIN ProductCategory ON ProductCategoryProduct.ProductCategoryId = ProductCategory.Id AND ProductCategory.IsDeleted <> '1' ";
+   sqlStmt += "LEFT OUTER JOIN SF_FileLink ON SF_FileLink.ParentId = RetailVisitKpi.ProductId ";
+   sqlStmt += "AND SF_FileLink.IsDeleted <> '1' ";
+   sqlStmt += "LEFT OUTER JOIN SF_File ON SF_FileLink.FileId = SF_File.Id ";
+   sqlStmt += "AND SF_File.Usage__c = 'Icon' ";
+   sqlStmt += "AND SF_File.IsDeleted <> '1' ";
+   sqlStmt += "WHERE 1=1 ";
+   sqlStmt += "AND RetailVisitKpi.AssessmentTaskId = #assessmentTaskId# ";
+   sqlStmt += "AND AssessmentIndicatorDefinition.DataType not in ('Percentage') ";
+
+   sqlStmt += "UNION ";
+
+   //##############################################################
+   //# Product Category related KPIs                              #
+   //# If KPI has no productId and filled productCategoryId       #
+   //# the productCategoryId is shown                             #
+   //##############################################################
+   sqlStmt += "SELECT RetailVisitKpi.Id as pKey ";
+   sqlStmt += ",ProductCategory.Name as productName ";
+   sqlStmt += ",'' as productCode";
+   sqlStmt += ",'' as productDescription";
+   sqlStmt += ",'' as gtin";
+   sqlStmt += ",RetailVisitKpi.ProductCategoryId as productId ";
+   sqlStmt += ",AssessmentIndicatorDefinition.Id as assessmentIndicatorDefinitionId ";
+   sqlStmt += ",AssessmentIndicatorDefinition.Name as question ";
+   sqlStmt += ",AssessmentIndicatorDefinition.DataType as aidDataType ";
+   sqlStmt += ",AssessmentTask.SequenceNumber ";
+   sqlStmt += ",AssessmentTask.Name ";
+   sqlStmt += ",AssessmentIndicatorDefinition.Name ";
+   sqlStmt += ",RetailVisitKpi.AssessmentTaskId as assessmentTaskId ";
+   sqlStmt += ",AssessmentTask.IsRequired as isAssessmentTaskRequired ";
+   sqlStmt += ",ifnull(RetailVisitKpi.PrimaryDisplayOrder,999999999) as primaryDisplayOrder";
+   sqlStmt += ",RetailVisitKpi.DisplayOrder as displayOrder";
+   sqlStmt += ",RetailVisitKpi.ActualIntegerValue as actualIntegerValue ";
+   sqlStmt += ",RetailVisitKpi.TargetIntegerValue as targetIntegerValue ";
+   sqlStmt += ",RetailVisitKpi.ActualBooleanValue as actualBooleanValue ";
+   sqlStmt += ",RetailVisitKpi.TargetBooleanValue as targetBooleanValue ";
+   sqlStmt += ",RetailVisitKpi.ActualDateTimeValue as actualDateTime";
+   sqlStmt += ",RetailVisitKpi.ActualDecimalValue as actualDecimalValue";
+   sqlStmt += ",RetailVisitKpi.TargetDecimalValue as targetDecimalValue ";
+   sqlStmt += ",RetailVisitKpi.ActualStringValue as actualStringValue ";
+   sqlStmt += ",RetailVisitKpi.TargetStringValue as targetStringValue ";
+   sqlStmt += ",RetailVisitKpi.CustomContextRecordName as customContextRecordName ";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Boolean' THEN 'NullableBoolean' WHEN AssessmentIndicatorDefinition.DataType == 'Number' THEN 'NullableDecimal' WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN 'NullableDecimal'  WHEN AssessmentIndicatorDefinition.DataType == 'String' THEN 'NullableString' WHEN AssessmentIndicatorDefinition.DataType == 'DateTime' THEN 'NullableDateTime' ELSE AssessmentIndicatorDefinition.DataType END as dataType ";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Boolean' THEN 'Bool' ELSE ' ' END as toggleId";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN '0.2' ELSE '0.0' END as formatType";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN 0.1 ELSE 1 END as stepSize";
+   sqlStmt += ",CASE WHEN InStoreLocation.Name is Null THEN 'Store' ELSE InStoreLocation.Name END as inStoreLocationName";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Boolean' THEN CASE WHEN RetailVisitKpi.actualBooleanValue == ' ' THEN '0' ELSE RetailVisitKpi.actualBooleanValue END ELSE   Case WHEN AssessmentIndicatorDefinition.DataType == 'Number' THEN  RetailVisitKpi.actualIntegerValue WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN RetailVisitKpi.actualDecimalValue   WHEN AssessmentIndicatorDefinition.DataType == 'DateTime' THEN RetailVisitKpi.actualDateTimeValue   WHEN AssessmentIndicatorDefinition.DataType == 'Percentage' THEN RetailVisitKpi.actualIntegerValue  WHEN AssessmentIndicatorDefinition.DataType == 'String' THEN RetailVisitKpi.actualStringValue  WHEN AssessmentIndicatorDefinition.DataType == 'Picklist' THEN RetailVisitKpi.actualStringValue ELSE AssessmentIndicatorDefinition.DataType END  END as actualValue ";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Boolean' THEN RetailVisitKpi.targetBooleanValue  WHEN AssessmentIndicatorDefinition.DataType == 'Number' THEN  RetailVisitKpi.targetIntegerValue WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN RetailVisitKpi.targetDecimalValue   WHEN AssessmentIndicatorDefinition.DataType == 'DateTime' THEN RetailVisitKpi.targetDateTimeValue   WHEN AssessmentIndicatorDefinition.DataType == 'Percentage' THEN RetailVisitKpi.targetIntegerValue  WHEN AssessmentIndicatorDefinition.DataType == 'String' THEN RetailVisitKpi.targetStringValue  WHEN AssessmentIndicatorDefinition.DataType == 'Picklist' THEN RetailVisitKpi.targetStringValue ELSE AssessmentIndicatorDefinition.DataType END as targetValue ";
+   sqlStmt += " ,CASE WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN  '-9999999999999.99999' WHEN AssessmentIndicatorDefinition.DataType  == 'Number' THEN '-999999999' END AS minValue ";
+   sqlStmt += " ,CASE WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN  '9999999999999.99999' WHEN AssessmentIndicatorDefinition.DataType  == 'Number' THEN '999999999' END AS maxValue ";
+   sqlStmt += ",ProductCategory.Name as productCategoryName";
+   sqlStmt += ",#kpiGroupTextAdditional# as groupText ";
+   sqlStmt += ",RetailVisitKpi.CustomContextRecordName ||', '|| ProductCategory.Name as customGroupName";
+   sqlStmt += ",'ZZZ' as sortAttribute";
+   sqlStmt += ",date(RetailVisitKpi.TargetDateTimeValue,'unixepoch', 'localtime') as targetDate ";
+   sqlStmt += ",substr(time(RetailVisitKpi.TargetDateTimeValue,'unixepoch', 'localtime'),1,5) as targetTime ";
+   sqlStmt += ",'' as fileType ";
+   sqlStmt += ",'' as mediaPath ";
+   sqlStmt += "FROM RetailVisitKpi ";
+   sqlStmt += "INNER JOIN AssessmentTask ON RetailVisitKpi.AssessmentTaskId = AssessmentTask.Id AND (RetailVisitKpi.IsDeleted <> '1' OR RetailVisitKpi.IsDeleted IS NULL) AND (AssessmentTask.IsDeleted <> '1' OR AssessmentTask.IsDeleted IS NULL) ";
+   sqlStmt += "INNER JOIN AssessmentIndicatorDefinition ON RetailVisitKpi.AssessmentIndDefinitionId = AssessmentIndicatorDefinition.Id AND (AssessmentIndicatorDefinition.IsDeleted <> '1' OR AssessmentIndicatorDefinition.IsDeleted IS NULL)  ";
+   sqlStmt += "INNER JOIN ProductCategory ON ProductCategory.Id = RetailVisitKpi.ProductCategoryId AND (ProductCategory.IsDeleted <> '1' OR ProductCategory.IsDeleted IS NULL)";
+   sqlStmt += "LEFT OUTER JOIN InStoreLocation ON RetailVisitKpi.InStoreLocationId = InStoreLocation.Id AND (InStoreLocation.IsDeleted <> '1' OR InStoreLocation.IsDeleted IS NULL) ";
+   sqlStmt += "WHERE 1=1 ";
+   sqlStmt += "AND RetailVisitKpi.AssessmentTaskId = #assessmentTaskId# ";
+   sqlStmt += "AND AssessmentIndicatorDefinition.DataType not in ('Percentage') ";
+   sqlStmt += "AND (RetailVisitKpi.ProductId is null OR RetailVisitKpi.ProductId = ' ') ";
+   
+   sqlStmt += "UNION ";
+
+   //##############################################################
+   //# Custom Context related KPIs                                    #
+   //# If KPI has no productId and no productCategoryId               #
+   //# this case is only for Other task type and filtered accordingly #
+   //##############################################################
+
+   sqlStmt += "SELECT RetailVisitKpi.Id as pKey ";
+   sqlStmt += ",RetailVisitKpi.CustomContextRecordName as productName ";
+   sqlStmt += ",'' as productCode";
+   sqlStmt += ",'' as productDescription";
+   sqlStmt += ",'' as gtin";
+   sqlStmt += ",RetailVisitKpi.ProductId as productId ";
+   sqlStmt += ",AssessmentIndicatorDefinition.Id as assessmentIndicatorDefinitionId ";
+   sqlStmt += ",AssessmentIndicatorDefinition.Name as question ";
+   sqlStmt += ",AssessmentIndicatorDefinition.DataType as aidDataType ";
+   sqlStmt += ",AssessmentTask.SequenceNumber ";
+   sqlStmt += ",AssessmentTask.Name ";
+   sqlStmt += ",AssessmentIndicatorDefinition.Name ";
+   sqlStmt += ",RetailVisitKpi.AssessmentTaskId as assessmentTaskId ";
+   sqlStmt += ",AssessmentTask.IsRequired as isAssessmentTaskRequired ";
+   sqlStmt += ",ifnull(RetailVisitKpi.PrimaryDisplayOrder,999999999) as primaryDisplayOrder";
+   sqlStmt += ",RetailVisitKpi.DisplayOrder as displayOrder";
+   sqlStmt += ",RetailVisitKpi.ActualIntegerValue as actualIntegerValue ";
+   sqlStmt += ",RetailVisitKpi.TargetIntegerValue as targetIntegerValue ";
+   sqlStmt += ",RetailVisitKpi.ActualBooleanValue as actualBooleanValue ";
+   sqlStmt += ",RetailVisitKpi.TargetBooleanValue as targetBooleanValue ";
+   sqlStmt += ",RetailVisitKpi.ActualDateTimeValue as actualDateTime";
+   sqlStmt += ",RetailVisitKpi.ActualDecimalValue as actualDecimalValue";
+   sqlStmt += ",RetailVisitKpi.TargetDecimalValue as targetDecimalValue ";
+   sqlStmt += ",RetailVisitKpi.ActualStringValue as actualStringValue ";
+   sqlStmt += ",RetailVisitKpi.TargetStringValue as targetStringValue ";
+   sqlStmt += ",RetailVisitKpi.CustomContextRecordName as customContextRecordName "; 
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Boolean' THEN 'NullableBoolean' WHEN AssessmentIndicatorDefinition.DataType == 'Number' THEN 'NullableDecimal' WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN 'NullableDecimal'  WHEN AssessmentIndicatorDefinition.DataType == 'String' THEN 'NullableString' WHEN AssessmentIndicatorDefinition.DataType == 'DateTime' THEN 'NullableDateTime' ELSE AssessmentIndicatorDefinition.DataType END as dataType ";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Boolean' THEN 'Bool' ELSE ' ' END as toggleId";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN '0.2' ELSE '0.0' END as formatType";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN 0.1 ELSE 1 END as stepSize";
+   sqlStmt += ",CASE WHEN InStoreLocation.Name is Null THEN 'Store' ELSE InStoreLocation.Name END as inStoreLocationName";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Boolean' THEN CASE WHEN RetailVisitKpi.actualBooleanValue == ' ' THEN '0' ELSE RetailVisitKpi.actualBooleanValue END ELSE   Case WHEN AssessmentIndicatorDefinition.DataType == 'Number' THEN  RetailVisitKpi.actualIntegerValue WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN RetailVisitKpi.actualDecimalValue   WHEN AssessmentIndicatorDefinition.DataType == 'DateTime' THEN RetailVisitKpi.actualDateTimeValue   WHEN AssessmentIndicatorDefinition.DataType == 'Percentage' THEN RetailVisitKpi.actualIntegerValue  WHEN AssessmentIndicatorDefinition.DataType == 'String' THEN RetailVisitKpi.actualStringValue  WHEN AssessmentIndicatorDefinition.DataType == 'Picklist' THEN RetailVisitKpi.actualStringValue ELSE AssessmentIndicatorDefinition.DataType END  END as actualValue ";
+   sqlStmt += ",CASE WHEN AssessmentIndicatorDefinition.DataType == 'Boolean' THEN RetailVisitKpi.targetBooleanValue  WHEN AssessmentIndicatorDefinition.DataType == 'Number' THEN  RetailVisitKpi.targetIntegerValue WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN RetailVisitKpi.targetDecimalValue   WHEN AssessmentIndicatorDefinition.DataType == 'DateTime' THEN RetailVisitKpi.targetDateTimeValue   WHEN AssessmentIndicatorDefinition.DataType == 'Percentage' THEN RetailVisitKpi.targetIntegerValue  WHEN AssessmentIndicatorDefinition.DataType == 'String' THEN RetailVisitKpi.targetStringValue  WHEN AssessmentIndicatorDefinition.DataType == 'Picklist' THEN RetailVisitKpi.targetStringValue ELSE AssessmentIndicatorDefinition.DataType END as targetValue ";
+   sqlStmt += " ,CASE WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN  '-9999999999999.99999' WHEN AssessmentIndicatorDefinition.DataType  == 'Number' THEN '-999999999' END AS minValue ";
+   sqlStmt += " ,CASE WHEN AssessmentIndicatorDefinition.DataType == 'Decimal' THEN  '9999999999999.99999' WHEN AssessmentIndicatorDefinition.DataType  == 'Number' THEN '999999999' END AS maxValue ";
+   sqlStmt += ",RetailVisitKpi.CustomContextRecordName as productCategoryName";
+   sqlStmt += ",#kpiGroupTextAdditional# as groupText ";
+   sqlStmt += ",RetailVisitKpi.CustomContextRecordName  as customGroupName";
+   sqlStmt += ",'ZZZ' as sortAttribute";
+   sqlStmt += ",date(RetailVisitKpi.TargetDateTimeValue,'unixepoch', 'localtime') as targetDate ";
+   sqlStmt += ",substr(time(RetailVisitKpi.TargetDateTimeValue,'unixepoch', 'localtime'),1,5) as targetTime ";
+   sqlStmt += ",'' as fileType ";
+   sqlStmt += ",'' as mediaPath ";
+   sqlStmt += "FROM RetailVisitKpi ";
+   sqlStmt += "INNER JOIN AssessmentTask ON RetailVisitKpi.AssessmentTaskId = AssessmentTask.Id AND (RetailVisitKpi.IsDeleted <> '1' OR RetailVisitKpi.IsDeleted IS NULL) AND (AssessmentTask.IsDeleted <> '1' OR AssessmentTask.IsDeleted IS NULL) ";
+   sqlStmt += "INNER JOIN AssessmentIndicatorDefinition ON RetailVisitKpi.AssessmentIndDefinitionId = AssessmentIndicatorDefinition.Id AND (AssessmentIndicatorDefinition.IsDeleted <> '1' OR AssessmentIndicatorDefinition.IsDeleted IS NULL)  ";
+   sqlStmt += "LEFT OUTER JOIN InStoreLocation ON RetailVisitKpi.InStoreLocationId = InStoreLocation.Id AND (InStoreLocation.IsDeleted <> '1' OR InStoreLocation.IsDeleted IS NULL) ";
+   sqlStmt += "WHERE 1=1 ";
+   sqlStmt += "AND RetailVisitKpi.AssessmentTaskId = #assessmentTaskId# ";
+   sqlStmt += "AND AssessmentIndicatorDefinition.DataType not in ('Percentage') ";
+   sqlStmt += "AND (RetailVisitKpi.ProductId is null OR RetailVisitKpi.ProductId = ' ') ";
+   sqlStmt += "AND (RetailVisitKpi.ProductCategoryId is null OR RetailVisitKpi.ProductCategoryId = ' ') ";
+   sqlStmt += "AND AssessmentTask.TaskType = 'Other' ";
+   sqlStmt += "ORDER BY AssessmentTask.SequenceNumber ASC,AssessmentTask.Name ASC,RetailVisitKpi.DisplayOrder ASC,AssessmentIndicatorDefinition.Name ASC ";
+
+   return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+  ]]></Load>
+  </Database>
+</DataSource>

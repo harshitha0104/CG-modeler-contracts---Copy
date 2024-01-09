@@ -1,0 +1,11 @@
+<LookupObject name="LuHasReferencedAsset" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuHasReferencedAsset" />
+  <SimpleProperties>
+    <SimpleProperty name="referencedAssetCount" type="DomInteger" dataSourceProperty="referencedAssetCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

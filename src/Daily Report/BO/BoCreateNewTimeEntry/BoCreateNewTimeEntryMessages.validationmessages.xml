@@ -1,0 +1,5 @@
+<ValidationMessages name="BoCreateNewTimeEntryMessages" businessObject="BoCreateNewTimeEntry" schemaVersion="">
+  <ValidationMessage name="CasTimeFillInAllValues" defaultMessage="Please fill in all values." comment="All fields need to be filled with values." />
+  <ValidationMessage name="CasTimeInvalidData" defaultMessage="Please enter an End Date and Time greater than or equal to the Start Date and Time." comment="Invalid data." />
+  <ValidationMessage name="CasTimeOverlapData" defaultMessage="Time Entry Overlap between time entries #entry1# (#time1#) and #entry2# (#time2#)." comment="Overlap." />
+</ValidationMessages>

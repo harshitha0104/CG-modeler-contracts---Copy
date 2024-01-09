@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DataSource name="DsLuMapDetail" backendSystem="sf" businessObjectClass="LuMapDetail" external="false" editableEntity="" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="" table="" column="" />
+  </Attributes>
+  <Entities>
+    <Entity name=" " alias="" idAttribute="" />
+  </Entities>
+  <QueryCondition />
+  <OrderCriteria />
+  <Parameters />
+</DataSource>

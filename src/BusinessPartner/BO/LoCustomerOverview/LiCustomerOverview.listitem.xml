@@ -1,0 +1,38 @@
+<ListItem name="LiCustomerOverview" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="name" type="DomBpaName" dataSourceProperty="name" />
+    <SimpleProperty name="customerId" type="DomId" dataSourceProperty="customerId" />
+    <SimpleProperty name="mainAddress" type="DomText" storable="false" dataSourceProperty="mainAddress" />
+    <SimpleProperty name="street" type="DomText" dataSourceProperty="street" />
+    <SimpleProperty name="zipCode" type="DomText" dataSourceProperty="zipCode" />
+    <SimpleProperty name="city" type="DomText" dataSourceProperty="city" />
+    <SimpleProperty name="countryState" type="DomText" dataSourceProperty="countryState" />
+    <SimpleProperty name="prio" type="DomText" dataSourceProperty="prio" />
+    <SimpleProperty name="classOfTrade" type="DomText" dataSourceProperty="classOfTrade" />
+    <SimpleProperty name="tradeOrg" type="DomText" dataSourceProperty="tradeOrg" storable="false" />
+    <SimpleProperty name="tradeOrgPKey" type="DomText" storable="false" dataSourceProperty="tradeOrgPKey" />
+    <SimpleProperty name="grouping1" type="DomText" dataSourceProperty="grouping1" />
+    <SimpleProperty name="substitutedUsrPKey" type="DomPKey" dataSourceProperty="substitutedUsrPKey" />
+    <SimpleProperty name="subValidFrom" type="DomDate" dataSourceProperty="subValidFrom" storable="false" />
+    <SimpleProperty name="subValidThru" type="DomValidThru" dataSourceProperty="subValidThru" storable="false" />
+    <SimpleProperty name="substituted" type="DomBool" dataSourceProperty="isSubstituted" />
+    <SimpleProperty name="managed" type="DomBool" dataSourceProperty="managed" />
+    <SimpleProperty name="managementRelationValidFrom" type="DomDate" dataSourceProperty="managementRelationValidFrom" />
+    <SimpleProperty name="managementRelationValidThru" type="DomValidThru" dataSourceProperty="managementRelationValidThru" />
+    <SimpleProperty name="latitude" type="DomDegree" dataSourceProperty="latitude" />
+    <SimpleProperty name="longitude" type="DomDegree" dataSourceProperty="longitude" />
+    <SimpleProperty name="overdue" type="DomBool" dataSourceProperty="isOverdue" />
+    <SimpleProperty name="distributionIssue" type="DomBool" dataSourceProperty="distributionIssue" />
+    <SimpleProperty name="outOfStockIssue" type="DomBool" dataSourceProperty="outOfStockIssue" />
+    <SimpleProperty name="hasActivity" type="DomBool" dataSourceProperty="hasActivity" />
+    <SimpleProperty name="hasPromotion" type="DomBool" dataSourceProperty="hasPromotion" />
+    <SimpleProperty name="distanceText" type="DomText" />
+    <SimpleProperty name="distance" type="DomDecimal" />
+    <SimpleProperty name="sortText" type="DomText" />
+    <SimpleProperty name="groupSort" type="DomInteger" />
+    <SimpleProperty name="mapIcon" type="DomText" />
+    <SimpleProperty name="isButtonVisible" type="DomBool" />
+    <SimpleProperty name="visibleInMap" type="DomBool" />
+  </SimpleProperties>
+</ListItem>

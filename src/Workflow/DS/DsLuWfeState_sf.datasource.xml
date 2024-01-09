@@ -1,0 +1,19 @@
+<DataSource name="DsLuWfeState" backendSystem="sf" businessObjectClass="LuWfeState" external="false" readOnly="true" editableEntity="Workflow_State__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Workflow_State__c" column="Id" />
+    <Attribute name="stateType" table="Workflow_State__c" column="State_Type__c" />
+    <Attribute name="text" table="Workflow_State__c" column="State_Name__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Workflow_State__c" alias="" idAttribute="PKey" />
+  </Entities>
+  <QueryCondition><![CDATA[
+		Workflow_State__c.Id = #pKey#
+		]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>
+
+<!-- Datasource currently not in use and currently not useable should use Workflow_State_Transation__c because Workflow_state__c was choosen to be deleted -->

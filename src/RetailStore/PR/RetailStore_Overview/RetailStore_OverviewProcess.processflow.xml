@@ -1,0 +1,72 @@
+<Process name="RetailStore::OverviewProcess" defaultAction="ShowRetailStore" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="RetailStoreDetail" type="BoRetailStore" />
+        <Declaration name="RetailStoreAddress" type="Object" />
+        <Declaration name="RetailStoreLatLong" type="Object" />
+      </Declarations>
+      <Parameters>
+        <Input name="pKey" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadRetailStore" actionType="LOAD" type="BoRetailStore">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::pKey" />
+        </Parameters>
+        <Return name="ProcessContext::RetailStoreDetail" />
+      </Action>
+      <Action name="LoadAddressData" actionType="LOGIC" call="ProcessContext::RetailStoreDetail.getRetailStoreAddress">
+        <Return name="ProcessContext::RetailStoreAddress" />
+      </Action>
+      <Action name="LoadLatLongOfRetailStore" actionType="LOGIC" call="ProcessContext::RetailStoreDetail.getRetailStoreLatLong">
+        <Return name="ProcessContext::RetailStoreLatLong" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="VIEW" name="ShowRetailStore">
+        <UIDescription>RetailStore::OverviewUI</UIDescription>
+        <Events>
+          <Event name="smsPressed" action="StartSMS" />
+          <Event name="phonePressed" action="StartPhoneCall" />
+          <Event name="mailPressed" action="StartMail" />
+          <Event name="tabSelected" action="TabDecision" />
+          <Event name="navigateToCustomerPressed" action="NavigateToCustomer" />
+        </Events>
+      </Action>
+      <Action name="StartSMS" actionType="LOGIC" call="ProcessContext::RetailStoreDetail.processSmsSending">
+        <Parameters>
+          <Input name="Dial" value="ProcessContext::RetailStoreDetail.luContact.phone" />
+          <Input name="Message" type="Literal" value=" " />
+        </Parameters>
+      </Action>
+      <Action name="StartPhoneCall" actionType="LOGIC" call="ProcessContext::RetailStoreDetail.processPhoneCall">
+        <Parameters>
+          <Input name="Dial" value="ProcessContext::RetailStoreDetail.luContact.phone" />
+        </Parameters>
+      </Action>
+      <Action name="StartMail" actionType="LOGIC" call="ProcessContext::RetailStoreDetail.sendMail">
+        <Parameters>
+          <Input name="Mail" value="ProcessContext::RetailStoreDetail.luContact.email" />
+        </Parameters>
+      </Action>
+      <Action name="TabDecision" actionType="DECISION" parameter="Event.tabName">
+        <Case value="InStoreLocations" action="LoadInStoreLocations" />
+        <Case value="PreviousVisits" action="LoadPreviousVisits" />
+        <Case value="Contact" action="LoadContacts" />
+        <CaseEmpty action="ShowRetailStore" />
+        <CaseElse action="ShowRetailStore" />
+      </Action>
+      <Action name="LoadInStoreLocations" actionType="LOGIC" call="ProcessContext::RetailStoreDetail.loadLoInStoreLocationAsync" />
+      <Action name="LoadPreviousVisits" actionType="LOGIC" call="ProcessContext::RetailStoreDetail.loadLoPreviousVisitsAsync" />
+      <Action name="LoadContacts" actionType="LOGIC" call="ProcessContext::RetailStoreDetail.loadLoContactAsync"></Action>
+      <!-- Navigate to customer -->
+      <Action actionType="LOGIC" name="NavigateToCustomer" call="ProcessContext::RetailStoreDetail.navigateToCustomer">
+        <Parameters />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

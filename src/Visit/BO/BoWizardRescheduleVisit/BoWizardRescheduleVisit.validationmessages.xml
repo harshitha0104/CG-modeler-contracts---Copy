@@ -1,0 +1,4 @@
+<ValidationMessages name="BoWizardRescheduleVisitMessages" businessObject="BoWizardRescheduleVisit" schemaVersion="">
+  <ValidationMessage name="StartPlannedTimeAfterEndPlannedTimeNotAllowed" defaultMessage="Planned start time can't be on or after the planned end time of a visit." comment="Planned start time can't be on or after the planned end time of a visit." />
+  <ValidationMessage name="FillInDateAndTimeFields" defaultMessage="Enter date and time for planned start date and planned end date." comment="Date and Time Fields in Reschedule Wizard must not be empty." />
+</ValidationMessages>

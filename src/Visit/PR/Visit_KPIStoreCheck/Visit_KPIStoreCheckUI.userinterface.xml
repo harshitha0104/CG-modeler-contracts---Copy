@@ -1,0 +1,84 @@
+<UIDescription name="Visit::KPIStoreCheckUI" schemaVersion="0.0.0.5" simpleEditorOnly="true">
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::RetailStoreName" />
+      </Bindings>
+    </PageHeader>
+    <!--  custom context groupings -->
+    <Section sectionName="masterSection" sectionPattern="FilteredViewAreaSection">
+      <Area areaName="filterArea" areaPattern="FilterElementArea">
+        <ImageSelector name="LocationSelector" type="FilterElement" dataSource="ProcessContext::RetailStoreDetail.loInStoreLocation.items[]" filter="true">
+          <Events>
+            <ItemSelectedEvent event="locationSelected">
+              <Params>
+                <Param name="storeLocation" value=".name" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+          <Items>
+            <Bindings>
+              <Binding target="Image" type="Image" binding=".image" bindingMode="ONE_WAY" />
+              <Binding target="Text" type="Text" binding=".name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+        </ImageSelector>
+      </Area>
+      <Area areaName="viewArea" areaPattern="SingleElementArea">
+        <GroupedList name="RetailVisitKPIList" searchable="false" groupBy="customGroupName" sortBy="sortAttribute" hasBorder="true" sortInsideGroupBy="displayOrder" sortDirectionInGroup="ASC" dataSource="ProcessContext::BoAssessmentTask.loRetailVisitKPI.items[]">
+          <Items name="Items" itemPattern="StoreRetailVisitKPIListItemLayout">
+            <ItemListLayout>
+              <Tablet>
+                <Default>
+                  <Col layoutType="itemSecondary" bindingId="question" />
+                  <Col layoutType="itemSecondary" bindingId="targetValue" />
+                  <Col layoutType="Dynamic itemRight" bindingId="actualValue" />
+                </Default>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col flex="1">
+                    <Row layoutType="itemSecondary" bindingId="question" />
+                    <Row layoutType="itemSecondary" bindingId="targetValue" />
+                  </Col>
+                  <Col width="11em" layoutType="Dynamic" bindingId="actualValue" />
+                </Default>
+              </Phone>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="question" type="Text" binding=".question" bindingMode="ONE_WAY" />
+              <Binding target="targetValue" type="Text" binding=".targetValue" bindingMode="ONE_WAY" />
+              <Binding target="actualValue" type="Dynamic" typeField="dataType" stepSizeBinding="stepSize" minBinding="minValue" maxBinding="maxValue" formatBinding="formatType" binding=".actualValue" bindingMode="TWO_WAY" />
+            </Bindings>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::contextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="KPIContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                  <Binding type="Visible" target="Visible" binding=".actionVisible" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+          </Items>
+          <!--  Event for creating context menu -->
+          <Events>
+            <ContextOpeningEvent event="contextMenuOpening">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="contextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

@@ -1,0 +1,13 @@
+<DataSource name="DsLuExistsSyncTable" businessObjectClass="LuExistsSyncTable" external="false" editableEntity="sqlite_master" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="tableExists" value="1" />
+  </Attributes>
+  <Entities>
+    <Entity name="sqlite_master" alias="" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   name = 'CssRplInboundPackageRegistry'
+ ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters></Parameters>
+</DataSource>

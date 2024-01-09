@@ -1,0 +1,35 @@
+<DataSource name="DsLoMagnetizedJobList" backendSystem="sf" businessObjectClass="LoMagnetizedJobList" external="false" editableEntity="Job_List__c" readOnly="false" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Job_List__c" column="Id" />
+    <Attribute name="clbMainPKey" table="Job_List__c" column="Visit__c" />
+    <Attribute name="done" table="Job_List__c" column="Done__c" />
+    <Attribute name="validFrom" table="Job_List__c" column="Valid_From__c" />
+    <Attribute name="validThru" table="Job_List__c" column="Valid_Thru__c" />
+    <DerivedAttribute name="magnetizeOnSave" value="'0'" />
+    <DerivedAttribute name="demagnetizeOnSave" value="'0'" />
+    <DerivedAttribute name="jobExists" value="CASE WHEN count(Visit_Job__c.Id) &gt; 0 THEN '1' ELSE '0' END" />
+  </Attributes>
+  <Entities>
+    <Entity name="Job_List__c" alias="" idAttribute="Id" />
+    <Entity name="Visit_Job__c" alias="">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="Job_List__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Visit_Job__c.Job_List__c" />
+          <Condition leftSideValue="Job_List__c.Visit__c" comparator="eq" rightSideType="Attribute" rightSideValue="Visit_Job__c.Visit__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+			    Job_List__c.Visit__c = #clbMainPKey#
+        ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Job_List__c" attribute="Id" direction="ASC" />
+  </OrderCriteria>
+  <GroupBy>
+    <GroupByCriterion entity="Job_List__c" attribute="Id" />
+  </GroupBy>
+  <Parameters>
+    <Parameter name="clbMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

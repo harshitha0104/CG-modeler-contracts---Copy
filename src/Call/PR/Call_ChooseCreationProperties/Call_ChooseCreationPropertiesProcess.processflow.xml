@@ -1,0 +1,45 @@
+<Process name="Call::ChooseCreationPropertiesProcess" defaultAction="ShowUIDecision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OpenJobLists" type="LoOpenJobLists" />
+        <Declaration name="CurrentJobListPKey" type="String" />
+        <Declaration name="DateFromAnsi" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="DateFrom" type="String" />
+        <Input name="TimeFrom" type="String" />
+        <Input name="Action" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="ConvertToAnsi" call="Utils.convertDate2Ansi">
+        <Parameters>
+          <Input name="date" value="ProcessContext::DateFrom" />
+        </Parameters>
+        <Return name="ProcessContext::DateFromAnsi" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowUIDecision" actionType="DECISION" parameter="ProcessContext::Action">
+        <Case value="createCall" action="ShowView" />
+        <CaseElse action="End" />
+      </Action>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Call::ChooseCreationProperties</UIDescription>
+        <Events>
+          <Event name="FinishWizard" action="End" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="dateFrom" value="ProcessContext::DateFrom" />
+          <Return name="timeFrom" value="ProcessContext::TimeFrom" />
+          <Return name="buttonPressed" value="Event.buttonPressed" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

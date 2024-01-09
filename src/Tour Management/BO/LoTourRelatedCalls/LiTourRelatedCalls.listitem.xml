@@ -1,0 +1,9 @@
+<ListItem name="LiTourRelatedCalls">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="dateFrom" type="DomDate" storable="true" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" storable="true" dataSourceProperty="dateThru" />
+    <SimpleProperty name="tmgMainPKey" type="DomPKey" storable="false" dataSourceProperty="tmgMainPKey" />
+    <SimpleProperty name="bpaMainPKey" type="DomPKey" storable="false" dataSourceProperty="bpaMainPKey" />
+  </SimpleProperties>
+</ListItem>

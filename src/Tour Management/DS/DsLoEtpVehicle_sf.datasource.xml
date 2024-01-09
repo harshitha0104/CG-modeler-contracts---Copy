@@ -1,0 +1,18 @@
+<DataSource name="DsLoEtpVehicle" backendSystem="sf" businessObjectClass="LoEtpVehicle" external="false" editableEntity="Vehicle__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Vehicle__c" column="Id" />
+    <Attribute name="id" table="Vehicle__c" column="Name" />
+    <Attribute name="vehicleType" table="Vehicle__c" column="Vehicle_Type__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Vehicle__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+                                (Vehicle__c.Vehicle_Type__c IN (#vehicleTypes#)) 
+
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="vehicleTypes" type="LIST" />
+  </Parameters>
+</DataSource>

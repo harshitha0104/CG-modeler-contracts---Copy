@@ -1,0 +1,18 @@
+<BusinessObject name="BoWizardAddProduct"  generateLoadMethod="true">
+  <DataSource name="DsBoWizardAddProduct" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="productPKey" type="DomPKey" storable="false" dataSourceProperty="productPKey" />
+    <SimpleProperty name="uoM" type="DomString" storable="false" dataSourceProperty="unit" />
+  </SimpleProperties>
+  <ObjectLookups>
+    <ObjectLookup name="luProduct" objectClass="LuProduct" dataSourceProperty="productPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <Methods>
+    <Method name="afterCreateAsync" />
+    <Method name="setEARights" />
+  </Methods>
+  <Validations>
+    <Validation name="validateNotEmpty" />
+  </Validations>
+</BusinessObject>

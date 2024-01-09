@@ -1,0 +1,126 @@
+<UIDescription name="Cash::CheckInHeaderUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="CashTitleId" defaultLabel="Cash" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <MenuItems>
+          <MenuItem directlyVisible="true" itemId="releaseCash">
+            <Bindings>
+              <Resource target="Text" type="Label" id="releaseDocumentId" defaultLabel="Release" />
+              <Resource target="Icon" type="Image" id="CompleteGrey24" />
+              <Binding type="Editable" target="Editable" call="ProcessContext::MainBo.releaseButtonActive" />
+              <Binding type="Visible" target="Visible" call="ProcessContext::MainBo.releaseButtonVisible" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="releaseDocument" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="reviewReleaseInformation">
+            <Bindings>
+              <Resource target="Text" type="Label" id="reviewRelease" defaultLabel="Release Info" />
+              <Resource target="Icon" type="Image" id="CompleteDarkGrey24" />
+              <Binding type="Visible" target="Visible" call="ProcessContext::MainBo.isReleaseInformationVisible" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="reviewReleaseInformation" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <GroupElement name="CashInfoGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="CashInfoId" defaultLabel="Cash Information" />
+          </Bindings>
+          <!-- Expected -->
+          <Merger name="ExpectedId" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Expected" id="ExpectedId" />
+            </Bindings>
+            <InputArea name="Expected" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Expected" id="ExpectedId" />
+                <Binding target="Value" type="Decimal" formatV2="15.2" binding="ProcessContext::MainBo.expectedAmount" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <SelectionBox name="Currency" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CurrencyId" defaultLabel="Currency" />
+                <Binding target="DataSource" toggleId="Currency" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::MainBo.currency" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </Merger>
+          <!-- Actual -->
+          <Merger name="ActualId" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Actual" id="ActualId" />
+            </Bindings>
+            <InputArea name="Actual" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Actual" id="ActualId" />
+                <Binding target="Value" type="Decimal" formatV2="15.2" binding="ProcessContext::MainBo.paidAmount" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <SelectionBox name="Currency" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CurrencyId" defaultLabel="Currency" />
+                <Binding target="DataSource" toggleId="Currency" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::MainBo.currency" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </Merger>
+          <!-- Difference -->
+          <Merger name="DifferenceId" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Difference" id="DifferenceId" />
+            </Bindings>
+            <InputArea name="Difference" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Difference" id="DifferenceId" />
+                <Binding target="Value" type="Decimal" formatV2="15.2" binding="ProcessContext::MainBo.differenceAmount" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <SelectionBox name="Currency" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CurrencyId" defaultLabel="Currency" />
+                <Binding target="DataSource" toggleId="Currency" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::MainBo.currency" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </Merger>
+          <!-- WareHouse -->
+          <Lookup name="Warehouse">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Warehouse" id="EtpWarehouseId" />
+              <Binding target="Value" binding="ProcessContext::MainBo.luEtpWarehouse.text" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="etpWarehouseLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

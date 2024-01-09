@@ -1,0 +1,35 @@
+<UIDescription name="Call::ChooseUserUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="CallChooseUserTitle" defaultLabel="Change User" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="UserList" searchable="false" hasBorder="true" dataSource="ProcessContext::UserList.Items[]">
+          <Items name="Items" itemPattern="CallChooseUserTemplate">
+            <ItemListLayout>
+              <Col flex="1">
+                <Row layoutType="itemName" bindingId="userName" />
+              </Col>
+              <Col width="2em" height="1.4em" layoutType="Image" bindingId="checkmarkImage" />
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="userName" type="Text" binding=".userName" bindingMode="ONE_WAY" />
+              <Binding target="checkmarkImage" type="Image" binding=".currentlySelectedImageId" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="UserSelected">
+              <Params>
+                <Param name="userPKey" value=".userPKey" />
+                <Param name="userName" value=".userName" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

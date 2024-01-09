@@ -1,0 +1,10 @@
+<ListItem name="LiAstAttachments">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="attachmentBlobPKey" type="DomPKey" dataSourceProperty="attachmentBlobPKey" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" blobTable="AstAssetAttachmentBlob" blobPKeyField="attachmentBlobPKey" />
+    <SimpleProperty name="description" type="DomText" dataSourceProperty="description" />
+    <SimpleProperty name="type" type="DomFileType" dataSourceProperty="type" />
+    <SimpleProperty name="fileName" type="DomFileName" dataSourceProperty="fileName" />
+  </SimpleProperties>
+</ListItem>

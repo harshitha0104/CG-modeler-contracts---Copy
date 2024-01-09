@@ -1,0 +1,7 @@
+<ListItem name="LiBreadCrumbLevel1" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="id" type="DomId" storable="false" dataSourceProperty="id" />
+    <SimpleProperty name="label" type="DomText" storable="false" dataSourceProperty="label" />
+  </SimpleProperties>
+</ListItem>

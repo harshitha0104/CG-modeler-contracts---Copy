@@ -1,0 +1,28 @@
+<DataSource name="DsLuTacticCount" backendSystem="sf" objectClass="LuTacticCount" businessObjectClass="LuTacticCount" external="true" distinct="false" readOnly="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+// In CGCloud Tactics are not supported in Sales Folder
+// Because no manual Load is implemented and LuTacticCount is part of BoPromotionDetail FW load this LU automatically
+// A valid SQL statement has to be returnes in this case
+var sqlParams = {};
+var sqlStmt = "Select 0 as salesFolderTacticCount ";
+return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+      ]]></Load>
+    <Update><![CDATA[
+
+return undefined;
+
+      ]]></Update>
+    <Insert><![CDATA[   
+
+return undefined;
+
+      ]]></Insert>
+    <Delete><![CDATA[
+
+return undefined;
+
+      ]]></Delete>
+  </Database>
+</DataSource>

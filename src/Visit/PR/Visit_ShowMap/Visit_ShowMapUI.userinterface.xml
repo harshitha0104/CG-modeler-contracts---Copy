@@ -1,0 +1,15 @@
+<UIDescription name="Visit::ShowMapUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionPage">
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GoogleMap name="VisitsGuide" width="100%" dataSource="ProcessContext::CardVisits_VisitList.Items[]" latitudeField="latitude" longitudeField="longitude" idField="mapIcon" toolTipField="toolTipText" visibilityField="visibleInMap">
+          <Bindings>
+            <Resource target="MarkerImage" type="Image" id="MarkerStore" defaultImage="MarkerStore" />
+            <Resource target="CurrentPositionImage" type="Image" id="MarkerUser" defaultImage="MarkerUser" />
+            <Binding target="DisplayTraffic" binding="ProcessContext::DisplayTraffic" bindingMode="ONE_WAY" />
+          </Bindings>
+        </GoogleMap>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

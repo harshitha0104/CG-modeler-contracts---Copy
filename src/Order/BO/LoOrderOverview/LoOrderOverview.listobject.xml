@@ -1,0 +1,54 @@
+<ListObject name="LoOrderOverview" generateLoadMethod="false" filter="InDatabase" paging="true" >
+  <DataSource name="DsLoOrderOverview" />
+  <Item objectClass="LiOrderOverview" />
+  <Methods>
+    <Method name="loadAsync" />
+    <Method name="setOpenOnlyFilter" />
+    <Method name="getValidPhasesForAdvSearch" />
+    <Method name="preparePaymentDetails" />
+    <Method name="getOrdersForCard" />
+    <Method name="getInfoForOrderHistoryCard" />
+    <Method name="createListItemBasedOnBO" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoOrderOverview">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="AsoOrderOverview_id" property="id" type="Text" />
+        <AdvancedSearchAttribute label="AsoOrderOverview_orderType" property="orderMetaPKey" type="Lookup" lookupProcess="Order::OrderMetaLookupProcess" lookupProcessReturnValue="orderMetaPKey" lookupObject="LuOrderMeta" lookupObjectDisplayValue="text">
+          <Parameters></Parameters>
+        </AdvancedSearchAttribute>
+        <AdvancedSearchAttribute label="AsoOrderOverview_phase" property="phase" call="@process.overviewList.getValidPhasesForAdvSearch" type="Selection" />
+        <AdvancedSearchAttribute label="AsoOrderOverview_commitDate" property="commitDate" type="Date" />
+        <AdvancedSearchAttribute label="AsoOrderOverview_deliveryDate" property="deliveryDate" type="Date" />
+        <AdvancedSearchAttribute label="AsoOrderOverview_customerName" property="customerPKey" type="Lookup" lookupProcess="Customer::LookupProcess" lookupProcessReturnValue="customerPKey" lookupObject="LuCustomer" lookupObjectDisplayValue="name">
+          <Parameters></Parameters>
+        </AdvancedSearchAttribute>
+        <AdvancedSearchAttribute label="AsoOrderOverview_initiatorName" property="initiatorPKey" type="Lookup" lookupProcess="User::LookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name">
+          <Parameters></Parameters>
+        </AdvancedSearchAttribute>
+        <AdvancedSearchAttribute label="AsoOrderOverview_responsibleName" property="responsiblePKey" type="Lookup" lookupProcess="User::LookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" defaultValue="#UserPKey#">
+          <Parameters></Parameters>
+        </AdvancedSearchAttribute>
+        <AdvancedSearchAttribute label="AsoOrderOverview_grossTotalValue" property="grossTotalValue" type="Number" numberFormat="0.2" stepSize="1" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+    <AdvancedSearchObject name="AsoOrderCallOverview">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="AsoOrderOverview_id" property="id" type="Text" />
+        <AdvancedSearchAttribute label="AsoOrderOverview_orderType" property="orderMetaPKey" type="Lookup" lookupProcess="Order::OrderMetaLookupProcess" lookupProcessReturnValue="orderMetaPKey" lookupObject="LuOrderMeta" lookupObjectDisplayValue="text">
+          <Parameters></Parameters>
+        </AdvancedSearchAttribute>
+        <AdvancedSearchAttribute label="AsoOrderOverview_phase" property="phase" call="@process.overviewList.getValidPhasesForAdvSearch" type="Selection" />
+        <AdvancedSearchAttribute label="AsoOrderOverview_commitDate" property="commitDate" type="Date" />
+        <AdvancedSearchAttribute label="AsoOrderOverview_deliveryDate" property="deliveryDate" type="Date" />
+        <AdvancedSearchAttribute label="AsoOrderOverview_initiatorName" property="initiatorPKey" type="Lookup" lookupProcess="User::LookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name">
+          <Parameters></Parameters>
+        </AdvancedSearchAttribute>
+        <AdvancedSearchAttribute label="AsoOrderOverview_responsibleName" property="responsiblePKey" type="Lookup" lookupProcess="User::LookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" defaultValue="#UserPKey#">
+          <Parameters></Parameters>
+        </AdvancedSearchAttribute>
+        <AdvancedSearchAttribute label="AsoOrderOverview_grossTotalValue" property="grossTotalValue" type="Number" numberFormat="0.2" stepSize="1" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

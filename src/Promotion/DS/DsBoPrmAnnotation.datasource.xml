@@ -1,0 +1,19 @@
+<DataSource name="DsBoPrmAnnotation" businessObjectClass="BoPrmAnnotation" external="false" distinct="false" readonly="false" editableEntity="PrmAnnotation" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="PrmAnnotation" column="PKey" />
+    <Attribute name="text" table="PrmAnnotation" column="Text" />
+    <Attribute name="prmPromotionPKey" table="PrmAnnotation" column="PrmPromotionPKey" />
+    <Attribute name="usage" table="PrmAnnotation" column="Usage" />
+  </Attributes>
+  <Entities>
+    <Entity name="PrmAnnotation" alias="" idAttribute="PKey" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   PrmAnnotation.Usage='Comment' 
+   AND PrmAnnotation.PrmPromotionPKey =#prmPromotionPKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="prmPromotionPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

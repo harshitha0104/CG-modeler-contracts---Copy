@@ -1,0 +1,17 @@
+<ListItem name="LiProductOverview" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="id" type="DomId" dataSourceProperty="id" />
+    <SimpleProperty name="text1" type="DomText" dataSourceProperty="text1" />
+    <SimpleProperty name="text2" type="DomText" dataSourceProperty="text2" />
+    <SimpleProperty name="shortText" type="DomText" dataSourceProperty="shortText" />
+    <SimpleProperty name="grouping1" type="DomText" dataSourceProperty="grouping1" />
+    <SimpleProperty name="ean" type="DomPrdNumber" dataSourceProperty="ean" />
+    <SimpleProperty name="foreignProduct" type="DomBool" dataSourceProperty="foreignProduct" />
+    <SimpleProperty name="category" type="DomPrdCategory" storable="false" dataSourceProperty="category" />
+    <SimpleProperty name="prdType" type="DomPrdType" storable="false" dataSourceProperty="prdType" />
+    <SimpleProperty name="productGroup" type="DomText" storable="false" dataSourceProperty="productGroup" />
+    <SimpleProperty name="metaType" type="DomPrdMetaType" storable="false" dataSourceProperty="metaType" />
+    <SimpleProperty name="isForeignProductImage" type="DomString" storable="false" dataSourceProperty="isForeignProductImage" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,13 @@
+<LookupObject name="LuPrmCttTacticProductCount" schemaVersion="1.1">
+  <DataSource name="DsLuPrmCttTacticProductCount" />
+  <SimpleProperties>
+    <SimpleProperty name="productCount" type="DomInteger" dataSourceProperty="productCount" />
+    <SimpleProperty name="tacticCount" type="DomInteger" dataSourceProperty="tacticCount" />
+    <SimpleProperty name="prmContractPKey" type="DomPKey" dataSourceProperty="prmContractPKey" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

@@ -1,0 +1,14 @@
+<LookupObject name="LuUserDocMissingReminderText" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuUserDocMissingReminderText" />
+   <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="reminderRuleType" type="DomUsrReminderRuleType" storable="false" dataSourceProperty="reminderRuleType" />
+    <SimpleProperty name="messageTitle" type="DomText" storable="false" dataSourceProperty="messageTitle" />
+    <SimpleProperty name="messageContent" type="DomText" storable="false" dataSourceProperty="messageContent" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

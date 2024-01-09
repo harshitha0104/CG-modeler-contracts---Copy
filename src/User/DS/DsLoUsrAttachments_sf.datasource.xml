@@ -1,0 +1,22 @@
+<DataSource name="DsLoUsrAttachments" backendSystem="sf" businessObjectClass="LoUsrAttachments" external="false" editableEntity="User" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="User" column="Id" />
+    <DerivedAttribute name="fileName" value="''" />
+    <DerivedAttribute name="fileType" value="''" />
+    <DerivedAttribute name="description" value="''" />
+    <DerivedAttribute name="attachmentBlobPKey" value="''" />
+    <Attribute name="mediaPath" table="User" column="SmallPhotoUrl" />
+    <DerivedAttribute name="creationDate" value="''" />
+    <DerivedAttribute name="usage" value="'Picture'" />
+  </Attributes>
+  <Entities>
+    <Entity name="User" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        User.Id = #usrMainPKey#
+      ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="usrMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

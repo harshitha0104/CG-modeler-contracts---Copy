@@ -1,0 +1,9 @@
+<ListItem name="LiProductQuickFilter">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" />
+    <SimpleProperty name="text" type="DomText" />
+    <SimpleProperty name="isSelected" type="DomBool" />
+    <SimpleProperty name="specialOption" type="DomText" />
+    <SimpleProperty name="filter" type="DomText" />
+  </SimpleProperties>
+</ListItem>

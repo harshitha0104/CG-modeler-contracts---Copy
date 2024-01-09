@@ -1,0 +1,33 @@
+<Datasource name="DsLoCndCpReadBpaSets" objectClass="LoCndCpReadBpaSets" businessObjectClass="LoCndCpReadBpaSets" readOnly="true" external="true" editableEntity="BpaSetRel" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="PKey" table="BpaSetRel" column="PKey" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+    var customerPKey = "";
+    if (Utils.isDefined(jsonParams.CustomerPKey)){
+                    customerPKey = Utils.convertForDBParam(jsonParams.CustomerPKey, "DomPKey");
+                }
+    var sqlParams = {customerPKey};
+    var sql= "";
+    sql += "SELECT ";
+    sql += "BR.PKey, BR.BpaCustomerPKey, BR.BpaSetPKey ";
+    sql += "FROM BpaSetRel AS BR ";
+    sql += "WHERE BR.Exclude <> 1 ";
+    sql += "AND BR.BpaCustomerPKey=#customerPKey# ";
+    return Utils.replaceMacrosParam(sql, sqlParams);
+         ]]></Load>
+    <Update><![CDATA[
+            // Intended to be empty
+            return undefined;
+                    ]]></Update>
+    <Insert><![CDATA[   
+                        // Intended to be empty     
+            return undefined;           
+                    ]]></Insert>
+    <Delete><![CDATA[
+              // Intended to be empty
+              return undefined;  
+                    ]]></Delete>
+  </Database>
+</Datasource>

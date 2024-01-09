@@ -1,0 +1,11 @@
+<LookupObject name="LuSelectablePromotion" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuSelectablePromotion" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="slogan" type="DomText" dataSourceProperty="slogan" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

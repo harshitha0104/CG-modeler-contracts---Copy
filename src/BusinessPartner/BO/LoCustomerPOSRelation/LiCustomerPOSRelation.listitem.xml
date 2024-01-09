@@ -1,0 +1,20 @@
+<ListItem name="LiCustomerPOSRelation"  >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="posPKey" type="DomPKey" dataSourceProperty="posPKey" />
+    <SimpleProperty name="customerPKey" type="DomPKey" dataSourceProperty="customerPKey" />
+    <SimpleProperty name="bpaRelMetaPKey" type="DomPKey" dataSourceProperty="bpaRelMetaPKey" />
+    <SimpleProperty name="validFrom" type="DomDate" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomDate" dataSourceProperty="validThru" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="listingModule" type="DomPrdListingModule" dataSourceProperty="listingModule" />
+    <SimpleProperty name="name" type="DomBpaName" dataSourceProperty="name" />
+    <SimpleProperty name="posId" type="DomId" dataSourceProperty="posId" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+    <SimpleProperty name="mandatory" type="DomBool" dataSourceProperty="mandatory" />
+    <SimpleProperty name="mandatoryImage" type="DomText" dataSourceProperty="mandatoryImage" />
+    <SimpleProperty name="continued" type="DomText" dataSourceProperty="continued" />
+    <SimpleProperty name="posName" type="DomBpaName" dataSourceProperty="posName" />
+    <SimpleProperty name="posMetaPKey" type="DomPKey" storable="true" dataSourceProperty="posMetaPKey" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,7 @@
+<LookupObject name="LuTourCount">
+  <DataSource name="DsLuTourCount" />
+  <SimpleProperties>
+    <SimpleProperty name="tourCount" type="DomInteger" storable="true" dataSourceProperty="tourCount" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>

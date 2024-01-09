@@ -1,0 +1,29 @@
+<ListObject name="LoPayCttPayment" generateLoadMethod="false" filter="InDatabase" paging="true"  schemaVersion="1.1">
+  <DataSource name="DsLoPayCttPayment" />
+  <Item objectClass="LiPayCttPayment" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoContractPaymentRequests">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="LoPayCttPayment_PaymentType" property="paymentType" lookupProcess="PaymentTemplate::MetaLookupProcess" lookupProcessReturnValue="metaPKey" lookupObject="LuPaymentType" lookupObjectDisplayValue="text" type="Lookup">
+          <Parameters>
+            <Input name="metaType" type="Literal" value="ContractPayment" />
+          </Parameters>
+        </AdvancedSearchAttribute>
+        <!--<AdvancedSearchAttribute label="LoPayCttPayment_CustomerNameId" property="customerName" type="Text" />-->
+        <AdvancedSearchAttribute label="LoPayCttPayment_CustomerNameId" property="customerPKey" lookupProcess="Customer::LookupProcess" lookupProcessReturnValue="customerPKey" lookupObject="LuCustomer" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="LoPayCttPayment_PhaseId" property="phase" type="Selection" toggleId="PayPhase" />
+        <AdvancedSearchAttribute label="LoPayCttPayment_DateInitiationId" property="dateInitiation" type="Date" />
+        <AdvancedSearchAttribute label="LoPayCttPayment_Owner" property="ownerPKey" lookupProcess="User::LookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="LoPayCttPayment_Responsible" property="responsiblePKey" lookupProcess="User::LookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

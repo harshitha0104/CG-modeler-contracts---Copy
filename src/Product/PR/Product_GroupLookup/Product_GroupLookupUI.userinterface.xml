@@ -1,0 +1,43 @@
+<UIDescription name="Product::GroupLookupUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="ProductGroupLookupTitleId" defaultLabel="Product Groups" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="ProductList" indexBar="true" groupBy="grouping1" searchable="true" dataSource="ProcessContext::ProductGroupList.Items[]">
+          <Items name="Items" itemPattern="ProductGroupOverviewItem">
+            <Bindings>
+              <Binding target="Text1" type="Text" binding=".text1" bindingMode="ONE_WAY" />
+              <Binding target="PrdId" type="Text" binding=".id" bindingMode="ONE_WAY" />
+              <Resource target="PrdIdLabel" type="Label" id="prdGroupIdLabelId" defaultLabel="Prd Grp No." />
+            </Bindings>
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemTitle" bindingId="Text1" />
+                <Row>
+                  <Col layoutType="itemSecondary" width="6em" bindingId="PrdIdLabel" />
+                  <Col layoutType="itemSecondary" width="8em" bindingId="PrdId" />
+                </Row>
+              </Col>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="id" value=".id" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+          <SearchAttributes>
+            <SearchAttribute name="id" />
+            <SearchAttribute name="text1" />
+          </SearchAttributes>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

@@ -1,0 +1,16 @@
+<ListItem name="LiAccountReceivables">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="externalId" type="DomText" dataSourceProperty="externalId" />
+    <SimpleProperty name="documentType" type="DomBpaReceivableDocType" dataSourceProperty="documentType" />
+    <SimpleProperty name="receiptDate" type="DomDate" dataSourceProperty="receiptDate" />
+    <SimpleProperty name="dueDate" type="DomDate" dataSourceProperty="dueDate" />
+    <SimpleProperty name="amount" type="DomMoney" dataSourceProperty="amount" />
+    <SimpleProperty name="amountOpen" type="DomMoney" dataSourceProperty="amountOpen" />
+    <SimpleProperty name="invoiceStatus" type="DomText" dataSourceProperty="invoiceStatus" />
+    <SimpleProperty name="accountReceivableIcon" type="DomString" />
+    <SimpleProperty name="externalIdInvoiceInfo" type="DomText" />
+    <SimpleProperty name="dueDateText" type="DomText" />
+    <SimpleProperty name="receiptDateText" type="DomText" />
+  </SimpleProperties>
+</ListItem>

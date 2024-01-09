@@ -1,0 +1,53 @@
+<UIDescription name="Order::PasteFromClipboardUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="PasteFromClipboardId" defaultLabel="Paste from Clipboard" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="Reload">
+          <Bindings>
+            <Resource target="Text" type="Label" id="ReloadId" defaultLabel="Reload" />
+            <Resource target="Icon" type="Image" id="Reload_PB" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="ReloadFromClipboard" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="true" itemId="Done">
+          <Bindings>
+            <Resource target="Text" type="Label" id="DoneId" defaultLabel="Done" />
+            <Resource target="Icon" type="Image" id="Check_PB" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="EndDataImport" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <DataImportWizard name="Wizard" dataSource="ProcessContext::ValidationList.Items[]">
+          <Items>
+            <Bindings>
+              <Binding target="validateProductNumber" type="Text" binding=".productNumber" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+          <Bindings></Bindings>
+          <DataMapping name="Mapping">
+            <ColumnMapping type="Text" maxLength="50" validateAgainstDataSourceAttribute="validateProductNumber" name="productNumber" defaultCSVPosition="1">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Product No" id="ProductNumberLabelId" />
+              </Bindings>
+            </ColumnMapping>
+            <ColumnMapping type="Number" skipOnZeroOrNull="true" maxLength="12" name="quantity" defaultCSVPosition="2">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Qty" id="QuantityLabelId" />
+              </Bindings>
+            </ColumnMapping>
+          </DataMapping>
+        </DataImportWizard>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

@@ -1,0 +1,11 @@
+<LookupObject name="LuSysSettingById" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuSysSettingById" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="value" type="DomVariant" dataSourceProperty="value" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

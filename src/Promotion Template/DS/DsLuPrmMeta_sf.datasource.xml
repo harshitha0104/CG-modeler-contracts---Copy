@@ -1,0 +1,31 @@
+<DataSource name="DsLuPrmMeta" backendSystem="sf" businessObjectClass="LuPrmMeta" external="false" distinct="false" readOnly="true" editableEntity="Contract_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contract_Template__c" column="Id" />
+    <Attribute name="active" table="Contract_Template__c" column="Active__c" />
+    <Attribute name="activePolicy" table="Contract_Template__c" column="Active_Policy__c" />
+    <DerivedAttribute name="uiGroup" type="String" value="' '" />
+    <DerivedAttribute name="anchorType" type="String" value="'BusinessPartner'" />
+    <Attribute name="metaId" table="Contract_Template__c" column="Name" />
+    <Attribute name="maxDays" table="Contract_Template__c" column="Max_Days__c" />
+    <Attribute name="minDays" table="Contract_Template__c" column="Min_Days__c" />
+    <Attribute name="metaType" table="Contract_Template__c" column="Meta_Type__c" />
+    <Attribute name="sort" table="Contract_Template__c" column="Sort_Count__c" />
+    <DerivedAttribute name="tacticType" type="String" value="' '" />
+    <Attribute name="wfeWorkflowPKey" table="Contract_Template__c" column=" Workflow__c" />
+    <DerivedAttribute name="displayInCall" type="String" value="'0'" />
+    <Attribute name="text" table="Contract_Template__c" column="Description_#Language#__c" />
+    <DerivedAttribute name="prdAssortmentPolicy" type="String" value="'No'" />
+    <Attribute name="prdPolicy" table="Contract_Template__c" column="Product_Policy__c" />
+    <DerivedAttribute name="autoPhaseSetting" type="String" value="'1'" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contract_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   Contract_Template__c.Id = #pKey#			
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

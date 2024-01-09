@@ -1,0 +1,5 @@
+<ValidationMessages name="BoPrmCttFlyoutCreateContractMessages" businessObject="BoPrmCttFlyoutCreateContract" schemaVersion="1.1">
+  <ValidationMessage name="CasPrmFillInAllValues" defaultMessage="Please fill in all values." comment="All fields need to be filled with values." />
+  <ValidationMessage name="CasPrmDateFromGTDateThru" defaultMessage="Please enter a Date Thru that is greater or equal Date From." comment="" />
+  <ValidationMessage name="CasClbCannotCreateContractWhileSubstituted" defaultMessage="For the selected day, an active substitution is running for you for the selected customer. You are not allowed to create contracts during the substitution time frame, if you are the substituted user." comment="validates if the current user is substituted and a substitution is running" />
+</ValidationMessages>

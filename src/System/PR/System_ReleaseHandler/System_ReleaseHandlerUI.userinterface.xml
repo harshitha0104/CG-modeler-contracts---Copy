@@ -1,0 +1,339 @@
+<UIDescription name="System::ReleaseHandlerUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionPage" cachable="false">
+    <PageHeader titleBinding="ProcessContext::titleText"></PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <MenuItems>
+          <MenuItem directlyVisible="true" itemId="release">
+            <Bindings>
+              <Resource target="Text" type="Label" id="release" defaultLabel="Release" />
+              <Resource target="Icon" type="Image" id="CompleteGrey24" />
+              <Binding type="Visible" target="Visible" call="ProcessContext::ReleaseProcessObject.releaseButtonVisible" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="release" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <GroupElement name="SummaryAttributeGroup">
+          <InputArea name="SummaryAttribute_1" disabled="true">
+            <Bindings>
+              <Binding target="Label" binding="ProcessContext::ReleaseProcessObject.summaryLabel0.text" bindingMode="ONE_WAY " />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.summaryValue0" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="SummaryAttribute_2" disabled="true">
+            <Bindings>
+              <Binding target="Label" binding="ProcessContext::ReleaseProcessObject.summaryLabel1.text" bindingMode="ONE_WAY " />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.summaryValue1" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="SummaryAttribute_3" disabled="true">
+            <Bindings>
+              <Binding target="Label" binding="ProcessContext::ReleaseProcessObject.summaryLabel2.text" bindingMode="ONE_WAY " />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.summaryValue2" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="SummaryAttribute_4" disabled="true">
+            <Bindings>
+              <Binding target="Label" binding="ProcessContext::ReleaseProcessObject.summaryLabel3.text" bindingMode="ONE_WAY " />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.summaryValue3" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="SummaryAttribute_5" disabled="true">
+            <Bindings>
+              <Binding target="Label" binding="ProcessContext::ReleaseProcessObject.summaryLabel4.text" bindingMode="ONE_WAY " />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.summaryValue4" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="SummaryAttribute_6" disabled="true">
+            <Bindings>
+              <Binding target="Label" binding="ProcessContext::ReleaseProcessObject.summaryLabel5.text" bindingMode="ONE_WAY " />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.summaryValue5" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="SummaryAttribute_7" disabled="true">
+            <Bindings>
+              <Binding target="Label" binding="ProcessContext::ReleaseProcessObject.summaryLabel6.text" bindingMode="ONE_WAY " />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.summaryValue6" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="SummaryAttribute_8" disabled="true">
+            <Bindings>
+              <Binding target="Label" binding="ProcessContext::ReleaseProcessObject.summaryLabel7.text" bindingMode="ONE_WAY " />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.summaryValue7" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="SummaryAttribute_9" disabled="true">
+            <Bindings>
+              <Binding target="Label" binding="ProcessContext::ReleaseProcessObject.summaryLabel8.text" bindingMode="ONE_WAY " />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.summaryValue8" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="SummaryAttribute_10" disabled="true">
+            <Bindings>
+              <Binding target="Label" binding="ProcessContext::ReleaseProcessObject.summaryLabel9.text" bindingMode="ONE_WAY " />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.summaryValue9" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+        <GroupElement name="SignatureGroup_1">
+          <Bindings>
+            <Binding target="Title" binding="ProcessContext::ReleaseProcessObject.signatureGroupName1" bindingMode="ONE_WAY " />
+          </Bindings>
+          <InputArea name="SignatureName1">
+            <Bindings>
+              <Resource target="Label" type="Label" id="signatureName1Id" defaultLabel="Name" />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.signatureName1" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="SignatureId1">
+            <Bindings>
+              <Resource target="Label" type="Label" id="signatureId1Id" defaultLabel="Id" />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.signatureId1" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <Merger name="SignatureConfirmMerger1" pattern="twoInputControls" labelHandling="Combined" leftRatio="3" rightRatio="1">
+            <PasswordArea name="SignatureCode1">
+              <Bindings>
+                <Resource target="Label" type="Label" id="signatureCode1Id" defaultLabel="Code" />
+                <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.signatureCode1" bindingMode="TWO_WAY" />
+              </Bindings>
+            </PasswordArea>
+            <ImageButton name="SignatureConfirmApproval1">
+              <Bindings>
+                <Resource target="Image" type="Image" id="CheckGrey24" />
+                <Binding type="Visible" target="Visible" call="ProcessContext::ReleaseProcessObject.getSignatureApprovalVisible">
+                  <Parameters>
+                    <Input name="token" type="Literal" value="Group1" />
+                  </Parameters>
+                </Binding>
+                <Binding type="Editable" target="Editable" call="ProcessContext::ReleaseProcessObject.getSignatureApprovalEditable">
+                  <Parameters>
+                    <Input name="token" type="Literal" value="Group1" />
+                  </Parameters>
+                </Binding>
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="SignatureConfirmApproval1_Pressed">
+                  <Params>
+                    <Param name="eventId" value="checkApproval_1" />
+                  </Params>
+                </ButtonPressedEvent>
+              </Events>
+            </ImageButton>
+          </Merger>
+          <SignatureControl name="SignatureControl_1">
+            <Bindings>
+              <Binding target="MediaPath" type="Text" binding="ProcessContext::ReleaseProcessObject.signatureBlob1.mediaPath" bindingMode="TWO_WAY" />
+              <Binding type="Visible" target="Visible" call="ProcessContext::ReleaseProcessObject.getSignatureGroupVisibility">
+                <Parameters>
+                  <Input name="token" type="Literal" value="Group1" />
+                </Parameters>
+              </Binding>
+              <Binding type="Editable" target="Editable" call="ProcessContext::ReleaseProcessObject.getSignatureGroupEditable">
+                <Parameters>
+                  <Input name="token" type="Literal" value="Group1" />
+                </Parameters>
+              </Binding>
+            </Bindings>
+            <VisibilityRoles />
+            <EditibilityRoles />
+          </SignatureControl>
+        </GroupElement>
+        <GroupElement name="SignatureGroup_2">
+          <Bindings>
+            <Binding target="Title" binding="ProcessContext::ReleaseProcessObject.signatureGroupName2" bindingMode="ONE_WAY " />
+          </Bindings>
+          <InputArea name="SignatureName2">
+            <Bindings>
+              <Resource target="Label" type="Label" id="signatureName2Id" defaultLabel="Name" />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.signatureName2" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="SignatureId2">
+            <Bindings>
+              <Resource target="Label" type="Label" id="signatureId2Id" defaultLabel="Id" />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.signatureId2" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <Merger name="SignatureConfirmMerger2" pattern="twoInputControls" labelHandling="Combined" leftRatio="3" rightRatio="1">
+            <PasswordArea name="SignatureCode2">
+              <Bindings>
+                <Resource target="Label" type="Label" id="signatureCode2Id" defaultLabel="Code" />
+                <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.signatureCode2" bindingMode="TWO_WAY" />
+              </Bindings>
+            </PasswordArea>
+            <ImageButton name="SignatureConfirmApproval2">
+              <Bindings>
+                <Resource target="Image" type="Image" id="CheckGrey24" />
+                <Binding type="Visible" target="Visible" call="ProcessContext::ReleaseProcessObject.getSignatureApprovalVisible">
+                  <Parameters>
+                    <Input name="token" type="Literal" value="Group2" />
+                  </Parameters>
+                </Binding>
+                <Binding type="Editable" target="Editable" call="ProcessContext::ReleaseProcessObject.getSignatureApprovalEditable">
+                  <Parameters>
+                    <Input name="token" type="Literal" value="Group2" />
+                  </Parameters>
+                </Binding>
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="SignatureConfirmApproval2_Pressed">
+                  <Params>
+                    <Param name="eventId" value="checkApproval_2" />
+                  </Params>
+                </ButtonPressedEvent>
+              </Events>
+            </ImageButton>
+          </Merger>
+          <SignatureControl name="SignatureControl_2">
+            <Bindings>
+              <Binding target="MediaPath" type="Text" binding="ProcessContext::ReleaseProcessObject.signatureBlob2.mediaPath" bindingMode="TWO_WAY" />
+              <Binding type="Visible" target="Visible" call="ProcessContext::ReleaseProcessObject.getSignatureGroupVisibility">
+                <Parameters>
+                  <Input name="token" type="Literal" value="Group2" />
+                </Parameters>
+              </Binding>
+              <Binding type="Editable" target="Editable" call="ProcessContext::ReleaseProcessObject.getSignatureGroupEditable">
+                <Parameters>
+                  <Input name="token" type="Literal" value="Group2" />
+                </Parameters>
+              </Binding>
+            </Bindings>
+            <VisibilityRoles />
+            <EditibilityRoles />
+          </SignatureControl>
+        </GroupElement>
+        <GroupElement name="SignatureGroup_3">
+          <Bindings>
+            <Binding target="Title" binding="ProcessContext::ReleaseProcessObject.signatureGroupName3" bindingMode="ONE_WAY " />
+          </Bindings>
+          <InputArea name="SignatureName3">
+            <Bindings>
+              <Resource target="Label" type="Label" id="signatureName3Id" defaultLabel="Name" />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.signatureName3" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="SignatureId3">
+            <Bindings>
+              <Resource target="Label" type="Label" id="signatureId3Id" defaultLabel="Id" />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.signatureId3" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <Merger name="SignatureConfirmMerger3" pattern="twoInputControls" labelHandling="Combined" leftRatio="3" rightRatio="1">
+            <PasswordArea name="SignatureCode3">
+              <Bindings>
+                <Resource target="Label" type="Label" id="signatureCode3Id" defaultLabel="Code" />
+                <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.signatureCode3" bindingMode="TWO_WAY" />
+              </Bindings>
+            </PasswordArea>
+            <ImageButton name="SignatureConfirmApproval3">
+              <Bindings>
+                <Resource target="Image" type="Image" id="CheckGrey24" />
+                <Binding type="Visible" target="Visible" call="ProcessContext::ReleaseProcessObject.getSignatureApprovalVisible">
+                  <Parameters>
+                    <Input name="token" type="Literal" value="Group3" />
+                  </Parameters>
+                </Binding>
+                <Binding type="Editable" target="Editable" call="ProcessContext::ReleaseProcessObject.getSignatureApprovalEditable">
+                  <Parameters>
+                    <Input name="token" type="Literal" value="Group3" />
+                  </Parameters>
+                </Binding>
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="SignatureConfirmApproval3_Pressed">
+                  <Params>
+                    <Param name="eventId" value="checkApproval_3" />
+                  </Params>
+                </ButtonPressedEvent>
+              </Events>
+            </ImageButton>
+          </Merger>
+          <SignatureControl name="SignatureControl_3">
+            <Bindings>
+              <Binding target="MediaPath" type="Text" binding="ProcessContext::ReleaseProcessObject.signatureBlob3.mediaPath" bindingMode="TWO_WAY" />
+              <Binding type="Visible" target="Visible" call="ProcessContext::ReleaseProcessObject.getSignatureGroupVisibility">
+                <Parameters>
+                  <Input name="token" type="Literal" value="Group3" />
+                </Parameters>
+              </Binding>
+              <Binding type="Editable" target="Editable" call="ProcessContext::ReleaseProcessObject.getSignatureGroupEditable">
+                <Parameters>
+                  <Input name="token" type="Literal" value="Group3" />
+                </Parameters>
+              </Binding>
+            </Bindings>
+            <VisibilityRoles />
+            <EditibilityRoles />
+          </SignatureControl>
+        </GroupElement>
+        <GroupElement name="SignatureGroup_4">
+          <Bindings>
+            <Binding target="Title" binding="ProcessContext::ReleaseProcessObject.signatureGroupName4" bindingMode="ONE_WAY " />
+          </Bindings>
+          <InputArea name="SignatureName4">
+            <Bindings>
+              <Resource target="Label" type="Label" id="signatureName4Id" defaultLabel="Name" />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.signatureName4" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="SignatureId4">
+            <Bindings>
+              <Resource target="Label" type="Label" id="signatureId4Id" defaultLabel="Id" />
+              <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.signatureId4" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <Merger name="SignatureConfirmMerger4" pattern="twoInputControls" labelHandling="Combined" leftRatio="3" rightRatio="1">
+            <PasswordArea name="SignatureCode4">
+              <Bindings>
+                <Resource target="Label" type="Label" id="signatureCode4Id" defaultLabel="Code" />
+                <Binding target="Value" binding="ProcessContext::ReleaseProcessObject.signatureCode4" bindingMode="TWO_WAY" />
+              </Bindings>
+            </PasswordArea>
+            <ImageButton name="SignatureConfirmApproval4">
+              <Bindings>
+                <Resource target="Image" type="Image" id="CheckGrey24" />
+                <Binding type="Visible" target="Visible" call="ProcessContext::ReleaseProcessObject.getSignatureApprovalVisible">
+                  <Parameters>
+                    <Input name="token" type="Literal" value="Group4" />
+                  </Parameters>
+                </Binding>
+                <Binding type="Editable" target="Editable" call="ProcessContext::ReleaseProcessObject.getSignatureApprovalEditable">
+                  <Parameters>
+                    <Input name="token" type="Literal" value="Group4" />
+                  </Parameters>
+                </Binding>
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="SignatureConfirmApproval4_Pressed">
+                  <Params>
+                    <Param name="eventId" value="checkApproval_4" />
+                  </Params>
+                </ButtonPressedEvent>
+              </Events>
+            </ImageButton>
+          </Merger>
+          <SignatureControl name="SignatureControl_4">
+            <Bindings>
+              <Binding target="MediaPath" type="Text" binding="ProcessContext::ReleaseProcessObject.signatureBlob4.mediaPath" bindingMode="TWO_WAY" />
+              <Binding type="Visible" target="Visible" call="ProcessContext::ReleaseProcessObject.getSignatureGroupVisibility">
+                <Parameters>
+                  <Input name="token" type="Literal" value="Group4" />
+                </Parameters>
+              </Binding>
+              <Binding type="Editable" target="Editable" call="ProcessContext::ReleaseProcessObject.getSignatureGroupEditable">
+                <Parameters>
+                  <Input name="token" type="Literal" value="Group4" />
+                </Parameters>
+              </Binding>
+            </Bindings>
+            <VisibilityRoles />
+            <EditibilityRoles />
+          </SignatureControl>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

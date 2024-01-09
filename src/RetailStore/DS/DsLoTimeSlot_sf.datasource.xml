@@ -1,0 +1,31 @@
+<DataSource name="DsLoTimeSlot" backendSystem="sf" businessObjectClass="LoTimeSlot" external="false" editableEntity="TimeSlot" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="TimeSlot" column="Id" />
+    <Attribute name="dayOfWeek" table="TimeSlot" column="DayOfWeek" />
+    <Attribute name="operatingHoursId" table="TimeSlot" column="OperatingHoursId" />
+    <Attribute name="startTimeToSave" table="TimeSlot" column="StartTime" />
+    <Attribute name="endTimeToSave" table="TimeSlot" column="EndTime" />
+    <Attribute name="type" table="TimeSlot" column="Type" />
+    <Attribute name="timeZone" table="OperatingHours" column="TimeZone" />
+    <DerivedAttribute name="daySort" value="CASE WHEN TimeSlot.DayOfWeek = 'Monday' THEN '1' || '_' || TimeSlot.StartTime WHEN  TimeSlot.DayOfWeek = 'Tuesday'  THEN '2' || '_' || TimeSlot.StartTime WHEN  TimeSlot.DayOfWeek = 'Wednesday'  THEN '3' || '_' || TimeSlot.StartTime WHEN  TimeSlot.DayOfWeek = 'Thursday'  THEN '4' || '_' || TimeSlot.StartTime  WHEN  TimeSlot.DayOfWeek = 'Friday'  THEN '5' || '_' || TimeSlot.StartTime WHEN  TimeSlot.DayOfWeek = 'Satureday'  THEN '6' || '_' || TimeSlot.StartTime ELSE '7' || '_' || TimeSlot.StartTime  END " />
+    <!-- Derived attributes needed because FW is not supporting real time fields. Format like 15:08:00.000Z (SF Time format) is converted to locale time string e.g. 05.08 PM for UI List -->
+    <DerivedAttribute name="startTime" value="TimeSlot.StartTime"  />
+    <DerivedAttribute name="endTime" value="TimeSlot.EndTime"  />
+  </Attributes>
+  <Entities>
+    <Entity name="TimeSlot" alias="" idAttribute="Id" />
+    <Entity name="OperatingHours">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="TimeSlot.operatingHoursId" comparator="eq" rightSideType="Attribute" rightSideValue="OperatingHours.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        TimeSlot.OperatingHoursId = #operatingHoursId#
+      ]]></QueryCondition>
+  <Parameters>
+    <Parameter name="operatingHoursId" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,22 @@
+<DataSource name="DsLuNavigation" businessObjectClass="LuNavigation" external="false" readOnly="true" editableEntity="SdoMain" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="sdoSubType" table="SdoMeta" column="SdoSubType" />
+  </Attributes>
+  <Entities>
+    <Entity name="SdoMain" alias="" idAttribute="PKey" />
+    <Entity name="SdoMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoMain.SdoMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoMeta.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  SdoMain.PKey = #pKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

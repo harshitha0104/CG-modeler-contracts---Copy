@@ -1,0 +1,41 @@
+<Process name="Broker::LookupProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="BrokerList" type="LoBrokerForCustomer" />
+      </Declarations>
+      <Parameters>
+        <Input name="pKey" type="DomPKey" />
+        <Input name="brokerPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="GetBrokerList" type="LoBrokerForCustomer">
+        <Parameters>
+          <Input name="toPKey" value="ProcessContext::pKey" />
+        </Parameters>
+        <Return name="ProcessContext::BrokerList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Broker::Lookup</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="EndWithNewValue" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="EndWithNewValue">
+        <ReturnValues>
+          <Return name="customerPKey" value="Event.pKey" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="customerPKey" value="ProcessContext::brokerPKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

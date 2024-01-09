@@ -1,0 +1,60 @@
+<DataSource name="DsLoCheckInPaymentItems" businessObjectClass="LoCheckInPaymentItems" external="false" editableEntity="SdoPayment" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="SdoPayment" column="PKey" />
+    <Attribute name="amount" table="SdoPayment" column="Amount" />
+    <Attribute name="currency" table="SdoPayment" column="Currency" />
+    <Attribute name="amountReceipt" table="SdoPayment" column="AmountReceipt" />
+    <Attribute name="absoluteAmount" table="SdoPayment" column="AbsoluteAmount" />
+    <Attribute name="sdoMainPKey" table="SdoPayment" column="SdoMainPKey" />
+    <Attribute name="sdoPaymentMetaPKey" table="SdoPayment" column="SdoPaymentMetaPKey" />
+    <Attribute name="initiationDate" table="SdoPayment" column="InitiationDate" />
+    <Attribute name="paymentMethod" table="SdoPaymentMeta" column="PaymentMethod" />
+    <Attribute name="debitCredit" table="SdoPaymentMeta" column="DebitCredit" />
+    <Attribute name="documentType" table="SdoMain" column="DocumentType" />
+    <Attribute name="text" table="SdoText" column="Text" />
+    <Attribute name="invoiceId" table="SdoMain" column="InvoiceId" />
+    <Attribute name="customerName" table="BpaCustomer" column="Name" />
+    <Attribute name="expenseType" table="SdoPayment" column="ExpenseType" />
+  </Attributes>
+  <Entities>
+    <Entity name="SdoPayment" alias="" idAttribute="PKey" />
+    <Entity name="SdoPaymentMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoPayment.SdoPaymentMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoPaymentMeta.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="SdoMain" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoMain.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoPayment.SdoMainPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="SdoText" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoText.AppPKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoMain.SdoMetaPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="BpaCustomer" alias="">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoMain.OrdererPKey" comparator="eq" rightSideType="Attribute" rightSideValue="BpaCustomer.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  SdoMain.Phase = 'Released'
+  AND SdoMain.TmgMainPKey= #tmgMainPKey#
+    ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="SdoPaymentMeta" attribute="PaymentMethod" direction="DESC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="tmgMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

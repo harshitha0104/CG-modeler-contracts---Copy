@@ -1,0 +1,11 @@
+<ListItem name="LiPrmIconAttachment">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="prmPKey" type="DomPKey" dataSourceProperty="prmPKey" />
+    <SimpleProperty name="attachmentBlobPKey" type="DomPKey" dataSourceProperty="attachmentBlobPKey" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" blobTable="PrmAttachmentBlob" blobPKeyField="attachmentBlobPKey" />
+    <!--<SimpleProperty name="description" type="DomText" dataSourceProperty="description" />-->
+    <SimpleProperty name="type" type="DomFileType" dataSourceProperty="type" />
+    <SimpleProperty name="fileName" type="DomFileName" dataSourceProperty="fileName" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,11 @@
+<LookupObject name="LuReleaseProcess" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuReleaseProcess" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

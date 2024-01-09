@@ -1,0 +1,20 @@
+<LookupObject name="LuContact" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuContact" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="fax" type="DomText" dataSourceProperty="fax" />
+    <SimpleProperty name="email" type="DomText" dataSourceProperty="email" />
+    <SimpleProperty name="phone" type="DomText" dataSourceProperty="phone" />
+    <SimpleProperty name="title" type="DomText" dataSourceProperty="title" />
+    <SimpleProperty name="name" type="DomText" dataSourceProperty="name" />
+    <SimpleProperty name="mobilePhone" type="DomText" dataSourceProperty="mobilePhone" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+    <Method name="isVisible" />
+  </Methods>
+</LookupObject>

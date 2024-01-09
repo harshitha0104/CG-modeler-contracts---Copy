@@ -1,0 +1,7 @@
+<ListItem name="LiMeOutOfStock" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty id="true" name="prdMainPKey" type="DomPKey" storable="false" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="outOfStock" type="DomBool" storable="false" dataSourceProperty="outOfStock" />
+  </SimpleProperties>
+</ListItem>

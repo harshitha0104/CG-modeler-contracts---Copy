@@ -1,0 +1,12 @@
+<!-- // OBSOLETE!! - No longer called by core - Data is retrieved via datasource from LoProductForAdd via temp table containing the merge result-->
+<LookupObject name="LuProductIsListedPromotedOutOfStock">
+  <DataSource name="DsLuProductIsListedPromotedOutOfStock" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="prdMainPKey" type="DomPKey" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="listed" type="DomString" dataSourceProperty="listed" />
+    <SimpleProperty name="promoted" type="DomString" dataSourceProperty="promoted" />
+    <SimpleProperty name="itemState" type="DomString" dataSourceProperty="itemState" />
+    <SimpleProperty name="outOfStock" type="DomString" dataSourceProperty="outOfStock" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>

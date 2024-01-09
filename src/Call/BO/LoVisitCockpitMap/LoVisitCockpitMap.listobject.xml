@@ -1,0 +1,14 @@
+<ListObject name="LoVisitCockpitMap" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoVisistCockpitMap" />
+  <Item objectClass="LiVisitCockpitMap" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="addRelevantItem" />
+    <Method name="navigate" />
+  </Methods>
+</ListObject>

@@ -1,0 +1,19 @@
+<Process name="Call::ActivityPerformanceProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations></Declarations>
+      <Parameters>
+        <Input name="ActivityPerformanceList" type="LoActivityPerformance" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Call::ActivityPerformanceUI</UIDescription>
+        <Events></Events>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

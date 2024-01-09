@@ -1,0 +1,311 @@
+<DataSource name="DsLoTruckLoadItems" businessObjectClass="LoTruckLoadItems" external="true" editableEntity="SdoItem" schemaVersion="1.1">
+  <Attributes>
+    <Attribute name="sdoMainPKey" table="SdoItem" column="SdoMainPKey" />
+    <Attribute name="sdoItemMetaPKey" table="SdoItem" column="SdoItemMetaPKey" />
+    <Attribute name="prdMainPKey" table="SdoItem" column="PrdMainPKey" />
+    <Attribute name="suggestedQuantity" table="SdoItem" column="SuggestedQuantity" />
+    <Attribute name="text1" table="PrdDescription" column="Text1" />
+    <Attribute name="prdId" table="PrdProduct" column="Id" />
+    <Attribute name="prdType" table="PrdProduct" column="PrdType" />
+    <Attribute name="shortText" table="SdoText" column="TEXT" />
+    <Attribute name="eAN" table="PrdProduct" column="EAN" />
+    <Attribute name="modReason" table="SdoItem" column="ModReason" />
+    <Attribute name="priceEffect" table="SdoItemMeta" column="PriceEffect" />
+    <Attribute name="calculationGroup" table="SdoItemMeta" column="CalculationGroup" />
+    <Attribute name="saveZeroQuantity" table="SdoItemMeta" column="SaveZeroQuantity" />
+    <Attribute name="price" table="SdoItem" column="Price" />
+    <Attribute name="priceReceipt" table="SdoItem" column="PriceReceipt" />
+    <Attribute name="specialPrice" table="SdoItem" column="SpecialPrice" />
+    <Attribute name="specialPriceReceipt" table="SdoItem" column="SpecialPriceReceipt" />
+    <Attribute name="basePrice" table="SdoItem" column="BasePrice" />
+    <Attribute name="basePriceReceipt" table="SdoItem" column="BasePriceReceipt" />
+    <Attribute name="valueReceipt" table="SdoItem" column="ValueReceipt" />
+    <Attribute name="grossValue" table="SdoItem" column="GrossValue" />
+    <Attribute name="grossValueReceipt" table="SdoItem" column="GrossValueReceipt" />
+    <Attribute name="promoted" table="SdoItem" column="Promoted" />
+    <Attribute name="listed" table="SdoItem" column="Listed" />
+    <Attribute name="history" table="SdoItem" column="History" />
+    <Attribute name="outOfStock" table="SdoItem" column="OutOfStock" />
+    <Attribute name="discount" table="SdoItem" column="Discount" />
+    <Attribute name="erpId" table="SdoItem" column="ErpId" />
+    <Attribute name="freeItemCreationStep" table="SdoItem" column="FreeItemCreationStep" />
+    <Attribute name="sdoParentItemPKey" table="SdoItem" column="SdoParentItemPKey" />
+    <Attribute name="edited" table="SdoItem" column="Edited" />
+    <Attribute name="sort" table="PrdLogistic" column="Sort" />
+    <Attribute name="isOrderUnit" table="PrdLogistic" column="IsOrderUnit" />
+    <Attribute name="pKey" table="SdoItem" column="PKey" />
+    <Attribute name="quantity" table="SdoItem" column="Quantity" />
+    <Attribute name="quantityLogisticUnit" table="SdoItem" column="QuantityLogisticUnit" />
+    <Attribute name="targetQuantity" table="SdoItem" column="TargetQuantity" />
+    <Attribute name="value" table="SdoItem" column="Value" />
+    <Attribute name="refPKey" table="SdoItem" column="SdoMainPKey" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+var sqlstmt = "SELECT pKey ";
+sqlstmt += " 	,sdoMainPKey ";
+sqlstmt += " 	,sdoItemMetaPKey ";
+sqlstmt += " 	,quantity ";
+sqlstmt += " 	,quantityLogisticUnit ";
+sqlstmt += " 	,prdMainPKey ";
+sqlstmt += " 	,suggestedQuantity ";
+sqlstmt += " 	,modReason ";
+sqlstmt += " 	,edited ";
+sqlstmt += " 	,targetQuantity ";
+sqlstmt += " 	,text1 ";
+sqlstmt += " 	,eAN ";
+sqlstmt += " 	,prdId ";
+sqlstmt += " 	,prdType ";
+sqlstmt += " 	,groupText ";
+sqlstmt += " 	,priceEffect ";
+sqlstmt += " 	,calculationGroup ";
+sqlstmt += " 	,saveZeroQuantity ";
+sqlstmt += " 	,price ";
+sqlstmt += " 	,priceReceipt ";
+sqlstmt += " 	,specialPrice ";
+sqlstmt += " 	,specialPriceReceipt ";
+sqlstmt += " 	,value ";
+sqlstmt += " 	,valueReceipt ";
+sqlstmt += " 	,grossValue ";
+sqlstmt += " 	,grossValueReceipt ";
+sqlstmt += " 	,promoted ";
+sqlstmt += " 	,listed ";
+sqlstmt += " 	,history ";
+sqlstmt += " 	,outOfStock ";
+sqlstmt += " 	,discount ";
+sqlstmt += " 	,erpId ";
+sqlstmt += " 	,freeItemCreationStep ";
+sqlstmt += " 	,sdoParentItemPKey ";
+sqlstmt += " 	,basePrice ";
+sqlstmt += " 	,basePriceReceipt ";
+sqlstmt += " 	,isOrderUnit ";
+sqlstmt += " 	,sort ";
+sqlstmt += " 	,shortText ";
+sqlstmt += " 	,businessModified ";
+sqlstmt += " 	,refPKey ";
+sqlstmt += " FROM ";
+sqlstmt += " ( ";
+sqlstmt += " SELECT SdoItem.PKey AS pKey ";
+sqlstmt += " 	,SdoItem.SdoMainPKey AS sdoMainPKey ";
+sqlstmt += " 	,SdoItem.SdoItemMetaPKey AS sdoItemMetaPKey ";
+sqlstmt += " 	,SdoItem.Quantity AS quantity ";
+sqlstmt += " 	,SdoItem.QuantityLogisticUnit AS quantityLogisticUnit ";
+sqlstmt += " 	,SdoItem.PrdMainPKey AS prdMainPKey ";
+sqlstmt += " 	,SdoItem.SuggestedQuantity AS suggestedQuantity ";
+sqlstmt += " 	,SdoItem.ModReason AS modReason ";
+sqlstmt += " 	,SdoItem.Edited AS edited ";
+sqlstmt += " 	,SdoItem.TargetQuantity AS targetQuantity ";
+sqlstmt += " 	,ProductText.Text1 AS text1 ";
+sqlstmt += " 	,PrdProduct.EAN AS eAN ";
+sqlstmt += " 	,PrdProduct.Id AS prdId ";
+sqlstmt += " 	,PrdProduct.PrdType AS prdType ";
+sqlstmt += " 	,ProductText.Text1 AS groupText ";
+sqlstmt += " 	,SdoItemMeta.PriceEffect AS priceEffect ";
+sqlstmt += " 	,SdoItemMeta.CalculationGroup AS calculationGroup ";
+sqlstmt += " 	,SdoItemMeta.SaveZeroQuantity AS saveZeroQuantity ";
+sqlstmt += " 	,SdoItem.Price AS price ";
+sqlstmt += " 	,SdoItem.PriceReceipt AS priceReceipt ";
+sqlstmt += " 	,SdoItem.SpecialPrice AS specialPrice ";
+sqlstmt += " 	,SdoItem.SpecialPriceReceipt AS specialPriceReceipt ";
+sqlstmt += " 	,SdoItem.Value AS value ";
+sqlstmt += " 	,SdoItem.ValueReceipt AS valueReceipt ";
+sqlstmt += " 	,SdoItem.GrossValue AS grossValue ";
+sqlstmt += " 	,SdoItem.GrossValueReceipt AS grossValueReceipt ";
+sqlstmt += " 	,SdoItem.Promoted AS promoted ";
+sqlstmt += " 	,SdoItem.Listed AS listed ";
+sqlstmt += " 	,SdoItem.History AS history ";
+sqlstmt += " 	,SdoItem.OutOfStock AS outOfStock ";
+sqlstmt += " 	,SdoItem.Discount AS discount ";
+sqlstmt += " 	,SdoItem.ErpId AS erpId ";
+sqlstmt += " 	,SdoItem.FreeItemCreationStep AS freeItemCreationStep ";
+sqlstmt += " 	,SdoItem.SdoParentItemPKey AS sdoParentItemPKey ";
+sqlstmt += " 	,SdoItem.BasePrice AS basePrice ";
+sqlstmt += " 	,SdoItem.BasePriceReceipt AS basePriceReceipt ";
+sqlstmt += " 	,PrdLogistic.IsOrderUnit AS isOrderUnit ";
+sqlstmt += " 	,PrdLogistic.Sort AS sort ";
+sqlstmt += " 	,SdoText.TEXT AS shortText ";
+sqlstmt += " 	,SdoItem.BusinessModified AS businessModified ";
+sqlstmt += " 	,SdoItem.SdoMainPKey || SdoItem.PrdMainPKey || SdoItem.SdoItemMetaPKey AS refPKey ";
+sqlstmt += " FROM SdoItem ";
+sqlstmt += " INNER JOIN SdoItemMeta ON SdoItemMeta.PKey = SdoItem.SdoItemMetaPKey ";
+sqlstmt += " INNER JOIN PrdProduct ON SdoItem.PrdMainPKey = PrdProduct.PKey ";
+sqlstmt += " INNER JOIN PrdDescription AS ProductText ON PrdProduct.PKey = ProductText.ProductPKey ";
+sqlstmt += " INNER JOIN PrdLogistic ON PrdLogistic.ProductPKey = SdoItem.PrdMainPKey ";
+sqlstmt += " 	AND PrdLogistic.UnitType = SdoItem.QuantityLogisticUnit ";
+sqlstmt += " INNER JOIN SdoText ON SdoItemMeta.PKey = SdoText.AppPKey ";
+sqlstmt += " 	AND SdoText.Usage = 'ItemMetaShort' ";
+sqlstmt += " WHERE 1 = 1 ";
+sqlstmt += " 	AND SdoItem.SdoMainPKey = '#sdoMainPKey#' ";
+sqlstmt += " 	AND PrdProduct.PrdType <> 'AssetType' ";
+sqlstmt += " 	AND PrdProduct.PrdType <> 'CountingGroup' ";
+sqlstmt += " 	AND SdoItemMeta.SalesOrg = '#SALESORG#' ";
+sqlstmt += "    AND SdoText.Language = '#LANGUAGE#' ";
+sqlstmt += "    AND ProductText.Language = '#LANGUAGE#' ";
+sqlstmt += "	AND ( ";
+sqlstmt += "		    ( ";
+sqlstmt += "			 SdoItemMeta.LogisticCategory = 'Order' ";
+sqlstmt += "			AND PrdLogistic.OrderAbility = '1' ";
+sqlstmt += "			) ";
+sqlstmt += "		OR ( ";
+sqlstmt += "			SdoItemMeta.LogisticCategory = 'Stocktaking' ";
+sqlstmt += "			AND PrdLogistic.IsStocktakingUnit = '1' ";
+sqlstmt += "			) ";
+sqlstmt += "		) ";
+sqlstmt += "  ";
+sqlstmt += " UNION ALL ";
+sqlstmt += "  ";
+sqlstmt += " SELECT DISTINCT ' ' AS pKey ";
+sqlstmt += " 	,SdoItem.SdoMainPKey AS sdoMainPKey ";
+sqlstmt += " 	,SdoItem.SdoItemMetaPKey AS sdoItemMetaPKey ";
+sqlstmt += " 	,0 AS quantity ";
+sqlstmt += " 	,PrdLogistic.UnitType AS quantityLogisticUnit ";
+sqlstmt += " 	,SdoItem.PrdMainPKey AS prdMainPKey ";
+sqlstmt += " 	,SdoItem.SuggestedQuantity AS suggestedQuantity ";
+sqlstmt += " 	,SdoItem.ModReason AS modReason ";
+sqlstmt += " 	,SdoItem.Edited AS edited ";
+sqlstmt += " 	,0 AS targetQuantity ";
+sqlstmt += " 	,ProductText.Text1 AS text1 ";
+sqlstmt += " 	,PrdProduct.EAN AS eAN ";
+sqlstmt += " 	,PrdProduct.Id AS prdId ";
+sqlstmt += " 	,PrdProduct.PrdType AS prdType ";
+sqlstmt += " 	,ProductText.Text1 AS groupText ";
+sqlstmt += " 	,SdoItemMeta.PriceEffect AS priceEffect ";
+sqlstmt += " 	,SdoItemMeta.CalculationGroup AS calculationGroup ";
+sqlstmt += " 	,SdoItemMeta.SaveZeroQuantity AS saveZeroQuantity ";
+sqlstmt += " 	,SdoItem.Price AS price ";
+sqlstmt += " 	,SdoItem.PriceReceipt AS priceReceipt ";
+sqlstmt += " 	,SdoItem.SpecialPrice AS specialPrice ";
+sqlstmt += " 	,SdoItem.SpecialPriceReceipt AS specialPriceReceipt ";
+sqlstmt += " 	,0 AS value ";
+sqlstmt += " 	,SdoItem.ValueReceipt AS valueReceipt ";
+sqlstmt += " 	,SdoItem.GrossValue AS grossValue ";
+sqlstmt += " 	,SdoItem.GrossValueReceipt AS grossValueReceipt ";
+sqlstmt += " 	,SdoItem.Promoted AS promoted ";
+sqlstmt += " 	,SdoItem.Listed AS listed ";
+sqlstmt += " 	,SdoItem.History AS history ";
+sqlstmt += " 	,SdoItem.OutOfStock AS outOfStock ";
+sqlstmt += " 	,SdoItem.Discount AS discount ";
+sqlstmt += " 	,SdoItem.ErpId AS erpId ";
+sqlstmt += " 	,SdoItem.FreeItemCreationStep AS freeItemCreationStep ";
+sqlstmt += " 	,SdoItem.SdoParentItemPKey AS sdoParentItemPKey ";
+sqlstmt += " 	,SdoItem.BasePrice AS basePrice ";
+sqlstmt += " 	,SdoItem.BasePriceReceipt AS basePriceReceipt ";
+sqlstmt += " 	,PrdLogistic.IsOrderUnit AS isOrderUnit ";
+sqlstmt += " 	,PrdLogistic.Sort AS sort ";
+sqlstmt += " 	,SdoText.TEXT AS shortText ";
+sqlstmt += " 	,SdoItem.BusinessModified AS businessModified ";
+sqlstmt += " 	,SdoItem.SdoMainPKey || SdoItem.PrdMainPKey || SdoItem.SdoItemMetaPKey AS refPKey ";
+sqlstmt += " FROM SdoItem ";
+sqlstmt += " INNER JOIN SdoItemMeta ON SdoItemMeta.PKey = SdoItem.SdoItemMetaPKey ";
+sqlstmt += " INNER JOIN PrdProduct ON SdoItem.PrdMainPKey = PrdProduct.PKey ";
+sqlstmt += " INNER JOIN PrdDescription AS ProductText ON PrdProduct.PKey = ProductText.ProductPKey ";
+sqlstmt += " INNER JOIN PrdLogistic ON PrdLogistic.ProductPKey = SdoItem.PrdMainPKey ";
+sqlstmt += " AND NOT EXISTS "
+sqlstmt += " ( ";
+sqlstmt += "   SELECT NULL FROM SdoItem items ";
+sqlstmt += "   WHERE items.PrdMainPKey = SdoItem.PrdMainPKey ";
+sqlstmt += "   AND items.SdoItemMetaPKey = SdoItem.SdoItemMetaPKey ";
+sqlstmt += "   AND items.QuantityLogisticUnit = PrdLogistic.UnitType ";
+sqlstmt += " ) ";
+sqlstmt += " INNER JOIN SdoText ON SdoItemMeta.PKey = SdoText.AppPKey ";
+sqlstmt += " 	AND SdoText.Usage = 'ItemMetaShort' ";
+sqlstmt += " WHERE 1 = 1 ";
+sqlstmt += " 	AND SdoItem.SdoMainPKey = '#sdoMainPKey#' ";
+sqlstmt += " 	AND PrdProduct.PrdType <> 'AssetType' ";
+sqlstmt += " 	AND PrdProduct.PrdType <> 'CountingGroup' ";
+sqlstmt += " 	AND SdoItemMeta.SalesOrg = '#SALESORG#' ";
+sqlstmt += "    AND SdoText.Language = '#LANGUAGE#' ";
+sqlstmt += "    AND ProductText.Language = '#LANGUAGE#' ";
+sqlstmt += "	AND ( ";
+sqlstmt += "		    ( ";
+sqlstmt += "			 SdoItemMeta.LogisticCategory = 'Order' ";
+sqlstmt += "			AND PrdLogistic.OrderAbility = '1' ";
+sqlstmt += "			) ";
+sqlstmt += "		OR ( ";
+sqlstmt += "			SdoItemMeta.LogisticCategory = 'Stocktaking' ";
+sqlstmt += "			AND PrdLogistic.IsStocktakingUnit = '1' ";
+sqlstmt += "			) ";
+sqlstmt += "		) ";
+sqlstmt += " ) ";
+sqlstmt += " ORDER BY RefPKey ASC, ";
+sqlstmt += " 	     IsOrderUnit DESC, ";
+sqlstmt += "          Sort ASC ";
+
+return Utils.replaceSqlParameters(sqlstmt, jsonQuery);
+]]></Load>
+    <Update><![CDATA[
+var sqlStmt = "";
+sqlStmt += "UPDATE SdoItem ";
+sqlStmt += "SET BusinessModified = '#BUSINESSMODIFIED#' " + ", ";
+sqlStmt += "Quantity = " + Utils.convertForDB(object.getQuantity(), 'DomDecimal') + ", ";
+sqlStmt += "SuggestedQuantity = " + Utils.convertForDB(object.getSuggestedQuantity(), 'DomDecimal') + ", ";
+sqlStmt += "ModReason = " + Utils.convertForDB(object.getModReason(), 'DomSdoModReason') + ", ";
+sqlStmt += "TargetQuantity = " + Utils.convertForDB(object.getTargetQuantity(), 'DomDecimal') + ", ";
+sqlStmt += "Price = " + Utils.convertForDB(object.getPrice(), 'DomMoney') + ", ";
+sqlStmt += "PriceReceipt = " + Utils.convertForDB(object.getPriceReceipt(), 'DomMoney') + ", ";
+sqlStmt += "SpecialPrice = " + Utils.convertForDB(object.getSpecialPrice(), 'DomMoney') + ", ";
+sqlStmt += "SpecialPriceReceipt = " + Utils.convertForDB(object.getSpecialPriceReceipt(), 'DomMoney') + ", ";
+sqlStmt += "Value = " + Utils.convertForDB(object.getValue(), 'DomMoney') + ", ";
+sqlStmt += "ValueReceipt = " + Utils.convertForDB(object.getValueReceipt(), 'DomMoney') + ", ";
+sqlStmt += "GrossValue = " + Utils.convertForDB(object.getGrossValue(), 'DomMoney') + ", ";
+sqlStmt += "Promoted = " + Utils.convertForDB(object.getPromoted(), 'DomBool') + ", ";
+sqlStmt += "Listed = " + Utils.convertForDB(object.getListed(), 'DomBool') + ", ";
+sqlStmt += "History = " + Utils.convertForDB(object.getHistory(), 'DomBool') + ", ";
+sqlStmt += "OutOfStock = " + Utils.convertForDB(object.getOutOfStock(), 'DomBool') + ", ";
+sqlStmt += "Discount = " + Utils.convertForDB(object.getDiscount(), 'DomPercentage') + ", ";
+sqlStmt += "ErpId = " + Utils.convertForDB(object.getErpId(), 'DomId') + ", ";
+sqlStmt += "FreeItemCreationStep = " + Utils.convertForDB(object.getFreeItemCreationStep(), 'DomString') + ", ";
+sqlStmt += "SdoParentItemPKey = " + Utils.convertForDB(object.getSdoParentItemPKey(), 'DomPKey') + ", ";
+sqlStmt += "Edited = " + Utils.convertForDB(object.getEdited(), 'DomBool') + ", ";
+sqlStmt += "BasePrice = " + Utils.convertForDB(object.getBasePrice(), 'DomMoney') + ", ";
+sqlStmt += "BasePriceReceipt = " + Utils.convertForDB(object.getBasePriceReceipt(), 'DomMoney') + " ";
+sqlStmt += "WHERE PKey = " + Utils.convertForDB(object.getPKey(), 'DomPKey');
+
+return Utils.replaceSqlParameters(sqlStmt);
+
+    ]]></Update>
+    <Insert><![CDATA[
+
+      var sqlStmt = "INSERT INTO SdoItem "; 
+      sqlStmt += "(PKey, BusinessModified, SdoMainPKey, SdoItemMetaPKey, Quantity, QuantityLogisticUnit, PrdMainPKey, SuggestedQuantity, ModReason, TargetQuantity, Price, PriceReceipt, "; 
+      sqlStmt += "SpecialPrice, SpecialPriceReceipt, Value, ValueReceipt, GrossValue, GrossValueReceipt, Promoted, Listed, History, OutOfStock, Discount, ErpId, FreeItemCreationStep, SdoParentItemPKey, Edited, BasePrice, BasePriceReceipt ) ";
+      sqlStmt += "VALUES(" + Utils.convertForDB(object.getPKey(), 'DomPKey') + ", '#BUSINESSMODIFIED#', ";
+      sqlStmt += Utils.convertForDB(object.getSdoMainPKey(), 'DomPKey') + ", ";
+      sqlStmt += Utils.convertForDB(object.getSdoItemMetaPKey(), 'DomPKey') + ", ";
+      sqlStmt += Utils.convertForDB(object.getQuantity(), 'DomDecimal') + ", ";
+      sqlStmt += Utils.convertForDB(object.getQuantityLogisticUnit(), 'DomPrdLogisticUnit') + ", ";
+      sqlStmt += Utils.convertForDB(object.getPrdMainPKey(), 'DomPKey') + ", ";
+      sqlStmt += Utils.convertForDB(object.getSuggestedQuantity(), 'DomDecimal') + ", ";
+      sqlStmt += Utils.convertForDB(object.getModReason(), 'DomSdoModReason') + ", ";
+      sqlStmt += Utils.convertForDB(object.getTargetQuantity(), 'DomMoney') + ", ";
+      sqlStmt += Utils.convertForDB(object.getPrice(), 'DomMoney') + ", ";
+      sqlStmt += Utils.convertForDB(object.getPriceReceipt(), 'DomMoney') + ", ";
+      sqlStmt += Utils.convertForDB(object.getSpecialPrice(), 'DomMoney') + ", ";
+      sqlStmt += Utils.convertForDB(object.getSpecialPriceReceipt(), 'DomMoney') + ", ";
+      sqlStmt += Utils.convertForDB(object.getValue(), 'DomMoney') + ", ";
+      sqlStmt += Utils.convertForDB(object.getValueReceipt(), 'DomMoney') + ", ";
+      sqlStmt += Utils.convertForDB(object.getGrossValue(), 'DomMoney') + ", ";
+      sqlStmt += Utils.convertForDB(object.getGrossValueReceipt(), 'DomMoney') + ", ";
+      sqlStmt += Utils.convertForDB(object.getPromoted(), 'DomBool') + ", ";
+      sqlStmt += Utils.convertForDB(object.getListed(), 'DomBool') + ", ";
+      sqlStmt += Utils.convertForDB(object.getHistory(), 'DomBool') + ", ";
+      sqlStmt += Utils.convertForDB(object.getOutOfStock(), 'DomBool') + ", ";
+      sqlStmt += Utils.convertForDB(object.getDiscount(), 'DomPercentage') + ", ";
+      sqlStmt += Utils.convertForDB(object.getErpId(), 'DomId') + ", ";
+      sqlStmt += Utils.convertForDB(object.getFreeItemCreationStep(), 'DomString') + ", ";
+      sqlStmt += Utils.convertForDB(object.getSdoParentItemPKey(), 'DomPKey') + ", ";
+      sqlStmt += Utils.convertForDB(object.getEdited(), 'DomBool') + ", ";
+      sqlStmt += Utils.convertForDB(object.getBasePrice(), 'DomMoney') + ", ";
+      sqlStmt += Utils.convertForDB(object.getBasePriceReceipt(), 'DomMoney') + " )";
+
+      return Utils.replaceSqlParameters(sqlStmt);
+
+    ]]></Insert>
+    <Delete><![CDATA[
+      var sqlStmt = "DELETE FROM SdoItem "; 
+      sqlStmt += "WHERE PKey ='" + object.getPKey() + "'";
+
+      return Utils.replaceSqlParameters(sqlStmt);
+      ]]></Delete>
+  </Database>
+</DataSource>

@@ -1,0 +1,63 @@
+<DataSource name="DsLoJobListJobs" backendSystem="sf" businessObjectClass="LoJobListJobs" external="false" distinct="false" readOnly="true" editableEntity="Visit_Job__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="jobDefinitionPKey" table="Visit_Job__c" column="Job_Definition__c" />
+    <Attribute name="jobListPKey" table="Visit_Job__c" column="Job_List__c" />
+    <DerivedAttribute name="JobListPKey" value="'1'" />
+    <Attribute name="prdMainPKey" table="Visit_Job__c" column="Product__c" />
+    <DerivedAttribute name="PrdMainPKey" value="'1'" />
+    <Attribute name="posBpaMainPKey" table="Visit_Job__c" column="POS__c" />
+    <Attribute name="clbKey" table="Visit_Job__c" column="Visit__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Visit_Job__c" alias="" idAttribute="Job_Definition__c" />
+    <Entity name="Job_Definition_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Visit_Job__c.Job_Definition_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="Job_Definition_Template__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Job_DL_Job_Definition_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Visit_Job__c.Job_Definition__c" comparator="eq" rightSideType="Attribute" rightSideValue="Job_DL_Job_Definition_Template__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Job_List__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Visit_Job__c.Job_List__c" comparator="eq" rightSideType="Attribute" rightSideValue="Job_List__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Job_Definition_List__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Job_List__c.Job_Definition_List__c" comparator="eq" rightSideType="Attribute" rightSideValue="Job_Definition_List__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+			Job_Definition_List__c.Approval_State__c <> 'Canceled'
+            AND Job_DL_Job_Definition_Template__c.POS_Type__c = ' '
+            AND Job_DL_Job_Definition_Template__c.POS_Template__c = ' '
+			AND Visit_Job__c.Visit__c <> #clbMainPKey#
+			AND Job_List__c.Manager__c = #responsiblePKey#
+			AND #compareAsDate('Job_List__c.Valid_From__c', 'Date','<=',#validFrom#, 'Date')#
+			AND #compareAsDate('Job_List__c.Valid_Thru__c', 'Date','>=',#validThru#, 'Date')#
+			AND (Job_List__c.Visit__c = #clbMainPKey# OR Job_List__c.Visit__c = ' ') 
+			AND Job_List__c.Account__c = #bpaMainPKey# 
+			AND Job_Definition_List__c.Visit_Template__c = #clbMetaPKey# 
+		]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="clbMainPKey" type="TEXT" />
+    <Parameter name="responsiblePKey" type="TEXT" />
+    <Parameter name="validFrom" type="INTEGER" />
+    <Parameter name="validThru" type="INTEGER" />
+    <Parameter name="bpaMainPKey" type="TEXT" />
+    <Parameter name="clbMetaPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

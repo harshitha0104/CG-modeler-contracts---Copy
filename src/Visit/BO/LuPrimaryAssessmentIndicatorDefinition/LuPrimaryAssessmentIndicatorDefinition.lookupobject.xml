@@ -1,0 +1,12 @@
+<LookupObject name="LuPrimaryAssessmentIndicatorDefinition" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuPrimaryAssessmentIndicatorDefinition" />
+  <SimpleProperties>
+    <SimpleProperty name="assessmentIndicatorDefinitionId" type="DomPKey" dataSourceProperty="id" />
+    <SimpleProperty name="dataType" type="DomText" dataSourceProperty="dataType" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

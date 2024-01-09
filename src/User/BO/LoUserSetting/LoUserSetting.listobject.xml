@@ -1,0 +1,13 @@
+<ListObject name="LoUserSetting" generateLoadMethod="false" schemaVersion="1.1">
+  <DataSource name="DsLoUserSetting" />
+  <Item objectClass="LiUserSetting" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="getSettingByName" />
+  </Methods>
+</ListObject>

@@ -1,0 +1,56 @@
+<Process name="SalesFolder::PromotionDetailProcess" defaultAction="ShowSalesFolderPromotionDetail" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="SalesFolderPromotionDetail" type="BoPromotionDetail" />
+        <Declaration name="CurrentTabName" type="String" />
+        <Declaration name="PageTitle" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainPKey" type="String" />
+        <Input name="SloganText" type="String" />
+        <Input name="DateFrom" type="String" />
+        <Input name="DateThru" type="String" />
+        <Input name="GroupText" type="String" />
+        <Input name="AnnotationText" type="String" />
+        <Input name="SalesFolderSloganText" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadSalesFolderPromotionDetail" actionType="LOAD" type="BoPromotionDetail">
+        <Return name="ProcessContext::SalesFolderPromotionDetail" />
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainPKey" />
+        </Parameters>
+      </Action>
+      <Action name="InitCurrentTab" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::CurrentTabName" />
+        <Parameters>
+          <Input name="tabName" value="'Main'" />
+        </Parameters>
+      </Action>
+      <Action name="SetHeaderText" actionType="LOGIC" call="ProcessContext::SalesFolderPromotionDetail.setPageTitle">
+        <Return name="ProcessContext::PageTitle" />
+        <Parameters>
+          <Input name="PageTitle" value="ProcessContext::SloganText" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowSalesFolderPromotionDetail" actionType="VIEW">
+        <UIDescription>SalesFolder::PromotionDetailUI</UIDescription>
+        <Events>
+          <Event name="tabSelected" action="SetCurrentTab" />
+        </Events>
+      </Action>
+      <Action name="SetCurrentTab" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::CurrentTabName" />
+        <Parameters>
+          <Input name="tabName" value="Event.tabName" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

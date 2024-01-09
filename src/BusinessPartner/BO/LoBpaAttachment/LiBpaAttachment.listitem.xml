@@ -1,0 +1,12 @@
+<ListItem name="LiBpaAttachment">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="type" type="DomFileType" dataSourceProperty="type" />
+    <SimpleProperty name="description" type="DomText" dataSourceProperty="description" />
+    <SimpleProperty name="customerPKey" type="DomPKey" dataSourceProperty="customerPKey" />
+    <SimpleProperty name="attachmentBlobPKey" type="DomPKey" dataSourceProperty="attachmentBlobPKey" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" blobTable="BpaAttachmentBlob" blobPKeyField="attachmentBlobPKey" />
+    <SimpleProperty name="usage" type="DomAttachUsage" dataSourceProperty="usage" />
+    <SimpleProperty name="fileName" type="DomFileName" dataSourceProperty="fileName" />
+  </SimpleProperties>
+</ListItem>

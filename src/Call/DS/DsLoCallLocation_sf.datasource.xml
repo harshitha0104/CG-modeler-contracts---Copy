@@ -1,0 +1,18 @@
+<DataSource name="DsLoCallLocation" backendSystem="sf" businessObjectClass="LoCallLocation" external="false" editableEntity="Visit" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Visit" column="Id" />
+    <DerivedAttribute name="logDate" value="''" />
+    <DerivedAttribute name="locationStatus" value="''" />
+    <DerivedAttribute name="signalDate" value="''" />
+    <DerivedAttribute name="latitude" value="''" />
+    <DerivedAttribute name="longitude" value="''" />
+    <DerivedAttribute name="referencePKey" value="''" />
+    <DerivedAttribute name="usage" value="''" />
+    <DerivedAttribute name="referenceObjectPhase" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="Visit" alias="" idAttribute="Id" />
+  </Entities>
+  <OrderCriteria></OrderCriteria>
+  <Parameters></Parameters>
+</DataSource>

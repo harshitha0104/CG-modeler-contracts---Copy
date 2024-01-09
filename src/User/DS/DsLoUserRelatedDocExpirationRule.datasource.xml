@@ -1,0 +1,60 @@
+<DataSource name="DsLoUserRelatedDocExpirationRule" businessObjectClass="LoUserRelatedDocExpirationRule" readOnly="true" editableEntity="UsrReminderRule" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var documentType;
+			var index = 0;
+
+			for (index in jsonQuery.params) {
+              if(Utils.isDefined(jsonQuery.params[index].value.documentType)) {                     
+                documentType= Utils.convertForDBParam(jsonQuery.params[index].value.documentType, 'DomUsrRelatedDocumentType');
+                break;
+              }
+			}
+
+			var sqlParams = {documentType};
+
+			var sqlStmt = "SELECT ";
+			sqlStmt += "UsrReminderRule.PKey as pKey, ";
+			sqlStmt += "UsrReminderRule.ReminderRuleType as reminderRuleType, ";
+			sqlStmt += "UsrReminderRule.DocumentType as documentType, ";
+			sqlStmt += "UsrRelatedDocument.ExpirationDate as expirationDate, ";
+			sqlStmt += "UsrReminderRule.StartTimeOffset as startTimeOffset, ";
+			sqlStmt += "UsrReminderRule.Duration as duration, ";
+			sqlStmt += "UsrReminderRuleText.Title as messageTitle, ";
+			sqlStmt += "UsrReminderRuleText.Message as messageContent ";
+			sqlStmt += "FROM UsrReminderRule ";
+			sqlStmt +=" JOIN UsrRelatedDocument ON UsrRelatedDocument.UsrUserPKey = '#UserPKey#' AND UsrRelatedDocument.DocumentType = #documentType# ";
+			sqlStmt += "JOIN UsrReminderRuleText ON UsrReminderRule.PKey=UsrReminderRuleText.UsrReminderRulePKey AND UsrReminderRuleText.Language='#LANGUAGE#'  ";
+			sqlStmt += "JOIN UsrEtpWarehouseRel ON UsrEtpWarehouseRel.UsrMainPKey='#UserPKey#' AND UsrEtpWarehouseRel.SalesOrg= '#SALESORG#'  ";
+			sqlStmt += "AND UsrEtpWarehouseRel.Active='1' JOIN EtpWarehouse ON EtpWarehouse.PKey=UsrEtpWarehouseRel.EtpWarehousePKey ";   
+			sqlStmt += "WHERE 1=1 ";
+			sqlStmt += "AND UsrReminderRule.SalesOrg = '#SALESORG#' ";
+			sqlStmt += "AND (UsrReminderRule.UsrRolePKey=' ' OR UsrReminderRule.UsrRolePKey IN (SELECT UsrRolePKey FROM UsrRoleRel WHERE UsrRoleRel.UsrMainPKey='#UserPKey#' AND UsrRoleRel.Exclude='0' AND UsrRoleRel.SalesOrg= '#SALESORG#')) ";      
+			sqlStmt += "AND (UsrReminderRule.CountryState = ' ' OR UsrReminderRule.CountryState=EtpWarehouse.CountryState) ";
+			sqlStmt += "AND UsrReminderRule.Active='1' ";
+			sqlStmt += "AND UsrReminderRule.ValidFrom <= '#Today#' ";
+			sqlStmt += "AND UsrReminderRule.ValidThru >= '#Today#' ";
+			sqlStmt += "AND UsrReminderRule.ReminderRuleType = 'DocumentExpiration' ";
+			sqlStmt += "AND UsrReminderRule.DocumentType = #documentType# ";
+			sqlStmt += "AND UsrReminderRuleText.SalesOrg = '#SALESORG#' ";
+			sqlStmt += "AND UsrReminderRuleText.Language = '#LANGUAGE#' ";
+			sqlStmt += "AND (UsrEtpWarehouseRel.SalesOrg = '#SALESORG#' OR UsrEtpWarehouseRel.SalesOrg is NULL) ";      
+			sqlStmt += "AND (EtpWarehouse.SalesOrg = '#SALESORG#' OR EtpWarehouse.SalesOrg is NULL) ";     
+			sqlStmt += "GROUP BY UsrReminderRule.StartTimeOffset , UsrReminderRule.Duration ";
+			sqlStmt += "ORDER BY UsrReminderRule.StartTimeOffset  DESC";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+		]]></Load>
+    <Update><![CDATA[
+			// Intended to be empty
+			return undefined;]]></Update>
+    <Insert><![CDATA[   
+			// Intended to be empty     
+			return undefined;]]></Insert>
+    <Delete><![CDATA[
+			// Intended to be empty
+			return undefined; ]]></Delete>
+  </Database>
+</DataSource>

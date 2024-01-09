@@ -1,0 +1,15 @@
+<LookupObject name="LuUserApprovalCode" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuUserApprovalCode" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="usrUserPKey" type="DomPKey" dataSourceProperty="usrUserPKey" />
+    <SimpleProperty name="code" type="DomUsrPassword64" dataSourceProperty="code" />
+    <SimpleProperty name="loginName" type="DomUsrLoginName" dataSourceProperty="loginName" />
+    <SimpleProperty name="name" type="DomBpaName" dataSourceProperty="name" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

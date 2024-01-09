@@ -1,0 +1,23 @@
+<DataSource name="DsLuPrmAttachmentCount" backendSystem="sf" businessObjectClass="LuPrmAttachmentCount" external="false" editableEntity="SF_File" schemaVersion="2.0" readOnly="true">
+  <Attributes>
+    <DerivedAttribute name="count" value="count(SF_File.Id)" />
+    <Attribute name="prmPromotionPKey" table="SF_FileLink" column="ParentId" />
+  </Attributes>
+  <Entities>
+    <Entity name="SF_File" alias="" idAttribute="Id" />
+    <Entity name="SF_FileLink" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SF_File.Id" comparator="eq" rightSideType="Attribute" rightSideValue="SF_FileLink.FileId" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+   SF_FileLink.ParentId = #prmPromotionPKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="prmPromotionPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

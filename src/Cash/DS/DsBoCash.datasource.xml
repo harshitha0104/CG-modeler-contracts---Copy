@@ -1,0 +1,64 @@
+<DataSource name="DsBoCash" businessObjectClass="BoCash" external="false" editableEntity="SdoMain" schemaVersion="1.1">
+  <Attributes>
+    <Attribute name="pKey" table="SdoMain" column="PKey" />
+    <Attribute name="id" table="SdoMain" column="Id" />
+    <Attribute name="invoiceId" table="SdoMain" column="InvoiceId" />
+    <Attribute name="commitDate" table="SdoMain" column="CommitDate" />
+    <Attribute name="pricingDate" table="SdoMain" column="PricingDate" />
+    <Attribute name="deliveryDate" table="SdoMain" column="DeliveryDate" />
+    <Attribute name="initiationDate" table="SdoMain" column="InitiationDate" />
+    <Attribute name="initiatorPKey" table="SdoMain" column="InitiatorPKey" />
+    <Attribute name="ownerPKey" table="SdoMain" column="OwnerPKey" />
+    <Attribute name="responsiblePKey" table="SdoMain" column="ResponsiblePKey" />
+    <Attribute name="payerCustomerPKey" table="SdoMain" column="PayerCustomerPKey" />
+    <Attribute name="billToCustomerPKey" table="SdoMain" column="BillToCustomerPKey" />
+    <Attribute name="brokerCustomerPKey" table="SdoMain" column="BrokerCustomerPKey" />
+    <Attribute name="ClbMainPKey" table="SdoMain" column="ClbMainPKey" />
+    <Attribute name="tmgMainPKey" table="SdoMain" column="TmgMainPKey" />
+    <Attribute name="phase" table="SdoMain" column="Phase" />
+    <Attribute name="paidAmount" table="SdoMain" column="PaidAmount" />
+    <Attribute name="absolutePaidAmount" table="SdoMain" column="AbsolutePaidAmount" />
+    <Attribute name="cancelReason" table="SdoMain" column="CancelReason" />
+    <Attribute name="currency" table="SdoMain" column="Currency" />
+    <Attribute name="documentType" table="SdoMain" column="DocumentType" />
+    <Attribute name="debitCredit" table="SdoMain" column="DebitCredit" />
+    <Attribute name="cancelReasonRequired" table="SdoMeta" column="CancelReasonRequired" />
+    <Attribute name="salesOrg" table="SdoMain" column="SalesOrg" />
+    <Attribute name="sdoMetaPKey" table="SdoMain" column="SdoMetaPKey" />
+    <Attribute name="actualStatePKey" table="SdoMain" column="ActualStatePKey" />
+    <Attribute name="nextStatePKey" table="SdoMain" column="NextStatePKey" />
+    <Attribute name="wfeWorkflowPKey" table="SdoMain" column="WfeWorkflowPKey" />
+    <Attribute name="docTaType" table="SdoMain" column="DocTaType" />
+    <Attribute name="etpWarehousePKey" table="SdoMain" column="EtpWarehousePKey" />
+    <Attribute name="releaseTime" table="SdoMain" column="ReleaseTime" />
+    <Attribute name="cndCpCalculationSchemaPKey" table="SdoMain" column="CndCpCalculationSchemaPKey" />
+    <Attribute name="calculationStatus" table="SdoMain" column="CalculationStatus" />
+    <Attribute name="distribChannel" table="SdoMain" column="DistribChannel" />
+    <Attribute name="division" table="SdoMain" column="Division" />
+    <Attribute name="headerDiscount" table="SdoMain" column="HeaderDiscount" />
+    <Attribute name="paymentReason" table="SdoMain" column="PaymentReason" />
+    <Attribute name="totalShippedQuantity" table="SdoMain" column="TotalShippedQuantity" />
+    <Attribute name="totalReturnedQuantity" table="SdoMain" column="TotalReturnedQuantity" />
+    <Attribute name="paidAmountReceipt" table="SdoMain" column="PaidAmountReceipt" />
+    <Attribute name="expenseType" table="SdoMain" column="ExpenseType" />
+  </Attributes>
+  <Entities>
+    <Entity name="SdoMain" alias="" idAttribute="PKey" />
+    <Entity name="SdoMeta" alias="">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoMain.SdoMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoMeta.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  SdoMain.PKey = '#pKey#'
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="SdoMain" attribute="Id" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" />
+  </Parameters>
+</DataSource>

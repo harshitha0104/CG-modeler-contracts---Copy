@@ -1,0 +1,23 @@
+<ListItem name="LiOpenJobLists">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="jobDefinitionListText" type="DomText" storable="true" dataSourceProperty="jobDefinitionListText" />
+    <SimpleProperty name="validFrom" type="DomDate" storable="true" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomValidThru" storable="true" dataSourceProperty="validThru" />
+    <SimpleProperty name="clbMetaPKey" type="DomPKey" storable="false" dataSourceProperty="clbMetaPKey" />
+    <SimpleProperty name="userPKey" type="DomPKey" storable="false" dataSourceProperty="userPKey" />
+    <SimpleProperty name="customerPKey" type="DomPKey" storable="false" dataSourceProperty="customerPKey" />
+    <SimpleProperty name="customerName" type="DomText" storable="false" dataSourceProperty="customerName" />
+    <SimpleProperty name="customerAddress" type="DomText" storable="false" dataSourceProperty="customerAddress" />
+    <SimpleProperty name="customerId" type="DomText" storable="false" dataSourceProperty="customerId" />
+    <SimpleProperty name="customerStreet" type="DomText" storable="false" dataSourceProperty="customerStreet" />
+    <SimpleProperty name="customerZIP" type="DomText" storable="false" dataSourceProperty="customerZIP" />
+    <SimpleProperty name="customerCity" type="DomText" storable="false" dataSourceProperty="customerCity" />
+    <SimpleProperty name="customerState" type="DomText" storable="false" dataSourceProperty="customerState" />
+    <SimpleProperty name="managed" type="DomBool" storable="false" dataSourceProperty="managed" />
+    <SimpleProperty name="substituted" type="DomBool" storable="false" dataSourceProperty="substituted" />
+    <SimpleProperty name="substitutedUsrPKey" type="DomPKey" storable="false" dataSourceProperty="substitutedUsrPKey" />
+    <SimpleProperty name="promotionId" type="DomPKey" storable="true" dataSourceProperty="promotionId" />
+    <SimpleProperty name="promotionSlogan" type="DomText" storable="true" dataSourceProperty="promotionSlogan" />
+  </SimpleProperties>
+</ListItem>

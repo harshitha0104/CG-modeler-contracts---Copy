@@ -1,0 +1,30 @@
+<BusinessObject name="BoCustomerReports" generateCreateMethod="false" schemaVersion="1.1">
+  <DataSource name="DsBoCustomerReports" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+  </SimpleProperties>
+  <NestedObjects>
+    <NestedObject name="chartHelper" objectClass="BoChartHelper" dataSourceProperty="empty" nestingProperty="empty" loadMode="LoadImmediate" />
+  </NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <!-- Reporting methods -->
+    <Method name="initializeCustomerRevenueReport" />
+    <Method name="prepareDataForCustomerRevenueReport" />
+    <Method name="refreshCustomerRevenueReport" />
+    <Method name="inputChangedForCustomerRevenueReport" />
+    <Method name="getCurrentYear" />
+    <Method name="centerVerticallyCustomerRevenueReport" />
+  </Methods>
+</BusinessObject>

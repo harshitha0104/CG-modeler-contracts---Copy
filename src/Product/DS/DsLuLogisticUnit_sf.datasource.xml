@@ -1,0 +1,17 @@
+<DataSource name="DsLuLogisticUnit" backendSystem="sf" businessObjectClass="LuLogisticUnit" external="false" editableEntity="Unit_of_Measure__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="piecesPerSmallestUnit" table="Unit_of_Measure__c" column="Pieces_per_Smallest_Unit__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Unit_of_Measure__c" alias="" />
+  </Entities>
+  <QueryCondition><![CDATA[
+    Unit_of_Measure__c.Product__c = #ProductPKey#
+    AND Unit_of_Measure__c.Unit_Type__c = #UnitType#
+    ]]></QueryCondition>
+  <OrderCriteria/>
+  <Parameters>
+    <Parameter name="ProductPKey" type="TEXT" />
+    <Parameter name="UnitType" type="TEXT" />
+  </Parameters>
+</DataSource>

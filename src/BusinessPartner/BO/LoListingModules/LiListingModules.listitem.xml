@@ -1,0 +1,8 @@
+<ListItem name="LiListingModules">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="listingModuleName" type="DomText" dataSourceProperty="listingModuleName" />
+    <SimpleProperty name="productAssortmentPKey" type="DomPKey" dataSourceProperty="productAssortmentPKey" />
+    <SimpleProperty name="sort" type="DomInteger" dataSourceProperty="sort" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,18 @@
+<DataSource name="DsLoOrderMetaPrdSelector" backendSystem="sf" businessObjectClass="LoOrderMetaPrdSelector" external="false" readOnly="true" editableEntity="Order_Template_Product_Selector_Group__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Order_Template_Product_Selector_Group__c" column="Id" />
+    <Attribute name="defaultGroup" table="Order_Template_Product_Selector_Group__c" column="Default__c" />
+    <Attribute name="level1" table="Order_Template_Product_Selector_Group__c" column="Level_1__c" />
+    <Attribute name="level2" table="Order_Template_Product_Selector_Group__c" column="Level_2__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order_Template_Product_Selector_Group__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        Order_Template_Product_Selector_Group__c.Order_Template_Id__c = #sdoMetaPKey#
+    ]]></QueryCondition>
+  <OrderCriteria/>
+  <Parameters>
+    <Parameter name="sdoMetaPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

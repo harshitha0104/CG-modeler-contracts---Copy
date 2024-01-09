@@ -1,0 +1,17 @@
+<DataSource name="DsLuSysToggleItem" backendSystem="sf" businessObjectClass="LuSysToggleItem" distinct="true" external="false" readOnly="true" editableEntity="Sync_Mobile_App_PL_Repo__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="id" table="Sync_Mobile_App_PL_Repo__c" column="Mobile_App_Domain__c" />
+    <DerivedAttribute name="code" value="CASE WHEN Sync_Mobile_App_PL_Repo__c.Code__c IS NULL THEN Sync_Mobile_App_PL_Repo__c.Picklist_Value__c ELSE Sync_Mobile_App_PL_Repo__c.Code__c END" />
+    <Attribute name="validationCode" table="Sync_Mobile_App_PL_Repo__c" column="ValidationCode__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Sync_Mobile_App_PL_Repo__c" alias="" idAttribute="Id" />
+  </Entities>
+  <OrderCriteria />
+  <QueryCondition><![CDATA[
+			Sync_Mobile_App_PL_Repo__c.Code__c = #code# OR Sync_Mobile_App_PL_Repo__c.Picklist_Value__c = #code#
+		]]></QueryCondition>
+  <Parameters>
+    <Parameter name="code" type="TEXT" />
+  </Parameters>
+</DataSource>

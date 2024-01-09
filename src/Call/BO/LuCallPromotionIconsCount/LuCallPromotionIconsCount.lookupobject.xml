@@ -1,0 +1,7 @@
+<LookupObject name="LuCallPromotionIconsCount">
+  <DataSource name="DsLuCallPromotionIconsCount" />
+  <SimpleProperties>
+    <SimpleProperty name="productsCount" type="DomInteger" storable="true" dataSourceProperty="productsCount" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>

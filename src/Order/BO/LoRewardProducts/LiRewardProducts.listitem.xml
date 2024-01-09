@@ -1,0 +1,33 @@
+<ListItem name="LiRewardProducts">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" storable="false"/>
+    <SimpleProperty name="prdId" type="DomId" dataSourceProperty="prdId" />
+    <SimpleProperty name="promotionReward" type="DomId" dataSourceProperty="promotionReward" />
+    <SimpleProperty name="defaultValue" type="DomDecimal" dataSourceProperty="defaultValue" />
+    <SimpleProperty name="maxQuantityValue" type="DomDecimal" dataSourceProperty="maxQuantityValue" />
+    <SimpleProperty name="rewardType" type="DomString" dataSourceProperty="rewardType" />
+    <SimpleProperty name="logisticUnit" type="DomString" dataSourceProperty="logisticUnit" />
+    <SimpleProperty name="productName" type="DomString" dataSourceProperty="productName" />
+    <SimpleProperty name="quantity" type="DomDecimal" dataSourceProperty="quantity" />
+    <SimpleProperty name="price" type="DomMoney" />
+    <SimpleProperty name="minStepperValue" type="DomInteger" storable="false" />
+    <SimpleProperty name="isValidFreeItem" type="DomBool" dataSourceProperty="isValidFreeItem" />
+    <SimpleProperty name="shortId" type="DomId" dataSourceProperty="shortId" />
+    <SimpleProperty name="eAN" type="DomPrdNumber" dataSourceProperty="eAN" />
+    <SimpleProperty name="piecesPerSmallestUnitForBasePrice" type="DomDecimal" dataSourceProperty="piecesPerSmallestUnitForBasePrice" />
+    <SimpleProperty name="orderQuantityLogisticUnit" type="DomPrdLogisticUnit" dataSourceProperty="orderQuantityLogisticUnit" />
+    <SimpleProperty name="orderPiecesPerSmallestUnit" type="DomDecimal" dataSourceProperty="orderPiecesPerSmallestUnit" />
+    <SimpleProperty name="consumerQuantityLogisticUnit" type="DomPrdLogisticUnit" dataSourceProperty="consumerQuantityLogisticUnit" />
+    <SimpleProperty name="consumerPiecesPerSmallestUnit" type="DomDecimal" dataSourceProperty="consumerPiecesPerSmallestUnit" />
+    <SimpleProperty name="prdType" type="DomPrdType" dataSourceProperty="prdType" />
+    <SimpleProperty name="taxClassification" type="DomTaxClassification" dataSourceProperty="taxClassification" />
+    <SimpleProperty name="productCode" type="DomId" dataSourceProperty="productCode" />
+    <SimpleProperty name="deliveryState" type="DomPrdState" dataSourceProperty="deliveryState" />
+    <SimpleProperty name="fieldState" type="DomString" dataSourceProperty="fieldState" />
+    <SimpleProperty name="newState" type="DomPrdState" dataSourceProperty="newState" />
+    <SimpleProperty name="groupText" type="DomString" dataSourceProperty="groupText" />
+    <SimpleProperty name="groupId" type="DomId" dataSourceProperty="groupId" />
+    <SimpleProperty name="isOrderUnit" type="DomBool" dataSourceProperty="isOrderUnit" />
+    <SimpleProperty name="category" type="DomPrdCategory" dataSourceProperty="category" />
+  </SimpleProperties>
+</ListItem>

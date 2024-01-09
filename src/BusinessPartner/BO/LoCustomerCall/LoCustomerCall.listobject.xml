@@ -1,0 +1,8 @@
+<ListObject name="LoCustomerCall" generateLoadMethod="false" >
+  <DataSource name="DsLoCustomerCall" />
+  <Item objectClass="LiCustomerCall" />
+  <Methods>
+    <Method name="saveAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</ListObject>

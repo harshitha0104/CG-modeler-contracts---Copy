@@ -1,0 +1,39 @@
+<Datasource name="DsLuPrmCttTacticProductCount" objectClass="LuPrmCttTacticProductCount" backendSystem="sf" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[	  
+		var pKey = "";
+		if(Utils.isDefined(jsonQuery.pKey)){
+          pKey =  Utils.convertForDBParam(jsonQuery.pKey, "DomPKey");
+        }
+		var sqlParams = {pKey};
+				
+		var sqlStmt = "";
+		sqlStmt += "SELECT productCount ";
+		sqlStmt += "	,tacticCount ";
+		sqlStmt += "FROM ( ";
+		sqlStmt += 		"SELECT Count(Contract_Product__c.Id) AS productCount ";
+		sqlStmt += 		"FROM Contract_Product__c ";
+		sqlStmt += 		"WHERE Contract_Product__c.Contract__c = #pKey# ";
+        sqlStmt += 		"AND Contract_Product__c.IsDeleted = 0 ";
+		sqlStmt +=  	") ";
+		sqlStmt +=  	",( ";
+		sqlStmt +=  		"SELECT Count(Contract_Tactic__c.Id) AS tacticCount ";
+		sqlStmt += 		"FROM Contract_Tactic__c ";
+		sqlStmt += 		"WHERE Contract_Tactic__c.Contract__c = #pKey# ";
+		sqlStmt += 		"AND Contract_Tactic__c.Active__c='1' ";
+        sqlStmt += 		"AND Contract_Tactic__c.IsDeleted = 0 ";
+		sqlStmt +=  	") ";
+		
+		return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+]]></Load>
+    <Update><![CDATA[ 
+return undefined;
+]]></Update>
+    <Insert><![CDATA[     
+return undefined;
+]]></Insert>
+    <Delete><![CDATA[   
+return undefined;   
+]]></Delete>
+  </Database>
+</Datasource>

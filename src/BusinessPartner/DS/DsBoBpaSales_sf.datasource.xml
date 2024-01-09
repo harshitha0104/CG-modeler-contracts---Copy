@@ -1,0 +1,20 @@
+<DataSource name="DsBoBpaSales" backendSystem="sf" businessObjectClass="BoBpaSales" external="false" editableEntity="Account_Extension__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Extension__c" column="Id" />
+    <Attribute name="businessPartnerPKey" table="Account_Extension__c" column="Account__c" />
+    <DerivedAttribute name="salesOrg" value="'#SalesOrg#'" />
+    <DerivedAttribute name="collectListingClosed" value="'0'" />
+    <DerivedAttribute name="hitListingClosed" value="'0'" />
+    <DerivedAttribute name="deleted" value="'0'" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Extension__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   Account__c = #businessPartnerPKey#
+        ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="businessPartnerPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

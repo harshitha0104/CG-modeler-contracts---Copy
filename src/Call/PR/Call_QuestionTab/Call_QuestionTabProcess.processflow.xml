@@ -1,0 +1,257 @@
+<Process name="Call::QuestionTabProcess" defaultAction="Backend_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="JobDefMetaPKey" type="String" />
+        <Declaration name="JobDefMetaText" type="String" />
+        <Declaration name="useStepper" type="String" />
+        <Declaration name="DataLength" type="String" />
+        <Declaration name="DataType" type="String" />
+        <Declaration name="ToggleId" type="String" />
+        <Declaration name="POS" type="String" />
+        <Declaration name="posId" type="String" />
+        <Declaration name="questionPKey" type="String" />
+        <Declaration name="JobMetaPKey" type="DomPKey" />
+        <Declaration name="ConsiderMinValue" type="DomBool" />
+        <Declaration name="MinValue" type="DomString" />
+        <Declaration name="ConsiderMaxValue" type="DomBool" />
+        <Declaration name="MaxValue" type="DomString" />
+        <Declaration name="StepSize" type="DomDecimal" />
+        <Declaration name="isSfBackend" type="DomBool" />
+        <Declaration name="CapturePictureSucceeded" type="String" />
+        <Declaration name="jDTPKey" type="DomPKey" />
+        <Declaration name="pictureTaking" type="DomBool" />
+        <Declaration name="contextMenuList" type="LoLongPressContextMenu" />
+        <Declaration name="isReadOnly" type="DomBool" />
+        <Declaration name="pictureTaken" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoCall" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <!-- sf/casdif -->
+      <Action actionType="LOGIC" name="SetIsSfBackend" call="Utils.isSfBackend">
+        <Return name="ProcessContext::isSfBackend" />
+      </Action>
+      <Action name="loadAndSetPrerequisites" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.loadAndSetPrerequisites">
+        <Parameters>
+          <Input name="loadType" type="Literal" value="Questions" />
+          <Input name="boCall" value="ProcessContext::MainBO" />
+        </Parameters>
+      </Action>
+      <Action name="presetPosId" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.determinePosId">
+        <Return name="ProcessContext::posId" />
+      </Action>
+      <Action actionType="LOGIC" name="GetQuestionsForDeterminedPOS" call="ProcessContext::MainBO.boJobManager.getQuestions">
+        <Parameters>
+          <Input name="posId" value="ProcessContext::posId" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="FilterQuestionsByDeterminedPOS" call="ProcessContext::MainBO.boJobManager.filterQuestions">
+        <Parameters>
+          <Input name="posId" value="ProcessContext::posId" />
+        </Parameters>
+        <Return name="ProcessContext::posId" />
+      </Action>
+      <Action name="IsCallReadOnly" actionType="LOGIC" call="ProcessContext::MainBO.isReadOnly">
+        <Return name="ProcessContext::isReadOnly" />
+      </Action>
+      <Action actionType="LOGIC" name="UpdatePictureCountOnLoad" call="ProcessContext::MainBO.updatePictureCountOnLoad"/>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="DECISION" name="Backend_Decision" parameter="ProcessContext::isSfBackend">
+        <Case value="false" action="HandleEARights" />
+        <CaseElse action="FilterPOSAndShowQuestions" />
+      </Action>
+      <Action name="FilterPOSAndShowQuestions" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.filterPOS">
+        <Parameters>
+          <Input name="loadType" type="Literal" value="questions" />
+        </Parameters>
+        <TransitionTo action="HandleEARights" />
+      </Action>
+      <Action name="HandleEARights" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.loQuestions.setEARights">
+        <Parameters>
+          <Input name="isReadOnly" value="ProcessContext::isReadOnly" />
+        </Parameters>
+        <TransitionTo action="ShowQuestions" />
+      </Action>
+      <Action actionType="View" name="ShowQuestions">
+        <UIDescription>Call::QuestionTabUI</UIDescription>
+        <Events>
+          <Event name="posSelected" action="GetQuestions" />
+          <Event name="addQuestion" action="AddQuestionLookup" />
+          <Event name="buttonPressed" action="ReadOnlyCallDecision_ButtonPressed" />
+          <Event name="openingEventHandler" action="ReadOnlyCallDecision_LongPressed" />
+          <Event name="selectedEventHandler" action="ContextMenuResultDecision" />
+        </Events>
+      </Action>
+      <Action actionType="LOGIC" name="GetQuestions" call="ProcessContext::MainBO.boJobManager.getQuestions">
+        <Parameters>
+          <Input name="posId" value="Event.posId" />
+        </Parameters>
+        <TransitionTo action="FilterQuestionsByPOS" />
+      </Action>
+      <Action actionType="LOGIC" name="FilterQuestionsByPOS" call="ProcessContext::MainBO.boJobManager.filterQuestions">
+        <Parameters>
+          <Input name="posId" value="Event.posId" />
+        </Parameters>
+        <Return name="ProcessContext::posId" />
+      </Action>
+      <Action actionType="PROCESS" name="AddQuestionLookup" process="Call::JobDefMetaLookupProcess">
+        <Parameters>
+          <Input name="posId" value="ProcessContext::posId" />
+          <Input name="jobMetaId" type="Literal" value="Question" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::JobDefMetaPKey" value="jobDefMetaPKey" />
+          <Return name="ProcessContext::JobDefMetaText" value="jobDefMetaText" />
+          <Return name="ProcessContext::DataLength" value="dataLength" />
+          <Return name="ProcessContext::DataType" value="dataType" />
+          <Return name="ProcessContext::ToggleId" value="toggleId" />
+          <Return name="ProcessContext::POS" value="pOS" />
+          <Return name="ProcessContext::JobMetaPKey" value="jobMetaPKey" />
+          <Return name="ProcessContext::ConsiderMinValue" value="considerMinValue" />
+          <Return name="ProcessContext::MinValue" value="minValue" />
+          <Return name="ProcessContext::ConsiderMaxValue" value="considerMaxValue" />
+          <Return name="ProcessContext::MaxValue" value="maxValue" />
+          <Return name="ProcessContext::StepSize" value="stepSize" />
+          <Return name="ProcessContext::defaultValue" value="defaultValue" />
+          <Return name="ProcessContext::useStepper" value="useStepper" />
+          <Return name="ProcessContext::pictureTaking" value="pictureTaking" />
+        </ReturnValues>
+        <TransitionTo action="AddQuestion_Result_Decision" />
+      </Action>
+      <Action name="AddQuestion_Result_Decision" actionType="DECISION" parameter="ProcessContext::JobDefMetaPKey">
+        <CaseEmpty action="ShowQuestions" />
+        <CaseElse action="AddQuestionToList" />
+      </Action>
+      <Action actionType="LOGIC" name="AddQuestionToList" call="ProcessContext::MainBO.boJobManager.addQuestion">
+        <Parameters>
+          <Input name="jobDefMetaPKey" value="ProcessContext::JobDefMetaPKey" />
+          <Input name="jobDefMetaText" value="ProcessContext::JobDefMetaText" />
+          <Input name="dataLength" value="ProcessContext::DataLength" />
+          <Input name="dataType" value="ProcessContext::DataType" />
+          <Input name="toggleId" value="ProcessContext::ToggleId" />
+          <Input name="pOS" value="ProcessContext::POS" />
+          <Input name="posId" value="ProcessContext::posId" />
+          <Input name="jobMetaPKey" value="ProcessContext::JobMetaPKey" />
+          <Input name="considerMinValue" value="ProcessContext::ConsiderMinValue" />
+          <Input name="minValue" value="ProcessContext::MinValue" />
+          <Input name="considerMaxValue" value="ProcessContext::ConsiderMaxValue" />
+          <Input name="maxValue" value="ProcessContext::MaxValue" />
+          <Input name="stepSize" value="ProcessContext::StepSize" />
+          <Input name="defaultValue" value="ProcessContext::defaultValue" />
+          <Input name="useStepper" value="ProcessContext::useStepper" />
+          <Input name="pictureTaking" value="ProcessContext::pictureTaking" />
+        </Parameters>
+      </Action>
+      <!-- Long Button Press Event Handling -->
+      <Action name="ReadOnlyCallDecision_LongPressed" actionType="DECISION" parameter="ProcessContext::isReadOnly">
+        <Case value="true" action="ShowQuestions" />
+        <CaseElse action="CheckIfPictureAvailable_LongPressed" />
+      </Action>
+      <Action name="CheckIfPictureAvailable_LongPressed" actionType="LOGIC" call="ProcessContext::MainBO.checkIfPictureTaken">
+        <Parameters>
+          <Input name="jDTPKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::pictureTaken" />
+        <TransitionTo action="GetContextMenu" />
+      </Action>
+      <Action actionType="LOAD" name="GetContextMenu" type="LoLongPressContextMenu">
+        <Parameters>
+          <Input name="jDTPKey" value="Event.pKey" />
+          <Input name="isReadOnly" value="ProcessContext::isReadOnly" />
+          <Input name="pictureTaken" value="ProcessContext::pictureTaken" />
+        </Parameters>
+        <Return name="ProcessContext::contextMenuList" />
+      </Action>
+      <!-- Short Button Press Handling -->
+      <Action name="ReadOnlyCallDecision_ButtonPressed" actionType="DECISION" parameter="ProcessContext::isReadOnly">
+        <Case value="true" action="CheckIfPictureAvailable_ButtonPressed" />
+        <CaseElse action="OpenCamera" />
+      </Action>
+      <Action name="CheckIfPictureAvailable_ButtonPressed" actionType="LOGIC" call="ProcessContext::MainBO.checkIfPictureTaken">
+        <Parameters>
+          <Input name="jDTPKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::pictureTaken" />
+        <TransitionTo action="PictureTakenDecision_ButtonPressed" />
+      </Action>
+      <Action name="PictureTakenDecision_ButtonPressed" actionType="DECISION" parameter="ProcessContext::pictureTaken">
+        <Case value="true" action="ReviewPictures" />
+        <CaseElse action="ShowQuestions" />
+      </Action>
+      <!-- Long Button Press Menu Selection Handling -->
+      <Action name="ContextMenuResultDecision" actionType="DECISION" parameter="Event.selected">
+        <Case value="TakePicture" action="OpenCamera" />
+        <Case value="SelectPicture" action="SelectPictureFromGallery" />
+        <CaseElse action="ReviewPictures" />
+      </Action>
+      <Action name="OpenCamera" actionType="PROCESS" process="Call::CapturePictureProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::MainBO" />
+          <Input name="jDTPKey" value="Event.pKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CapturePictureSucceeded" value="success" />
+          <Return name="ProcessContext::jDTPKey" value="jDTPKey" />
+        </ReturnValues>
+        <TransitionTo action="UpdateCountOnTakePicture_Decision" />
+      </Action>
+      <Action name="UpdateCountOnTakePicture_Decision" actionType="DECISION" parameter="ProcessContext::CapturePictureSucceeded">
+        <Case value="1" action="UpdateCountOnTakePicture" />
+        <CaseElse action="ShowQuestions" />
+      </Action>
+      <Action name="UpdateCountOnTakePicture" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.updatePictureCountOnAddDelete">
+        <Parameters>
+          <Input name="actionPerformed" value="TakePicture" />
+        </Parameters>
+        <TransitionTo action="MarkQuestionAsAnswered" />
+      </Action>
+      <Action name="SelectPictureFromGallery" actionType="PROCESS" process="Call::CapturePictureProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::MainBO" />
+          <Input name="jDTPKey" value="Event.pKey" />
+          <Input name="openGallery" value="1" type="Literal" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CapturePictureSucceeded" value="success" />
+          <Return name="ProcessContext::jDTPKey" value="jDTPKey" />
+        </ReturnValues>
+        <TransitionTo action="UpdateCountOnSelectPicture_Decision" />
+      </Action>
+      <Action name="UpdateCountOnSelectPicture_Decision" actionType="DECISION" parameter="ProcessContext::CapturePictureSucceeded">
+        <Case value="1" action="UpdateCountOnSelectPicture" />
+        <CaseElse action="ShowQuestions" />
+      </Action>
+      <Action name="UpdateCountOnSelectPicture" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.updatePictureCountOnAddDelete">
+        <Parameters>
+          <Input name="actionPerformed" value="SelectPicture" />
+        </Parameters>
+        <TransitionTo action="MarkQuestionAsAnswered" />
+      </Action>
+      <Action name="MarkQuestionAsAnswered" actionType="LOGIC" call="ProcessContext::MainBO.boJobManager.onQuestionChanged">
+        <Parameters>
+          <Input name="handlerParams" value="" />
+          <Input name="jDTPKey" value="ProcessContext::jDTPKey" />
+        </Parameters>
+        <TransitionTo action="ReviewPictures_CurrentJDT" />
+      </Action>
+      <Action name="ReviewPictures_CurrentJDT" actionType="PROCESS" process="Call::PictureTakingProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::MainBO" />
+          <Input name="jDTPKey" value="ProcessContext::jDTPKey" />
+        </Parameters>
+      </Action>
+      <Action name="ReviewPictures" actionType="PROCESS" process="Call::PictureTakingProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::MainBO" />
+          <Input name="jDTPKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

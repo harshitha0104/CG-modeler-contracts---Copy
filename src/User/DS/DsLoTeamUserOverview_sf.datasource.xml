@@ -1,0 +1,27 @@
+<DataSource name="DsLoTeamUserOverview" backendSystem="sf" businessObjectClass="LoTeamUserOverview" external="false" readOnly="true" editableEntity="User" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="User" column="ID" />
+    <Attribute name="userAccountableId" table="User_Accountable__c" column="Id" />
+    <DerivedAttribute name="name" value="User.LastName || ', ' || User.FirstName" />
+    <DerivedAttribute name="grouping1" value="substr(User.LastName || ', ' || User.FirstName,1,1)" />
+  </Attributes>
+  <Entities>
+    <Entity name="User" alias="" idAttribute="Id" />
+      <Entity name="User_Accountable__c">
+        <Join Type="left outer">
+          <SimpleJoin>
+            <Condition leftSideValue="User.Id" comparator="eq" rightSideType="Attribute" rightSideValue="User_Accountable__c.User__c" />
+          </SimpleJoin>
+        </Join>
+      </Entity>
+      </Entities>
+    <QueryCondition><![CDATA[
+  (User.Id IN (#teamList#))
+  ]]></QueryCondition>
+    <OrderCriteria>
+      <OrderCriterion entity="User" attribute="LastName" direction="asc" />
+    </OrderCriteria>
+    <Parameters>
+      <Parameter name="teamList" type="LIST" />
+    </Parameters>
+    </DataSource>

@@ -1,0 +1,16 @@
+<ListItem name="LiUsrNotification" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="businessModified" type="DomDate" storable="false" dataSourceProperty="businessModified" />
+    <SimpleProperty name="priority" type="DomABC" storable="false" dataSourceProperty="priority" />
+    <SimpleProperty name="priorityImage" type="DomString" storable="false" dataSourceProperty="priorityImage" />
+    <SimpleProperty name="isReadImage" type="DomString" storable="false" dataSourceProperty="isReadImage" />
+    <SimpleProperty name="isRead" type="DomBool" storable="false" dataSourceProperty="isRead" />
+    <SimpleProperty name="subject" type="DomString" storable="false" dataSourceProperty="subject" />
+    <SimpleProperty name="category" type="DomString" storable="false" dataSourceProperty="category" />
+    <SimpleProperty name="dueDate" type="DomDate" storable="false" dataSourceProperty="dueDate" />
+    <SimpleProperty name="dueDateText" type="DomText" />
+    <SimpleProperty name="priorityCardImage" type="DomString" storable="false" dataSourceProperty="priorityCardImage" />
+    <SimpleProperty name="objectTypeImage" type="DomString" storable="false" dataSourceProperty="objectTypeImage" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,41 @@
+<ListItem name="LiTmgTourOverview">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="id" type="DomId" storable="false" dataSourceProperty="id" />
+    <SimpleProperty name="dateFrom" type="DomDate" storable="false" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" storable="false" dataSourceProperty="dateThru" />
+    <SimpleProperty name="tmgStatus" type="DomTmgStatus" storable="false" dataSourceProperty="tmgStatus" />
+    <SimpleProperty name="tmgMetaPKey" type="DomPKey" storable="false" dataSourceProperty="tmgMetaPKey" />
+    <SimpleProperty name="startEtpWarehousePKey" type="DomPKey" storable="false" dataSourceProperty="startEtpWarehousePKey" />
+    <SimpleProperty name="warehouseId" type="DomPKey" storable="false" dataSourceProperty="wId" />
+    <SimpleProperty name="visitCount" type="DomString" storable="false" dataSourceProperty="visitCount" />
+    <SimpleProperty name="compDate" type="DomString" storable="false" />
+    <SimpleProperty name="text" type="DomText" storable="false" dataSourceProperty="text" />
+    <!-- <SimpleProperty name="DateThru" type="DomDate" storable="false" dataSourceProperty="dateThru" />
+    <SimpleProperty name="TimeFrom" type="DomTime" storable="false" dataSourceProperty="timeFrom" />
+    <SimpleProperty name="TimeThru" type="DomTime" storable="false" dataSourceProperty="timeThru" />
+    <SimpleProperty name="Message" type="DomLongDescription" storable="false" dataSourceProperty="message" />
+    
+    <SimpleProperty name="MileageStart" type="DomMileage" storable="false" dataSourceProperty="mileageStart" />
+    <SimpleProperty name="MileageEnd" type="DomMileage" storable="false" dataSourceProperty="mileageEnd" />
+    <SimpleProperty name="SealOK" type="DomBool" storable="false" dataSourceProperty="sealOK" />
+    <SimpleProperty name="TruckId" type="DomId" storable="false" dataSourceProperty="truckId" />
+    <SimpleProperty name="TrailerId" type="DomId" storable="false" dataSourceProperty="trailerId" />
+    <SimpleProperty name="TrailerId2" type="DomId" storable="false" dataSourceProperty="trailerId2" />
+    <SimpleProperty name="VehicleOKStart" type="DomBool" storable="false" dataSourceProperty="vehicleOKStart" />
+    <SimpleProperty name="VehicleStatusStart" type="DomTmgVehicleStatus" storable="false" dataSourceProperty="vehicleStatusStart" />
+    <SimpleProperty name="VehicleOKEnd" type="DomBool" storable="false" dataSourceProperty="vehicleOKEnd" />
+    <SimpleProperty name="VehicleStatusEnd" type="DomTmgVehicleStatus" storable="false" dataSourceProperty="vehicleStatusEnd" />
+    <SimpleProperty name="DefaultUsrMainPKey" type="DomPKey" storable="false" dataSourceProperty="defaultUsrMainPKey" />
+    <SimpleProperty name="ActualUsrMainPKey" type="DomPKey" storable="false" dataSourceProperty="actualUsrMainPKey" />
+    <SimpleProperty name="StartEtpWarehousePKey" type="DomPKey" storable="false" dataSourceProperty="startEtpWarehousePKey" />
+    <SimpleProperty name="CashHandlingRequired" type="DomBool" storable="false" dataSourceProperty="cashHandlingRequired" />
+    <SimpleProperty name="ExpressCheckOutAllowed" type="DomBool" storable="false" dataSourceProperty="expressCheckOutAllowed" />
+    <SimpleProperty name="PalletCheckOutAllowed" type="DomBool" storable="false" dataSourceProperty="palletCheckOutAllowed" />
+    <SimpleProperty name="CountingGroupCheckOutAllowed" type="DomBool" storable="false" dataSourceProperty="countingGroupCheckOutAllowed" />
+    <SimpleProperty name="ConsiderMileage" type="DomTmgConsiderMileage" storable="false" dataSourceProperty="considerMileage" />
+    <SimpleProperty name="ConsiderVehicleStatus" type="DomTmgConsiderVehicleStatus" storable="false" dataSourceProperty="considerVehicleStatus" />
+    <SimpleProperty name="ConsiderSealCheck" type="DomTmgConsiderSealCheck" storable="false" dataSourceProperty="considerSealCheck" />
+    <SimpleProperty name="EtpVehicleTruckPKey" type="DomPKey" storable="false" dataSourceProperty="etpVehicleTruckPKey" />-->
+  </SimpleProperties>
+</ListItem>

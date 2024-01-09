@@ -1,0 +1,6 @@
+<ListItem name="LiPublicHolidays" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="holiday" type="DomDate" storable="false" dataSourceProperty="holiday" />
+  </SimpleProperties>
+</ListItem>

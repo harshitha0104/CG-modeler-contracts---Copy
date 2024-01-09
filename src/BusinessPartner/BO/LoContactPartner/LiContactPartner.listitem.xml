@@ -1,0 +1,25 @@
+<ListItem name="LiContactPartner" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="bpaContactPartnerPKey" type="DomPKey" dataSourceProperty="bpaContactPartnerPKey" />
+    <SimpleProperty name="salutation" type="DomBpaSalutation" dataSourceProperty="salutation" />
+    <SimpleProperty name="name" type="DomBpaName" dataSourceProperty="name" />
+    <SimpleProperty name="firstName" type="DomBpaName" dataSourceProperty="firstName" />
+    <SimpleProperty name="lastName" type="DomBpaName" dataSourceProperty="lastName" />
+    <SimpleProperty name="mainFunction" type="DomBpaFunction" dataSourceProperty="mainFunction" />
+    <SimpleProperty name="jobTitle" type="DomText" dataSourceProperty="jobTitle" />
+    <SimpleProperty name="mainAddress" type="DomText" dataSourceProperty="mainAddress" />
+    <SimpleProperty name="phone1" type="DomDial" dataSourceProperty="phone1" />
+    <SimpleProperty name="phone2" type="DomDial" dataSourceProperty="phone2" />
+    <SimpleProperty name="fax1" type="DomDial" dataSourceProperty="fax1" />
+    <SimpleProperty name="email1" type="DomEmail" dataSourceProperty="email1" />
+    <SimpleProperty name="bpaMetaPKey" type="DomPKey" dataSourceProperty="bpaMetaPKey" />
+    <SimpleProperty name="toPKey" type="DomPKey" dataSourceProperty="toPKey" />
+    <SimpleProperty name="department" type="DomText" dataSourceProperty="department" />
+    <SimpleProperty name="contactPartnerName" type="DomBpaName" dataSourceProperty="contactPartnerName" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+    <SimpleProperty name="text" type="DomText" />
+    <SimpleProperty name="emailEditable" type="DomBool" dataSourceProperty="emailEditable" />
+  </SimpleProperties>
+</ListItem>

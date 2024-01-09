@@ -1,0 +1,17 @@
+<DataSource name="DsBoPrmSlogan" businessObjectClass="BoPrmSlogan" distinct="false" readonly="false" external="false" editableEntity="PrmSlogan" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="PrmSlogan" column="PKey" />
+    <Attribute name="text" table="PrmSlogan" column="Text" />
+    <Attribute name="prmPromotionPKey" table="PrmSlogan" column="PrmPromotionPKey" />
+  </Attributes>
+  <Entities>
+    <Entity name="PrmSlogan" alias="" idAttribute="PKey" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   PrmSlogan.PrmPromotionPKey = #prmPromotionPKey#
+  ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="prmPromotionPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

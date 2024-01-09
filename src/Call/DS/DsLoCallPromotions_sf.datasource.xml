@@ -1,0 +1,113 @@
+<DataSource name="DsLoCallPromotions" backendSystem="sf" businessObjectClass="LoCallPromotions" external="true" distinct="false" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Promotion__c" column="Id" />
+    <Attribute name="bpaMainPKey" table="Promotion_Store__c" column="Store__c" />
+    <Attribute name="dateFrom" table="Promotion__c" column="Date_From__c" />
+    <Attribute name="dateThru" table="Promotion__c" column="Date_Thru__c" />
+    <Attribute name="orderDateFrom" table="Promotion__c" column="Order_Date_From__c" />
+    <Attribute name="orderDateThru" table="Promotion__c" column="Order_Date_Thru__c" />
+    <Attribute name="placementDateFrom" table="Promotion__c" column="Placement_Date_From__c" />
+    <Attribute name="placementDateThru" table="Promotion__c" column="Placement_Date_Thru__c" />
+    <Attribute name="slogan" table="Promotion__c" column="Slogan_#Language#__c" />
+    <Attribute name="type" table="Promotion_Template__c" column="Description_#Language#__c" />
+    <Attribute name="note" table="Promotion__c" column="Note__c" />
+    <Attribute name="color" table="Promotion_Template__c" column="Mobility_Color__c" />
+    <Attribute name="anchor" table="Account" column="Name" />
+    <DerivedAttribute name="seperator" value="'  -  '" />
+  </Attributes>
+  <Entities>
+    <Entity name="Promotion__c" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+		var callDate = "";
+		var customerPKey = "";
+		var leadTime = "";
+		var callDateWithLeadTime = "";
+
+    	if(Utils.isDefined(jsonQuery.customerPKey)) {
+      		customerPKey = Utils.convertForDBParam(jsonQuery.customerPKey, "DomPKey");
+   		}
+   		if(Utils.isDefined(jsonQuery.leadTime)) {
+      		leadTime = Utils.convertForDBParam(jsonQuery.leadTime);
+   		}
+        if(Utils.isDefined(jsonQuery.callDate)) {      		
+      	    callDate= Utils.convertForDBParam(jsonQuery.callDate, "DomDate");
+            callDateWithLeadTime = Utils.convertForDBParam(Utils.addDays2AnsiDateTime(jsonQuery.callDate, leadTime), "DomDate"); 
+   		}
+   	 	
+
+   		var sqlParams = {customerPKey, callDate, leadTime, callDateWithLeadTime};
+
+
+			//add lead time to call date and convert to utc
+			
+			var sqlStmt = "";
+
+			sqlStmt += "SELECT ";
+			sqlStmt += "Promotion__c.Id as pKey,";
+			sqlStmt += "Promotion_Store__c.Store__c as bpaMainPKey,";
+			sqlStmt += "Promotion__c.Date_From__c as dateFrom,";
+			sqlStmt += "Promotion__c.Date_Thru__c as dateThru,";
+			sqlStmt += "'  -  '  as seperator,";
+			sqlStmt += "Promotion__c.Order_Date_From__c as orderDateFrom,";
+			sqlStmt += "Promotion__c.Order_Date_Thru__c as orderDateThru,";
+			sqlStmt += "Promotion__c.Placement_Date_From__c as placementDateFrom,";
+			sqlStmt += "Promotion__c.Placement_Date_Thru__c as placementDateThru,";
+			sqlStmt += "Promotion__c.Note__c as note,";
+			sqlStmt += "CASE WHEN Anchor.Name IS NULL THEN CASE WHEN Account_Set__c.Description_#Language#__c Is Null  Then ' ' ELSE Account_Set__c.Description_#Language#__c END ELSE Anchor.Name END AS anchor,";
+			sqlStmt += "PromotionMeta.Description_#Language#__c as type,";
+			sqlStmt += "Promotion__c.Slogan_#Language#__c as slogan, ";
+			sqlStmt += "PromotionMeta.Mobility_Color__c as color ";
+			sqlStmt += "FROM ";
+			sqlStmt += "Promotion__c ";
+
+			sqlStmt += "JOIN Promotion_Template__c AS PromotionMeta ON Promotion__c.Promotion_Template__c = PromotionMeta.Id ";
+			sqlStmt += "AND PromotionMeta.Display_In_Visit__c = '1' ";
+			sqlStmt += "LEFT JOIN ( ";
+			sqlStmt += "Promotion_Store__c ";
+			sqlStmt += "JOIN Account ON Account.Id = Promotion_Store__c.Store__c ";
+			sqlStmt += ") ON Promotion_Store__c.Promotion__c = Promotion__c.Id ";
+			sqlStmt += "LEFT JOIN ( ";
+			sqlStmt += "Account_Set_Account__c ";
+			sqlStmt += "JOIN Account_Set__c ON Account_Set_Account__c.Account_Set__c = Account_Set__c.Id ";
+			sqlStmt += ") ON Promotion__c.Anchor_Account_Set__c = Account_Set_Account__c.Account_Set__c ";
+			sqlStmt += "LEFT JOIN Account AS Anchor ON Promotion__c.Anchor_Account__c = Anchor.Id ";
+
+			sqlStmt += "WHERE 1=1 ";
+			sqlStmt += "AND ( Promotion_Store__c.Store__c = #customerPKey# ";
+			sqlStmt += "OR Account_Set_Account__c.Account_Set_Account__c = #customerPKey# ) ";
+			sqlStmt += "AND EXISTS ( ";
+			sqlStmt += "SELECT NULL FROM Tactic__c ";
+			sqlStmt += "JOIN Tactic_Template__c ON Tactic__c.Tactic_Template__c = Tactic_Template__c.Id ";
+			sqlStmt += "WHERE Promotion__c.Id = Tactic__c.Promotion__c ";
+			sqlStmt += "AND Promotion__c.Id = Tactic__c.Promotion__c ";
+			sqlStmt += "AND Tactic_Template__c.Active__c = '1' ";
+			sqlStmt += "AND #compareAsDate('Tactic__c.Date_From__c', 'Date','<=' , #callDateWithLeadTime# , 'Date')# ";  
+			sqlStmt += "AND #compareAsDate('Tactic__c.Date_Thru__c', 'Date','>=' , #callDate# , 'Date')# ";
+			sqlStmt += "AND Tactic__c.Included__c  = '1' ";
+			sqlStmt += "AND Tactic_Template__c.Tactic_Type__c<>'Talon') ";
+			sqlStmt += "AND Promotion__c.Active__c='1' ";
+			sqlStmt += "AND Promotion__c.Phase__c='Committed' ";
+			sqlStmt += "AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #callDateWithLeadTime# , 'Date')# ";  
+    		sqlStmt += "AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #callDate# , 'Date')# ";
+			sqlStmt += "ORDER BY ";
+			sqlStmt += "Promotion__c.Date_From__c ASC, Promotion__c.Slogan_#Language#__c ASC";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+    <Update><![CDATA[ 
+			// Intended to be empty     
+			return undefined;     
+		]]></Update>
+    <Insert><![CDATA[     
+			// Intended to be empty     
+			return undefined;     
+		]]></Insert>
+    <Delete><![CDATA[      
+			// Intended to be empty     
+			return undefined;     
+		]]></Delete>
+  </Database>
+</DataSource>

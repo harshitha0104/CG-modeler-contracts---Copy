@@ -1,0 +1,42 @@
+<BusinessObject name="BoVisitAssessmentTask" schemaVersion="1.1">
+  <DataSource name="DsBoVisitAssessmentTask"/>
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" id="true" dataSourceProperty="pKey"/>
+    <SimpleProperty name="status" type="DomAssessmentTaskStatus" id="false" dataSourceProperty="status"/>
+    <SimpleProperty name="categoryFilter" type="DomText" storable="false"/>
+    <SimpleProperty name="locationFilter" type="DomText" storable="false"/>
+  </SimpleProperties>
+  <NestedObjects/>
+  <ObjectLookups/>
+  <ListObjects>
+    <ListObject name="loRetailVisitKPI" objectClass="LoVisitRetailVisitKPI" dataSourceProperty="pKey" listProperty="assessmentTaskId"/>
+    <ListObject name="loPrimaryRetailVisitKPI" objectClass="LoVisitRetailVisitKPI" dataSourceProperty="empty" listProperty="empty" loadMode="OnDemand"/>
+    <ListObject name="loProductCategoryQuickFilter" objectClass="LoProductCategoryQuickFilter" dataSourceProperty="empty" listProperty="empty" loadMode="OnDemand"/>
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync"/>
+    <Method name="afterSaveAsync"/>
+    <Method name="beforeLoadAsync"/>
+    <Method name="afterLoadAsync"/>
+    <Method name="beforeInitialize"/>
+    <Method name="afterInitialize"/>
+    <Method name="beforeDoValidateAsync"/>
+    <Method name="afterDoValidateAsync"/>
+    <Method name="beforeCreateAsync"/>
+    <Method name="afterCreateAsync"/>
+    <Method name="loadAsync"/>
+    <Method name="saveAsync"/>
+    <Method name="createAsync"/>
+    <Method name="loadPrimaryRetailVisitKPI"/>
+    <Method name="onKPIItemChanged"/>
+    <Method name="onPrimaryKPIItemChanged"/>
+    <Method name="filterRetailVisitKPI"/>
+    <Method name="filterProductsByQuickFilter"/>
+    <Method name="prepareCategoryQuickFilterList"/>
+    <Method name="validStoreProduct"/>
+    <Method name="validStoreLocationProduct"/>
+  </Methods>
+  <Validations>
+    <Validation name="validateDateTimeKPIs"/>
+  </Validations>
+</BusinessObject>

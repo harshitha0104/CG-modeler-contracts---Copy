@@ -1,0 +1,13 @@
+<ListObject name="LoCallAttachmentsContextMenu" generateLoadMethod="false" schemaVersion="1.1">
+  <DataSource name="DsLoCallAttachmentsContextMenu" />
+  <Item objectClass="LiCallAttachmentsContextMenu" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="saveAsync" />
+  </Methods>
+</ListObject>

@@ -1,0 +1,1092 @@
+<UIPluginV2 name="PromotionStoreCalendarUiPluginV2">
+  <Interface>
+    <Property id="callDate" />
+    <Property id="promotionData" />
+  </Interface>
+  <Labels>
+    <Label id="Report_PromotionStoreCalendar_Type" />
+    <Label id="Report_PromotionStoreCalendar_ValidTimeFrame" />
+    <Label id="Report_PromotionStoreCalendar_OrderTimeFrame" />
+    <Label id="Report_PromotionStoreCalendar_InStoreTimeFrame" />
+    <Label id="Report_PromotionStoreCalendar_Anchor" />
+    <Label id="Report_PromotionStoreCalendar_Group" />
+  </Labels>
+  <Libraries>
+    <Library name="C3JS" />
+    <Library name="D3JS" />
+  </Libraries>
+  <UIComponentHTML name="UIComponentHTML"><![CDATA[
+      <div id="container_Promotion" class="PromotionContainer">
+        <div id="header" ></div>
+        <div id="chart_Promotion" class="PromotionChart"></div>
+        <div id="infoTextContainer" ></div>
+      </div>
+    ]]></UIComponentHTML>
+  <UIComponentCSS name="UIComponentCSS"><![CDATA[
+  
+  .PromotionContainer {
+      overflow: hidden;
+  }
+
+  .PromotionChart {
+      /*background-color: #FFFFFF;*/
+  }
+
+    /* ######################
+      ###     FONTS      ###
+      ###################### */
+
+    @font-face {
+      font-family: "Regular";
+	  font-weight: 400;
+      src: local("Arial");
+    }
+
+    @font-face {
+      font-family: "Light";
+	  font-weight: 300;
+      src: local("Arial");
+    }
+
+    @font-face {
+      font-family: "Medium";
+	  font-weight: 500;
+      src: local("Arial");
+    }
+
+    ]]></UIComponentCSS>
+  <UIComponentJS name="UIComponentJS"><![CDATA[
+
+const chartIdSelector = "#chart_Promotion";
+const containerIdSelector = "#container_Promotion";
+
+let chartReference;
+
+//Implementation
+function connectCallback() {
+    renderChart();
+}
+
+function disconnectCallback() {
+    if (PluginManager.helpers.isDefined(chartReference)) {
+        chartReference.destroy();
+    }
+}
+
+function renderCallback() {
+    inputChanged();
+}
+
+function inputChanged() {
+    var jsonData = PluginManager.promotionData;
+
+    var chart = chartReference;
+    var d3Container = d3.select(containerIdSelector);
+
+    var toolTipVisible = false;
+    var clickedOnTooltip = false;
+    var uiPluginColors = [PluginManager.pluginConfiguration.Color2];
+
+    var headerWidth = d3.select(containerIdSelector)._groups[0][0]
+        .parentElement.offsetWidth * 0.96;
+
+    //resize
+    if (PluginManager.helpers.isDefined(chartReference)) {
+        //resize in case of orientation change
+        var sizeJson = getSizeJSON();
+        chartReference.resize(sizeJson);
+    }
+
+    if (PluginManager.helpers.isDefined(chart) && PluginManager.helpers.isDefined(chart.internal) && PluginManager.helpers.isDefined(chart.internal.cache)) {
+        chart.unload();
+        chart.load({
+            columns: jsonData.data.columns,
+        });
+
+        if (PluginManager.deviceInfo.isPhone) {
+            //set bar width
+            if (!PluginManager.deviceInfo.isAndroid) {
+                if (jsonData.count > 20)
+                    d3Container.selectAll(".c3-line").style("stroke-width", "0.2em");
+                else if (jsonData.count > 10)
+                    d3Container.selectAll(".c3-line").style("stroke-width", "0.3em");
+                else d3Container.selectAll(".c3-line").style("stroke-width", "0.5em");
+            } else {
+                if (jsonData.count > 20)
+                    d3Container.selectAll(".c3-line").style("stroke-width", "0.15em");
+                else if (jsonData.count > 10)
+                    d3Container.selectAll(".c3-line").style("stroke-width", "0.2em");
+                else d3Container.selectAll(".c3-line").style("stroke-width", "0.3em");
+            }
+        } else {
+            if (!PluginManager.deviceInfo.isAndroid) {
+                if (jsonData.count > 20)
+                    d3Container.selectAll(".c3-line").style("stroke-width", "0.4em");
+                else if (jsonData.count > 10)
+                    d3Container.selectAll(".c3-line").style("stroke-width", "0.9em");
+                else d3Container.selectAll(".c3-line").style("stroke-width", "1.8em");
+            } else {
+                if (jsonData.count > 20)
+                    d3Container.selectAll(".c3-line").style("stroke-width", "0.2em");
+                else if (jsonData.count > 10)
+                    d3Container.selectAll(".c3-line").style("stroke-width", "0.5em");
+                else d3Container.selectAll(".c3-line").style("stroke-width", "1.3em");
+            }
+        }
+
+        // update text sizes
+        var svg = d3Container.select(chartIdSelector);
+        var text = svg.select("g.c3-axis.c3-axis-y").selectAll("text");
+        text.style("font", PluginManager.pluginConfiguration.FontRegular10);
+
+        //header cw
+        var cwLocations = [];
+
+        var xgrid = d3Container.select(chartIdSelector).selectAll("g.c3-xgrid-line");
+
+        if (jsonData.numberOfDaysFirstWeek === 7) {
+            cwLocations.push(0);
+        }
+        var func = function (gridLine) {
+            cwLocations.push(gridLine.childNodes[0].x1.baseVal.value);
+        };
+        if (PluginManager.helpers.isDefined(xgrid._groups[0])) {
+            xgrid._groups[0].forEach(func);
+        }
+        //header months
+        var ll = "translate(".length;
+        var monthLocations = [];
+
+        var xAxis = d3Container
+            .select(chartIdSelector)
+            .selectAll("g.c3-axis.c3-axis-x");
+        var ticks = [];
+        if (
+            PluginManager.helpers.isDefined(xAxis._groups[0]) &&
+            PluginManager.helpers.isDefined(xAxis._groups[0][0])
+        ) {
+            ticks = xAxis._groups[0][0].childNodes;
+        }
+
+        var ticksLength = ticks.length;
+        for (var i = 0; i < ticksLength; i++) {
+            var tick = ticks[i];
+            if (tick.className.baseVal === "tick") {
+                var monthTransform = tick.attributes.transform.value;
+                if (monthTransform.indexOf(",") != -1) {
+                    monthLocations.push(
+                        monthTransform.substr(ll, monthTransform.indexOf(",") - ll)
+                    );
+                } else {
+                    monthLocations.push(
+                        monthTransform.substr(ll, monthTransform.indexOf(")") - ll)
+                    );
+                }
+            }
+        }
+
+        if (!PluginManager.helpers.isDefined(d3Container.select(chartIdSelector)._groups[0][0])) {
+            return;
+        }
+        var chartTransform = d3Container
+            .select(chartIdSelector)
+            .select("svg")
+            .select("g")
+            .attr("transform");
+        if (chartTransform.indexOf(",") != -1) {
+            var chartOffsetLeft = chartTransform.substr(
+                ll,
+                chartTransform.indexOf(",") - ll
+            );
+        } else {
+            var chartOffsetLeft = chartTransform.substr(
+                ll,
+                chartTransform.indexOf(" ") - ll
+            );
+        }
+
+        if (!PluginManager.deviceInfo.isPhone && !PluginManager.pluginConfiguration.isPortrait) {
+            //configure header cws
+            var cwHeaderData = [],
+                cwHeaderDataLabels = [];
+            var cws = jsonData.cws;
+            var cwWidth = cwLocations[1] - cwLocations[0];
+
+            var idx = 0;
+            if (jsonData.numberOfDaysFirstWeek != 7) {
+                var label = "";
+                cwHeaderData.push({
+                    label: label,
+                    location: monthLocations[0],
+                    width: cwLocations[0] - monthLocations[0],
+                });
+                cwHeaderDataLabels.push(label);
+                cwLocations = [0].concat(cwLocations);
+                idx++;
+            }
+
+            var maxWeekLoc = 0;
+            for (; idx < cws.length && idx < cwLocations.length; idx++) {
+                var label = cws[idx];
+                var width = cwWidth;
+                if (idx == cwLocations.length - 1) {
+                    label = jsonData.numberOfDaysLastWeek > 6 ? cws[idx] : "";
+                    width = (cwWidth / 7) * jsonData.numberOfDaysLastWeek;
+
+                    maxWeekLoc = cwLocations[idx] + width;
+                }
+                cwHeaderData.push({
+                    label: label,
+                    location: cwLocations[idx],
+                    width: width,
+                });
+                cwHeaderDataLabels.push(label);
+            }
+        }
+
+        //configure header months
+        var monthHeaderData = [],
+            monthHeaderDataLabels = [],
+            maxMonthLoc = monthLocations[monthLocations.length - 1];
+        var maximalMonthWidth = 0;
+        for (var idx = 0; idx < monthLocations.length - 1; idx++) {
+            monthHeaderData.push({
+                label: jsonData.monthNames[idx],
+                location: monthLocations[idx],
+                width: monthLocations[idx + 1] - monthLocations[idx],
+            });
+            monthHeaderDataLabels.push("testMonth" + idx);
+
+            if (monthLocations[idx + 1] - monthLocations[idx] > maximalMonthWidth)
+                maximalMonthWidth = monthLocations[idx + 1] - monthLocations[idx];
+        }
+
+        if (PluginManager.deviceInfo.isPhone || PluginManager.pluginConfiguration.isPortrait) {
+            maxWeekLoc = maxMonthLoc + (maximalMonthWidth * 4) / 31;
+        }
+
+        monthHeaderData.push({
+            label: "",
+            location: maxMonthLoc,
+            width: maxWeekLoc - maxMonthLoc,
+        });
+
+        var bufferTop = d3Container.select("#bufferTop");
+        var monthSvgHeader = d3Container.select("#monthSvgHeader");
+        var monthNode = monthSvgHeader.node();
+        if (monthNode != null) {
+            var monthChilds = monthNode.childNodes;
+            if (monthChilds.length > 0 && PluginManager.helpers.isDefined(monthNode.childNodes[0])) {
+                monthNode.removeChild(monthNode.childNodes[0]);
+            }
+        }
+        bufferTop.attr("width", headerWidth);
+        monthSvgHeader.attr("width", headerWidth);
+        var monthHeader = monthSvgHeader
+            .append("g")
+            .attr("transform", "translate(" + chartOffsetLeft + ", 0)");
+        var weekSvgHeader = d3Container.select("#weekSvgHeader");
+        weekSvgHeader.attr("style", "display: none");
+        if (!jsonData.isPhone && !PluginManager.pluginConfiguration.isPortrait) {
+            weekSvgHeader.attr("style", "display: block");
+            weekSvgHeader.attr("width", headerWidth);
+            var weekNode = weekSvgHeader.node();
+            if (weekNode != null) {
+                var weekChilds = weekNode.childNodes;
+                if (weekChilds.length > 0 && PluginManager.helpers.isDefined(weekNode.childNodes[0])) {
+                    weekNode.removeChild(weekNode.childNodes[0]);
+                }
+            }
+            var weekHeader = weekSvgHeader
+                .append("g")
+                .attr("transform", "translate(" + chartOffsetLeft + ", 0)");
+
+            var weekData = weekHeader.selectAll("g").data(cwHeaderData);
+            var weekGroups = weekData.enter().append("g");
+            var weekRects = weekGroups.append("rect");
+            var weekText = weekGroups.append("text");
+
+            weekGroups.attr("transform", function (d) {
+                return "translate(" + d.location + ", 0)";
+            });
+            weekRects
+                .attr("width", function (d) {
+                    return d.width;
+                })
+                .attr("height", 30)
+                .attr("fill", PluginManager.pluginConfiguration.Color22)
+                .attr("stroke", PluginManager.pluginConfiguration.Color22);
+            weekText.style("fill", PluginManager.pluginConfiguration.Color6);
+            weekText.text(function (d) {
+                return d.label;
+            });
+            weekText.attr("transform", function (d) {
+                return "translate(" + d.width / 2 + ", 0)";
+            });
+            weekText
+                .style("text-anchor", "middle")
+                .style("font", PluginManager.pluginConfiguration.FontRegular11);
+            weekText.attr("alignment-baseline", "central");
+            weekText.attr("y", function (d) {
+                return "50%";
+            });
+        }
+
+        var monthData = monthHeader.selectAll("g").data(monthHeaderData);
+        var monthGroups = monthData.enter().append("g");
+        var monthRects = monthGroups.append("rect");
+        var monthText = monthGroups.append("text");
+
+        monthGroups.attr("transform", function (d) {
+            return "translate(" + d.location + ", 0)";
+        });
+        monthRects
+            .attr("width", function (d) {
+                return d.width;
+            })
+            .attr("height", 30)
+            .attr("fill", PluginManager.pluginConfiguration.Color10)
+            .attr("stroke", PluginManager.pluginConfiguration.Color6);
+        monthText.style("fill", PluginManager.pluginConfiguration.Color6);
+        monthText.text(function (d) {
+            return d.label;
+        });
+        monthText.attr("transform", function (d) {
+            return "translate(" + d.width / 2 + ", 0)";
+        });
+        if (PluginManager.deviceInfo.isPhone || PluginManager.pluginConfiguration.isPortrait) {
+            monthText
+                .style("text-anchor", "middle")
+                .style("font", PluginManager.pluginConfiguration.FontRegular11);
+
+            // no weekText on phone available (on real phone, but Chrome reports isPhone=true for tablet execution as well
+            if (PluginManager.helpers.isDefined(weekText)) {
+                weekText
+                    .style("text-anchor", "middle")
+                    .style("font", PluginManager.pluginConfiguration.FontRegular11);
+            }
+        } else {
+            monthText
+                .style("text-anchor", "middle")
+                .style("font", PluginManager.pluginConfiguration.FontRegular11);
+            weekText
+                .style("text-anchor", "middle")
+                .style("font", PluginManager.pluginConfiguration.FontRegular11);
+        }
+        monthText.attr("alignment-baseline", "central");
+        monthText.attr("y", function (d) {
+            return "50%";
+        });
+
+        d3Container
+            .select(chartIdSelector)
+            .select("svg")
+            .select("g")
+            .select("rect")
+            .attr("width", maxWeekLoc);
+
+        var lessenGridLines = function (gridLine, uiPluginColors) {
+            gridLine.childNodes[0].style.stroke = uiPluginColors[0];
+        };
+        if (PluginManager.helpers.isDefined(xgrid._groups[0])) {
+            xgrid._groups[0].forEach(lessenGridLines, uiPluginColors);
+        }
+
+        //tooltip activation
+        var chartDiv = d3Container.select(chartIdSelector);
+
+        d3Container.selectAll(".ttEventRect").remove();
+
+        var allLines = d3Container
+            .select(chartIdSelector)
+            .select("svg")
+            .select("g")
+            .select("g.c3-chart")
+            .select("g.c3-chart-lines")
+            .selectAll("g.c3-chart-line")
+            .select("g")._groups;
+
+        var results = [];
+
+        var index = 0;
+        var lineProcessing = function (group) {
+            results.push({
+                bb: group.getBBox(),
+                data: {
+                    id: jsonData.dataStrings[index],
+                    index: 1,
+                    name: jsonData.namesFromIds[index + 1],
+                    value: index + 1,
+                },
+            });
+            index++;
+        };
+
+        allLines[0].forEach(lineProcessing);
+        var height = "3.5em";
+        var heightOffset = 18;
+
+        //set bar width
+        if (jsonData.count > 20) {
+            height = "0.8em";
+            heightOffset = 4;
+        } else if (jsonData.count > 10) {
+            height = "1.7em";
+            heightOffset = 9;
+        }
+
+        var uninterpolate = function (a, b) {
+            b = (b -= a = +a) || 1 / b;
+            return function (x) {
+                return (x - a) / b;
+            };
+        };
+
+        var eventRect = chartDiv.selectAll(".c3-event-rect");
+        if (PluginManager.helpers.isDefined(eventRect.node())) {
+            var eventWidth = eventRect.node().getBBox().width;
+            var mouseFractionX = uninterpolate(0, eventWidth);
+
+            eventRect
+                .on("mouseover", function (elem) { })
+                .on("mousemove", function (elem) { })
+                .on("mouseout", function (elem) { });
+
+            chartDiv.on("click", function (elem) {
+                if (toolTipVisible && !clickedOnTooltip) {
+                    chart.internal.hideTooltip();
+                    toolTipVisible = false;
+                }
+                clickedOnTooltip = false;
+            });
+
+            var eventRects = d3Container
+                .select(chartIdSelector)
+                .select("svg")
+                .select("g")
+                .selectAll(".ttEventRect")
+                .data(results)
+                .enter()
+                .append("rect")
+                .attr("class", "ttEventRect");
+
+            eventRects
+                .on("mouseover", function (elem) {
+                    chart.internal.hideTooltip();
+                    var data = elem.data;
+                    var mousePos = d3.mouse(eventRect.node());
+                    var xFraction = mouseFractionX(mousePos[0]);
+                    var date = Math.round(
+                        d3.interpolate(
+                            new Date(jsonData.axis.x.min),
+                            new Date(jsonData.axis.x.max)
+                        )(xFraction)
+                    );
+                    data.x = date;
+                    chart.internal.showTooltip([data], eventRect.node());
+                    toolTipVisible = true;
+                })
+                .on("mouseout", function (elem) {
+                    // chart.internal.hideTooltip();
+                })
+
+                .on("click", function (elem) {
+                    clickedOnTooltip = true;
+                    return true;
+                });
+
+            eventRects
+                .attr("width", function (elem) {
+                    return elem.bb.x < 0 ? elem.bb.width + elem.bb.x : elem.bb.width;
+                })
+                .attr("height", function (elem) {
+                    return height;
+                })
+                .attr("x", function (elem) {
+                    return elem.bb.x < 0 ? 0 : elem.bb.x;
+                })
+                .attr("y", function (elem) {
+                    return elem.bb.y - heightOffset;
+                })
+                .style("fill-opacity", 0);
+        }
+    }
+}
+
+function getSizeJSON() {
+
+    var sizeJson;
+    if (PluginManager.pluginConfiguration.isPortrait) {
+        sizeJson = {
+            width:
+                d3.select(containerIdSelector)._groups[0][0]
+                    .parentElement.offsetWidth * 0.96,
+            height:
+                d3.select(containerIdSelector)._groups[0][0]
+                    .parentElement.offsetWidth * 1.1,
+        };
+    }
+    else {
+        sizeJson = {
+            width:
+                d3.select(containerIdSelector)._groups[0][0]
+                    .parentElement.offsetWidth * 0.96,
+            height:
+                d3.select(containerIdSelector)._groups[0][0]
+                    .parentElement.offsetWidth * 0.5,
+        };
+    }
+
+    return sizeJson;
+}
+
+function renderChart() {
+    var sizeJson = getSizeJSON();
+
+    var jsonData = PluginManager.promotionData;
+
+    var colors = jsonData.barColors;
+    var colorFunction = function (color, d) {
+        return colors[d.id];
+    };
+
+    //destroy chart object before setting new reference
+    if (PluginManager.helpers.isDefined(chartReference)) {
+        chartReference.destroy();
+    }
+
+    // Create the chart
+    chartReference = c3.generate({
+        bindto: chartIdSelector,
+        data: {
+            columns: jsonData.data.columns,
+            xs: jsonData.data.xs,
+            names: jsonData.data.names,
+            color: colorFunction,
+        },
+        tooltip: {
+            show: jsonData.showTooltip,
+            contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
+                var result = "";
+
+                if (d.length > 0) {
+                    var tooltipData = jsonData.tooltips[d[0].id];
+
+                    var fontRegular = PluginManager.pluginConfiguration.FontRegular10;
+                    var color6 = PluginManager.pluginConfiguration.Color6;
+                    var color11 = PluginManager.pluginConfiguration.Color11;
+                    var color23 = PluginManager.pluginConfiguration.Color23;
+                    var color2 = PluginManager.pluginConfiguration.Color2;
+                    var color1 = PluginManager.pluginConfiguration.Color1;
+
+                    if (PluginManager.deviceInfo.isWindows) {
+                        result =
+                            "<table class='c3-tooltip' cellspacing='0' style='font: " +
+                            fontRegular +
+                            "; border-spacing:0; border: 1px solid " +
+                            color11 +
+                            "'>";
+                        result =
+                            result +
+                            "<tr><th colspan='2' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color23 +
+                            "; color: " +
+                            color1 +
+                            "'>" +
+                            tooltipData.slogan +
+                            "</th></tr>";
+                        result =
+                            result +
+                            "<tr class='c3-tooltip-name-data2'><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-right: 1px dotted " +
+                            color23 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            PluginManager.locale.labels.Report_PromotionStoreCalendar_Type +
+                            "</td><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color2 +
+                            "; color: " +
+                            color2 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            tooltipData.type +
+                            "</td></tr>";
+                        result =
+                            result +
+                            "<tr class='c3-tooltip-name-data2'><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-right: 1px dotted " +
+                            color23 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            PluginManager.locale.labels.Report_PromotionStoreCalendar_ValidTimeFrame +
+                            "</td><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color2 +
+                            "; color: " +
+                            color2 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            tooltipData.validTimeframe +
+                            "</td></tr>";
+                        result =
+                            result +
+                            "<tr class='c3-tooltip-name-data2'><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-right: 1px dotted " +
+                            color23 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            PluginManager.locale.labels.Report_PromotionStoreCalendar_OrderTimeFrame +
+                            "</td><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color2 +
+                            "; color: " +
+                            color2 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            tooltipData.orderTimeframe +
+                            "</td></tr>";
+                        result =
+                            result +
+                            "<tr class='c3-tooltip-name-data2'><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-right: 1px dotted " +
+                            color23 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            PluginManager.locale.labels.Report_PromotionStoreCalendar_InStoreTimeFrame +
+                            "</td><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color2 +
+                            "; color: " +
+                            color2 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            tooltipData.inStoreTimeframe +
+                            "</td></tr>";
+                        result =
+                            result +
+                            "<tr class='c3-tooltip-name-data2'><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-right: 1px dotted " +
+                            color23 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            PluginManager.locale.labels.Report_PromotionStoreCalendar_Anchor +
+                            "</td><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color2 +
+                            "; color: " +
+                            color2 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            tooltipData.anchor +
+                            "</td></tr>";
+                        result =
+                            result +
+                            "<tr class='c3-tooltip-name-data2'><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-right: 1px dotted " +
+                            color23 +
+                            "'>" +
+                            PluginManager.locale.labels.Report_PromotionStoreCalendar_Group +
+                            "</td><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color2 +
+                            "; color: color2'>" +
+                            tooltipData.group +
+                            "</td></tr>";
+                        result = result + "</table>";
+                    } else {
+                        result =
+                            "<table class='c3-tooltip' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            PluginManager.pluginConfiguration.Color12 +
+                            "; border-spacing:0; border: 1px solid " +
+                            color11 +
+                            "'>";
+                        result =
+                            result +
+                            "<tr><th colspan='2' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color23 +
+                            "; color: " +
+                            color1 +
+                            "'>" +
+                            tooltipData.slogan +
+                            "</th></tr>";
+                        result =
+                            result +
+                            "<tr class='c3-tooltip-name-data2'><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-right: 1px dotted " +
+                            color23 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            PluginManager.locale.labels.Report_PromotionStoreCalendar_Type +
+                            "</td><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            tooltipData.type +
+                            "</td></tr>";
+                        result =
+                            result +
+                            "<tr class='c3-tooltip-name-data2'><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-right: 1px dotted " +
+                            color23 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            PluginManager.locale.labels.Report_PromotionStoreCalendar_ValidTimeFrame +
+                            "</td><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            tooltipData.validTimeframe +
+                            "</td></tr>";
+                        result =
+                            result +
+                            "<tr class='c3-tooltip-name-data2'><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-right: 1px dotted " +
+                            color23 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            PluginManager.locale.labels.Report_PromotionStoreCalendar_OrderTimeFrame +
+                            "</td><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            tooltipData.orderTimeframe +
+                            "</td></tr>";
+                        result =
+                            result +
+                            "<tr class='c3-tooltip-name-data2'><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-right: 1px dotted " +
+                            color23 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            PluginManager.locale.labels.Report_PromotionStoreCalendar_InStoreTimeFrame +
+                            "</td><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            tooltipData.inStoreTimeframe +
+                            "</td></tr>";
+                        result =
+                            result +
+                            "<tr class='c3-tooltip-name-data2'><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-right: 1px dotted " +
+                            color23 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            PluginManager.locale.labels.Report_PromotionStoreCalendar_Anchor +
+                            "</td><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            tooltipData.anchor +
+                            "</td></tr>";
+                        result =
+                            result +
+                            "<tr class='c3-tooltip-name-data2'><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-right: 1px dotted " +
+                            color23 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            PluginManager.locale.labels.Report_PromotionStoreCalendar_Group +
+                            "</td><td class='name' style='font: " +
+                            fontRegular +
+                            "; background-color: " +
+                            color6 +
+                            "; color: " +
+                            color2 +
+                            "; border-bottom: 1px solid " +
+                            color11 +
+                            "'>" +
+                            tooltipData.group +
+                            "</td></tr>";
+                        result = result + "</table>";
+                    }
+                }
+
+                return result;
+            },
+            grouped: false,
+        },
+        transition: {
+            duration: 2000,
+        },
+        size: sizeJson,
+        axis: {
+            x: {
+                show: false,
+                type: "timeseries",
+                tick: {
+                    values: jsonData.axis.x.tick.values,
+                    format: function (v, id, i, j) {
+                        return (
+                            ("00" + (v.getMonth() + 1)).slice(-2) + "/" + v.getFullYear()
+                        );
+                    },
+                },
+                min: jsonData.axis.x.min,
+                max: jsonData.axis.x.max,
+                padding: {
+                    left: jsonData.isPhone ? 40 : 0,
+                },
+            },
+            y: {
+                max: -1,
+                min: Math.min(...PluginManager.promotionData.axis.y.tick.values, -5),
+                show: jsonData.axis.y.show,
+                tick: {
+                    values: jsonData.axis.y.tick.values,
+                    format: function (y) {
+                        // Limit tick names to 32 characters and add triple dots if text is longer than 18 characters
+                        var tick = jsonData.namesFromIds[Math.abs(y)];
+                        if (PluginManager.helpers.isDefined(tick)) {
+                            var tickLength = tick.length;
+                            var shortTick = "";
+                            if (!PluginManager.deviceInfo.isPhone && (PluginManager.deviceInfo.isApple || PluginManager.deviceInfo.isWindows)) {
+                                shortTick = tick.substring(0, 18);
+                            } else {
+                                shortTick = tick.substring(0, 32);
+                            }
+                            var shortTickLength = shortTick.length;
+
+                            return tickLength > shortTickLength ? shortTick + "... " : shortTick;
+                        } else {
+                            return undefined;
+                        }
+                    },
+                },
+            },
+        },
+        legend: {
+            show: false,
+        },
+        point: {
+            show: false,
+            r: 1,
+        },
+        grid: {
+            x: {
+                show: jsonData.isPhone,
+                lines: jsonData.gridLines,
+            },
+            lines: {
+                front: false,
+            },
+        },
+    });
+
+    var d3Container = d3.select(containerIdSelector);
+
+    // update text sizes
+    var svg = d3Container.select(chartIdSelector);
+    var text = svg.select("g.c3-axis.c3-axis-y").selectAll("text");
+    text.style("font", PluginManager.pluginConfiguration.FontRegular10);
+
+    //set bar width
+    if (!PluginManager.deviceInfo.isAndroid) {
+        if (jsonData.count > 20)
+            d3Container.selectAll(".c3-line").style("stroke-width", "0.8em");
+        else if (jsonData.count > 10)
+            d3Container.selectAll(".c3-line").style("stroke-width", "1.7em");
+        else d3Container.selectAll(".c3-line").style("stroke-width", "3.5em");
+    } else {
+        if (jsonData.count > 20)
+            d3Container.selectAll(".c3-line").style("stroke-width", "0.4em");
+        else if (jsonData.count > 10)
+            d3Container.selectAll(".c3-line").style("stroke-width", "1.0em");
+        else d3Container.selectAll(".c3-line").style("stroke-width", "2.5em");
+    }
+
+    // Prepare the area for the header
+    var chartSvg = chartReference.element.firstChild;
+    var chartWidth = chartSvg.width.baseVal.value;
+    var bufferTop = d3Container
+        .select("#header")
+        .append("svg")
+        .attr("id", "bufferTop");
+    bufferTop.attr("width", chartWidth).attr("height", 30);
+    var monthSvgHeader = d3Container
+        .select("#header")
+        .append("svg")
+        .attr("id", "monthSvgHeader");
+    monthSvgHeader.attr("width", chartWidth).attr("height", 30);
+
+    if (!PluginManager.deviceInfo.isPhone) {
+        var weekSvgHeader = d3Container
+            .select("#header")
+            .append("svg")
+            .attr("id", "weekSvgHeader");
+        weekSvgHeader.attr("width", chartWidth).attr("height", 30);
+    } else {
+        var div = d3Container.select(chartIdSelector);
+        div.style("text-align", "center");
+        var div2 = d3Container.select("#header");
+        div2.style("text-align", "center");
+    }
+
+    // Set axis colors
+    d3.select(".c3-axis-x")
+        .select("path")
+        .style("stroke", PluginManager.pluginConfiguration.Color8);
+    d3.select(".c3-axis-y")
+        .select("path")
+        .style("stroke", PluginManager.pluginConfiguration.Color8);
+
+    // Set color of tick lines
+    d3.select(".c3-axis-x")
+        .selectAll("line")
+        .style("stroke", PluginManager.pluginConfiguration.Color8);
+    d3.select(".c3-axis-y")
+        .selectAll("line")
+        .style("stroke", PluginManager.pluginConfiguration.Color8);
+
+    // Set color of axis labels
+    d3.select(".c3-axis-x")
+        .selectAll("text")
+        .style("fill", PluginManager.pluginConfiguration.Color8);
+    d3.select(".c3-axis-y")
+        .selectAll("text")
+        .style("fill", PluginManager.pluginConfiguration.Color8);
+
+    //set color of grid
+    d3.selectAll(".c3-xgrid-line")
+        .selectAll("line")
+        .style("stroke", PluginManager.pluginConfiguration.Color11);
+
+    //remove the yAxis
+    d3Container
+        .select(chartIdSelector)
+        .select("svg")
+        .selectAll("path")
+        .style("stroke-width", 0);
+
+    var infoTextEl = d3.select("#infoTextContainer")
+        .append("text");
+
+    var infoText = '';
+    if (jsonData.promotionLengthCut) {
+        infoText = jsonData.promotionInfoText;
+    }
+
+    infoTextEl.text(infoText);
+    infoTextEl.style("padding-left", "10px");
+    infoTextEl.style("fill", PluginManager.pluginConfiguration.Color8);
+    infoTextEl.style("font", PluginManager.pluginConfiguration.FontRegular10);
+
+    inputChanged();
+}
+
+    ]]></UIComponentJS>
+</UIPluginV2>

@@ -1,0 +1,58 @@
+<DataSource name="DsLoInventoryMetaByItemMeta" backendSystem="sf" businessObjectClass="LoInventoryMetaByItemMeta" external="false" readOnly="true" editableEntity="Inventory_Control_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="sdoItemMetaPKey" table="Order_Item_Order_Template_Association__c" column="Order_Item_Template__c" />
+    <Attribute name="usedForDisplay" table="Order_Item_Inventory_Transaction__c" column="Used_For_Display__c" />
+    <DerivedAttribute name="metaId" value="CASE RecordType.DeveloperName WHEN 'Cash_Float' THEN 'CashFloat' WHEN 'Inventory' THEN 'UserInventory' WHEN 'Quota' THEN 'Quota' END" />
+    <Attribute name="ivcMetaPKey" table="Inventory_Control_Template__c" column="Id" />
+    <Attribute name="ivcTaMetaPKey" table="Inventory_Transaction_Template__c" column="Id" />
+    <Attribute name="taType" table="Inventory_Transaction_Template__c" column="Transaction_Type__c" />
+    <Attribute name="taControl" table="Inventory_Transaction_Template__c" column="Transaction_Control__c" />
+    <Attribute name="prdPolicy" table="Inventory_Control_Template__c" column="Product_Policy__c" />
+    <Attribute name="usrPolicy" table="Inventory_Control_Template__c" column="User_Policy__c" />
+    <Attribute name="bpaPolicy" table="Inventory_Control_Template__c" column="Customer_Policy__c" />
+    <Attribute name="useIvcRefPKey1" table="Inventory_Transaction_Template__c" column="Use_Inventory_Reference_1__c" />
+    <Attribute name="useIvcRefPKey2" table="Inventory_Transaction_Template__c" column="Use_Inventory_Reference_2__c" />
+    <Attribute name="useIvcRefPKey3" table="Inventory_Transaction_Template__c" column="Use_Inventory_Reference_3__c" />
+    <Attribute name="useIvcRefPKey4" table="Inventory_Transaction_Template__c" column="Use_Inventory_Reference_4__c" />
+    <Attribute name="useIvcRefPKey5" table="Inventory_Transaction_Template__c" column="Use_Inventory_Reference_5__c" />
+    <Attribute name="ivcMeasure" table="Inventory_Control_Template__c" column="Inventory_Control_Measure__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Inventory_Control_Template__c" alias="" idAttribute="Id" />
+    <Entity name="Order_Item_Inventory_Transaction__c" alias="" idAttribute="Id">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Order_Item_Inventory_Transaction__c.Inventory_Control_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="Inventory_Control_Template__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Inventory_Transaction_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Inventory_Transaction_Template__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Order_Item_Inventory_Transaction__c.Inventory_Transaction_Template__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Order_Item_Order_Template_Association__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Order_Item_Order_Template_Association__c.Order_Item_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="Order_Item_Inventory_Transaction__c.Order_Item_Template__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="RecordType" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Inventory_Control_Template__c.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Order_Item_Order_Template_Association__c.Order_Template__c = #sdoMetaPKey#
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="sdoMetaPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

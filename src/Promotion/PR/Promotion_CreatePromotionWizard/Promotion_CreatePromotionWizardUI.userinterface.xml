@@ -1,0 +1,50 @@
+<UIDescription name="Promotion::CreatePromotionWizardUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" >
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="PromotionCreateCustomerContractTitleId" defaultLabel="Add Contract" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="createCustomerContract">
+          <Bindings>
+            <Resource target="Text" type="Label" id="createCustomerContractId" defaultLabel="Done" />
+            <Resource target="Icon" type="Image" id="CheckGrey24" defaultImage="light/done_24.png" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="FinishWizard">
+              <Params>
+                <Param name="buttonPressed" value="createCustomerContract" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="Customer">
+          <Lookup name="CustomerName">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Customer" id="CustomerName" />
+              <Binding target="Value" binding="ProcessContext::WizardBo.luCustomer.name" bindingMode="ONE_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="OpenCustomerNameLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+        <GroupElement name="CustomerContractType">
+          <Lookup name="CustomerContractType">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Type" id="CustomerContractTypeId" />
+              <Binding target="Value" binding="ProcessContext::WizardBo.luPrmMeta.text" bindingMode="ONE_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="OpenPrmMetaLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

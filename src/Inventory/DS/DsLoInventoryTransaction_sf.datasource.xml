@@ -1,0 +1,30 @@
+<DataSource name="DsLoInventoryTransaction" backendSystem="sf" businessObjectClass="LoInventoryTransaction" external="false" editableEntity="Inventory_Transaction__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Inventory_Transaction__c" column="Id" />
+    <Attribute name="amount" table="Inventory_Transaction__c" column="Amount__c" />
+    <Attribute name="ivcMainPKey" table="Inventory_Transaction__c" column="Inventory__c" />
+    <Attribute name="ivcTaMetaPKey" table="Inventory_Transaction__c" column="Inventory_Transaction_Template__c" />
+    <Attribute name="sdoMainPKey" table="Inventory_Transaction__c" column="Order_Document__c" />
+    <Attribute name="sdoItemPKey" table="Inventory_Transaction__c" column="Order_Item__c" />
+    <Attribute name="accounted" table="Inventory_Transaction__c" column="Accounted__c" />
+    <DerivedAttribute name="salesOrg" type="String" value="'#SalesOrg#'" />
+    <Attribute name="initiationDate" table="Inventory_Transaction__c" column="Creation_Date__c " />
+    <Attribute name="initiatorUsrMainPKey" table="Inventory_Transaction__c" column="CreatedById" />
+    <Attribute name="chargeDate" table="Inventory_Transaction__c" column="Charge_Date__c" />
+    <DerivedAttribute name="bpaCustomerPKey" value="''" />
+    <Attribute name="paymentMethod" table="Inventory_Transaction__c" column="Payment_Method__c" />
+    <Attribute name="sdoPaymentPKey" table="Inventory_Transaction__c" column="Order_Payment__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Inventory_Transaction__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        Inventory_Transaction__c.Order_Item__c IN ( #orderItemPkeys# ) OR
+        Inventory_Transaction__c.Order_Payment__c IN ( #orderPaymentPkeys# )
+       ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="orderItemPkeys" type="LIST" />
+    <Parameter name="orderPaymentPkeys" type="LIST" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,110 @@
+<Process name="Reporting::OverviewProcess" defaultAction="GetOverviewList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OverviewList" type="LoReportOverview" />
+        <Declaration name="CustomerRevenueReport_CustomerPKey" type="DomPKey" />
+        <Declaration name="CustomerRevenueReport_CustomerName" type="DomString" />
+        <Declaration name="PromotionStoreCalendarReport_CustomerPKey" type="DomPKey" />
+        <Declaration name="teamReport" type="DomString" />
+        <Declaration name="boTimeCardReports" type="BoTimeCardReports" />
+        <Declaration name="loTimeEntryReport" type="LoTimeEntryReport" />
+        <Declaration name="userPKey" type="DomString" />
+        <Declaration name="userName" type="DomString" />
+        <Declaration name="userList" type="DomString" />
+        <Declaration name="dataAvailable" type="DomString" />
+        <Declaration name="SfReplicationCallbacks" type="BoSfReplicationCallbacks" />
+      </Declarations>
+      <Parameters />
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateReplicationCallBacksBo" actionType="CREATE" type="BoSfReplicationCallbacks">
+        <Return name="ProcessContext::SfReplicationCallbacks" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="GetOverviewList" actionType="LOAD" type="LoReportOverview">
+        <Return name="ProcessContext::OverviewList" />
+        <TransitionTo action="ShowOverviewList" />
+      </Action>
+      <Action name="ShowOverviewList" actionType="VIEW">
+        <UIDescription>Reporting::OverviewUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="SelectReport_Decision" />
+        </Events>
+      </Action>
+      <Action name="SelectReport_Decision" actionType="DECISION" parameter="Event.reportId">
+        <Case value="CustomerRevenueReport" action="CustomerRevenueReport_CustomerSelection" />
+        <Case value="PromotionStoreCalendarReport" action="PromotionStoreCalendarReport_CustomerSelection" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <Action name="CustomerRevenueReport_CustomerSelection" actionType="PROCESS" process="Customer::LookupProcess">
+        <TransitionTo action="CustomerRevenueReport_CustomerSelection_Result_Decision" />
+        <ReturnValues>
+          <Return name="ProcessContext::CustomerRevenueReport_CustomerPKey" value="customerPKey" />
+          <Return name="ProcessContext::CustomerRevenueReport_CustomerName" value="customerName" />
+        </ReturnValues>
+      </Action>
+      <Action name="CustomerRevenueReport_CustomerSelection_Result_Decision" actionType="DECISION" parameter="ProcessContext::CustomerRevenueReport_CustomerPKey">
+        <CaseElse action="CustomerRevenueReport_ShowReport" />
+        <CaseEmpty action="GetOverviewList" />
+      </Action>
+      <Action name="CustomerRevenueReport_ShowReport" actionType="PROCESS" process="Reporting::CustomerRevenueProcess">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::CustomerRevenueReport_CustomerPKey" />
+          <Input name="customerName" value="ProcessContext::CustomerRevenueReport_CustomerName" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <Action name="PromotionStoreCalendarReport_CustomerSelection" actionType="PROCESS" process="Customer::LookupProcess">
+        <TransitionTo action="CheckIfDataIsAvailable" />
+        <ReturnValues>
+          <Return name="ProcessContext::PromotionStoreCalendarReport_CustomerPKey" value="customerPKey" />
+        </ReturnValues>
+      </Action>
+      <Action name="CheckIfDataIsAvailable" actionType="LOGIC" call="ProcessContext::SfReplicationCallbacks.isPromotionOnDemandDataAvailable">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::PromotionStoreCalendarReport_CustomerPKey" />
+        </Parameters>
+        <Return name="ProcessContext::PromotionDataAvailable" />
+        <TransitionTo action="CallDataCheck_Decision" />
+      </Action>
+      <Action name="CallDataCheck_Decision" actionType="DECISION" parameter="ProcessContext::PromotionDataAvailable">
+        <Case value="1" action="LoadPromotionFinal" />
+        <Case value="2" action="LoadingPromotionData" />
+        <CaseElse action="AskForDataRequest" />
+      </Action>
+      <Action name="AskForDataRequest" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmLoadPromotionOnDemandData" />
+        <Cases>
+          <Case value="Yes" action="RequestPromotionData" />
+          <Case value="No" action="PromotionStoreCalendarReport_CustomerSelection" />
+        </Cases>
+      </Action>
+      <Action name="LoadingPromotionData" actionType="CONFIRM" confirmType="Ok">
+        <Message messageId="CasPromotionDataLoadingInProgress" />
+        <Cases>
+          <Case value="Ok" action="PromotionStoreCalendarReport_CustomerSelection" />
+        </Cases>
+      </Action>
+      <Action name="RequestPromotionData" actionType="LOGIC" call="ProcessContext::SfReplicationCallbacks.requestPromotionOnDemandDataAsync">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::PromotionStoreCalendarReport_CustomerPKey" />
+        </Parameters>
+        <TransitionTo action="PromotionStoreCalendarReport_CustomerSelection" />
+      </Action>
+      <Action name="LoadPromotionFinal" actionType="DECISION" parameter="ProcessContext::PromotionStoreCalendarReport_CustomerPKey">
+        <CaseElse action="PromotionStoreCalendarReport_ShowReport" />
+        <CaseEmpty action="GetOverviewList" />
+      </Action>
+      <Action name="PromotionStoreCalendarReport_ShowReport" actionType="PROCESS" process="Reporting::PromotionStoreCalendarProcess">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::PromotionStoreCalendarReport_CustomerPKey" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

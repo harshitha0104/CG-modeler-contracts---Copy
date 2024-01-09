@@ -1,0 +1,8 @@
+<ListItem name="LiFastOrderProducts">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="productNumber" type="DomString" />
+    <SimpleProperty name="productDescription" type="DomText" />
+    <SimpleProperty name="quantity" type="DomDecimal" />
+  </SimpleProperties>
+</ListItem>

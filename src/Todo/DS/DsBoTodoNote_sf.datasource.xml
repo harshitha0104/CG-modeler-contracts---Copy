@@ -1,0 +1,25 @@
+<DataSource name="DsBoTodoNote" backendSystem="sf" businessObjectClass="BoTodoNote" external="false" editableEntity="Task" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Task" column="Id" />
+    <Attribute name="text" table="Task" column="Description" />
+    <DerivedAttribute name="svcTodoPKey" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="Task" alias="" idAttribute="Id" />
+    <Entity name="RecordType" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Task.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+          <Condition leftSideValue="RecordType.DeveloperName" comparator="eq" rightSideType="Literal" rightSideValue="'User_Task'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+      Task.Id = #svcTodoPKey#
+   ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="svcTodoPKey" type="TEXT"/>
+  </Parameters>
+</DataSource>

@@ -1,0 +1,61 @@
+<ListObject name="LoToDoOverview" generateLoadMethod="false" filter="InDatabase" paging="true"  schemaVersion="1.1">
+  <DataSource name="DsLoToDoOverview" />
+  <Item objectClass="LiToDoOverview" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="setOnlyOpenFilter" />
+    <Method name="addItem" />
+    <Method name="fillListItemFromObjectMD" />
+    <Method name="setOnlyOpenFilterAfterComplete" />
+    <Method name="getTasksForCard" />
+    <Method name="getInfoForTasksCard" />
+    <Method name="setFirstItemAsCurrent" />
+    <Method name="updateToDoStatus" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoToDoOverview">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="ToDo_Description" property="text" type="Text" editable="true" />
+        <AdvancedSearchAttribute label="Todo_TodoType" property="svcMetaPKey" type="Lookup" lookupProcess="ServiceRequest::MetaLookupForASOProcess" lookupProcessReturnValue="svcRequestMetaPKey" lookupObject="LuSvcRequestMeta" lookupObjectDisplayValue="text">
+          <Parameters>
+            <Input name="metaType" value="Issue" type="Literal" />
+            <Input name="issueType" value="ToDo" type="Literal" />
+          </Parameters>
+        </AdvancedSearchAttribute>
+        <AdvancedSearchAttribute label="ToDo_Priority" property="priority" type="Selection" toggleId="ABC" editable="true" />
+        <AdvancedSearchAttribute label="ToDo_Classification" property="classification" toggleId="TaskType" type="Selection" editable="true" />
+        <AdvancedSearchAttribute label="ToDo_InitiationDate" property="initiationDate" type="Date" />
+        <AdvancedSearchAttribute label="ToDo_DueDate" property="dueDate" type="Date" />
+        <AdvancedSearchAttribute label="ToDo_Status" property="issuePhase" type="Selection" toggleId="SvcIssuePhase" editable="true" />
+        <AdvancedSearchAttribute label="ToDo_Initiator" property="initiatorPKey" lookupProcess="User::UserAndSupervisorLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <!-- Team lookup process delivery only the current user if the user is no supervisor -> Fits to UC for Owner and Responsible -->
+        <AdvancedSearchAttribute label="ToDo_Owner" property="ownerPKey" lookupProcess="User::TeamLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="ToDo_Responsible" property="responsiblePKey" defaultValue="#UserPKey#" lookupProcess="User::TeamLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+    <AdvancedSearchObject name="AsoToDoOverviewForSupervisor">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="ToDo_Description" property="text" type="Text" editable="true" />
+        <AdvancedSearchAttribute label="Todo_TodoType" property="svcMetaPKey" type="Lookup" lookupProcess="ServiceRequest::MetaLookupForASOProcess" lookupProcessReturnValue="svcRequestMetaPKey" lookupObject="LuSvcRequestMeta" lookupObjectDisplayValue="text">
+          <Parameters>
+            <Input name="metaType" value="Issue" type="Literal" />
+            <Input name="issueType" value="ToDo" type="Literal" />
+          </Parameters>
+        </AdvancedSearchAttribute>
+        <AdvancedSearchAttribute label="ToDo_Priority" property="priority" type="Selection" toggleId="ABC" editable="true" />
+        <AdvancedSearchAttribute label="ToDo_Classification" property="classification" toggleId="TaskType" type="Selection" editable="true" />
+        <AdvancedSearchAttribute label="ToDo_InitiationDate" property="initiationDate" type="Date" />
+        <AdvancedSearchAttribute label="ToDo_DueDate" property="dueDate" type="Date" />
+        <AdvancedSearchAttribute label="ToDo_Status" property="issuePhase" type="Selection" toggleId="SvcIssuePhase" editable="true" />
+        <AdvancedSearchAttribute label="ToDo_Initiator" property="initiatorPKey" lookupProcess="User::TeamLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="ToDo_Owner" property="ownerPKey" lookupProcess="User::TeamLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="ToDo_Responsible" property="responsiblePKey" defaultValue="#UserPKey#" lookupProcess="User::TeamLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

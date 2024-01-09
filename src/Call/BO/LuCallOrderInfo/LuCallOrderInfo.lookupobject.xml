@@ -1,0 +1,14 @@
+<LookupObject name="LuCallOrderInfo">
+  <DataSource name="DsLuCallOrderInfo" />
+  <SimpleProperties>
+    <SimpleProperty name="orders" type="DomString" dataSourceProperty="orders" />
+    <SimpleProperty name="items" type="DomString" dataSourceProperty="items" />
+    <SimpleProperty name="totalValue" type="DomString" dataSourceProperty="totalValue" />
+    <SimpleProperty name="openOrders" type="DomString" dataSourceProperty="openOrders" />
+    <SimpleProperty name="openDeliveries" type="DomString" dataSourceProperty="openDeliveries" />
+    <SimpleProperty name="currency" type="DomCurrency" dataSourceProperty="currency" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="setEARights" />
+  </Methods>
+</LookupObject>

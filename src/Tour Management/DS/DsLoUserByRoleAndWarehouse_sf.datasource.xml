@@ -1,0 +1,17 @@
+<Datasource name="DsLoUserByRoleAndWarehouse" backendSystem="sf" objectClass="LoUserByRoleAndWarehouse" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <!-- Datasource can be empty because CGCloud Backend does not support Co-Driver/SupportUser -->
+    <Load><![CDATA[
+      return undefined;
+            ]]></Load>
+    <Update><![CDATA[
+      return undefined;
+            ]]></Update>
+    <Insert><![CDATA[
+      return undefined;   
+            ]]></Insert>
+    <Delete><![CDATA[
+      return undefined;  
+            ]]></Delete>
+  </Database>
+</Datasource>

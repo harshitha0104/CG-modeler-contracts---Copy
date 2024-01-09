@@ -1,0 +1,28 @@
+<DataSource name="DsLuUsrDRUniquePerDay" backendSystem="sf" businessObjectClass="LuUsrDRUniquePerDay" external="true" editableEntity="User_Document__c" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+      
+      var dateFrom = "";
+      var usrDocMetaPKey = "";
+      if(Utils.isDefined(jsonQuery.dateFrom)){
+		dateFrom = Utils.convertForDBParam(jsonQuery.dateFrom, "DomDate");
+	  }
+	  if(Utils.isDefined(jsonQuery.usrDocMetaPKey)){
+		usrDocMetaPKey = Utils.convertForDBParam(jsonQuery.usrDocMetaPKey, "DomPKey");
+	  }
+
+	  var sqlParams = {dateFrom,usrDocMetaPKey};
+      var sqlStmt = "SELECT User_Document__c.Id as pKey,";
+  	  	  sqlStmt += " Count(*) as dailyReportCount";
+      	  sqlStmt += " FROM";
+      	  sqlStmt += " User_Document__c";
+      	  sqlStmt += " WHERE 1 = 1 ";
+		  sqlStmt += " AND #compareAsDate('User_Document__c.Creation_Date__c', 'Date','<=' ,#dateFrom#, 'Date')# ";
+ 	  	  sqlStmt += " AND User_Document__c.User_Document_Template__c = #usrDocMetaPKey#";
+  	  	  sqlStmt += " AND User_Document__c.OwnerId = '#UserPKey#'";
+  	  	  sqlStmt += " AND User_Document__c.IsDeleted <> '1'";
+      return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+      
+		]]></Load>
+  </Database>
+</DataSource>

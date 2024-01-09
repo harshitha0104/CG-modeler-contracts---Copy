@@ -1,0 +1,52 @@
+<DataSource name="DsLoMeTruckLoadItems" businessObjectClass="LoMeTruckLoadItems" external="true" editableEntity="IvcMain" schemaVersion="1.1">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+
+
+
+
+  var sqlStmt = " SELECT IvcMain.PrdMainPKey as prdMainPKey";
+ sqlStmt += ", '1' as currentInventory";
+ sqlStmt += ",SUM(CASE WHEN IvcTA.Amount IS NULL THEN 0.0 ELSE IvcTA.Amount END) AS balance ";
+ sqlStmt += " From IvcMain";
+ sqlStmt += " LEFT OUTER JOIN IvcTA ON";
+ sqlStmt += " IvcMain.PKey =  IvcTA.IvcMainPKey";
+ sqlStmt += " AND IvcTA.Accounted = '0'";
+ sqlStmt += " AND IvcTA.SalesOrg = '#SALESORG#'";
+ sqlStmt += " LEFT OUTER JOIN IvcTAMeta ON";
+ sqlStmt += " IvcTA.IvcTAMetaPKey = IvcTAMeta.PKey";
+ sqlStmt += " AND IvcTAMeta.SalesOrg = '#SALESORG#'";
+sqlStmt += "  WHERE (1=1) AND IvcMain.Phase = 'Active'";
+sqlStmt += " AND IvcMain.Invalid = '0'";
+sqlStmt += " AND IvcMain.ValidFrom <= '#Today#'"; 
+sqlStmt += " AND IvcMain.ValidThru >= '#Today#'";
+sqlStmt += " AND IvcMain.IvcMetaPKey IN  (#ivcMetaPKeys#)  ";
+sqlStmt += " AND IvcMain.UsrMainPKey IN (#usrMainPKeys#) ";
+sqlStmt += " AND IvcMain.BpaMainPKey IN (#bpaMainPKeys#) ";
+sqlStmt += " AND IvcMain.TmgTourPKey IN (#tmgTourPKeys#) ";
+sqlStmt += " AND IvcMain.EtpVehiclePKey IN (#etpVehiclePKeys#) ";
+sqlStmt += " AND (IvcTAMeta.TaControl <> 'Neutral' OR IvcTAMeta.TaType = 'Balance') ";
+sqlStmt += " AND IvcMain.SalesOrg = '#SALESORG#' ";
+sqlStmt += " GROUP BY IvcMain.PKey,IvcMain.PrdMainPKey ";
+sqlStmt += " HAVING balance > 0.0";
+sqlStmt += " ORDER BY IvcMain.PrdMainPKey ASC ";
+
+return Utils.replaceSqlParameters(sqlStmt,jsonQuery);
+
+]]></Load>
+    <Update><![CDATA[ 
+// Intended to be empty     
+ return undefined;     
+]]></Update>
+    <Insert><![CDATA[     
+// Intended to be empty     
+return undefined;     
+
+]]></Insert>
+    <Delete><![CDATA[      
+// Intended to be empty     
+return undefined;     
+]]></Delete>
+  </Database>
+</DataSource>

@@ -1,0 +1,65 @@
+<Process name="Cash::LoadProcess" defaultAction="BoLoadDecision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CashBo" type="BoCash" />
+        <Declaration name="OrderBo" type="BoOrder" />
+        <Declaration name="SubType" type="LuSdoSubTypeByMainPKey" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadLu" actionType="LOAD" type="LuSdoSubTypeByMainPKey">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::SubType" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="BoLoadDecision" actionType="DECISION" parameter="ProcessContext::SubType.sdoSubType">
+        <Case value="Delivery" action="LoadDelivery" />
+        <CaseElse action="LoadBo" />
+      </Action>
+      <Action name="LoadBo" actionType="LOAD" type="BoCash">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::CashBo" />
+        <TransitionTo action="NavigationDecision" />
+      </Action>
+      <Action name="LoadDelivery" actionType="LOAD" type="BoOrder">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::OrderBo" />
+        <TransitionTo action="StartNavigation_DeliveryDocument" />
+      </Action>
+      <Action name="NavigationDecision" actionType="DECISION" parameter="ProcessContext::SubType.sdoSubType">
+        <Case value="CashCheckIn" action="StartNavigation_CheckIn" />
+        <Case value="CashCheckOut" action="StartNavigation_CheckOut" />
+        <Case value="Expenses" action="StartNavigation_CheckOut" />
+        <CaseElse action="StartNavigation_CheckIn" />
+      </Action>
+      <Action name="StartNavigation_CheckOut" actionType="PROCESS" process="Cash::CheckOutNavigationProcess">
+        <Parameters>
+          <Input name="MainBo" value="ProcessContext::CashBo" />
+        </Parameters>
+      </Action>
+      <Action name="StartNavigation_CheckIn" actionType="PROCESS" process="Cash::CheckInNavigationProcess">
+        <Parameters>
+          <Input name="MainBo" value="ProcessContext::CashBo" />
+        </Parameters>
+      </Action>
+      <Action name="StartNavigation_DeliveryDocument" actionType="PROCESS" process="Order::PreDeliveryNavigationProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::OrderBo" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

@@ -1,0 +1,23 @@
+<DataSource name="DsLuSubstitutedUser" businessObjectClass="LuSubstitutedUser" external="false" readOnly="true" editableEntity="UsrUser" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="UsrUser" column="PKey" />
+    <DerivedAttribute name="name" value="UsrUser.LastName || ', ' || UsrUser.FirstName" />
+  </Attributes>
+  <Entities>
+    <Entity name="UsrUser" alias="" idAttribute="PKey" />
+    <Entity name="SubMain" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="UsrUser.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="SubMain.UsrMainPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        SubMain.PKey = #pKey#
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

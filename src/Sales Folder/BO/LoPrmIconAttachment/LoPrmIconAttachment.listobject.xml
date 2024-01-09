@@ -1,0 +1,12 @@
+<ListObject name="LoPrmIconAttachment" generateLoadMethod="false" schemaVersion="1.1">
+  <DataSource name="DsLoPromotionIconAttachment" />
+  <Item objectClass="LiPrmIconAttachment" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+  </Methods>
+</ListObject>

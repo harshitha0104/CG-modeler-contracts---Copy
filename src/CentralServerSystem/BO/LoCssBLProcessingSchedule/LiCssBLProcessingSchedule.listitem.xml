@@ -1,0 +1,9 @@
+<ListItem name="LiCssBLProcessingSchedule" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="registerTime" type="DomDateTime" storable="true" dataSourceProperty="registerTime" />
+    <SimpleProperty name="workState" type="DomCssWorkStateReadable" storable="true" dataSourceProperty="workState" />
+    <SimpleProperty name="objectPKey" type="DomPKey" storable="true" dataSourceProperty="objectPKey" />
+    <SimpleProperty name="workerFunction" type="DomCssBLProcessingFunction" storable="true" dataSourceProperty="workerFunction" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,7 @@
+<ListObject name="LoItemFilter" generateLoadMethod="true">
+  <DataSource name="DsLoItemFilter" />
+  <Item objectClass="LiItemFilter" />
+  <Methods>
+    <Method name="afterLoadAsync" />
+  </Methods>
+</ListObject>

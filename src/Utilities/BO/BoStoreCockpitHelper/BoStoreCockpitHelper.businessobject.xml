@@ -1,0 +1,48 @@
+<BusinessObject name="BoStoreCockpitHelper" schemaVersion="1.1">
+  <DataSource name="DsBoStoreCockpitHelper" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="collapseState_CardStoreWelcome" type="DomBool" />
+    <SimpleProperty name="collapseState_CardSellIns" type="DomBool" />
+    <SimpleProperty name="collapseState_CardCustomerTasks" type="DomBool" />
+    <SimpleProperty name="collapseState_CardOrderHistory" type="DomBool" />
+    <SimpleProperty name="collapseState_CardSurveyReporting" type="DomBool" />
+    <SimpleProperty name="collapseState_CardMobileLinks" type="DomBool" />
+    <SimpleProperty name="collapseState_CardQuickAccess" type="DomBool" />
+    <SimpleProperty name="collapseState_CardPicture" type="DomBool" />
+    <SimpleProperty name="collapseState_CardCallNotes" type="DomBool" />
+    <SimpleProperty name="collapseState_CardActivityPerformance" type="DomBool" />
+    <SimpleProperty name="collapseState_CardAccountReceivables" type="DomBool" />
+    <SimpleProperty name="collapseState_CardFollowUpVisits" type="DomBool" />
+    <SimpleProperty name="collapseState_CardSellIns" type="DomBool" />
+    <SimpleProperty name="collapseState_CardVisitDetails" type="DomBool" />
+    <SimpleProperty name="collapseState_VisitTasks" type="DomBool" />
+    <SimpleProperty name="numberOfListItems" type="DomInteger" />
+    <SimpleProperty name="mobilityUserGuidance" type="DomString" />
+    <SimpleProperty name="currentSurveys" type="DomBool" />
+    <SimpleProperty name="isLatestPictureAvailable" type="DomBool" />
+    <SimpleProperty name="cardVisitTasks_emptyMainMessage" type="DomText" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="isCardVisible" />
+    <Method name="isCardMaximizable" />
+    <Method name="isCardCollapsible" />
+    <Method name="getDisplayedSubcomponentName" />
+    <Method name="getSurveyExceptions" />
+    <Method name="setLatestPictureAvailability" />
+    <Method name="setEmptyTaskMessage" />
+  </Methods>
+</BusinessObject>

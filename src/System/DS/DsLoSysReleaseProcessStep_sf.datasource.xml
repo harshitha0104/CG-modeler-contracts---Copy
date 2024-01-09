@@ -1,0 +1,23 @@
+<DataSource name="DsLoSysReleaseProcessStep" backendSystem="sf" businessObjectClass="LoSysReleaseProcessStep" external="false" editableEntity="Signature_Flow_Step__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Signature_Flow_Step__c" column="Id" />
+    <Attribute name="authentication" table="Signature_Flow_Step__c" column="Authentication__c" />
+    <Attribute name="signatureRequired" table="Signature_Flow_Step__c" column="Signature_Required__c" />
+    <Attribute name="sort" table="Signature_Flow_Step__c" column="Sort__c" />
+    <Attribute name="usrRoleId" table="Signature_Flow_Step__c" column="Function__c" />
+    <Attribute name="sysReleaseProcessPKey" table="Signature_Flow_Step__c" column="Signature_Template__c" />
+    <Attribute name="text" table="Signature_Flow_Step__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Signature_Flow_Step__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        Signature_Flow_Step__c.Signature_Template__c = #sysReleaseProcessPKey#
+        ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Signature_Flow_Step__c" attribute="Sort__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="sysReleaseProcessPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

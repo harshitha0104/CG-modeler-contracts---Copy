@@ -1,0 +1,28 @@
+<BusinessObject name="BoRewardProductValidation" schemaVersion="1.1">
+  <DataSource name="DsBoRewardProductValidation" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="hurdleEvaluationHelper" type="Object" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects>
+    <ListObject name="loRewardProducts" objectClass="LoRewardProducts" dataSourceProperty="empty" listProperty="empty" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+  </Methods>
+  <Validations>
+    <Validation name="validateQuantitiesOfFreeItems" />
+    <Validation name="validateTotalQuantityOfFreeItems" />
+  </Validations>
+</BusinessObject>

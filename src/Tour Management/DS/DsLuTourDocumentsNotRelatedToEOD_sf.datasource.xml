@@ -1,0 +1,51 @@
+<DataSource name="DsLuTourDocumentsNotRelatedToEOD" backendSystem="sf" businessObjectClass="LuTourDocumentsNotRelatedToEOD" external="true" readOnly="true" editableEntity="Order__c" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[     
+
+      var sqlParams = {};
+      // Count For Open Inventory Documents
+      var sqlStmt_OpenInventoryDocsCount = "SELECT Order__c.Id, COUNT(*) As docsCount FROM Order__c ";
+          sqlStmt_OpenInventoryDocsCount += "INNER JOIN Order_Template__c ON ";
+          sqlStmt_OpenInventoryDocsCount += "Order__c.Order_Template__c = Order_Template__c.Id ";
+          sqlStmt_OpenInventoryDocsCount += "INNER JOIN RecordType ON ";
+          sqlStmt_OpenInventoryDocsCount += "RecordType.Id = Order_Template__c.RecordTypeId ";
+		  sqlStmt_OpenInventoryDocsCount += "AND RecordType.SobjectType = 'Order_Template__c' ";
+          sqlStmt_OpenInventoryDocsCount += "WHERE (1=1) AND Order__c.Phase__c = 'Initial' ";
+          sqlStmt_OpenInventoryDocsCount += "AND RecordType.DeveloperName = 'Truck_Load' ";
+    // Count For Fake Inward Documents In Released Phase
+    var sqlStmt_fakeReleasedInventoryDocsCount = "SELECT Order__c.Id, COUNT(*) AS docsCount FROM Order__c ";
+          sqlStmt_fakeReleasedInventoryDocsCount += "INNER JOIN Order_Template__c ON ";
+          sqlStmt_fakeReleasedInventoryDocsCount += "Order__c.Order_Template__c = Order_Template__c.Id ";
+          sqlStmt_fakeReleasedInventoryDocsCount += "WHERE (1=1) AND Order__c.Phase__c = 'Released' ";
+          sqlStmt_fakeReleasedInventoryDocsCount += "AND Order__c.Document_Type__c = 'TruckIvcTransferOutward' ";
+		   
+    
+      // Count For  Fake Inward Documents In Canceled Phase
+      var sqlStmt_fakeCanceledInventoryDocsCount = "SELECT Order__c.Id, COUNT(*) AS docsCount FROM Order__c ";
+          sqlStmt_fakeCanceledInventoryDocsCount += "INNER JOIN Order_Template__c ON ";
+          sqlStmt_fakeCanceledInventoryDocsCount += "Order__c.Order_Template__c = Order_Template__c.Id ";         
+          sqlStmt_fakeCanceledInventoryDocsCount += "WHERE (1=1) AND Order__c.Phase__c = 'Canceled' ";
+          sqlStmt_fakeCanceledInventoryDocsCount += "AND Order__c.Document_Type__c = 'TruckIvcTransferInward' ";
+		  
+    
+    
+      var sqlStmt = "SELECT SUM(docsCount) AS openInventoryDocumentsCount FROM (" + sqlStmt_OpenInventoryDocsCount + " UNION ALL " + sqlStmt_fakeReleasedInventoryDocsCount + " UNION ALL " + sqlStmt_fakeCanceledInventoryDocsCount + ")";
+
+      return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+      ]]></Load>
+    <Update><![CDATA[ 
+        // Intended to be empty     
+        return undefined;     
+      ]]></Update>
+    <Insert><![CDATA[     
+        // Intended to be empty     
+        return undefined;     
+
+      ]]></Insert>
+    <Delete><![CDATA[      
+        // Intended to be empty     
+        return undefined;     
+      ]]></Delete>
+  </Database>
+</DataSource>

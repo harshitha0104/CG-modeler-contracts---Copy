@@ -1,0 +1,18 @@
+<DataSource name="DsLoCallRelatedDocuments" backendSystem="sf" businessObjectClass="LoCallRelatedDocuments" external="false" editableEntity="Order__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Order__c" column="Id" />
+    <Attribute name="phase" table="Order__c" column="Phase__c" />
+    <Attribute name="documentType" table="Order__c" column="Document_Type__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        Order__c.Visit__c = #callPKey#
+        AND Order__c.Phase__c = 'Initial'
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="callPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

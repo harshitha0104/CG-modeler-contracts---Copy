@@ -1,0 +1,15 @@
+<LookupObject name="LuProductGroup">
+  <DataSource name="DsLuProductGroup" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="shortText" type="DomText" dataSourceProperty="shortText" />
+    <SimpleProperty name="text1" type="DomText" dataSourceProperty="text1" />
+    <SimpleProperty name="text2" type="DomText" dataSourceProperty="text2" />
+    <SimpleProperty name="productId" type="DomId" dataSourceProperty="id" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

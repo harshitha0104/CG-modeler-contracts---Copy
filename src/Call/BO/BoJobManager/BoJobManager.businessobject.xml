@@ -1,0 +1,87 @@
+<BusinessObject name="BoJobManager" generateLoadMethod="false" >
+  <DataSource name="DsBoJobManager" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="clbMainPKey" type="DomPKey" storable="false" dataSourceProperty="clbMainPKey" />
+    <SimpleProperty name="clbMetaPKey" type="DomPKey" storable="false" dataSourceProperty="clbMetaPKey" />
+    <SimpleProperty name="clbStatus" type="DomVisitStatus" storable="false" dataSourceProperty="clbStatus" />
+    <SimpleProperty name="originalClbStatus" type="DomVisitStatus" storable="false" dataSourceProperty="originalClbStatus" />
+    <SimpleProperty name="bpaMainPKey" type="DomPKey" storable="false" dataSourceProperty="bpaMainPKey" />
+    <SimpleProperty name="referenceDate" type="DomDate" storable="false" dataSourceProperty="referenceDate" />
+    <SimpleProperty name="timeFrom" type="DomTime" storable="false" dataSourceProperty="timeFrom" />
+    <SimpleProperty name="bpaName" type="DomBpaName" storable="false" dataSourceProperty="bpaName" />
+    <SimpleProperty name="currentPosId" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="questionsInitialized" type="DomBool" storable="false" dataSourceProperty="questionsInitialized" />
+    <SimpleProperty name="considerPOSCheck" type="DomBool" storable="false" dataSourceProperty="considerPOSCheck" />
+    <SimpleProperty name="considerTargetValues" type="DomBool" storable="false" dataSourceProperty="considerTargetValues" />
+    <SimpleProperty name="readOnlyBySubstitution" type="DomBool" dataSourceProperty="readOnlyBySubstitution" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="ownerPKey" type="DomPKey" dataSourceProperty="ownerPKey" />
+    <SimpleProperty name="callDateChangedAfterLoad" type="DomBool" dataSourceProperty="callDateChangedAfterLoad" />
+    <SimpleProperty name="loPOSInvalidated" type="DomBool" dataSourceProperty="loPOSInvalidated" />
+    <SimpleProperty name="historicalProductConfig" type="DomClbMetaHistorical" dataSourceProperty="historicalProductConfig" />
+    <SimpleProperty name="dictHistoricalProductsLoaded" type="Object" dataSourceProperty="dictHistoricalProductsLoaded" />
+    <SimpleProperty name="considerModule" type="DomBool" dataSourceProperty="considerModule" />
+    <SimpleProperty name="questionDic" type="Object" />
+  </SimpleProperties>
+  <ListObjects>
+    <ListObject name="loPOS" objectClass="LoPOS" dataSourceProperty="pKey" listProperty="clbMainPKey" loadMode="LoadImmediate" />
+    <ListObject name="loJobDefinitions" objectClass="LoJobDefinitions" dataSourceProperty="clbMainPKey" listProperty="clbMainPKey" loadMode="LoadImmediate" />
+    <ListObject name="loCurrentSurveyProducts" objectClass="LoJobProducts" dataSourceProperty="clbMainPKey" listProperty="clbMainPKey" loadMode="LoadImmediate">
+      <Events>
+        <Event name="listItemChanged" eventHandler="onSurveyChanged" />
+      </Events>
+    </ListObject>
+    <ListObject name="loMagnetizedJobList" objectClass="LoMagnetizedJobList" dataSourceProperty="clbMainPKey" listProperty="clbMainPKey" loadMode="LoadImmediate" />
+    <ListObject name="loQuestions" objectClass="LoQuestions" dataSourceProperty="clbMainPKey" listProperty="clbMainPKey" loadMode="LoadImmediate">
+      <Events>
+        <Event name="listItemChanged" eventHandler="onQuestionChanged" />
+      </Events>
+    </ListObject>
+    <ListObject name="loCurrentSurveys" objectClass="LoSurveys" dataSourceProperty="clbMainPKey" listProperty="clbMainPKey" loadMode="LoadImmediate">
+      <Events>
+        <Event name="listItemChanged" eventHandler="onSurveyChanged" />
+      </Events>
+    </ListObject>
+    <ListObject name="loExistingJobListJobs" objectClass="LoJobListJobs" dataSourceProperty="clbMainPKey" listProperty="clbMainPKey" loadMode="LoadImmediate" />
+    <ListObject name="loSurveyColumns" objectClass="LoSurveyColumns" dataSourceProperty="clbMainPKey" listProperty="clbMainPKey" loadMode="LoadImmediate" />
+    <ListObject name="loHistoricalProducts" objectClass="LoBpaHistSurveyProduct" dataSourceProperty="bpaMainPKey" listProperty="bpaCustomerPKey" loadMode="LoadImmediate" />
+  </ListObjects>
+  <ObjectLookups>
+    <ObjectLookup name="luCustomer" objectClass="LuCustomer" dataSourceProperty="bpaMainPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <Methods>
+    <Method name="addProduct" />
+    <Method name="addQuestion" />
+    <Method name="addSurvey" />
+    <Method name="assimilateSurvey" />
+    <Method name="expandJobProducts" />
+    <Method name="filterQuestions" />
+    <Method name="filterSurveysByPos" />
+    <Method name="filterSurveysByProduct" />
+    <Method name="getJobProducts" />
+    <Method name="getJobProductsExisting" />
+    <Method name="getOutOfStockProducts" />
+    <Method name="getQuestions" />
+    <Method name="getSurveys" />
+    <Method name="getSurveysExisting" />
+    <Method name="loadAndSetPrerequisites" />
+    <Method name="loadAsync" />
+    <Method name="onQuestionChanged" />
+    <Method name="onSurveyChanged" />
+    <Method name="prepareSavePresettingJobs" />
+    <Method name="saveAsync" />
+    <Method name="setCallInfo" />
+    <Method name="setNextProduct" />
+    <Method name="updateHistoricalProductsAsync" />
+    <Method name="filterPromotedProducts" />
+    <Method name="filterProductDiscrepancies" />
+    <Method name="showAllSurveyProducts" />
+    <Method name="determinePosId" />
+    <Method name="filterPOS" />
+    <Method name="updateProductsInitialize" />
+    <Method name="assimilateQuestion" />
+    <Method name="evaluateQuestions" />
+    <Method name="updatePictureCountOnAddDelete" />
+  </Methods>
+</BusinessObject>

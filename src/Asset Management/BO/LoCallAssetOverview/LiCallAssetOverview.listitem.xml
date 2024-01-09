@@ -1,0 +1,44 @@
+<ListItem name="LiCallAssetOverview" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="serialNumber" type="DomId" dataSourceProperty="serialNumber" />
+    <SimpleProperty name="brand" type="DomPKey" dataSourceProperty="brand" />
+    <SimpleProperty name="assetType" type="DomText" dataSourceProperty="assetType" />
+    <SimpleProperty name="validFrom" type="DomDate" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomValidThru" dataSourceProperty="validThru" />
+    <SimpleProperty name="assetName" type="DomText" dataSourceProperty="assetName" />
+    <SimpleProperty name="assetNameShort" type="DomText" dataSourceProperty="assetName" />
+    <SimpleProperty name="assetPKey" type="DomText" dataSourceProperty="assetPKey" />
+    <SimpleProperty name="presence" type="DomAstPresence" dataSourceProperty="presence" />
+    <SimpleProperty name="present" type="DomBool" dataSourceProperty="present" />
+    <SimpleProperty name="surveyAvailable" type="DomText" dataSourceProperty="surveyAvailable" />
+    <SimpleProperty name="astSurveyAstAssetPKey" type="DomPKey" dataSourceProperty="astSurveyAstAssetPKey" />
+    <SimpleProperty name="clbMainPKey" type="DomPKey" dataSourceProperty="astSurveyClbMainPKey" />
+    <SimpleProperty name="creationDate" type="DomDate" dataSourceProperty="astSurveyCreationDate" />
+    <SimpleProperty name="latestSurveyDate" type="DomDate" dataSourceProperty="latestSurveyDate" />
+    <SimpleProperty name="latestSurveyDateBackup" type="DomDate" dataSourceProperty="latestSurveyDateBackup" />
+    <SimpleProperty name="usrUserPKey" type="DomPKey" dataSourceProperty="astSurveyUsrUserPKey" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="astSurveySalesOrg" />
+    <SimpleProperty name="astSurveySerialNumber" type="DomId" dataSourceProperty="astSurveySerialNumber" />
+    <SimpleProperty name="usage" type="DomAstUsage" dataSourceProperty="astSurveyUsage" />
+    <SimpleProperty name="usageHist" type="DomAstUsage" />
+    <SimpleProperty name="location" type="DomAstLocation" dataSourceProperty="astSurveyLocation" />
+    <SimpleProperty name="locationHist" type="DomAstLocation" />
+    <SimpleProperty name="locationRating" type="DomAstLocationRating" dataSourceProperty="astSurveyLocationRating" />
+    <SimpleProperty name="locationRatingHist" type="DomAstLocationRating" />
+    <SimpleProperty name="note" type="DomText" dataSourceProperty="astSurveyNote" />
+    <SimpleProperty name="noteHist" type="DomText" />
+    <SimpleProperty name="condition" type="DomAstCondition" dataSourceProperty="astSurveyCondition" />
+    <SimpleProperty name="conditionHist" type="DomAstCondition" />
+    <SimpleProperty name="method" type="DomAstSurveyMethod" dataSourceProperty="astSurveyMethod" />
+    <SimpleProperty name="bpaCustomerPKey" type="DomPKey" dataSourceProperty="astSurveyCustomer" />
+    <SimpleProperty name="isNewSurvey" type="DomBool" dataSourceProperty="presence" />
+    <SimpleProperty name="posName" type="DomBpaName" storable="false" dataSourceProperty="posName" />
+    <SimpleProperty name="annotation" type="DomText" dataSourceProperty="annotation" />
+    <SimpleProperty name="formattedDate" type="DomText" dataSourceProperty="assetName" />
+    <SimpleProperty name="scanRequired" type="DomBool" dataSourceProperty="scanRequired" />
+    <SimpleProperty name="blindMode" type="DomBool" dataSourceProperty="blindMode" />
+    <SimpleProperty name="hidden" type="DomBool" dataSourceProperty="hidden" />
+    <SimpleProperty name="registeredAsset" type="DomBool" dataSourceProperty="registeredAsset" />
+  </SimpleProperties>
+</ListItem>

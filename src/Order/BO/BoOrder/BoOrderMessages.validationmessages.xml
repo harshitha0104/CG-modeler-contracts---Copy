@@ -1,0 +1,31 @@
+<ValidationMessages name="BoOrderMessages" businessObject="BoOrder" schemaVersion="0.0.0.5">
+  <ValidationMessage name="CasSdoMainTotalValueTooLarge" defaultMessage="The total value #totalValue# of the order is greater than the maximum value #maxValue# of the Order template." comment="Validates if the total value is larger than the value speficied in the template." />
+  <ValidationMessage name="CasSdoMainTotalValueTooSmall" defaultMessage="The total value #totalValue# of the Order is lesser than the minimum value #minValue# of the Order template." comment="Validates if the total value is less than the value speficied in the template." />
+  <ValidationMessage name="CasSdoMainProductItemMetaNotUnique" defaultMessage="The product(s) #summary# has/have been assigned more than once using the same item template." comment="Product with same item template and quantity logistic unit can only exist once." />
+  <ValidationMessage name="CasSdoCommitDateGreaterDeliveryDate" defaultMessage="The Order date must be lesser than or equal to delivery date." comment="DeliveryDate must be greater than CommitDate." />
+  <ValidationMessage name="CasSdoMainDeliveryDateTooLarge" defaultMessage="Please choose a delivery date during the next #days# days." comment="DeliveryDate must be smaller than defined in template." />
+  <ValidationMessage name="CasSdoMainDeliveryDateTooSmall" defaultMessage="Choose a delivery date that is at least #days# workdays in the future." comment="DeliveryDate must be larger than defined in template." />
+  <ValidationMessage name="CasSdoMainDeliveryDateSaturday" defaultMessage="The selected delivery date is a Saturday. Delivery is not allowed on Saturdays." comment="Delivery date is not allowed on Saturdays." />
+  <ValidationMessage name="CasSdoMainDeliveryDateSunday" defaultMessage="The selected delivery date is a Sunday. Delivery is not allowed on Sundays." comment="Delivery date is not allowed on Sundays." />
+  <ValidationMessage name="CasSdoMainNoWorkDay" defaultMessage="The selected delivery date is not a workday." comment="Delivery date is only allowed on workdays." />
+  <ValidationMessage name="CasSdoMainNoBrokerAssignment" defaultMessage="Please assign a wholesaler." comment="Validates if BrokerCustomerPKey is empty." />
+  <ValidationMessage name="CasSdoMandatoryFields" defaultMessage="Please assign a delivery recipient." comment="Workaround simple mandatory fields." />
+  <ValidationMessage name="CasSdoOrderQuantityExceedsQuota" defaultMessage="The quota for product #productName# is overdrawn by #quantity#  #unit#(s). Please reduce the quantity for this product." comment="Validates if quota is overdrawn." />
+  <ValidationMessage name="CasSdoOrderQuantityExceedsQuotaWarning" defaultMessage="The quota for product #productName# is overdrawn by #quantity# #unit#(s)." comment="Validates if quota is overdrawn." />
+  <ValidationMessage name="CasSdoOrderQuantityExceedsUserInventory" defaultMessage="The user inventory for product #productName# is overdrawn by #quantity# #unit#(s). Please reduce the quantity for this product." comment="Validates if userinventory is overdrawn." />
+  <ValidationMessage name="CasSdoOrderQuantityExceedsUserInventoryWarning" defaultMessage="The user inventory for product #productName# is overdrawn by #quantity# #unit#(s)." comment="Validates if userinventory is overdrawn." />
+  <ValidationMessage name="CasSdoOrderQuantityExceedsQuotaSummary" defaultMessage="The quota for some products are overdrawn: #summary#. Please reduce the quantity for the products." comment="Validates if quota is overdrawn." />
+  <ValidationMessage name="CasSdoOrderQuantityExceedsQuotaWarningSummary" defaultMessage="The quota for some products are overdrawn: #summary#." comment="Validates if quota is overdrawn." />
+  <ValidationMessage name="CasSdoOrderQuantityExceedsUserInventorySummary" defaultMessage="The user inventory for some products are overdrawn: #summary#. Please reduce the quantity for the products." comment="Validates if userinventory is overdrawn." />
+  <ValidationMessage name="CasSdoOrderQuantityExceedsUserInventoryWarningSummary" defaultMessage="The user inventory for some products are overdrawn: #summary#." comment="Validates if userinventory is overdrawn." />
+  <ValidationMessage name="CasSdoFillInAllValues" defaultMessage="Please fill in all values." comment="All fields need to be filled with values." />
+  <ValidationMessage name="CasSdoQuantityExceedsMaxQuantity" defaultMessage="The entered quantity #quantity# of #item# exceeds the defined max quantity #maxQuantity#." comment="" />
+  <ValidationMessage name="CasSdoQuantityExceedsMaxQuantitySummary" defaultMessage="Ordered quantity is more than the allowed quantity for the product #summary#." comment="" />
+  <ValidationMessage name="CasCalculationSchemaNotfound" defaultMessage="Calculation Schema could not be determined." comment="Calculation Schema not found" />
+  <ValidationMessage name="CasSdoCpMandatoryConditionMissing" defaultMessage="Calculation failed - No condition found for mandatory calculation step #step# and product #product#." comment="Mandatory condition missing." />
+  <ValidationMessage name="CasSdoNoModReasonEnteredAfterEdit" defaultMessage="The product(s) #summary# has/have beed modified, please provide the reason for the modification." comment="Product is modified without a reason" />
+  <ValidationMessage name="CasSdoDeliveryDateNull" defaultMessage="Please enter the delivery date." comment="Delivery date cannot be empty" />
+  <ValidationMessage name="CasCheckPaymentCollected" defaultMessage="Please confirm payment collected." comment="Payment Collected must be checked" />
+  <ValidationMessage name="CasSdoCheckEmptyPaymentMethod" defaultMessage="For collecting the order payment, a payment method needs to be specified." comment="Payment method cannot be empty" />
+  <ValidationMessage name="CasSdoNoPPPLicense" defaultMessage="You don't have the required permission to use the penny perfect pricing feature. Contact your salesforce administrator." comment="PPP license needed to calculate orders" />
+</ValidationMessages>

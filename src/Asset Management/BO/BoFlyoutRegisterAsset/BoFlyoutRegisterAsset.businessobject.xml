@@ -1,0 +1,32 @@
+<BusinessObject name="BoFlyoutRegisterAsset" schemaVersion="1.1">
+  <DataSource name="DsBoFlyoutRegisterAsset" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="serialNumber" type="DomString" />
+    <SimpleProperty name="scanned" type="DomBool" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+    <Method name="validateScannerMandatory" />
+    <Method name="getEmptySerialnumber" />
+  </Methods>
+  <Validations>
+    <Validation name="validateNotEmpty" />
+    <Validation name="validateLength" />
+  </Validations>
+</BusinessObject>

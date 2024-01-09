@@ -1,0 +1,35 @@
+<DataSource name="DsLoRetailVisitKPIAttachment" backendSystem="sf" editableEntity="SF_File" businessObjectClass="LoRetailVisitKPIAttachment" external="false" distinct="false" readOnly="false" schemaVersion="2.0" linkedEntityAttributeName="parentId">
+  <Attributes>
+    <Attribute name="pKey" table="SF_FileLink" column="Id" />
+    <Attribute name="parentId" table="SF_FileLink" column="ParentId" />
+    <DateTimeAttribute dateName="creationDate" timeName="creationTime" table="SF_File" column="CreatedDate" />
+    <Attribute name="fileName" table="SF_File" column="PathOnClient" />
+    <DerivedAttribute name="fileType" value="replace(SF_File.PathOnClient, rtrim(SF_File.PathOnClient, replace(SF_File.PathOnClient, '.', '')), '')" />
+    <Attribute name="attachmentBlobPKey" table="SF_File" column="Id" />
+    <DerivedAttribute name="attachmentText" value="''" />
+    <Attribute name="attachmentBlob" table="SF_File" column="VersionData" />
+  </Attributes>
+  <Entities>
+    <Entity name="SF_File" alias="" idAttribute="Id" />
+    <Entity name="SF_FileLink" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SF_File.Id" comparator="eq" rightSideType="Attribute" rightSideValue="SF_FileLink.FileId" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        SF_FileLink.ParentId = #parentId# 
+        AND SF_FileLink.IsDeleted = '0'
+      ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="SF_File" attribute="CreatedDate" direction="DESC" />
+  </OrderCriteria>
+  <!-- 
+  Here parent id could be retailVisitId, assessment Task Id.
+ -->
+  <Parameters>
+    <Parameter name="parentId" type="TEXT" />
+  </Parameters>
+</DataSource>

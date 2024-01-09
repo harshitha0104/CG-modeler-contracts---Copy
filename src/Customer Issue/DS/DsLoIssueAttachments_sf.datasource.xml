@@ -1,0 +1,34 @@
+<Datasource name="DsLoIssueAttachments" backendSystem="sf" editableEntity="SF_File" objectClass="LoIssueAttachments" businessObjectClass="LoIssueAttachments" external="false" distinct="false" readOnly="false" schemaVersion="2.0" linkedEntityAttributeName="svcIssuePKey">
+  <Attributes>
+    <Attribute name="attachmentBlobPKey" table="SF_File" column="Id" />
+    <!-- this is handled in the safe async because call is a special case, the object needs to be split into two objects-->
+    <Attribute name="pKey" table="SF_FileLink" column="Id" />
+    <Attribute name="svcIssuePKey" table="SF_FileLink" column="ParentId" />
+    <Attribute name="creationDate" table="SF_File" column="CreatedDate" />
+    <Attribute name="fileName" table="SF_File" column="PathOnClient" />
+    <DerivedAttribute name="fileType" value="replace(PathOnClient, rtrim(PathOnClient, replace(PathOnClient, '.', '')), '')" />
+    <DerivedAttribute name="attachmentTextPKey" value="SF_FileLink.Id" />
+    <Attribute name="attachmentText" table="SF_File" column="Description" />
+    <Attribute name="attachmentBlob" table="SF_File" column="VersionData" />
+  </Attributes>
+  <Entities>
+    <Entity name="SF_File" idAttribute="Id" />
+    <Entity name="SF_FileLink">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SF_File.Id" comparator="eq" rightSideType="Attribute" rightSideValue="SF_FileLink.FileId" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+		SF_FileLink.ParentId= #svcIssuePKey#
+		]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="SF_File" attribute="CreatedDate" direction="DESC" />
+    <OrderCriterion entity="SF_File" attribute="PathOnClient" direction="DESC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="svcIssuePKey" type="TEXT" />
+  </Parameters>
+</Datasource>

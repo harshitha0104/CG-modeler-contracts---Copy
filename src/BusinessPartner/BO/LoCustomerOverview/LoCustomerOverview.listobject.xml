@@ -1,0 +1,61 @@
+<ListObject name="LoCustomerOverview" generateLoadMethod="false" filter="InDatabase" paging="true" >
+  <DataSource name="DsLoCustomerOverview" />
+  <Item objectClass="LiCustomerOverview" />
+  <Methods>
+    <Method name="saveAsync" />
+    <Method name="loadAsync" />
+    <Method name="addItem" />
+    <Method name="removeBlankItem" />
+    <Method name="sortCustomersByDistance" />
+    <Method name="calculateDistance" />
+    <Method name="displayWarning" />
+    <Method name="setCustomerByPKey" />
+    <Method name="setFirstItemAsCurrent" />
+    <Method name="getButtonEditability" />
+    <Method name="getButtonVisibility" />
+    <Method name="deleteAdditionalWaypoints" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoCustomerOverview">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="Customer_Id" property="customerId" type="Text" />
+        <AdvancedSearchAttribute label="Customer_Name" property="name" type="Text" />
+        <AdvancedSearchAttribute label="Customer_Street" property="street" type="Text" />
+        <AdvancedSearchAttribute label="Customer_ZipCode" property="zipCode" type="Text" />
+        <AdvancedSearchAttribute label="Customer_City" property="city" type="Text" />
+        <AdvancedSearchAttribute label="Customer_State" property="countryState" type="Text" />
+        <AdvancedSearchAttribute label="Customer_Prio" property="prio" type="Selection" toggleId="ABC" editable="true" />
+        <AdvancedSearchAttribute label="Customer_ClassOfTrade" property="classOfTrade" type="Selection" toggleId="BpaClassOfTrade" editable="true" />
+        <AdvancedSearchAttribute label="Customer_Substitution" property="substituted" type="Boolean" />
+        <AdvancedSearchAttribute label="Customer_TradeOrg" property="tradeOrgPKey" lookupProcess="Customer::CustomerTradeOrgLookupProcess" lookupProcessReturnValue="pKey" lookupObject="LuCustomerTradeOrgAdvSearch" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="Customer_Overdue" property="overdue" type="Boolean" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+    <AdvancedSearchObject name="AsoOverdueCustomerOverview">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="Customer_Id" property="customerId" type="Text" />
+        <AdvancedSearchAttribute label="Customer_Name" property="name" type="Text" />
+        <AdvancedSearchAttribute label="Customer_Street" property="street" type="Text" />
+        <AdvancedSearchAttribute label="Customer_ZipCode" property="zipCode" type="Text" />
+        <AdvancedSearchAttribute label="Customer_City" property="city" type="Text" />
+        <AdvancedSearchAttribute label="Customer_State" property="countryState" type="Text" />
+        <AdvancedSearchAttribute label="Customer_Prio" property="prio" type="Selection" toggleId="ABC" editable="true" />
+        <AdvancedSearchAttribute label="Customer_ClassOfTrade" property="classOfTrade" type="Selection" toggleId="BpaClassOfTrade" editable="true" />
+        <AdvancedSearchAttribute label="Customer_Substitution" property="substituted" type="Boolean" />
+        <AdvancedSearchAttribute label="Customer_TradeOrg" property="tradeOrgPKey" lookupProcess="Customer::CustomerTradeOrgLookupProcess" lookupProcessReturnValue="pKey" lookupObject="LuCustomerTradeOrgAdvSearch" lookupObjectDisplayValue="name" type="Lookup" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+    <AdvancedSearchObject name="AsoFindCustomers">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="Customer_Name" property="name" type="Text" />
+        <AdvancedSearchAttribute label="Customer_Prio" property="prio" type="Selection" toggleId="ABC" editable="true" />
+        <AdvancedSearchAttribute label="Customer_Distance" property="Distance_1" latitudeProperty="latitude" longitudeProperty="longitude" stepSize="2" appContextDistanceUnitKey="ApplicationContext::User.distanceUnit" editable="true" type="Distance" />
+        <AdvancedSearchAttribute label="Customer_Overdue" property="overdue" type="Boolean" />
+        <AdvancedSearchAttribute label="Customer_DistributionIssue" property="distributionIssue" type="Boolean" />
+        <AdvancedSearchAttribute label="Customer_OutOfStockIssue" property="outOfStockIssue" type="Boolean" />
+        <AdvancedSearchAttribute label="Customer_Activities" property="hasActivity" type="Boolean" />
+        <AdvancedSearchAttribute label="Customer_Promotions" property="hasPromotion" type="Boolean" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

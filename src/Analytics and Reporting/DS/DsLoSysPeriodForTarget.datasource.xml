@@ -1,0 +1,54 @@
+<DataSource name="DsLoSysPeriodForTarget" backendSystem="cas" businessObjectClass="LoSysPeriodsForTarget" external="false" editableEntity="EtpOrgTargetSetting" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="sysPeriodPKey" table="EtpOrgTargetSetting" column="SysPeriodPKey" />
+    <Attribute name="referencePKey" table="EtpOrgTargetSetting" column="ReferencePKey" />
+    <Attribute name="periodText" table="SysSystemText" column="Text" />
+    <Attribute name="validFrom" table="SysPeriod" column="ValidFrom" />
+    <Attribute name="validThru" table="SysPeriod" column="ValidThru" />
+    <Attribute name="plannedTarget" table="EtpOrgTargetSetting" column="PlannedTarget" />
+  </Attributes>
+  <Entities>
+    <Entity name="EtpOrgTargetSetting" alias="" idAttribute="PKey" />
+    <Entity name="EtpSalesOrgKPI" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="EtpOrgTargetSetting.EtpSalesOrgKPIPKey" comparator="eq" rightSideType="Attribute" rightSideValue="EtpSalesOrgKPI.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="SysPeriod" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="EtpOrgTargetSetting.SysPeriodPKey" comparator="eq" rightSideType="Attribute" rightSideValue="SysPeriod.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="SysSystemText" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SysPeriod.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="SysSystemText.ReferencePKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="TmgRoute" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="EtpOrgTargetSetting.ReferencePKey" comparator="eq" rightSideType="Attribute" rightSideValue="TmgRoute.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+    TmgRoute.DefaultUsrPKey = '#UserPKey#'
+    AND SysPeriod.ValidFrom <=  '#Today#'
+    AND EtpSalesOrgKPI.ValidFrom <= '#Today#' AND EtpSalesOrgKPI.ValidThru >= '#Today#'
+    AND EtpSalesOrgKPI.KPIValueType = #kpiValueType# AND EtpSalesOrgKPI.StructureType = #structureType#
+    ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="SysPeriod" attribute="ValidFrom" direction="DESC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="kpiValueType" type="TEXT" />
+    <Parameter name="structureType" type="TEXT" />
+  </Parameters>
+</DataSource>

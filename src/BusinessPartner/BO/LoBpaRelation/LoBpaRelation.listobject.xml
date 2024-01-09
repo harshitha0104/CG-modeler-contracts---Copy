@@ -1,0 +1,8 @@
+<ListObject name="LoBpaRelation" generateLoadMethod="false" >
+  <DataSource name="DsLoBpaRelation" />
+  <Item objectClass="LiBpaRelation" />
+  <Methods>
+    <Method name="saveAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</ListObject>

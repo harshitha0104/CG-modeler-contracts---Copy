@@ -1,0 +1,104 @@
+<Process name="Call::CreateNewCallProcess" defaultAction="CheckIfCallCreationFailed" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CallBO" type="BoCall" />
+        <Declaration name="isDataAvailable" type="DomBool" />
+        <Declaration name="LocationsList" type="LoLocations" />
+      </Declarations>
+      <Parameters>
+        <Input name="CallMetaPKey" type="String" />
+        <Input name="CustomerPKey" type="String" />
+        <Input name="DateFrom" type="String" />
+        <Input name="TimeFrom" type="String" />
+        <Input name="AllDay" type="String" />
+        <Input name="SubstitutedUsrPKey" type="DomPKey" />
+        <Input name="responsiblePKey" type="DomPKey" />
+        <Input name="isManagedCustomer" type="DomBool" />
+        <Input name="isSubstituted" type="DomBool" />
+        <Input name="Mode" type="String" />
+        <Input name="fromCockpitUI" type="String" />
+        <Input name="BoSfReplicationCallbacks" type="BoSfReplicationCallbacks" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="loadLocations" actionType="LOAD" type="LoLocations">
+        <Return name="ProcessContext::LocationsList" />
+      </Action>
+      <Action name="CreateCallBO" actionType="CREATE" type="BoCall">
+        <Parameters>
+          <Input name="bpaMainPKey" value="ProcessContext::CustomerPKey" />
+          <Input name="clbMetaPKey" value="ProcessContext::CallMetaPKey" />
+          <Input name="dateFrom" value="ProcessContext::DateFrom" />
+          <Input name="timeFrom" value="ProcessContext::TimeFrom" />
+          <Input name="allDay" value="ProcessContext::AllDay" />
+          <Input name="substitutedUsrPKey" value="ProcessContext::substitutedUsrPKey" />
+          <Input name="responsiblePKey" value="ProcessContext::responsiblePKey" />
+          <Input name="isManagedCustomer" value="ProcessContext::IsManagedCustomer" />
+          <Input name="isSubstituted" value="ProcessContext::IsSubstituted" />
+          <Input name="Mode" value="ProcessContext::Mode" />
+          <Input name="LocationsList" value="ProcessContext::LocationsList" />
+        </Parameters>
+        <Return name="ProcessContext::CallBO" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="CheckIfCallCreationFailed" actionType="DECISION" parameter="ProcessContext::CallBO">
+        <Case value="callCreationFailed" action="EndCancel" />
+        <CaseElse action="CreateValidation" />
+      </Action>
+      <Action actionType="VALIDATION" name="CreateValidation">
+        <Validations>
+          <Validation name="ProcessContext::CallBO.validateCustomer" />
+          <Validation name="ProcessContext::CallBO.validateCallDate" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="SetConfiguration" />
+        <CaseElse action="ResetBoInProcessContext" />
+      </Action>
+      <Action name="SetConfiguration" actionType="LOGIC" call="ProcessContext::CallBO.captureProceedingTime">
+        <TransitionTo action="IsCallDataAvailable" />
+      </Action>
+      <Action name="IsCallDataAvailable" actionType="LOGIC" call="ProcessContext::BoSfReplicationCallbacks.isCallOnDemandDataAvailable">
+        <Parameters>
+          <Input name="callPKey" value="ProcessContext::CallBO.pKey" />
+          <Input name="customerPKey" value="ProcessContext::CallBO.bpaMainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::isDataAvailable" />
+        <TransitionTo action="IsCallDataAvailable_Decision" />
+      </Action>
+      <Action name="IsCallDataAvailable_Decision" actionType="DECISION" parameter="ProcessContext::isDataAvailable">
+        <Case value="0" action="RequestCallData" />
+        <CaseElse action="UpdateMagnetization" />
+      </Action>
+      <!-- SF/CASDIF Start -->
+      <Action name="RequestCallData" actionType="LOGIC" call="ProcessContext::BoSfReplicationCallbacks.requestCallOnDemandDataAsync">
+        <Parameters>
+          <Input name="callPKey" value="ProcessContext::CallBO.pKey" />
+          <Input name="customerPKey" value="ProcessContext::CallBO.bpaMainPKey" />
+        </Parameters>
+        <TransitionTo action="UpdateMagnetization" />
+      </Action>
+      <Action name="UpdateMagnetization" actionType="LOGIC" call="ProcessContext::CallBO.updateJobListMagnetization">
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="callPKey" value="ProcessContext::CallBO.pKey" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="LOGIC" name="ResetBoInProcessContext" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="" />
+        </Parameters>
+        <Return name="ProcessContext::CallBO" />
+        <TransitionTo action="EndCancel" />
+      </Action>
+      <Action actionType="END" name="EndCancel" />
+    </Actions>
+  </Body>
+</Process>

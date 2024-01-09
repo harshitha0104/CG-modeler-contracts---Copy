@@ -1,0 +1,41 @@
+<DataSource name="DsBoIssue" backendSystem="sf" businessObjectClass="BoIssue" external="false" editableEntity="Account_Task__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Task__c" column="Id" />
+    <Attribute name="text" table="Account_Task__c" column="Description_#Language#__c" />
+    <Attribute name="classification" table="Account_Task__c" column="Classification__c" />
+    <Attribute name="initiationDate" table="Account_Task__c" column="Creation_Date__c" />
+    <Attribute name="dueDate" table="Account_Task__c" column="Due_Date__c" />
+    <Attribute name="priority" table="Account_Task__c" column="Priority__c" />
+    <Attribute name="responsiblePKey" table="Account_Task__c" column="Responsible__c" />
+    <Attribute name="ownerPKey" table="Account_Task__c" column="Accountable__c" />
+    <Attribute name="ownerBpaMainPKey" table="Account_Task__c" column="Account__c" />
+    <Attribute name="initiatorPKey" table="Account_Task__c" column="CreatedById" />
+    <Attribute name="issuePhase" table="Account_Task__c" column="Phase__c" />
+    <Attribute name="issueId" table="Account_Task__c" column="Name" />
+    <Attribute name="svcRequestMetaPKey" table="Account_Task__c" column="Account_Task_Template__c" />
+    <DerivedAttribute name="actualStatePKey" value="#toggleMapping('Account_Task__c', 'Phase__c')#" />
+    <DerivedAttribute name="nextStatePKey" value="' '" />
+    <DerivedAttribute name="wfeWorkflowPKey" value="Account_Task_Template__c.Workflow__c" />
+    <DerivedAttribute name="metaType" value="'Issue'" />
+    <Attribute name="salesOrg" table="Account_Task__c" column="Sales_Org__c" />
+    <DerivedAttribute name="clbMainPKey" value="' '" />
+    <DerivedAttribute name="fromClbMainPKey" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Task__c" alias="" idAttribute="Id" />
+    <Entity name="Account_Task_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Account_Task__c.Account_Task_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="Account_Task_Template__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[ 
+		Account_Task__c.Id = #pKey#
+		]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

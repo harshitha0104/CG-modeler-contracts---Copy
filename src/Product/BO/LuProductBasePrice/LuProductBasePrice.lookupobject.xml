@@ -1,0 +1,13 @@
+<LookupObject name="LuProductBasePrice" generateLoadMethod="false" schemaVersion="1.1">
+  <DataSource name="DsLuProductBasePrice" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="unitType" type="DomText" dataSourceProperty="unitType" />
+    <SimpleProperty name="conditionContent" type="DomPrdLogisticUnit" dataSourceProperty="conditionContent" />
+    <SimpleProperty name="basePrice" type="DomMoney" dataSourceProperty="basePrice" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

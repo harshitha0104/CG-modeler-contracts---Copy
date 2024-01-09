@@ -1,0 +1,13 @@
+<LookupObject name="LuParentOrgUnit" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuParentOrgUnit" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="childPKey" type="DomPKey" dataSourceProperty="childPKey" />
+    <SimpleProperty name="parentPKey" type="DomPKey" dataSourceProperty="parentPKey" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

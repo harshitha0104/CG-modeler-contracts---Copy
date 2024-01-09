@@ -1,0 +1,16 @@
+<ListObject name="LoVisitsByDate" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoVisitsByDate"/>
+  <Item objectClass="LiVisitsByDate"/>
+  <Methods>
+    <Method name="beforeSaveAsync"/>
+    <Method name="afterSaveAsync"/>
+    <Method name="afterLoadAsync"/>
+    <Method name="beforeLoadAsync"/>
+    <Method name="afterDoValidateAsync"/>
+    <Method name="beforeDoValidateAsync"/>
+    <Method name="loadAsync"/>
+    <Method name="saveAsync"/>
+    <Method name="getInfoForCard"/>
+    <Method name="navigateToCustomer"/>
+  </Methods>
+</ListObject>

@@ -1,0 +1,14 @@
+<DataSource name="DsLoCpConditionTemplateText" backendSystem="sf" businessObjectClass="LoCpConditionTemplateText" external="false" editableEntity="CP_Pricing_Condition_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="CP_Pricing_Condition_Template__c" column="Id" />
+    <Attribute name="text" table="CP_Pricing_Condition_Template__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="CP_Pricing_Condition_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition >
+    CP_Pricing_Condition_Template__c.Sales_Org__c='#SalesOrg#'
+  </QueryCondition >
+  <OrderCriteria />
+  <Parameters />
+</DataSource>

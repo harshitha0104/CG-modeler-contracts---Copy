@@ -1,0 +1,42 @@
+<BusinessObject name="BoWizardCreateNewCall"  generateLoadMethod="true" generateCreateMethod="false">
+  <DataSource name="DsBoWizardCreateNewCall" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="dateFrom" type="DomDate" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="timeFrom" type="DomTime" dataSourceProperty="timeFrom" />
+    <SimpleProperty name="allDay" type="DomBool" dataSourceProperty="allDay" />
+    <SimpleProperty name="callMetaPKey" type="DomPKey" dataSourceProperty="callMetaPKey" />
+    <SimpleProperty name="customerPKey" type="DomPKey" dataSourceProperty="customerPKey" />
+    <SimpleProperty name="hasSubstitute" type="DomBool" dataSourceProperty="hasSubstitute" />
+    <SimpleProperty name="substitutedUsrPKey" type="DomPKey" dataSourceProperty="substitutedUsrPKey" />
+    <SimpleProperty name="subValidFrom" type="DomDate" dataSourceProperty="subValidFrom" />
+    <SimpleProperty name="subValidThru" type="DomValidThru" dataSourceProperty="subValidThru" />
+    <SimpleProperty name="isManagedCustomer" type="DomBool" dataSourceProperty="isManagedCustomer" />
+    <SimpleProperty name="isSubstituted" type="DomBool" dataSourceProperty="isSubstituted" />
+    <SimpleProperty name="jobListPKey" type="DomPKey" dataSourceProperty="jobListPKey" />
+    <SimpleProperty name="tripListName" type="DomString" dataSourceProperty="tripListName" />
+    <SimpleProperty name="mode" type="DomString" dataSourceProperty="mode" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="managementRelationValidFrom" type="DomDate" dataSourceProperty="managementRelationValidFrom" />
+    <SimpleProperty name="managementRelationValidThru" type="DomValidThru" dataSourceProperty="managementRelationValidThru" />
+  </SimpleProperties>
+  <ObjectLookups>
+    <ObjectLookup name="customerLookup" objectClass="LuCustomer" dataSourceProperty="customerPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="callMetaLookup" objectClass="LuCallMeta" dataSourceProperty="callMetaPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="jobListLookup" objectClass="LuJobList" dataSourceProperty="jobListPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <Methods>
+    <Method name="createAsync" />
+    <Method name="loadCallMetaLookup" />
+    <Method name="loadCustomerLookup" />
+    <Method name="reloadManagementInformation" />
+    <Method name="setEARights" />
+    <Method name="updateTimeAllDay"/>
+  </Methods>
+  <Validations>
+    <Validation name="validateNotEmpty" />
+    <Validation name="validateSub" />
+    <Validation name="validateTime" />
+    <Validation name="validateCustomer" />
+  </Validations>
+</BusinessObject>

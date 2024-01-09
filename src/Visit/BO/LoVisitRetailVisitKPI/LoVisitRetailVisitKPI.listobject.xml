@@ -1,0 +1,18 @@
+<ListObject name="LoVisitRetailVisitKPI" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoVisitRetailVisitKPI" />
+  <Item objectClass="LiVisitRetailVisitKPI" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="filterByAssessmentTask" />
+    <Method name="filterByProduct" />
+    <Method name="setEARights" />
+    <Method name="selectItemAfterScan" />
+  </Methods>
+</ListObject>

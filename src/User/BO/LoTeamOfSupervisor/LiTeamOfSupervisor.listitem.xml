@@ -1,0 +1,6 @@
+<ListItem name="LiTeamOfSupervisor" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty id="true" name="usrPKey" type="DomPKey" />
+  </SimpleProperties>
+</ListItem>

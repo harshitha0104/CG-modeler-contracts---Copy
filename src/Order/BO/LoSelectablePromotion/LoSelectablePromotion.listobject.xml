@@ -1,0 +1,14 @@
+<ListObject name="LoSelectablePromotion" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoSelectablePromotion" />
+  <Item objectClass="LiSelectablePromotion" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="getFirstPromotion" />
+    <Method name="getPromotionIdsForHurdles" />
+  </Methods>
+</ListObject>

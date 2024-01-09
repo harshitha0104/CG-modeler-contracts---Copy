@@ -1,0 +1,67 @@
+<DataSource name="DsLoWfeState" backendSystem="sf" businessObjectClass="LoWfeState" external="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Workflow_State_Transition__c" column="From_Status__c" />
+    <Attribute name="stateType" table="Workflow_State_Transition__c" column="From_Status__c" />
+    <Attribute name="initialState" table="Workflow_State_Transition__c" column="From_Initial_Stage__c" />
+    <Attribute name="wfeWorkflowPKey" table="Workflow_State_Transition__c" column="Workflow__c" />
+    <Attribute name="text" table="Workflow_State_Transition__c" column="From_Status__c" />
+    <DerivedAttribute name="salesOrg" value="'#SALESORG#'" />
+    <DerivedAttribute name="owner" value="'0'" />
+    <DerivedAttribute name="usrRolePKey" value="' '" />
+    <DerivedAttribute name="usrRoleId" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="Workflow_State_Transition__c" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+      var wfeWorkflowPKey = "";
+      if (Utils.isDefined(jsonQuery.wfeWorkflowPKey)){
+          wfeWorkflowPKey = Utils.convertForDBParam(jsonQuery.wfeWorkflowPKey, "DomPKey");
+	  }
+	  var sqlParams = {wfeWorkflowPKey};
+
+var sqlStmt = "SELECT Workflow_State_Transition__c.From_Status__c AS pKey, ";
+sqlStmt += "Workflow_State_Transition__c.From_Status__c AS stateType, ";
+sqlStmt += "Workflow_State_Transition__c.From_Initial_Stage__c AS initialState, ";
+sqlStmt += "Workflow_State_Transition__c.Workflow__c AS wfeWorkflowPKey, ";
+sqlStmt += "'#SALESORG#' AS salesOrg, ";
+sqlStmt += "'0' AS owner, ";
+sqlStmt += "' ' AS usrRolePKey, ";
+sqlStmt += "' ' AS usrRoleId, ";
+sqlStmt += "Workflow_State_Transition__c.From_Status__c AS text ";
+sqlStmt += "FROM Workflow_State_Transition__c ";
+sqlStmt += "WHERE Workflow_State_Transition__c.Workflow__c = #wfeWorkflowPKey# ";
+
+sqlStmt += "Union ";
+
+sqlStmt += "SELECT Workflow_State_Transition__c.To_Status__c AS pKey, ";
+sqlStmt += "Workflow_State_Transition__c.To_Status__c AS stateType, ";
+sqlStmt += "'0' AS initialState, ";
+sqlStmt += "Workflow_State_Transition__c.Workflow__c AS wfeWorkflowPKey, ";
+sqlStmt += "'#SALESORG#' AS salesOrg, ";
+sqlStmt += "'0' AS owner, ";
+sqlStmt += "' ' AS usrRolePKey, ";
+sqlStmt += "' ' AS usrRoleId, ";
+sqlStmt += "Workflow_State_Transition__c.To_Status__c AS text ";
+sqlStmt += "FROM Workflow_State_Transition__c ";
+sqlStmt += "WHERE Workflow_State_Transition__c.Workflow__c = #wfeWorkflowPKey# ";
+
+return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+   ]]></Load>
+    <Update><![CDATA[
+      // Intended to be empty!
+      return undefined;
+   ]]></Update>
+    <Insert><![CDATA[
+      // Intended to be empty!
+      return undefined;
+   ]]></Insert>
+    <Delete><![CDATA[
+      // Intended to be empty!
+      return undefined;
+   ]]></Delete>
+  </Database>
+</DataSource>

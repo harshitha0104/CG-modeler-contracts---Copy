@@ -1,0 +1,26 @@
+<DataSource name="DsLuOrderMetaforFreeItems" backendSystem="sf" businessObjectClass="LuOrderMetaforFreeItems" external="false" editableEntity="Order_Item_Order_Template_Association__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="sdoItemMetaPKey" table="Order_Item_Order_Template_Association__c" column="Order_Item_Template__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order_Item_Order_Template_Association__c" alias="" idAttribute="Order_Item_Template__c" />
+    <Entity name="Order_Item_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Order_Item_Order_Template_Association__c.Order_Item_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="Order_Item_Template__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+     	Order_Item_Template__c.Calculation_Group__c='FreeItem'
+        AND Order_Item_Order_Template_Association__c.Order_Template__c = #sdoMetaPKey#
+        AND Order_Item_Template__c.Active__c = '1'
+        AND #compareAsDate('Order_Item_Order_Template_Association__c.Valid_Thru__c', 'Date','>=' ,#TodayAsDate#, 'Date')#
+        AND #compareAsDate('Order_Item_Order_Template_Association__c.Valid_From__c', 'Date','<=' ,#TodayAsDate#, 'Date')#
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="sdoMetaPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,18 @@
+<ListItem name="LiContactPartnerOverview">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="salutation" type="DomBpaSalutation" storable="true" dataSourceProperty="salutation" />
+    <SimpleProperty name="name" type="DomText" storable="true" dataSourceProperty="name" />
+    <SimpleProperty name="firstName" type="DomBpaName" storable="true" dataSourceProperty="firstName" />
+    <SimpleProperty name="lastName" type="DomBpaName" storable="true" dataSourceProperty="lastName" />
+    <SimpleProperty name="jobTitle" type="DomBpaName" storable="true" dataSourceProperty="jobTitle" />
+    <SimpleProperty name="mainFunction" type="DomBpaFunction" storable="true" dataSourceProperty="mainFunction" />
+    <SimpleProperty name="phone1" type="DomDial" storable="true" dataSourceProperty="phone1" />
+    <SimpleProperty name="phone2" type="DomDial" storable="true" dataSourceProperty="phone2" />
+    <SimpleProperty name="email1" type="DomEmail" storable="true" dataSourceProperty="email1" />
+    <SimpleProperty name="fax1" type="DomDial" storable="true" dataSourceProperty="fax1" />
+    <SimpleProperty name="bpaMetaPKey" type="DomPKey" dataSourceProperty="bpaMetaPKey" />
+    <SimpleProperty name="mainAddress" type="DomText" dataSourceProperty="mainAddress" />    
+    <SimpleProperty name="grouping1" type="DomText" dataSourceProperty="grouping1" />
+  </SimpleProperties>
+</ListItem>

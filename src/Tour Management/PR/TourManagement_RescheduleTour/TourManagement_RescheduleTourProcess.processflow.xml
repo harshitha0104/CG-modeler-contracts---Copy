@@ -1,0 +1,45 @@
+<Process name="TourManagement::RescheduleTourProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="TourBo" type="BoTour" />
+        <Declaration name="TourPKey" type="DomPKey" />
+      </Declarations>
+      <Parameters>
+        <Input name="TourPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateTourBo" actionType="LOAD" type="BoTour">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::TourPKey" />
+          <Input name="TourDate" value="ProcessContext::tourDate" />
+        </Parameters>
+        <Return name="ProcessContext::TourBo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>TourManagement::RescheduleTourUI</UIDescription>
+        <Events>
+          <Event name="rescheduleTour" action="RescheduleTour" />
+        </Events>
+      </Action>
+      <Action actionType="LOGIC" name="RescheduleTour" call="ProcessContext::TourBo.rescheduleTourDate">
+        <Parameters>
+          <Input name="newDate" value="ProcessContext::TourBo.tourDate" />
+        </Parameters>
+        <TransitionTo action="SaveTour" />
+      </Action>
+      <Action name="SaveTour" actionType="SAVE">
+        <Parameters>
+          <Input name="boTour" value="ProcessContext::TourBo" />
+        </Parameters>
+        <TransitionTo action="End" />
+      </Action>
+      <Action name="End" actionType="END"></Action>
+    </Actions>
+  </Body>
+</Process>

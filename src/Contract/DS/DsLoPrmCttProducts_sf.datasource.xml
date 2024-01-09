@@ -1,0 +1,70 @@
+<Datasource objectClass="LoPrmCttProducts" backendSystem="sf" businessObjectClass="LoPrmCttProducts" readOnly="false" external="true" editableEntity="Contract_Product__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contract_Product__c" column="Id" />
+    <Attribute name="quantity" table="Contract_Product__c" column="Planned_Quantity__c" />
+    <Attribute name="specialPrice" table="Contract_Product__c" column="Consumer_Price__c" />
+    <Attribute name="discount" table="Contract_Product__c" column="Amount__c" />
+    <Attribute name="prmContractPKey" table="Contract_Product__c" column="Contract__c" />
+    <Attribute name="referencePKey" table="Contract_Product__c" column="Product__c" />
+    <Attribute name="prdProductGroupName" table="Product2" column="Description_1_#Language#__c" />
+    <Attribute name="text" table="Product2" column="Description_1_#Language#__c" />
+    <Attribute name="productId" table="Product2" column="Consumer_Goods_Product_Code__c" />
+    <Attribute name="prdgroupId" table="Product2" column="Consumer_Goods_Product_Code__c" />
+    <DerivedAttribute name="groupFlag" value="' '" />
+    <DerivedAttribute name="prdMetaType" value="'PrdGroup'" />
+    <DerivedAttribute name="manual" value="'1'" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contract_Product__c" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+		
+			var index = 0;
+			if (Utils.isDefined(jsonQuery)){
+              var newParams = jsonQuery;
+              if (Utils.isOldParamsFormat(newParams)){
+              	newParams = Utils.convertDsParamsOldToNew(newParams);
+              }
+			} 
+
+			var prmContractPKey = "";
+
+			if(Utils.isDefined(newParams.prmContractPKey)){
+				prmContractPKey = Utils.convertForDBParam(newParams.prmContractPKey, "DomPKey");
+			}
+
+			var sqlParams = {prmContractPKey};
+
+			var sqlStmt = "SELECT  ";
+			sqlStmt+= "   Contract_Product__c.Id AS pKey, ";
+			sqlStmt+= "   ' ' AS groupFlag, ";
+			sqlStmt+= "		CASE WHEN RecordType.Name='Product Group' THEN Product2.Consumer_Goods_Product_Code__c ELSE GroupGroup.Consumer_Goods_Product_Code__c END as prdgroupId, ";
+			sqlStmt+= "		Product2.Description_1_#Language#__c AS text, ";
+			sqlStmt+= "		CASE WHEN RecordType.Name='Product Group' THEN Product2.Description_1_#Language#__c ELSE GroupGroup.Description_1_#Language#__c END AS prdProductGroupName, ";
+			sqlStmt+= "		Product2.Consumer_Goods_Product_Code__c as productId, ";
+			sqlStmt += "    Contract_Product__c.Amount__c as discount, ";
+			sqlStmt += "    Contract_Product__c.Consumer_Price__c as specialPrice, ";
+			sqlStmt+= "		Contract_Product__c.Planned_Quantity__c as quantity , ";
+			sqlStmt+= "		Contract_Product__c.Contract__c AS prmContractPKey, ";
+			sqlStmt+= "		Contract_Product__c.Product__c AS referencePKey, ";
+			sqlStmt+= "		CASE WHEN RecordType.Name='Product Group' THEN 'PrdGroup' ELSE 'Product' END AS prdMetaType ";
+			sqlStmt+=" 		,'1' AS manual ";
+			sqlStmt+=" 		,'Decimal' AS dataType ";
+			sqlStmt+=" 		,'0' AS useStepper ";
+			sqlStmt+=" 		,'0' AS stepSize ";  
+			sqlStmt+=" 		,'0.0' AS minValue ";
+			sqlStmt+=" 		,'100.0' AS maxValue ";  
+			sqlStmt+=" 		,'0.1' AS formatType ";
+			sqlStmt+= "	FROM Contract_Product__c ";
+			sqlStmt+= "		LEFT OUTER JOIN Product2 ON Contract_Product__c.Product__c = Product2.Id AND Product2.Sales_Org__c = '#SalesOrg#' ";
+			sqlStmt+= "		LEFT OUTER JOIN RecordType ON Product2.RecordTypeId = RecordType.Id ";
+			sqlStmt+= "		LEFT OUTER JOIN Product2 AS GroupGroup ON GroupGroup.Id = Product2.Criterion_3_Product__c AND GroupGroup.Sales_Org__c = '#SalesOrg#' ";
+			sqlStmt+= "	WHERE ";
+			sqlStmt+= "		Contract_Product__c.Contract__c = #prmContractPKey# ";
+			sqlStmt+= "		AND Contract_Product__c.IsDeleted = 0";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+  </Database>
+</Datasource>

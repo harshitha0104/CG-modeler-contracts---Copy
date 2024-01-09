@@ -1,0 +1,7 @@
+<LookupObject name="LuCashDocumentCount">
+  <DataSource name="DsLuCashDocumentCount" />
+  <SimpleProperties>
+    <SimpleProperty name="cashDocumentCount" type="DomInteger" storable="true" dataSourceProperty="cashDocumentCount" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>  

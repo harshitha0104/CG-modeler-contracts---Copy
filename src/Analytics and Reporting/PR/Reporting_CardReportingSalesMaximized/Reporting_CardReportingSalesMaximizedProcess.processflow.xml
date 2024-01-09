@@ -1,0 +1,49 @@
+<Process name="Reporting::CardReportingSalesMaximizedProcess" defaultAction="Set_DataLoaded" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <!-- Card: Reporting -->
+        <Declaration name="CardReporting_DataLoaded" type="DomBool" />
+        <Declaration name="CardReporting_ModeMaximized" type="String" />
+        <Declaration name="IsPhone" type="String" />
+        <Declaration name="CurrentDate" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="CardReportingSales_SalesData" type="LoCustomerSalesRevenueForCard" />
+        <Input name="CardReportingUnsuccessfulVisits_Rate" type="String" />
+        <Input name="CardReportingVisitRate_Rate" type="String" />
+        <Input name="Mode" type="String" />
+        <Input name="SelectedDate" type="DomText" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="IsPhone" call="Utils.isPhone">
+        <Return name="ProcessContext::IsPhone" />
+      </Action>
+      <Action actionType="LOGIC" name="SetCurrentDate" call="Utils.createAnsiDateToday">
+        <Return name="ProcessContext::CurrentDate" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="Set_DataLoaded" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::CardReporting_DataLoaded" />
+        <TransitionTo action="SetMaximizedMode" />
+      </Action>
+      <Action name="SetMaximizedMode" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::CardReporting_ModeMaximized" />
+        <TransitionTo action="ShowReporting" />
+      </Action>
+      <Action actionType="View" name="ShowReporting">
+        <UIDescription>Reporting::CardReportingSalesMaximizedUI</UIDescription>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

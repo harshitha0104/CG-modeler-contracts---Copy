@@ -1,0 +1,79 @@
+<DataSource name="DsLuJobDefinitionList" backendSystem="sf" businessObjectClass="LuJobDefinitionList" external="true" readOnly="true" editableEntity="Job_Definition_List__c" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var clbMetaPKey = "";
+			var bpaMainPKey = "";
+			var responsiblePKey = "";
+			var clbMainPKey = "";
+            var validFrom = "";
+            var validThru = "";
+
+			if(Utils.isDefined(jsonQuery.clbMetaPKey)){
+				clbMetaPKey = Utils.convertForDBParam(jsonQuery.clbMetaPKey, "DomPKey");
+			}
+			if(Utils.isDefined(jsonQuery.bpaMainPKey)){
+				bpaMainPKey = Utils.convertForDBParam(jsonQuery.bpaMainPKey, "DomPKey");
+			}
+			if (Utils.isDefined(jsonQuery.validFrom)){
+              validFrom = Utils.convertForDBParam(jsonQuery.validFrom,'DomDate');
+			}
+			if (Utils.isDefined(jsonQuery.validThru)){
+			  validThru = Utils.convertForDBParam(jsonQuery.validThru,'DomDate');
+			}
+			if(Utils.isDefined(jsonQuery.responsiblePKey)){
+				responsiblePKey = Utils.convertForDBParam(jsonQuery.responsiblePKey, "DomPKey");
+			}
+			if(Utils.isDefined(jsonQuery.clbMainPKey)){
+				clbMainPKey = Utils.convertForDBParam(jsonQuery.clbMainPKey, "DomPKey");
+			}
+
+			var sqlParams = {clbMetaPKey, bpaMainPKey, validFrom, validThru, responsiblePKey, clbMainPKey};
+
+          var sqlStmt = "SELECT ";
+          sqlStmt += "	GROUP_CONCAT(jobdefinitionlistpkey, ',') AS jDLPKeys ";
+          sqlStmt += "FROM ";
+          sqlStmt += "	( ";
+          sqlStmt += "			SELECT DISTINCT ";
+          sqlStmt += "				relevantJobDefList.pKey AS jobdefinitionlistpkey ";
+          sqlStmt += "			FROM ";
+          sqlStmt += "				( ";
+          sqlStmt += "					SELECT ";
+          sqlStmt += "						Job_Definition_List__c.Id as pKey";
+          sqlStmt += "					FROM Job_Definition_List__c ";
+		  sqlStmt += "					LEFT OUTER JOIN Job_Definition_List_Account__c on Job_Definition_List__c.Id = Job_Definition_List_Account__c.Job_Definition_List__c ";
+          sqlStmt += "					LEFT OUTER JOIN Job_Definition_List_Account_Set__c ON Job_Definition_List__c.Id = Job_Definition_List_Account_Set__c.Job_Definition_List__c ";
+          sqlStmt += "					LEFT OUTER JOIN Account_Set_Account__c ON Job_Definition_List_Account_Set__c.Account_set__c = Account_Set_Account__c.Account_set__c AND Account_Set_Account__c.Account_Set_Account__c = #bpaMainPKey# ";
+
+          sqlStmt += "					WHERE (1=1) ";
+          sqlStmt += "					AND Job_Definition_List__c.Visit_Template__c = #clbMetaPKey# ";
+		  sqlStmt += "					AND Job_Definition_List__c.Approval_State__c <> 'Canceled'  ";
+
+		  sqlStmt += "						AND ( ";
+		  sqlStmt += "                            Job_Definition_List_Account__c.Account__c = #bpaMainPKey# AND Job_Definition_List_Account__c.Excluded__c = '0' AND Job_Definition_List_Account__c.IsDeleted = '0' ";
+		  sqlStmt += "                            OR Job_Definition_List_Account__c.Account__c IS NULL AND Job_Definition_List_Account_Set__c.Account_Set__c IS NULL ";
+		  sqlStmt += "                            OR Account_Set_Account__c.Account_Set_Account__c = #bpaMainPKey# AND NOT IFNULL(Job_Definition_List_Account__c.Account__c = #bpaMainPKey# AND Job_Definition_List_Account__c.Excluded__c = '1' AND Job_Definition_List_Account__c.IsDeleted = '0', 0) ";
+		  sqlStmt += "                           ) ";
+
+          sqlStmt += "					AND  ( ";
+		  sqlStmt += "                       ( Job_Definition_List__c.Standard_Jobs__c='1' ";
+		  sqlStmt += "                          AND Job_Definition_List__c.Active__c = '1' ";
+		  sqlStmt += "                          AND #compareAsDate('Job_Definition_List__c.Valid_From__c', 'Date','<=' ,#validFrom#, 'Date')# ";
+		  sqlStmt += "                          AND #compareAsDate('Job_Definition_List__c.Valid_Thru__c', 'Date','>=' ,#validThru#, 'Date')# ";
+          sqlStmt +=                         "OR ";
+          sqlStmt += "                       (Job_Definition_List__c.Standard_Jobs__c='0' ";
+          sqlStmt += "                          AND EXISTS (SELECT Id from Job_List__c where ";
+          sqlStmt += "                                       Job_List__c.Job_Definition_List__c = Job_Definition_List__c.Id ";
+          sqlStmt += "                                       AND Job_List__c.Manager__c = #responsiblePKey# ";
+          sqlStmt += "                                       AND #compareAsDate('Job_List__c.Valid_From__c', 'Date', '<=',#validFrom#, 'Date')# ";
+          sqlStmt += "                                       AND #compareAsDate('Job_List__c.Valid_Thru__c', 'Date', '>=',#validThru#, 'Date')# ";
+          sqlStmt += "                                       AND (Job_List__c.Visit__c= #clbMainPKey# OR Job_List__c.Visit__c = ' ') ";
+          sqlStmt += "                                       AND Job_List__c.Account__c=  #bpaMainPKey# ))) ";
+          sqlStmt += "				)) relevantJobDefList ";
+		  sqlStmt += "	) ";
+		  
+          return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+		]]></Load>
+  </Database>
+</DataSource>

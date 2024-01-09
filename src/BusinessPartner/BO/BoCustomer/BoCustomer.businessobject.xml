@@ -1,0 +1,109 @@
+<BusinessObject name="BoCustomer"  generateLoadMethod="false" generateCreateMethod="false" OERReference="BpaCustomer">
+  <DataSource name="DsBoCustomer" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="name" type="DomBpaName" storable="true" dataSourceProperty="name" />
+    <SimpleProperty name="name2" type="DomBpaName" storable="true" dataSourceProperty="name2" />
+    <SimpleProperty name="matchcode" type="DomBpaName" storable="true" dataSourceProperty="matchcode" />
+    <SimpleProperty name="customerId" type="DomId" storable="true" dataSourceProperty="customerId" />
+    <SimpleProperty name="phone1" type="DomDial" storable="true" dataSourceProperty="phone1" />
+    <SimpleProperty name="email1" type="DomEmail" storable="true" dataSourceProperty="email1" />
+    <SimpleProperty name="fax1" type="DomDial" storable="true" dataSourceProperty="fax1" />
+    <SimpleProperty name="priority" type="DomABC" storable="true" dataSourceProperty="priority" />
+    <SimpleProperty name="classOfTrade" type="DomBpaClassOfTrade" storable="true" dataSourceProperty="classOfTrade" />
+    <SimpleProperty name="companyType" type="DomBpaCompanyType" storable="true" dataSourceProperty="companyType" />
+    <SimpleProperty name="orgLevel" type="DomBpaOrgLevel" storable="true" dataSourceProperty="orgLevel" />
+    <SimpleProperty name="phase" type="DomBpaPhase" storable="true" dataSourceProperty="phase" />
+    <SimpleProperty name="salesRelevant" type="DomBpaSalesRelevant" storable="true" dataSourceProperty="salesRelevant" />
+    <SimpleProperty name="state" type="DomBpaState" storable="true" dataSourceProperty="state" />
+    <SimpleProperty name="bpaMetaPKey" type="DomPKey" storable="true" dataSourceProperty="bpaMetaPKey" />
+    <SimpleProperty name="dateClosure" type="DomDate" storable="true" dataSourceProperty="dateClosure" />
+    <SimpleProperty name="deleted" type="DomBool" storable="false" dataSourceProperty="deleted" />
+    <SimpleProperty name="totalDebit" type="DomString" dataSourceProperty="totalDebit" />
+    <SimpleProperty name="totalCredit" type="DomString" dataSourceProperty="totalCredit" />
+    <SimpleProperty name="totalDebitCredit" type="DomString" dataSourceProperty="totalDebitCredit" />
+    <SimpleProperty name="accountExtensionId" type="DomPKey" storable="true" dataSourceProperty="accountExtensionId" />
+    <SimpleProperty name="considerModules" type="DomBool" storable="true" dataSourceProperty="considerModules" />
+    <SimpleProperty name="priorityImage" type="DomString" storable="false" dataSourceProperty="priorityImage" />
+    <SimpleProperty name="accountDi" type="DomBool" storable="true" id="false" dataSourceProperty="accountDi" />
+    <SimpleProperty name="accountOi" type="DomBool" storable="true" id="false" dataSourceProperty="accountOi" />
+    <SimpleProperty name="operatingHoursId" type="DomPKey" dataSourceProperty="operatingHoursId" />
+    <SimpleProperty name="emailEditable" type="DomBool" storable="false" dataSourceProperty="emailEditable" />
+  </SimpleProperties>
+  <ObjectLookups>
+    <!-- luCustomerTradeOrg: load immediate -->
+    <ObjectLookup name="luCustomerTradeOrg" objectClass="LuCustomerTradeOrg" dataSourceProperty="pKey" lookupProperty="customerPKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <NestedObjects>
+    <NestedObject name="boBpaMeta" objectClass="BoBpaMeta" dataSourceProperty="bpaMetaPKey" nestingProperty="pKey" loadMode="LoadImmediate" />
+    <!-- boBpaSales: not loaded - only used during create at the moment -->
+    <NestedObject name="boBpaSales" objectClass="BoBpaSales" dataSourceProperty="pKey" nestingProperty="businessPartnerPKey" loadMode="LoadImmediate" />
+    <!-- boOrderRole, boCustomerRole, boPayerRole, boDeliveryRole: load on demand via process -->
+    <NestedObject name="boOrderRole" objectClass="BoOrderRole" dataSourceProperty="pKey" nestingProperty="customerPKey" loadMode="OnDemand" />
+    <NestedObject name="boCustomerRole" objectClass="BoCustomerRole" dataSourceProperty="pKey" nestingProperty="customerPKey" loadMode="OnDemand" />
+    <NestedObject name="boPayerRole" objectClass="BoPayerRole" dataSourceProperty="pKey" nestingProperty="customerPKey" loadMode="OnDemand" />
+    <NestedObject name="boDeliveryRole" objectClass="BoDeliveryRole" dataSourceProperty="pKey" nestingProperty="customerPKey" loadMode="OnDemand" />
+    <NestedObject name="boStoreRole" objectClass="BoStoreRole" dataSourceProperty="pKey" nestingProperty="customerPKey" loadMode="OnDemand" />
+    <NestedObject name="boOperatingHour" objectClass="BoOperatingHour" dataSourceProperty="operatingHoursId" nestingProperty="pKey" loadMode="OnDemand" />
+  </NestedObjects>
+  <ListObjects>
+    <!-- loCustomerAddress: load immediate -->
+    <ListObject name="loCustomerAddress" objectClass="LoBpaAddress" dataSourceProperty="pKey" listProperty="referencePKey" loadMode="LoadImmediate" />
+    <!-- loContactPartner, loCustomerPOSRelation, loCustomerOpeningTime, loBpaRole: load on demand via process -->
+    <ListObject name="loContactPartner" objectClass="LoContactPartner" dataSourceProperty="pKey" listProperty="customerPKey" loadMode="OnDemand" />
+    <ListObject name="loCustomerPOSRelation" objectClass="LoCustomerPOSRelation" dataSourceProperty="pKey" listProperty="customerPKey" loadMode="OnDemand">
+      <Events>
+        <Event name="listItemChanged" eventHandler="onPOSChanged" />
+      </Events>
+    </ListObject>
+    <!--Account Harmonization: obsolete <ListObject name="loCustomerOpeningTime" objectClass="LoCustomerOpeningTime" dataSourceProperty="pKey" listProperty="customerPKey" loadMode="OnDemand" /> -->
+    <ListObject name="loBpaRole" objectClass="LoBpaRole" dataSourceProperty="pKey" listProperty="customerPKey" loadMode="OnDemand" />
+    <ListObject name="loBpaUsrCallSettings" objectClass="LoBpaUsrCallSettings" dataSourceProperty="pKey" listProperty="customerPKey" loadMode="OnDemand" />
+    <ListObject name="loBpaManagement" objectClass="LoBpaManagement" dataSourceProperty="pKey" listProperty="bpaMainPKey" loadMode="OnDemand" />
+    <ListObject name="loAttachment" objectClass="LoBpaAttachment" dataSourceProperty="pKey" listProperty="customerPKey" loadMode="OnDemand" />
+    <ListObject name="loCustomerSalesRevenue" objectClass="LoCustomerSalesRevenue" dataSourceProperty="pKey" listProperty="bpaMainPKey" loadMode="LoadImmediate" />
+    <ListObject name="loBpaOpenItem" objectClass="LoBpaOpenItem" dataSourceProperty="pKey" listProperty="customerPKey" loadMode="OnDemand" />
+    <ListObject name="loListingModules" objectClass="LoListingModules" dataSourceProperty="pKey" listProperty="customerPKey" loadMode="OnDemand" />
+    <ListObject name="loListingClassification" objectClass="LoListingClassification" dataSourceProperty="pKey" listProperty="customerPKey" loadMode="OnDemand" />
+    <ListObject name="loOpenHours" objectClass="LoTimeSlot" dataSourceProperty="operatingHoursId" listProperty="operatingHoursId" loadMode="OnDemand" />
+  </ListObjects>
+  <Methods>
+    <Method name="loadAsync" />
+    <Method name="createAsync" />
+    <Method name="saveAsync" />
+    <Method name="updateGeoCoordinates" />
+    <Method name="checkGeoCoordinates" />
+    <Method name="setEARights" />
+    <Method name="loadRoleObjectsAsync" />
+    <!--Account Harmonization: obsolete <Method name="loadLoOpeningTimeAsync" /> -->
+    <Method name="loadLoContactPartnerAsync" />
+    <Method name="loadLoCustomerPOSRelationAsync" />
+    <Method name="loadLoAttachmentAsync" />
+    <Method name="sendMail" />
+    <Method name="processPhoneCall" />
+    <Method name="processSmsSending" />
+    <Method name="loadLoBpaOpenItemAsync" />
+    <Method name="calculateOpenItemTotal" />
+    <Method name="addExistingContactPartner" />
+    <Method name="checkExistingContactPartner" />
+    <Method name="deleteExistingContactPartner" />
+    <Method name="onPOSChanged" />
+    <Method name="navigateToCustomer" />
+    <Method name="getContactPartner" />
+    <Method name="resetObjectStatus" />
+    <Method name="loadLoListingClassificationAsync" />
+    <Method name="loadLoListingModulesAsync" />
+    <Method name="saveListingClassification" />
+    <Method name="getTabVisibility" />
+    <Method name="selectedListingModule" />
+    <Method name="validatePOSDeletion" />
+    <Method name="loadLoOpenHoursAsync" />
+  </Methods>
+  <Validations>
+    <!--Account Harmonization: obsolete <Validation name="validateCustomerOpeningTime" /> -->
+    <Validation name="validateCustomer" />
+    <Validation name="validateContactPartner" />
+    <Validation name="validatePos" />
+    <Validation name="validateSplittingRule" />
+  </Validations>
+</BusinessObject>

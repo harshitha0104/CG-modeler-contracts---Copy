@@ -1,0 +1,10 @@
+<LookupObject name="LuOrderMetaforFreeItems">
+  <DataSource name="DsLuOrderMetaforFreeItems" />
+  <SimpleProperties>
+    <SimpleProperty name="sdoItemMetaPKey" type="DomPKey" dataSourceProperty="sdoItemMetaPKey" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

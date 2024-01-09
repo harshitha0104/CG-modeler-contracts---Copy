@@ -1,0 +1,112 @@
+<Process name="Customer::LookupProcess" defaultAction="HideSubstitutedCustomers_Filter_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CustomerList" type="LoCustomerOverview" />
+        <Declaration name="CurrentAddress" type="LuCurrentAddress" />
+        <Declaration name="SortBy" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="ReferenceUserPKey" type="String" />
+        <Input name="HideSubstitutedCustomers" type="DomBool" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="LoadTeamOfUser" call="ApplicationContext::User.loadTeamOfUser">
+        <Parameters>
+          <Input name="includeCurrentUser" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOAD" name="GetCustomerList" type="LoCustomerOverview">
+        <Parameters>
+          <Input name="considerSubstitutionLeadFollowUpTime" type="Literal" value="1" />
+          <Input name="referenceUserPKey" value="ProcessContext::ReferenceUserPKey" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="HideSubstitutedCustomers_Filter_Decision" actionType="DECISION" parameter="ProcessContext::HideSubstitutedCustomers">
+        <CaseEmpty action="ShowView" />
+        <CaseElse action="HideSubstitutedCustomers_Decision" />
+      </Action>
+      <Action name="HideSubstitutedCustomers_Decision" actionType="DECISION" parameter="ProcessContext::HideSubstitutedCustomers">
+        <Case value="0" action="ShowView" />
+        <Case value="1" action="HideSubstitutedCustomers_Logic" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action name="HideSubstitutedCustomers_Logic" actionType="LOGIC" call="ProcessContext::CustomerList.setFilter">
+        <Parameters>
+          <Input name="fieldName" value="substituted" type="Literal" />
+          <Input name="value" value="0" type="Literal" />
+          <Input name="operator" value="EQ" type="Literal" />
+        </Parameters>
+        <TransitionTo action="ShowView" />
+      </Action>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Customer::Lookup</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="End" />
+          <Event name="sortByDistance" action="SetSortByDistance" />
+          <Event name="sortByAlphabet" action="SetSortByAlphabet" />
+        </Events>
+      </Action>
+      <!-- Start -Sort Customer list  -->
+      <Action name="SetSortByDistance" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::SortBy" />
+        <TransitionTo action="LoadCurrentAddressList" />
+        <Parameters>
+          <Input name="value" value="Distance" type="String" />
+        </Parameters>
+      </Action>
+      <Action name="SetSortByAlphabet" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::SortBy" />
+        <TransitionTo action="LoadCustomerList" />
+        <Parameters>
+          <Input name="value" value="Alphabet" type="String" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOAD" name="LoadCurrentAddressList" type="LuCurrentAddress">
+        <Return name="ProcessContext::CurrentAddress" />
+        <TransitionTo action="ShowCurrentAddress_Decision1" />
+      </Action>
+      <Action name="ShowCurrentAddress_Decision1" actionType="DECISION" parameter="ProcessContext::SortBy">
+        <Case value="Distance" action="ShowCurrentAddress_Decision2" />
+        <CaseElse action="ShowWarning" />
+      </Action>
+      <Action name="ShowCurrentAddress_Decision2" actionType="DECISION" parameter="ProcessContext::CurrentAddress.isAddressFound">
+        <Case value="Yes" action="sortListByDistance" />
+        <Case value="No" action="ShowWarning" />
+        <CaseElse action="ShowWarning" />
+      </Action>
+      <Action name="sortListByDistance" actionType="LOGIC" call="ProcessContext::CustomerList.sortCustomersByDistance">
+        <Parameters>
+          <Input name="currentLatitude" value="ProcessContext::CurrentAddress.latitude" />
+          <Input name="currentLongitude" value="ProcessContext::CurrentAddress.longitude" />
+        </Parameters>
+      </Action>
+      <Action name="ShowWarning" actionType="LOGIC" call="ProcessContext::CustomerList.displayWarning"></Action>
+      <Action actionType="LOAD" name="LoadCustomerList" type="LoCustomerOverview">
+        <Parameters>
+          <Input name="considerSubstitutionLeadFollowUpTime" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerList" />
+      </Action>
+      <!-- End -Sort Customer list  -->
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="customerPKey" value="Event.pKey" />
+          <Return name="customerName" value="Event.name" />
+          <Return name="substitutedUsrPKey" value="Event.substitutedUsrPKey" />
+          <Return name="subValidFrom" value="Event.subValidFrom" />
+          <Return name="subValidThru" value="Event.subValidThru" />
+          <Return name="isManagedCustomer" value="Event.isManagedCustomer" />
+          <Return name="managementRelationValidFrom" value="Event.managementRelationValidFrom" />
+          <Return name="managementRelationValidThru" value="Event.managementRelationValidThru" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

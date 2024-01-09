@@ -1,0 +1,10 @@
+<ListObject name="LoOrderItemMetas" generateLoadMethod="true" >
+  <DataSource name="DsLoOrderItemMetas" />
+  <Item objectClass="LiOrderItemMeta" />
+  <Methods>
+    <Method name="getMainItemTemplate" />
+    <Method name="getItemTemplateByPKey" />
+    <Method name="getScanIncrementVisibility" />
+    <Method name="filterInvalidOrderItemMetas" />
+  </Methods>
+</ListObject>

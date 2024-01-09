@@ -1,0 +1,8 @@
+<LookupObject name="LuActivitiesCount" generateLoadMethod="false" schemaVersion="1.1">
+  <DataSource name="DsLuActivitiesCount" />
+  <SimpleProperties>
+  	<SimpleProperty name="activitiesCount" type="DomInteger" storable="true" dataSourceProperty="activitiesCount" />
+  </SimpleProperties>
+  <Methods>
+  </Methods>
+</LookupObject>

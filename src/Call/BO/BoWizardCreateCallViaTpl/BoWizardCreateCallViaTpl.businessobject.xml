@@ -1,0 +1,53 @@
+<BusinessObject name="BoWizardCreateCallViaTpl"  generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsBoWizardCreateCallViaTpl" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="tplMainPKey" type="DomPKey">
+      <Events>
+        <Event name="onChanged" eventHandler="onTripListChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="callMetaPKey" type="DomPKey" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" />
+    <SimpleProperty name="allDay" type="DomBool" />
+    <SimpleProperty name="selectedDate" type="DomDate">
+      <Events>
+        <Event name="onChanged" eventHandler="onDateChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="mode" type="DomString" />
+    <SimpleProperty name="workBegins" type="DomTime" />
+  </SimpleProperties>
+  <ObjectLookups>
+    <ObjectLookup name="callMetaLookup" objectClass="LuCallMeta" dataSourceProperty="callMetaPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <NestedObjects />
+  <ListObjects>
+    <ListObject name="loTripList" objectClass="LoTripList" dataSourceProperty="tplMainPKey" listProperty="tplMainPKey" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+    <Method name="onDateChanged" />
+    <Method name="onTripListChanged" />
+    <Method name="setEARights" />
+    <Method name="getDefaultCallTemplate" />
+    <Method name="getDefaultWorkBegins" />
+    <Method name="loadCallMetaLookup" />
+  </Methods>
+  <Validations>
+    <Validation name="validateNotEmpty" />
+    <Validation name="validateTimeFrame" />
+  </Validations>
+</BusinessObject>

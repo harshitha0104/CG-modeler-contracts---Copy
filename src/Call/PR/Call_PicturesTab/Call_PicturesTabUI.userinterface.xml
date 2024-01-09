@@ -1,0 +1,22 @@
+<UIDescription name="Call::PicturesTabUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::MainBO.luCustomer.name" />
+        <!-- CW-REQUIRED: remove title binding -->
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <!--<ImageGrid name="PicturesGrid">
+					<Bindings>
+
+						<Binding target="Text" binding="" bindingMode="TWO_WAY"/>
+								  <Binding target="NewText" binding="" bindingMode="TWO_WAY"/>
+								  <Binding target="ImageList" binding="" bindingMode="TWO_WAY"/>
+					</Bindings>
+				</ImageGrid>-->
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

@@ -1,0 +1,43 @@
+<DataSource name="DsLuTodoCount" backendSystem="sf" businessObjectClass="LuTodoCount" external="false" readOnly="true" editableEntity="Task" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Task" column="Id" />
+    <DerivedAttribute name="todoCount" value="Count(*)" />
+  </Attributes>
+  <Entities>
+    <Entity name="Task" alias="" />
+    <Entity name="User" alias="Responsible">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Task.OwnerId" comparator="eq" rightSideType="Attribute" rightSideValue="Responsible.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="User_Accountable__c">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Task.User_Accountable__c" comparator="eq" rightSideType="Attribute" rightSideValue="User_Accountable__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="User" alias="Owner">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="User_Accountable__c.User__c" comparator="eq" rightSideType="Attribute" rightSideValue="Owner.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="RecordType" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Task.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+          <Condition leftSideValue="RecordType.DeveloperName" comparator="eq" rightSideType="Literal" rightSideValue="'User_Task'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Task.OwnerId = '#UserPKey#'
+        AND Task.Status IN ('In Progress', 'Not Started', 'Waiting on someone else')
+        AND Task.IsDeleted = '0'
+     ]]></QueryCondition>
+</DataSource>

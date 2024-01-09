@@ -1,0 +1,17 @@
+<DataSource name="DsLuTourObjectRelInformation" backendSystem="sf" businessObjectClass="LuTourObjectRelInformation" external="false" editableEntity="Tour_Object_Reference__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Tour_Object_Reference__c" column="Id" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tour_Object_Reference__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+  Tour_Object_Reference__c.Tour__c = #tmgTourPKey#
+AND		Tour_Object_Reference__c.Usage__c = #usage#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="tmgTourPKey" type="TEXT" />
+    <Parameter name="usage" type="TEXT" />
+  </Parameters>
+</DataSource>

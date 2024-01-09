@@ -1,0 +1,85 @@
+<Process name="Customer::ScanCustomerProcess" defaultAction="externalBarcode_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="loScannedCustomer" type="LoScannedCustomer" />
+        <Declaration name="CustomerId" type="String" />
+        <Declaration name="CustomerPKey" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="externalBarcode" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetScannedCustomerList" actionType="CREATE" type="LoScannedCustomer">
+        <Return name="ProcessContext::loScannedCustomer" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="externalBarcode_Decision" actionType="DECISION" parameter="ProcessContext::externalBarcode">
+        <CaseEmpty action="scanCustomerBarcode_Logic" />
+        <CaseElse action="trimExternalBarcode" />
+      </Action>
+      <Action actionType="LOGIC" name="trimExternalBarcode" call="ProcessContext::loScannedCustomer.trimBarcode">
+        <Parameters>
+          <Input name="value" value="ProcessContext::externalBarcode" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerId" />
+        <TransitionTo action="scanCustomerBarcode_Decision" />
+      </Action>
+      <Action name="scanCustomerBarcode_Logic" actionType="LOGIC" call="ProcessContext::loScannedCustomer.scanBarcode">
+        <Return name="ProcessContext::CustomerId" />
+        <TransitionTo action="scanCustomerBarcode_Decision" />
+      </Action>
+      <Action name="scanCustomerBarcode_Decision" actionType="DECISION" parameter="ProcessContext::CustomerId">
+        <Case value="cancelled" action="clearCustomer_Logic" />
+        <CaseElse action="loadLoScannedCustomer" />
+      </Action>
+      <Action actionType="LOGIC" name="clearCustomer_Logic" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value=" " />
+        </Parameters>
+        <Return name="ProcessContext::CustomerId" />
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="LOAD" name="loadLoScannedCustomer" type="LoScannedCustomer">
+        <Parameters>
+          <Input name="id" value="ProcessContext::CustomerId" />
+        </Parameters>
+        <Return name="ProcessContext::loScannedCustomer" />
+        <TransitionTo action="validateScannedCustomer" />
+      </Action>
+      <Action actionType="LOGIC" name="validateScannedCustomer" call="ProcessContext::loScannedCustomer.validateScannedCustomer">
+        <Return name="ProcessContext::isCustomerFound" />
+        <TransitionTo action="isCustomerFound_Decision" />
+      </Action>
+      <Action name="isCustomerFound_Decision" actionType="DECISION" parameter="ProcessContext::isCustomerFound">
+        <Case value="0" action="noCustomerFound" />
+        <Case value="1" action="returnScannedCustomer" />
+        <CaseElse action="noCustomerFound" />
+      </Action>
+      <Action actionType="CONFIRM" confirmType="Ok" name="noCustomerFound">
+        <Message messageId="NoCustomersMsg"></Message>
+        <Cases>
+          <Case value="Ok" action="End" />
+        </Cases>
+      </Action>
+      <Action actionType="END" name="returnScannedCustomer">
+        <ReturnValues>
+          <Return name="CustomerPKey" value="ProcessContext::loScannedCustomer.firstItem.pKey" />
+          <Return name="CustomerId" value="ProcessContext::loScannedCustomer.firstItem.id" />
+          <Return name="Success" type="Literal" value="1" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="CustomerPKey" type="Literal" value=" " />
+          <Return name="CustomerId" type="Literal" value=" " />
+          <Return name="Success" type="Literal" value="0" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

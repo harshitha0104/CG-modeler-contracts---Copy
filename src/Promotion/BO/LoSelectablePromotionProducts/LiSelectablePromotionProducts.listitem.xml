@@ -1,0 +1,7 @@
+<ListItem name="LiSelectablePromotionProducts">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="promotionPKey" type="DomPKey" dataSourceProperty="promotionPKey" />
+  </SimpleProperties>
+</ListItem>

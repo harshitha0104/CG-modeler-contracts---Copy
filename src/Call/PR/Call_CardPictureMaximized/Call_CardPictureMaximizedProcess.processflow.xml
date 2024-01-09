@@ -1,0 +1,85 @@
+<Process name="Call::CardPictureMaximizedProcess" defaultAction="HandleEARights" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="Pictures" type="LoCallAttachments" />
+        <Declaration name="LatestPicture" type="LiCallAttachments" />
+        <Declaration name="isPhone" type="DomBool" />
+        <Declaration name="isReadOnly" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="Call" type="BoCall" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetPictureForList" actionType="LOGIC" call="ProcessContext::Call.loCallAttachments.getLatestPictureForSketching">
+        <Return name="ProcessContext::Pictures" />
+      </Action>
+      <Action name="GetLatestPicture" actionType="LOGIC" call="ProcessContext::Pictures.getFirstItem">
+        <Return name="ProcessContext::LatestPicture" />
+      </Action>
+      <Action name="DetermineIfPhone" actionType="LOGIC" call="Utils.isPhone">
+        <Return name="ProcessContext::isPhone" />
+      </Action>
+      <Action name="IsCallReadOnly" actionType="LOGIC" call="ProcessContext::Call.isReadOnly">
+        <Return name="ProcessContext::isReadOnly" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="HandleEARights" actionType="LOGIC" call="ProcessContext::Pictures.setEARights">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::LatestPicture.pKey" />
+          <Input name="boCall" value="ProcessContext::Call" />
+          <Input name="isReadOnly" value="ProcessContext::isReadOnly" />
+        </Parameters>
+        <TransitionTo action="ShowUI" />
+      </Action>
+      <Action name="ShowUI" actionType="DECISION" parameter="ProcessContext::isPhone">
+        <Case value="true" action="ShowPhoneUI" />
+        <CaseElse action="ShowTabletUI" />
+      </Action>
+      <Action actionType="View" name="ShowPhoneUI">
+        <UIDescription>Call::CardPictureMaximizedPhoneUI</UIDescription>
+        <Events>
+          <Event name="SketchButtonPressed" action="OpenSketchEditor" />
+          <Event name="DeleteButtonPressed" action="DeleteAttachmentConfirm" />
+        </Events>
+      </Action>
+      <Action actionType="View" name="ShowTabletUI">
+        <UIDescription>Call::CardPictureMaximizedUI</UIDescription>
+        <Events>
+          <Event name="SketchButtonPressed" action="OpenSketchEditor" />
+          <Event name="DeleteButtonPressed" action="DeleteAttachmentConfirm" />
+        </Events>
+      </Action>
+      <Action name="OpenSketchEditor" actionType="LOGIC" call="ProcessContext::Pictures.sketchPicture">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::LatestPicture.pKey" type="Binding" />
+        </Parameters>
+        <TransitionTo action="ShowUI" />
+      </Action>
+      <Action name="DeleteAttachmentConfirm" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmAttachmentDeletionMsg" />
+        <Cases>
+          <Case value="Yes" action="DeletePicture" />
+          <Case value="No" action="ShowUI" />
+        </Cases>
+      </Action>
+      <Action name="DeletePicture" actionType="LOGIC" call="ProcessContext::Call.loCallAttachments.deleteItem">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::LatestPicture.pKey" type="Binding" />
+        </Parameters>
+        <TransitionTo action="RemovePicture" />
+      </Action>
+      <Action actionType="LOGIC" name="RemovePicture" call="ProcessContext::Pictures.removeAllItems">
+        <TransitionTo action="EndProcess" />
+      </Action>
+      <Action name="EndProcess" actionType="END"></Action>
+    </Actions>
+  </Body>
+  <ExitHandlers>
+    <ExitHandler handlerName="SaveAttachments" type="ValidateAndSave" name="ProcessContext::Call.loCallAttachments" />
+  </ExitHandlers>
+</Process>

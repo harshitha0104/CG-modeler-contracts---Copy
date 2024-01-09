@@ -1,0 +1,37 @@
+<ListItem name="LiCheckInPaymentItems">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomId" storable="false" dataSourceProperty="text" />
+    <SimpleProperty name="amount" type="DomMoney" storable="true" dataSourceProperty="amount" />
+    <SimpleProperty name="amountReceipt" type="DomMoney" storable="true" dataSourceProperty="amountReceipt" />
+    <SimpleProperty name="absoluteAmount" type="DomMoney" storable="true" dataSourceProperty="absoluteAmount" />
+    <SimpleProperty name="currency" type="DomCurrency" storable="true" dataSourceProperty="currency" />
+    <SimpleProperty name="sdoMainPKey" type="DomPKey" storable="true" dataSourceProperty="sdoMainPKey" />
+    <SimpleProperty name="sdoPaymentMetaPKey" type="DomPKey" storable="true" dataSourceProperty="sdoPaymentMetaPKey" />
+    <SimpleProperty name="initiationDate" type="DomDate" storable="true" dataSourceProperty="initiationDate" />
+    <SimpleProperty name="paymentMethod" type="DomPaymentMethod" storable="false" dataSourceProperty="paymentMethod" />
+    <SimpleProperty name="documentType" type="DomSdoSubType" storable="false" dataSourceProperty="documentType" />
+    <SimpleProperty name="debitCredit" type="DomBpaDebitCredit" storable="false" dataSourceProperty="debitCredit" />
+    <SimpleProperty name="level" type="DomString" storable="false" />
+    <SimpleProperty name="enteredAmount" type="DomMoney" storable="false" dataSourceProperty="amount" />
+    <SimpleProperty name="modReasonEntered" type="DomString" storable="false" />
+    <SimpleProperty name="hierarchyIcon" type="DomString" storable="false" />
+    <SimpleProperty name="displayId" type="DomString" storable="false" />
+    <SimpleProperty name="mainPKey" type="DomPKey" storable="false" />
+    <SimpleProperty name="dataType" type="DomString" storable="false" />
+    <SimpleProperty name="useStepper" type="DomBool" storable="false" />
+    <SimpleProperty name="stepSize" type="DomDecimal" storable="false" />
+    <SimpleProperty name="minValue" type="DomString" storable="false" />
+    <SimpleProperty name="maxValue" type="DomString" storable="false" />
+    <SimpleProperty name="formatType" type="DomString" storable="false" />
+    <SimpleProperty name="modReason" type="DomSdoPaymentModReason" storable="false" dataSourceProperty="modReason" />
+    <SimpleProperty name="displayExpectedAmount" type="DomString" storable="false" />
+    <SimpleProperty name="difference" type="DomMoney" storable="false" />
+    <SimpleProperty name="calcAmount" type="DomMoney" />
+    <SimpleProperty name="invoiceId" type="DomId" dataSourceProperty="invoiceId" />
+    <SimpleProperty name="customerName" type="DomText" dataSourceProperty="customerName" />
+    <SimpleProperty name="expenseType" type="DomSdoPaymentExpenseType" dataSourceProperty="expenseType" />
+    <!--Inventory-->
+    <SimpleProperty name="ivcInformationObject" type="Object" storable="false" />
+  </SimpleProperties>
+</ListItem>

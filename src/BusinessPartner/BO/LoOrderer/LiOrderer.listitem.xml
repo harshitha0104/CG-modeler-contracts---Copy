@@ -1,0 +1,20 @@
+<ListItem name="LiOrderer" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="name" type="DomBpaName" dataSourceProperty="name" />
+    <SimpleProperty name="customerId" type="DomId" dataSourceProperty="customerId" />
+    <SimpleProperty name="mainAddress" type="DomText" dataSourceProperty="mainAddress" />
+    <SimpleProperty name="customerStreet" type="DomText" dataSourceProperty="customerStreet" />
+    <SimpleProperty name="zipCode" type="DomText" dataSourceProperty="customerZIP" />
+    <SimpleProperty name="city" type="DomText" dataSourceProperty="customerCity" />
+    <SimpleProperty name="countryState" type="DomText" dataSourceProperty="customerState" />
+    <SimpleProperty name="prio" type="DomText" dataSourceProperty="prio" />
+    <SimpleProperty name="classOfTrade" type="DomText" dataSourceProperty="classOfTrade" />
+    <SimpleProperty name="tradeOrg" type="DomPKey" dataSourceProperty="tradeOrgName" />
+    <SimpleProperty name="grouping1" type="DomText" dataSourceProperty="grouping1" />
+    <SimpleProperty name="substitutedUsrPKey" type="DomPKey" dataSourceProperty="substitutedUsrPKey" />
+    <SimpleProperty name="subValidFrom" type="DomDate" dataSourceProperty="subValidFrom" />
+    <SimpleProperty name="subValidThru" type="DomValidThru" dataSourceProperty="subValidThru" />
+    <SimpleProperty name="substituted" type="DomBool" dataSourceProperty="isSubstituted" />
+  </SimpleProperties>
+</ListItem>

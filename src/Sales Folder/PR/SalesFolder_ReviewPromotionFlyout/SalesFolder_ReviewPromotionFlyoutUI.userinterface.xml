@@ -1,0 +1,31 @@
+<UIDescription name="SalesFolder::ReviewPromotionFlyoutUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="SupportedPromotionsId" defaultLabel="Promotions" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="PromotionList" dataSource="ProcessContext::PromotionList.Items[]">
+          <Items name="Items" itemPattern="PromotionListItem">
+            <Bindings>
+              <Binding target="PromotionIcon" type="Blob" binding=".mediaPath" fileTypeBinding=".fileType" />
+              <Binding target="SloganText" type="Text" binding=".sloganText" bindingMode="ONE_WAY" />
+              <Binding target="DateText" type="Text" binding=".dateText" bindingMode="ONE_WAY" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col width="4em" height="4em" layoutType="Image" bindingId="PromotionIcon" />
+                <Col>
+                  <Row layoutType="itemIdentifier" bindingId="SloganText" />
+                  <Row layoutType="itemSecondary" bindingId="DateText" />
+                </Col>
+              </Default>
+            </ItemListLayout>
+          </Items>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

@@ -1,0 +1,67 @@
+<BusinessObject name="BoIssue" generateLoadMethod="false" generateCreateMethod="false" OERReference="SvcIssue" schemaVersion="1.1">
+  <DataSource name="DsBoIssue" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+    <SimpleProperty name="classification" type="DomSvcClassification" storable="false" dataSourceProperty="classification" />
+    <SimpleProperty name="initiationDate" type="DomDate" storable="false" dataSourceProperty="initiationDate" />
+    <SimpleProperty name="dueDate" type="DomDate" storable="false" dataSourceProperty="dueDate" />
+    <SimpleProperty name="priority" type="DomABC" storable="false" dataSourceProperty="priority" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" storable="false" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="ownerPKey" type="DomPKey" storable="false" dataSourceProperty="ownerPKey" />
+    <SimpleProperty name="ownerBpaMainPKey" type="DomPKey" storable="false" dataSourceProperty="ownerBpaMainPKey" />
+    <SimpleProperty name="initiatorPKey" type="DomPKey" storable="false" dataSourceProperty="initiatorPKey" />
+    <SimpleProperty name="issuePhase" type="DomSvcIssuePhase" storable="false" dataSourceProperty="issuePhase" />
+    <SimpleProperty name="issueId" type="DomId" storable="false" dataSourceProperty="issueId" />
+    <SimpleProperty name="svcRequestMetaPKey" type="DomPKey" storable="false" dataSourceProperty="svcRequestMetaPKey" />
+    <SimpleProperty name="actualStatePKey" type="DomPKey" dataSourceProperty="actualStatePKey" />
+    <SimpleProperty name="nextStatePKey" type="DomPKey" dataSourceProperty="nextStatePKey" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="metaType" type="DomSvcMetaType" dataSourceProperty="metaType" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" storable="true" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="clbMainPKey" type="DomPKey" dataSourceProperty="clbMainPKey" />
+    <SimpleProperty name="fromClbMainPKey" type="DomPKey" dataSourceProperty="fromClbMainPKey" />
+  </SimpleProperties>
+  <NestedObjects>
+    <NestedObject name="boIssueNote" objectClass="BoIssueNote" dataSourceProperty="pKey" nestingProperty="svcIssuePKey" loadMode="LoadImmediate" />
+    <NestedObject name="boSvcRequestMeta" objectClass="BoSvcRequestMeta" dataSourceProperty="svcRequestMetaPKey" nestingProperty="pKey" loadMode="LoadImmediate" />
+    <NestedObject name="boWorkflow" objectClass="BoWorkflow" dataSourceProperty="wfeWorkflowPKey" nestingProperty="pKey" loadMode="LoadImmediate" />
+  </NestedObjects>
+  <ObjectLookups>
+    <ObjectLookup name="luCustomer" objectClass="LuCustomer" dataSourceProperty="ownerBpaMainPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luResponsible" objectClass="LuUser" dataSourceProperty="responsiblePKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luOwner" objectClass="LuUser" dataSourceProperty="ownerPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luInitiator" objectClass="LuUser" dataSourceProperty="initiatorPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luCustomerManagementInfo" objectClass="LuCustomerManagementInfo" dataSourceProperty="ownerBpaMainPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luIssueAttachmentCount" objectClass="LuIssueAttachmentCount" dataSourceProperty="pKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <ListObjects>
+    <ListObject name="loRecentState" objectClass="LoIssueRecentState" dataSourceProperty="pKey" listProperty="svcIssuePKey" loadMode="LoadImmediate" />
+    <ListObject name="loIssueAttachments" objectClass="LoIssueAttachments" dataSourceProperty="pKey" listProperty="svcIssuePKey" loadMode="LoadOnDemand" />
+    <ListObject name="loAtmAttachment" objectClass="LoAtmAttachment" dataSourceProperty="pKey" listProperty="referencePKey" loadMode="LoadOnDemand" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="setEARights" />
+    <Method name="doDelete" />
+    <Method name="checkButtonVisibility" />
+    <Method name="stateTransition" />
+    <Method name="copyAsync" />
+    <Method name="loadOnDemand" />
+    <Method name="updateAttachmentCount" />
+    <Method name="clearState" />
+  </Methods>
+  <Validations>
+    <Validation name="validateNotEmpty" />
+    <Validation name="validateDueDate" />
+  </Validations>
+</BusinessObject>

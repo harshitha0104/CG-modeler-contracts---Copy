@@ -1,0 +1,27 @@
+<DataSource name="DsLoContactPartnerAddress" backendSystem="sf" businessObjectClass="LoContactPartnerAddress" external="false" editableEntity="Contact" readOnly="false" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contact" column="Id" />
+    <DerivedAttribute name="referencePKey" value="Contact.Id" />
+    <DerivedAttribute name="usage" value="'Private'" />
+    <DerivedAttribute name="main" value="'1'" />
+    <Attribute name="street" table="Contact" column="Mailing_Street__c" />
+    <DerivedAttribute name="houseNumber" value="' '" />
+    <Attribute name="zipCode" table="Contact" column="Mailing_Postal_Code__c" />
+    <Attribute name="city" table="Contact" column="Mailing_City__c" />
+    <Attribute name="countryState" table="Contact" column="Mailing_State__c" />
+    <Attribute name="country" table="Contact" column="Mailing_Country__c" />
+    <DerivedAttribute name="latitude" value="' '" />
+    <DerivedAttribute name="longitude" value="' '" />
+    <DerivedAttribute name="address" value="Contact.Mailing_Street__c ||', ' || Contact.Mailing_Postal_Code__c || ' ' || Contact.Mailing_City__c || ', ' || Contact.Mailing_State__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contact" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+       Contact.Id = #referencePKey# 
+        ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="referencePKey" type="TEXT" />
+  </Parameters>
+</DataSource>

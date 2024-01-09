@@ -1,0 +1,88 @@
+<DataSource name="DsBoTour" backendSystem="sf" businessObjectClass="BoTour" external="false" editableEntity="Tour__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Tour__c" column="Id" />
+    <DerivedAttribute name="businessModified" value="Tour__c.LastModifiedDate" />
+    <Attribute name="salesOrg" table="Tour__c" column="Sales_Org__c" />
+    <Attribute name="tmgMetaPKey" table="Tour__c" column="Tour_Template__c" />
+    <Attribute name="tourId" table="Tour__c" column="Name" />
+    <DateTimeAttribute dateName="dateFrom" timeName="timeFrom" table="Tour__c" column="Start_Date_Time__c" />
+    <DateTimeAttribute dateName="dateThru" timeName="timeThru" table="Tour__c" column="End_Date_Time__c" />
+    <Attribute name="message" table="Tour__c" column="Message__c" />
+    <Attribute name="tmgStatus" table="Tour__c" column="Status__c" />
+    <Attribute name="mileageStart" table="Tour__c" column="Odometer_Start__c" />
+    <Attribute name="mileageEnd" table="Tour__c" column="Odometer_End__c" />
+    <Attribute name="vehicleOKStart" table="Tour__c" column="Truck_ok_Start__c" />
+    <Attribute name="vehicleStatusStart" table="Tour__c" column="Truck_Status_Start__c" />
+    <Attribute name="vehicleOKEnd" table="Tour__c" column="Truck_ok_End__c" />
+    <Attribute name="vehicleStatusEnd" table="Tour__c" column="Truck_Status_End__c" />
+    <Attribute name="defaultUsrMainPKey" table="Tour__c" column="Default_Driver__c" />
+    <Attribute name="actualUsrMainPKey" table="Tour__c" column="Default_Driver__c" />
+    <Attribute name="startEtpWarehousePKey" table="Tour__c" column="Start_Warehouse__c" />
+    <Attribute name="endEtpWarehousePKey" table="Tour__c" column="End_Warehouse__c" />
+    <Attribute name="etpVehicleTruckPKey" table="Tour__c" column="Truck__c" />
+    <Attribute name="etpVehicleTrailer1PKey" table="Tour__c" column="Trailer_1__c" />
+    <Attribute name="etpVehicleTrailer2PKey" table="Tour__c" column="Trailer_2__c" />
+    <Attribute name="completionReleaseTime" table="Tour__c" column="Completion_Release_Time__c" />
+    <Attribute name="startReleaseTime" table="Tour__c" column="Start_Release_Time__c" />
+    <Attribute name="considerMileage" table="Tour__c" column="Consider_Mileage__c" />
+    <Attribute name="considerVehicle" table="Tour__c" column="Consider_Vehicle__c" />
+    <Attribute name="considerVehicleStatus" table="Tour__c" column="Consider_Vehicle_Status__c" />
+    <!-- Derived Attributes -->
+    <DerivedAttribute name="driver" type="String" value="User.LastName || ', ' || User.FirstName" />
+    <!-- Derived Attributes / not supported in CGCloud Backend -->
+    <DerivedAttribute name="defaultEtpVehicleTruckPKey" value="Tour__c.Truck__c" />
+    <DerivedAttribute name="truckId" type="String" value="' '" />
+    <DerivedAttribute name="trailerId" type="String" value="' '" />
+    <DerivedAttribute name="trailerId2" type="String" value="' '" />
+    <DerivedAttribute name="sealOK" type="String" value="' '" />
+    <DerivedAttribute name="cashHandlingRequired" type="String" value="'0'" />
+    <DerivedAttribute name="expressCheckOutAllowed" type="String" value="'0'" />
+    <DerivedAttribute name="palletCheckOutAllowed" type="String" value="'0'" />
+    <DerivedAttribute name="countingGroupCheckOutAllowed" type="String" value="'0'" />
+    <DerivedAttribute name="considerSealCheck" type="String" value="'None'" />
+    <DerivedAttribute name="deleteCallAllowed" type="String" value="'0'" />
+    <DerivedAttribute name="displaySealWarning" type="String" value="'0'" />
+    <DerivedAttribute name="deliveryListPreviewPrintout" type="String" value="'0'" />
+    <DerivedAttribute name="printUIGroup" type="String" value="' '" />
+    <DerivedAttribute name="sealCheckPresettingPolicy" type="String" value="'Prepopulated'" />
+    <DerivedAttribute name="agendaScanBehavior" type="String" value="'StartCreateCall'" />
+    <DerivedAttribute name="coDriverRequired" type="String" value="'ZeroOrMore'" />
+    <DerivedAttribute name="coDriverUsrMainPKey" type="String" value="' '" />
+    <DerivedAttribute name="cashCheckInRequired" type="String" value="'Optional'" />
+    <DerivedAttribute name="multipleCashCheckInAllowed" type="String" value="'0'" />
+    <DerivedAttribute name="defaultCurrency" type="String" value="'USD'" />
+    <DerivedAttribute name="advancedUOMAllowed" type="String" value="'0'" />
+    <DerivedAttribute name="tSRLevelOfDetail" type="String" value="'Aggregated'" />
+    <DerivedAttribute name="tSRShowTourInfo" type="String" value="'0'" />
+    <DerivedAttribute name="tSRShowVisitInfo" type="String" value="'0'" />
+    <DerivedAttribute name="tSRShowInventoryInfo" type="String" value="'0'" />
+    <DerivedAttribute name="tSRShowDeliveryDocInfo" type="String" value="'0'" />
+    <DerivedAttribute name="tSRShowSalesDocInfo" type="String" value="'0'" />
+    <DerivedAttribute name="tSRShowCashInfo" type="String" value="'0'" />
+    <DerivedAttribute name="previewPrintout" type="String" value="'0'" />
+    <DerivedAttribute name="inclDSDActivities" type="String" value="'0'" />
+    <DerivedAttribute name="inclMerchActivities" type="String" value="'0'" />
+    <DerivedAttribute name="inclPreSalesActivities" type="String" value="'0'" />
+    <DerivedAttribute name="inclOffRouteActivities" type="String" value="'0'" />
+    <DerivedAttribute name="usrDocMetaPKey" type="String" value="' '" />
+    <DerivedAttribute name="cancelReason" type="String" value="' '" />
+    <DerivedAttribute name="cancelNote" type="String" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tour__c" alias="" idAttribute="Id" />
+    <Entity name="User" alias="">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="Tour__c.Default_Driver__c" comparator="eq" rightSideType="Attribute" rightSideValue="User.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Tour__c.Id = #pKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,92 @@
+<Process name="TourManagement::PreEndOfDayNavigationProcess" defaultAction="StartNavigation" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="MainBO" type="BoTour" />
+        <Declaration name="currentTabPage" type="String" />
+        <Declaration name="Completed" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoTour" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions />
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="NAVIGATION" name="StartNavigation">
+        <Parameters name="ProcessContext::NavigationName">
+          <Processes defaultProcess ="EndTour">
+            <Process id="ProductCheckIn" image="ProductCheckIn" label="productCheckIn" defaultLabel="Check in Product" process="TruckLoad::OverviewProcess" action="setCurrentTabName_productCheckIn" />
+            <Process id="CashCheckIn" image="DollarCheckIn" label="cashCheckIn" defaultLabel="Check in Cash" process="Cash::OverviewProcess" action="setCurrentTabName_cashCheckIn" />
+            <Process id="TimeUtilization " image="TimeCard" label="timeUtilization" defaultLabel="Time Card" process="DailyReport::TimeCardDetailProcess" action="setCurrentTabName_timeUtilization" />
+            <Process id="EndTour" image="TruckEnd" label="endTour" defaultLabel="End Tour" process="TourManagement::DetailProcess" action="setCurrentTabName_endTour" />
+          </Processes>
+        </Parameters>
+        <TransitionTo action="setEARights" />
+      </Action>
+      <Action actionType="LOGIC" name="setEARights" call="ProcessContext::MainBO.setEARights">
+        <TransitionTo action="setCurrentTabName_productCheckIn" />
+      </Action>
+      <!-- End Of Day -->
+      <Action actionType="LOGIC" name="setCurrentTabName_endTour" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_EndTour" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="StartDetailProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartDetailProcess" process="TourManagement::DetailProcess">
+        <Parameters>
+          <Input name="TourDetail" value="ProcessContext::MainBO" />
+          <Input name="navigationMode" type="Literal" value="EndOfDay" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::Completed" value="Released" />
+        </ReturnValues>
+        <TransitionTo action="NavigationDecisionAfterEndOfDay" />
+      </Action>
+      <Action name="NavigationDecisionAfterEndOfDay" actionType="DECISION" parameter="ProcessContext::Completed">
+        <Case value="2" action="CloseEndOfDay" />
+      </Action>
+      <!-- Check In Product -->
+      <Action actionType="LOGIC" name="setCurrentTabName_productCheckIn" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_ProductCheckIn" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="StartTruckLoadOverviewProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartTruckLoadOverviewProcess" process="TruckLoad::OverviewProcess">
+        <Parameters>
+          <Input name="currentTourPKey" value="ProcessContext::MainBO.pKey" />
+          <Input name="navigationMode" type="Literal" value="EndOfDay" />
+        </Parameters>
+      </Action>
+      <!-- Check In Cash -->
+      <Action actionType="LOGIC" name="setCurrentTabName_cashCheckIn" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_CashCheckIn" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="StartCashOverviewProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartCashOverviewProcess" process="Cash::OverviewProcess">
+        <Parameters>
+          <Input name="currentTourPKey" value="ProcessContext::MainBO.pKey" />
+          <Input name="navigationMode" type="Literal" value="EndOfDay" />
+        </Parameters>
+      </Action>
+      <!-- Time Card -->
+      <Action actionType="LOGIC" name="setCurrentTabName_timeUtilization" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_timeUtilization" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="StartTimeUtilizationProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartTimeUtilizationProcess" process="DailyReport::TimeCardDetailProcess" />
+      <Action name="CloseEndOfDay" actionType="END" />
+    </Actions>
+  </Body>
+</Process>

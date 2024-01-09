@@ -1,0 +1,48 @@
+<Process name="User::NotificationFlyoutProcess" defaultAction="ShowNotificationInfo" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="NotificationDetail" type="BoUsrNotification" />
+      </Declarations>
+      <Parameters>
+        <Input name="UsrNotificationPKey" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadBo" actionType="LOAD" type="BoUsrNotification">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::UsrNotificationPKey" />
+        </Parameters>
+        <Return name="ProcessContext::NotificationDetail" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowNotificationInfo">
+        <UIDescription>User::NotificationFlyoutUI</UIDescription>
+        <Events>
+          <Event name="MarkNotificationAsRead" action="setNotificationAsRead" />
+        </Events>
+      </Action>
+      <Action name="setNotificationAsRead" actionType="LOGIC" call="ProcessContext::NotificationDetail.setNotificationAsRead">
+        <TransitionTo action="SaveNotification" />
+      </Action>
+      <Action name="SaveNotification" actionType="SAVE">     
+        <TransitionTo action="markAsReadButtonPressed" />
+      </Action>
+       <Action actionType="LOGIC" name="markAsReadButtonPressed" call="Utils.identity">
+        <Parameters>
+          <Input name="param" type="Literal" value="markAsRead" />
+        </Parameters>
+        <Return name="ProcessContext::buttonPressed" />
+        <TransitionTo action="EndNotificationFlyout" />
+      </Action>
+      <Action actionType="END" name="EndNotificationFlyout">
+        <ReturnValues>
+          <Return name="buttonPressed" value="ProcessContext::buttonPressed" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

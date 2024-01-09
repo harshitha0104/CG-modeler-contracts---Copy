@@ -1,0 +1,17 @@
+<LookupObject name="LuPrdSales" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuPrdSales" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="productPKey" type="DomPKey" dataSourceProperty="productPKey" />
+    <SimpleProperty name="criterion1" type="DomVariant" dataSourceProperty="criterion1" />
+    <SimpleProperty name="criterion2" type="DomVariant" dataSourceProperty="criterion2" />
+    <SimpleProperty name="criterion3" type="DomVariant" dataSourceProperty="criterion3" />
+    <SimpleProperty name="criterion4" type="DomVariant" dataSourceProperty="criterion4" />
+    <SimpleProperty name="criterion5" type="DomVariant" dataSourceProperty="criterion5" />
+    <SimpleProperty name="criterion6" type="DomVariant" dataSourceProperty="criterion6" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

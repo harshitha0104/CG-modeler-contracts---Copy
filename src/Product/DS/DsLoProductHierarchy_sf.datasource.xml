@@ -1,0 +1,96 @@
+<DataSource name="DsLoProductHierarchy" objectClass="LoProductHierarchy" external="true" schemaVersion="2.0" backendSystem="sf">
+  <Attributes>
+    <Attribute name="CriterionPKey" table="Product2" column="Criterion_1_Product__c" />
+    <Attribute name="Description" table="Product2" column="Description_1_#Language#__c" />
+    <DerivedAttribute name="Sort" value="'1'" />
+    <DerivedAttribute name="ProductGroupLevel" value="CASE WHEN (Sync_Mobile_App_PL_Repo__c.Code__c IS NULL OR Sync_Mobile_App_PL_Repo__c.Code__c = ' ' OR Sync_Mobile_App_PL_Repo__c.Code__c = '') THEN Sync_Mobile_App_PL_Repo__c.Picklist_Value__c ELSE Sync_Mobile_App_PL_Repo__c.Code__c END" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var productPKey = "";
+
+			if(Utils.isDefined(jsonQuery.ProductPKey)){
+				productPKey = Utils.convertForDBParam(jsonQuery.ProductPKey, "DomPKey");
+			}
+
+			var sqlParams = {productPKey};
+
+			var sqlStmt = "SELECT DISTINCT ProductLevels.CriterionPKey, ProductLevels.Description, ProductLevels.Sort, ";
+			sqlStmt += "CASE WHEN (Sync_Mobile_App_PL_Repo__c.Code__c IS NULL OR Sync_Mobile_App_PL_Repo__c.Code__c = ' ' OR Sync_Mobile_App_PL_Repo__c.Code__c = '') THEN Sync_Mobile_App_PL_Repo__c.Picklist_Value__c ELSE Sync_Mobile_App_PL_Repo__c.Code__c END AS ProductGroupLevel FROM ";
+
+			sqlStmt += "(SELECT Product2.Criterion_1_Product__c AS CriterionPKey, ProductGroup.Description_1_#Language#__c AS Description, '1' AS Sort, 'Category' AS ToggleCode ";
+			sqlStmt += "FROM Product2, Product2 ProductGroup ";
+			sqlStmt += "WHERE Product2.Id = #productPKey# ";
+			sqlStmt += "AND ProductGroup.Id = Product2.Criterion_1_Product__c ";
+            sqlStmt += "AND Product2.Sales_Org__c = '#SalesOrg#' ";
+            sqlStmt += "AND ProductGroup.Sales_Org__c = '#SalesOrg#' ";
+
+			sqlStmt += "UNION ";
+
+			sqlStmt += "SELECT Product2.Criterion_2_Product__c AS CriterionPKey, ProductGroup.Description_1_#Language#__c AS Description, '2' AS Sort, 'SubCategory' AS ToggleCode ";
+			sqlStmt += "FROM Product2, Product2 ProductGroup ";
+			sqlStmt += "WHERE Product2.Id  = #productPKey# ";
+			sqlStmt += "AND ProductGroup.Id = Product2.Criterion_2_Product__c ";
+            sqlStmt += "AND Product2.Sales_Org__c = '#SalesOrg#' ";
+            sqlStmt += "AND ProductGroup.Sales_Org__c = '#SalesOrg#' ";
+
+
+			sqlStmt += "UNION ";
+
+			sqlStmt += "SELECT Product2.Criterion_3_Product__c AS CriterionPKey, ProductGroup.Description_1_#Language#__c AS Description, '3' AS Sort, 'Brand' AS ToggleCode ";
+			sqlStmt += "FROM Product2, Product2 ProductGroup ";
+			sqlStmt += "WHERE Product2.Id  = #productPKey# ";
+			sqlStmt += "AND ProductGroup.Id = Product2.Criterion_3_Product__c ";
+            sqlStmt += "AND Product2.Sales_Org__c = '#SalesOrg#' ";
+            sqlStmt += "AND ProductGroup.Sales_Org__c = '#SalesOrg#' ";
+
+			sqlStmt += "UNION ";
+
+			sqlStmt += "SELECT Product2.Criterion_4_Product__c AS CriterionPKey, ProductGroup.Description_1_#Language#__c AS Description, '4' AS Sort, 'Flavor' AS ToggleCode ";
+			sqlStmt += "FROM Product2, Product2 ProductGroup ";
+			sqlStmt += "WHERE Product2.Id  = #productPKey# ";
+			sqlStmt += "AND ProductGroup.Id = Product2.Criterion_4_Product__c ";
+            sqlStmt += "AND Product2.Sales_Org__c = '#SalesOrg#' ";
+            sqlStmt += "AND ProductGroup.Sales_Org__c = '#SalesOrg#' ";
+
+			sqlStmt += "UNION ";
+
+			sqlStmt += "SELECT Product2.Criterion_5_Product__c AS CriterionPKey, ProductGroup.Description_1_#Language#__c AS Description, '5' AS Sort, 'Package' AS ToggleCode ";
+			sqlStmt += "FROM Product2, Product2 ProductGroup ";
+			sqlStmt += "WHERE Product2.Id  = #productPKey# ";
+			sqlStmt += "AND ProductGroup.Id = Product2.Criterion_5_Product__c ";
+            sqlStmt += "AND Product2.Sales_Org__c = '#SalesOrg#' ";
+            sqlStmt += "AND ProductGroup.Sales_Org__c = '#SalesOrg#' ";
+
+			sqlStmt += "UNION ";
+
+			sqlStmt += "SELECT Product2.Criterion_6_Product__c AS CriterionPKey, ProductGroup.Description_1_#Language#__c AS Description, '6' AS Sort, 'Product' AS ToggleCode ";
+			sqlStmt += "FROM Product2, Product2 ProductGroup ";
+			sqlStmt += "WHERE Product2.Id  = #productPKey# ";
+			sqlStmt += "AND ProductGroup.Id = Product2.Criterion_6_Product__c ";
+            sqlStmt += "AND Product2.Sales_Org__c = '#SalesOrg#' ";
+            sqlStmt += "AND ProductGroup.Sales_Org__c = '#SalesOrg#' ";
+
+			sqlStmt += ") ProductLevels, Sync_Mobile_App_PL_Repo__c ";
+
+			sqlStmt += "WHERE Sync_Mobile_App_PL_Repo__c.Mobile_App_Domain__c = 'DomPrdGroupLevel' ";
+			sqlStmt += "AND (ProductLevels.ToggleCode = Sync_Mobile_App_PL_Repo__c.Code__c OR ProductLevels.ToggleCode = Sync_Mobile_App_PL_Repo__c.Picklist_Value__c)";
+			sqlStmt += "ORDER By ProductLevels.Sort ";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+    <Update><![CDATA[
+			// Read only datasource
+			return undefined;
+		]]></Update>
+    <Insert><![CDATA[   
+			// Read only datasource
+			return undefined;
+		]]></Insert>
+    <Delete><![CDATA[
+			// Read only datasource
+			return undefined;
+		]]></Delete>
+  </Database>
+</DataSource>

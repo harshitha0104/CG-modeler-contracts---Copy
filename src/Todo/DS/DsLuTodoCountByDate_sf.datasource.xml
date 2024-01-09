@@ -1,0 +1,48 @@
+<DataSource name="DsLuTodoCountByDate" backendSystem="sf" businessObjectClass="LuTodoCountByDate" external="true" editableEntity="Task" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[ 
+
+var currentDate = Utils.convertForDBParam(Utils.convertDate2Ansi(Utils.createDateToday()), 'DomDate');
+if (Utils.isDefined(jsonQuery.dueDate)){
+ currentDate = Utils.convertForDBParam(jsonQuery.dueDate, 'DomDate');
+}
+
+var sqlParams = {currentDate};
+
+var sqlStmt = "SELECT COUNT(*) AS todoCount ";
+sqlStmt += "FROM ";
+
+sqlStmt += "Task ";
+sqlStmt += "JOIN RecordType ON ";
+sqlStmt += "RecordType.Id = Task.RecordTypeId ";
+sqlStmt += "AND RecordType.DeveloperName = 'User_Task' ";
+sqlStmt += "JOIN User_Accountable__c ON ";
+sqlStmt += "User_Accountable__c.Id = Task.User_Accountable__c ";
+sqlStmt += "JOIN User as Owner ON ";
+sqlStmt += "Owner.Id = User_Accountable__c.User__c ";	
+sqlStmt += "LEFT JOIN User as Initiator ON ";
+sqlStmt += "Initiator.Id = Task.CreatedById ";
+sqlStmt += "WHERE ";
+sqlStmt += "Task.OwnerId = '#UserPKey#'";
+sqlStmt += "AND Task.Status IN ('In Progress', 'Not Started', 'Waiting on someone else') ";
+sqlStmt += "AND #compareAsDate('Task.ActivityDate', 'DateTime','<=' , #currentDate#, 'Date')#  ";
+sqlStmt += "AND Task.ActivityDate <> '#MinDate#' ";
+sqlStmt += "AND Task.IsDeleted <> 1 ";
+
+return Utils.replaceMacrosParam(sqlStmt, sqlParams); 
+
+]]></Load>
+    <Update><![CDATA[ 
+// Intended to be empty     
+return undefined;     
+]]></Update>
+    <Insert><![CDATA[     
+// Intended to be empty     
+return undefined;     
+]]></Insert>
+    <Delete><![CDATA[      
+// Intended to be empty     
+return undefined;     
+]]></Delete>
+  </Database>
+</DataSource>

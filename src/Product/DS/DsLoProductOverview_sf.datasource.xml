@@ -1,0 +1,115 @@
+<Datasource name="DsLoProductOverview" objectClass="LoProductOverview" external="true" editableEntity="Product2" schemaVersion="2.0" backendSystem="sf">
+  <Attributes>
+    <Attribute name="pKey" table="Product2" column="Id" />
+    <Attribute name="id" table="Product2" column="Consumer_Goods_Product_Code__c" />
+    <Attribute name="text1" table="Product2" column="Description_1_#Language#__c" />
+    <Attribute name="text2" table="Product2" column="Description_2_#Language#__c" />
+    <Attribute name="shortText" table="Product2" column="Short_Description_#Language#__c" />
+    <DerivedAttribute name="grouping1" value="substr(Product2.Description_1_#Language#__c,1,1)" />
+    <Attribute name="ean" table="Product2" column="GTIN__c" />
+    <Attribute name="foreignProduct" table="Product2" column="Competitive_Product__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Product2" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+       var newParams = Utils.convertDsParamsOldToNew(jsonQuery);
+
+       var addCondSearch = "";
+       var prdStateType = 'FLD';
+
+	   var id = "";
+	   var text1 = "";
+	   var category = "";
+	   var ean = "";
+	   var prdType = "";
+	   var foreignProduct = "";
+
+       if(Utils.isDefined(newParams.prdStateType)){
+       	prdStateType = Utils.convertForDBParam(newParams.prdStateType, "DomPrdStatusType");
+       }
+
+       //############################
+       //## Advanced Search Paging ##
+       //############################
+
+       /**  Prd Id  */
+       if (Utils.isDefined(newParams.id)) {
+         id = Utils.convertForDBParam(newParams.id, "DomId");
+         addCondSearch += " AND Product2.Consumer_Goods_Product_Code__c " + Utils.replaceOperator(newParams.idComp) + "#id# ";
+       }
+
+       /**  Text1  */
+       if (Utils.isDefined(newParams.text1)) {
+         text1 = Utils.convertForDBParam(newParams.text1, "DomText");
+         addCondSearch += " AND Product2.Description_1_#Language#__c " + Utils.replaceOperator(newParams.text1Comp) + "#text1# ";
+       }
+
+       /**  Prd Category  */
+       if (Utils.isDefined(newParams.category)) {
+         category = Utils.convertForDBParam(newParams.category, "DomPrdCategory");
+         addCondSearch += " AND Product2.Category__c " + Utils.replaceOperator(newParams.categoryComp) + "#category# ";
+       }
+
+       /**  EAN  */
+       if (Utils.isDefined(newParams.ean)) {
+         ean = Utils.convertForDBParam(newParams.ean, "DomPrdNumber");
+         addCondSearch += " AND Product2.GTIN__c " + Utils.replaceOperator(newParams.eanComp) + "#ean# ";
+       }
+
+       /**  Prd Type  */
+       if (Utils.isDefined(newParams.prdType)) {
+         prdType = Utils.convertForDBParam(newParams.prdType, "DomPrdType");
+         addCondSearch += " AND Product2.Product_Type__c " + Utils.replaceOperator(newParams.prdTypeComp) + "#prdType# ";
+       }
+
+       /**  Foreign Product */
+       if (Utils.isDefined(newParams.foreignProduct)){
+         foreignProduct = Utils.convertForDBParam(newParams.foreignProduct, "DomBool");
+         addCondSearch += " AND Product2.Competitive_Product__c " + Utils.replaceOperator(newParams.foreignProductComp) + "#foreignProduct# ";
+       }
+
+       var sqlParams = {prdStateType, id, text1, category, ean, prdType, foreignProduct};
+
+       var sqlStmt = "SELECT Product2.Id AS pKey,";
+       sqlStmt += " Product2.Consumer_Goods_Product_Code__c AS id,";
+       sqlStmt += " Product2.GTIN__c AS ean,";
+       sqlStmt += " Product2.Description_1_#Language#__c AS text1,";
+       sqlStmt += " Product2.Description_2_#Language#__c AS text2,";
+       sqlStmt += " Product2.Short_Description_#Language#__c AS shortText,";
+       sqlStmt += " substr(Product2.Description_1_#Language#__c,1,1) as grouping1, ";
+       sqlStmt += " Product2.Product_Type__c as prdType, ";
+       sqlStmt += " Product2.Competitive_Product__c as foreignProduct, ";
+       sqlStmt += " Product2.Category__c as category, ";
+       sqlStmt += " RecordType.DeveloperName as metaType, ";
+       sqlStmt += " CASE Product2.Competitive_Product__c WHEN '1' THEN 'ProductForeignGrey24' ELSE 'EmptyImage' END as isForeignProductImage ";
+       sqlStmt += " FROM Product2 ";
+       sqlStmt += " JOIN Product_Template__c ";
+       sqlStmt += " ON Product2.Product_Template__c = Product_Template__c.Id ";
+       sqlStmt += " JOIN RecordType";
+       sqlStmt += " ON Product_Template__c.RecordTypeId = RecordType.Id ";
+       sqlStmt += " WHERE ";
+       sqlStmt += "Product2.Product_Type__c <> 'AssetType' ";
+       sqlStmt += "AND Product2.Sales_Org__c = '#SalesOrg#' ";
+
+       if (newParams.filterOnlyProducts == "true") {
+         sqlStmt += "AND RecordType.Name = 'Product' ";
+       }
+
+       if (newParams.prdStateType == 'FLD') {
+                  sqlStmt += "AND #compareAsDate('Product2.Field_Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+                  sqlStmt += "AND #compareAsDate('Product2.Field_Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+       } else if (newParams.prdStateType == 'KAM') {
+                  sqlStmt += "AND #compareAsDate('Product2.KAM_Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+                  sqlStmt += "AND #compareAsDate('Product2.KAM_Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+       }
+
+       sqlStmt += addCondSearch;
+       sqlStmt += "ORDER BY text1";
+
+       return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+  </Database>
+</Datasource>

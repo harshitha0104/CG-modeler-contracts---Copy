@@ -1,0 +1,19 @@
+<ListItem name="LiPrmProduct">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="prmPromotionPKey" type="DomPKey" dataSourceProperty="prmPromotionPKey" />
+    <SimpleProperty name="prdProductGroupName" type="DomText" dataSourceProperty="prdProductGroupName" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+    <SimpleProperty name="quantity" type="DomInteger" dataSourceProperty="quantity" />
+    <SimpleProperty name="specialPrice" type="DomMoney" dataSourceProperty="specialPrice" />
+    <SimpleProperty name="discount" type="DomDecimal" dataSourceProperty="discount" />
+    <SimpleProperty name="prdgroupId" type="DomId" dataSourceProperty="prdgroupId" />
+    <SimpleProperty name="groupFlag" type="DomText" dataSourceProperty="groupFlag" />
+    <SimpleProperty name="referencePKey" type="DomPKey" dataSourceProperty="referencePKey" />
+    <SimpleProperty name="prdMetaType" type="DomPrdMetaType" dataSourceProperty="prdMetaType" />
+    <SimpleProperty name="manual" type="DomBool" dataSourceProperty="manual" />
+    <SimpleProperty name="sortId" type="DomId" />
+    <SimpleProperty name="clusterGroupReferencePKey" type="DomPKey" dataSourceProperty="clusterGroupReferencePKey" />
+    <SimpleProperty name="included" type="DomPKey" dataSourceProperty="included" />
+  </SimpleProperties>
+</ListItem>

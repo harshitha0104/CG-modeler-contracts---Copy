@@ -1,0 +1,11 @@
+<LookupObject name="LuTotalOrderValueForPositiveSales" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuTotalOrderValueForPositiveSales" />
+  <SimpleProperties>
+    <SimpleProperty name="totalValue" type="DomMoney"/>
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

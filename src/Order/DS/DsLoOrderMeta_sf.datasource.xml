@@ -1,0 +1,50 @@
+<DataSource name="DsLoOrderMeta" backendSystem="sf" businessObjectClass="LoOrderMeta" external="true" distinct="true" editableEntity="Order_Template__c" schemaVersion="2.0">
+  <Entities>
+    <Entity name="Order_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+  var customerPKey =  "" ;
+  if (Utils.isDefined(jsonQuery.customerPKey)) {
+  	customerPKey = Utils.convertForDBParam(jsonQuery.customerPKey, "DomPKey");
+  }
+  var sqlParams = {customerPKey};
+        
+var sqlStmt = "SELECT DISTINCT Order_Template__c.Id AS pKey, ";
+	sqlStmt += "Order_Template__c.Description_#Language#__c AS text ";
+	if (!Utils.isEmptyString(customerPKey)){
+  		sqlStmt += ", (Select Order_Role_orderer_Type__c FROM Account_Extension__c where Account__c = #customerPKey#) as OrderRoleOrdererType ";
+	}
+	sqlStmt += "FROM Order_Template__c ";
+  sqlStmt += "INNER JOIN Custom_Permission_User_Role_Mapping__c on ';' || Order_Template__c.User_Roles__c || ';' like '%;' || Custom_Permission_User_Role_Mapping__c.Custom_Permission_Name__c || ';%' ";
+	sqlStmt += "AND Order_Template__c.IsDeleted <> '1' AND Custom_Permission_User_Role_Mapping__c.IsDeleted <> '1' "
+	sqlStmt += "INNER JOIN SetupEntityAccess ON Custom_Permission_User_Role_Mapping__c.Custom_Permission__c = SetupEntityAccess.SetupEntityId AND SetupEntityAccess.IsDeleted <> '1' ";
+	sqlStmt += "INNER JOIN PermissionSetAssignment ON SetupEntityAccess.ParentId = PermissionSetAssignment.PermissionSetId AND PermissionSetAssignment.IsDeleted <> '1' ";
+	sqlStmt += "WHERE Order_Template__c.Active__c='1' ";
+	sqlStmt += "AND Order_Template__c.Creation_Platform__c IN ('Both', 'Mobility') ";
+	sqlStmt += "AND #compareAsDate('Order_Template__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+	sqlStmt += "AND #compareAsDate('Order_Template__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+	sqlStmt += "AND Order_Template__c.Document_Type__c IN ('OrderEntry','Invoice') ";
+    if (!Utils.isEmptyString(customerPKey)){
+        sqlStmt += "AND (Order_Template__c.Allowed_Orderer_Types__c LIKE OrderRoleOrdererType || '%' OR Order_Template__c.Allowed_Orderer_Types__c LIKE '%;' || OrderRoleOrdererType) ";
+    }
+	sqlStmt += "AND Order_Template__c.IsDeleted <> '1' ";       
+	sqlStmt += "ORDER BY Order_Template__c.Sort__c = '0' ASC, Order_Template__c.Sort__c ASC"
+
+	return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+   ]]></Load>
+    <Update><![CDATA[
+      // Intended to be empty - Overview list => read only!
+      return undefined;
+   ]]></Update>
+    <Insert><![CDATA[
+      // Intended to be empty - Overview list => read only!
+      return undefined;     
+   ]]></Insert>
+    <Delete><![CDATA[
+      // Intended to be empty - Overview list => read only!
+      return undefined;
+   ]]></Delete>
+  </Database>
+</DataSource>

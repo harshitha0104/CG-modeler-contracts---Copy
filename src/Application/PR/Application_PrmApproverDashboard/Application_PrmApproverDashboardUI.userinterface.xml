@@ -1,0 +1,52 @@
+<UIDescription name="Application::PrmApproverDashboardUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionPage">
+    <Section sectionName="masterSection" sectionPattern="DashboardSection" showInfoArea="true" showPasswordChangeButton="false">
+      <Bindings>
+        <Resource target="LogoIcon" type="Image" id="LogoSalesforce" />
+        <Resource target="AltLogoIcon" type="Image" id="EmptyImage" />
+      </Bindings>
+      <Area areaName="welcomeArea" areaPattern="WelcomeArea">
+        <Welcome name="Welcome">
+          <Bindings>
+            <Resource target="Welcome" type="Label" id="welcome" defaultLabel="Welcome" />
+            <Binding target="User" type="Text" binding="ApplicationContext::User.name" bindingMode="ONE_WAY" />
+          </Bindings>
+        </Welcome>
+      </Area>
+      <Area areaName="buttonGridArea" areaPattern="ButtonGridArea">
+        <ImageButton name="ApprovePromotionButton">
+          <Bindings>
+            <Resource target="Image" type="Image" id="MenuFlag" />
+            <Resource target="Text" type="Label" id="ApprovePromotionLabelId" defaultLabel="Promotions" />
+            <Binding target="Info" binding="ProcessContext::PromotionCount.promotionCount" bindingMode="ONE_WAY" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="openApprovePromotion" />
+          </Events>
+        </ImageButton>
+        <ImageButton name="SalesFolder">
+          <Bindings>
+            <Binding type="Visible" target="Visible" call="ApplicationContext::User.isKAMVisible" />
+            <Resource target="Image" type="Image" id="MenuFolderuser" />
+            <Resource target="Text" type="Label" id="SalesFolderId" defaultLabel="SalesFolder" />
+          </Bindings>
+          <VisibilityRoles allRoles="false">
+            <Role name="KeyAccountManager" />
+          </VisibilityRoles>
+          <Events>
+            <ButtonPressedEvent event="OpenSalesFolder" />
+          </Events>
+        </ImageButton>
+        <ImageButton name="About">
+          <Bindings>
+            <Resource target="Image" type="Image" id="MenuInfo" />
+            <Resource target="Text" type="Label" id="AboutLabelId" defaultLabel="About" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="openAboutScreen" />
+          </Events>
+        </ImageButton>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

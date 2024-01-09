@@ -1,0 +1,42 @@
+<ListItem name="LiVisit">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="instructionDescription" type="DomText" dataSourceProperty="instructionDescription" />
+    <SimpleProperty name="name" type="DomText" dataSourceProperty="name" />
+    <!-- Retail Store Info-->
+    <SimpleProperty name="retailStoreName" type="DomText" dataSourceProperty="retailStoreName" />
+    <SimpleProperty name="retailStoreCity" type="DomText" dataSourceProperty="retailStoreCity" />
+    <SimpleProperty name="retailStorePostalCode" type="DomText" dataSourceProperty="retailStorePostalCode" />
+    <SimpleProperty name="retailStoreStreet" type="DomText" dataSourceProperty="retailStoreStreet" />
+    <SimpleProperty name="retailStoreLongitude" type="DomDegree" dataSourceProperty="retailStoreLongitude" />
+    <SimpleProperty name="retailStoreLatitude" type="DomDegree" dataSourceProperty="retailStoreLatitude" />
+    <SimpleProperty name="plannedStartDateTime" type="DomDateTime" id="false" dataSourceProperty="plannedVisitStartTime" />
+    <SimpleProperty name="plannedEndDateTime" type="DomDateTime" id="false" dataSourceProperty="plannedVisitEndTime" />
+    <SimpleProperty name="plannedStartDate" type="DomDate" id="false" />
+    <SimpleProperty name="plannedStartTime" type="DomTime" id="false" />
+    <SimpleProperty name="plannedEndDate" type="DomDate" id="false" />
+    <SimpleProperty name="plannedEndTime" type="DomTime" id="false" />
+    <SimpleProperty name="retailStoreId" type="DomPKey" dataSourceProperty="placeId" />
+    <SimpleProperty name="visitStatus" type="DomVisitStatus" dataSourceProperty="visitStatus" />
+    <SimpleProperty name="visitTypeStatus" type="DomString" dataSourceProperty="visitTypeStatus" />
+    <!-- Address -->
+    <SimpleProperty name="city" type="DomText" dataSourceProperty="city" />
+    <SimpleProperty name="street" type="DomText" dataSourceProperty="street" />
+    <SimpleProperty name="postalCode" type="DomText" dataSourceProperty="postalCode" />
+    <SimpleProperty name="combinedAddress" type="DomText" />
+    <!-- Visitor Address-->
+    <SimpleProperty name="visitorCity" type="DomText" dataSourceProperty="visitorCity" />
+    <SimpleProperty name="visitorStreet" type="DomText" dataSourceProperty="visitorStreet" />
+    <SimpleProperty name="visitorPostalCode" type="DomText" dataSourceProperty="visitorPostalCode" />
+    <!-- needed for Calendar -->
+    <SimpleProperty name="allDay" type="DomBool" storable="true" dataSourceProperty="allDay" />
+    <SimpleProperty name="color" type="DomRgbColor" storable="true" dataSourceProperty="color" />
+    <SimpleProperty name="visitName" type="DomText" dataSourceProperty="visitName" />
+    <SimpleProperty name="mapPinId" type="DomString" storable="false" dataSourceProperty="mapPinId" />
+    <SimpleProperty name="mapPinImage" type="DomString" storable="false" dataSourceProperty="mapPinImage" />
+    <SimpleProperty name="toolTipText" type="DomText" storable="false" dataSourceProperty="toolTipText" />
+    <SimpleProperty name="latitude" type="DomDegree" dataSourceProperty="latitude" />
+    <SimpleProperty name="longitude" type="DomDegree" dataSourceProperty="longitude" />
+    <SimpleProperty name="visibleInMap" type="DomBool" />
+  </SimpleProperties>
+</ListItem>

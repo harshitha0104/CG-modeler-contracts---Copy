@@ -1,0 +1,58 @@
+<Process name="TruckLoad::ExpressCheckOutProcess" defaultAction="GetProductCheckOutItems" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="overviewList" type="LoTruckLoadOverview" />
+        <Declaration name="checkOutItems" type="LoTruckLoadOverview" />
+        <Declaration name="isCheckOutDocAvailable" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="CurrentTourPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetOverviewList" actionType="LOAD" type="LoTruckLoadOverview">
+        <Parameters>
+          <Input name="tmgMainPKey" value="ProcessContext::CurrentTourPKey" />
+        </Parameters>
+        <Return name="ProcessContext::overviewList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="LOGIC" name="GetProductCheckOutItems" call="ProcessContext::overviewList.getProductCheckOutItems">
+        <Parameters>
+          <Input name="overviewList" type="LoTruckLoadOverview" value="ProcessContext::overviewList" />
+        </Parameters>
+        <Return name="ProcessContext::checkOutItems" />
+        <TransitionTo action="CheckForDocumentAvailability" />
+      </Action>
+      <Action actionType="LOGIC" name="CheckForDocumentAvailability" call="ProcessContext::overviewList.isCheckOutDocAvailable">
+        <Parameters>
+          <Input name="checkOutItems" type="LoTruckLoadOverview" value="ProcessContext::checkOutItems" />
+        </Parameters>
+        <Return name="ProcessContext::isCheckOutDocAvailable" />
+        <TransitionTo action="TakeDecisionForExpressCheckOut" />
+      </Action>
+      <Action name="TakeDecisionForExpressCheckOut" actionType="DECISION" parameter="ProcessContext::isCheckOutDocAvailable">
+        <Case value="1" action="ConfirmExpressCheckOut" />
+        <CaseElse action="EndExpressCheckOut" />
+      </Action>
+      <Action name="ConfirmExpressCheckOut" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmExpressCheckOutMsg" />
+        <Cases>
+          <Case value="Yes" action="ReleaseAllProductCheckOut" />
+          <Case value="No" action="EndExpressCheckOut" />
+        </Cases>
+      </Action>
+      <Action actionType="LOGIC" name="ReleaseAllProductCheckOut" call="ProcessContext::overviewList.releaseAllCheckOut">
+        <Parameters>
+          <Input name="overviewList" type="LoTruckLoadOverview" value="ProcessContext::CheckOutItems" />
+        </Parameters>
+         <TransitionTo action="EndExpressCheckOut" />
+      </Action>
+      <Action actionType="END" name="EndExpressCheckOut"></Action>
+    </Actions>
+  </Body>
+</Process>

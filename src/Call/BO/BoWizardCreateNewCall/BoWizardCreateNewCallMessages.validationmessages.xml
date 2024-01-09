@@ -1,0 +1,6 @@
+<ValidationMessages name="BoWizardCreateNewCallMessages" businessObject="BoWizardCreateNewCall" schemaVersion="0.0.0.5">
+  <ValidationMessage name="CasClbFillInAllValues" defaultMessage="Please fill in all values." comment="All fields need to be filled with values." />
+  <ValidationMessage name="CasClbCannotCreateCallWhileSubstituted" defaultMessage="An active substitution is running for you and the selected customer. You are not allowed to create calls during the substitution time frame, if you are the substituted user." comment="Cannot create calls while substituted." />
+  <ValidationMessage name="CasClbCannotCreateSubstitutedCall" defaultMessage="A call of a substituted user cannot be created outside of the substitution time frame." comment="All fields need to be filled with values." />
+  <ValidationMessage name="CasClbInvalidManagementRelation" defaultMessage="The management relation of the customer is not valid for the date of the call." comment="The management relation of the customer needs to be valid." />
+</ValidationMessages>

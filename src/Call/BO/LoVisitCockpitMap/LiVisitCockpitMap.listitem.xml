@@ -1,0 +1,11 @@
+<ListItem name="LiVisitCockpitMap">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="bpaMainPKey" id="true" type="DomPKey" storable="false" />
+    <SimpleProperty name="latitude" type="DomDegree" storable="false" />
+    <SimpleProperty name="longitude" type="DomDegree" storable="false" />
+    <SimpleProperty name="toolTipText" type="DomText" storable="false" />
+    <SimpleProperty name="mapPinId" type="DomString" storable="false" />
+    <SimpleProperty name="address" type="DomText" />
+  </SimpleProperties>
+</ListItem>

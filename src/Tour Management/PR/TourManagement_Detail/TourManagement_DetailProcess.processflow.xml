@@ -1,0 +1,457 @@
+<Process name="TourManagement::DetailProcess" defaultAction="ShowTourList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="TourDetail" type="BoTour" />
+        <Declaration name="StartWarehousePKey" type="DomPKey" />
+        <Declaration name="EndWarehousePKey" type="DomPKey" />
+        <Declaration name="TruckPKey" type="DomPKey" />
+        <Declaration name="Trailer1PKey" type="DomPKey" />
+        <Declaration name="Trailer2PKey" type="DomPKey" />
+        <Declaration name="VehicleTypes" type="String" />
+        <Declaration name="CoDriverPKey" type="DomPKey" />
+        <Declaration name="TourDescriptionPKey" type="DomPKey" />
+        <Declaration name="TourDescriptionValue" type="String" />
+        <Declaration name="currentTabName" type="String" />
+        <Declaration name="isSfBackend" type="DomBool" />
+        <Declaration name="tourStartsToday" type="Object" />
+      </Declarations>
+      <Parameters>
+        <Input name="TourDetail" type="BoTour" />
+        <Input name="NavigationMode" type="DomString" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <!-- sf/casdif -->
+      <Action actionType="LOGIC" name="SetIsSfBackend" call="Utils.isSfBackend">
+        <Return name="ProcessContext::isSfBackend" />
+      </Action>
+      <Action actionType="LOGIC" name="GetCurrentPKey" call="ProcessContext::TourDetail.LoTourDescription.getFirstItemPKey">
+        <Return name="ProcessContext::TourDescriptionPKey" />
+      </Action>
+      <Action name="SetCurrentPKey" actionType="LOGIC" call="ProcessContext::TourDetail.LoTourDescription.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::TourDescriptionPKey" />
+        </Parameters>
+      </Action>
+      <Action name="Load_TourChecklist" actionType="LOGIC" call="ProcessContext::TourDetail.loadTourChecklist" />
+      <Action name="Set_TourDesc" actionType="LOGIC" call="ProcessContext::TourDetail.setTourDescription">
+        <Parameters>
+          <Input name="tourTitle" value="ProcessContext::TourDetail.loTourDescription.Current.text" />
+        </Parameters>
+        <Return name="ProcessContext::TourDescriptionValue" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowTourList" actionType="VIEW">
+        <UIDescription>TourManagement::DetailUI</UIDescription>
+        <Events>
+          <Event name="tabSelected" action="setCurrentTabName_Decision" />
+          <Event name="wareHouseLookup" action="ShowWarehouseLookup" />
+          <Event name="endWareHouseLookup" action="OpenEndWarehouseLookup" />
+          <Event name="truckLookup" action="LoadTruckVehicleTypes" />
+          <Event name="trailer1Lookup" action="LoadTrailer1VehicleTypes" />
+          <Event name="trailer2Lookup" action="LoadTrailer2VehicleTypes" />
+          <Event name="releaseTour" action="ValidateForRelease" />
+          <Event name="completeTour" action="ValidateForCompleteTour" />
+          <Event name="coDriverLookup" action="ShowCoDriverLookup" />
+          <Event name="reviewReleaseInformation" action="ReviewReleaseInformation" />
+          <Event name="reviewCompleteInformation" action="ReviewCompleteInformation" />
+        </Events>
+      </Action>
+      <!-- Decision Point for selected Tab Pages -->
+      <Action name="setCurrentTabName_Decision" actionType="DECISION" parameter="Event.tabName">
+        <Case value="Main" action="setCurrentTabName_Main" />
+        <Case value="Checklist" action="setCurrentTabName_Checklist" />
+        <CaseElse action="setCurrentTabName_Main" />
+      </Action>
+      <!-- BEGIN: Handling TabDecision -->
+      <Action actionType="LOGIC" name="setCurrentTabName_Main" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Main" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabName" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Checklist" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Checklist" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabName" />
+      </Action>
+      <!-- END: Handling TabDecision -->
+      <!-- Start Warehouse-Lookup & Selection -->
+      <Action actionType="PROCESS" name="ShowWarehouseLookup" process="TourManagement::FlyoutSelectWarehouseProcess">
+        <ReturnValues>
+          <Return name="ProcessContext::StartWarehousePKey" value="warehousePKey" />
+        </ReturnValues>
+        <TransitionTo action="StartWarehouseSelected" />
+      </Action>
+      <Action name="StartWarehouseSelected" actionType="DECISION" parameter="ProcessContext::StartWarehousePKey">
+        <Case value=" " action="ShowTourList" />
+        <CaseEmpty action="ShowTourList" />
+        <CaseElse action="SetStartEtpWarehousePKey" />
+      </Action>
+      <Action actionType="LOGIC" name="SetStartEtpWarehousePKey" call="ProcessContext::TourDetail.setStartEtpWarehousePKey">
+        <Parameters>
+          <Input name="newValue" value="ProcessContext::StartWarehousePKey" />
+        </Parameters>
+        <TransitionTo action="LoadWarehouseLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadWarehouseLookup" type="LuEtpWarehouse">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::TourDetail.startEtpWarehousePKey" />
+        </Parameters>
+        <Return name="ProcessContext::TourDetail.luEtpWarehouse" />
+        <TransitionTo action="ResetWarehouseValues" />
+      </Action>
+      <Action actionType="LOGIC" name="ResetWarehouseValues" call="ProcessContext::TourDetail.resetWarehouseValues" />
+      <!-- End Warehouse-Lookup & Selection -->
+      <Action name="OpenEndWarehouseLookup" actionType="DECISION" parameter="ProcessContext::TourDetail.tmgStatus">
+        <Case value="Running" action="ShowEndWarehouseLookup" />
+        <CaseElse action="ShowTourList" />
+      </Action>
+      <Action actionType="PROCESS" name="ShowEndWarehouseLookup" process="TourManagement::FlyoutSelectWarehouseProcess">
+        <ReturnValues>
+          <Return name="ProcessContext::EndWarehousePKey" value="warehousePKey" />
+        </ReturnValues>
+        <TransitionTo action="EndWarehouseSelected" />
+      </Action>
+      <Action name="EndWarehouseSelected" actionType="DECISION" parameter="ProcessContext::EndWarehousePKey">
+        <Case value=" " action="ShowTourList" />
+        <CaseEmpty action="ShowTourList" />
+        <CaseElse action="SetEndEtpWarehousePKey" />
+      </Action>
+      <Action actionType="LOGIC" name="SetEndEtpWarehousePKey" call="ProcessContext::TourDetail.setEndEtpWarehousePKey">
+        <Parameters>
+          <Input name="newValue" value="ProcessContext::EndWarehousePKey" />
+        </Parameters>
+        <TransitionTo action="LoadEndWarehouseLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadEndWarehouseLookup" type="LuEtpWarehouse">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::TourDetail.endEtpWarehousePKey" />
+        </Parameters>
+        <Return name="ProcessContext::TourDetail.luEndEtpWarehouse" />
+      </Action>
+      <!-- Truck Lookup -->
+      <Action name="LoadTruckVehicleTypes" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="vehicleTypes" type="Literal" value="'TruckFast', 'TruckSlow'" />
+        </Parameters>
+        <Return name="ProcessContext::VehicleTypes" />
+        <TransitionTo action="ShowTruckLookup" />
+      </Action>
+      <Action actionType="PROCESS" name="ShowTruckLookup" process="TourManagement::FlyoutSelectVehicleProcess">
+        <Parameters>
+          <Input name="VehicleTypes" type="String" value="ProcessContext::VehicleTypes" />
+          <Input name="EtpWarehousePKey" type="DomPKey" value="ProcessContext::TourDetail.startEtpWarehousePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::TruckPKey" value="vehiclePKey" />
+        </ReturnValues>
+        <TransitionTo action="TruckVehicleSelected" />
+      </Action>
+      <Action name="TruckVehicleSelected" actionType="DECISION" parameter="ProcessContext::TruckPKey">
+        <Case value=" " action="ShowTourList" />
+        <CaseEmpty action="ShowTourList" />
+        <CaseElse action="SetTruckPKey" />
+      </Action>
+      <Action actionType="LOGIC" name="SetTruckPKey" call="ProcessContext::TourDetail.setEtpVehicleTruckPKey">
+        <Parameters>
+          <Input name="newValue" value="ProcessContext::TruckPKey" />
+        </Parameters>
+        <TransitionTo action="LoadVehicleLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadVehicleLookup" type="LuEtpVehicle">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::TourDetail.etpVehicleTruckPKey" />
+        </Parameters>
+        <Return name="ProcessContext::TourDetail.luTruck" />
+      </Action>
+      <!-- Trailer 1 Lookup -->
+      <Action name="LoadTrailer1VehicleTypes" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="vehicleTypes" type="Literal" value="'Trailer'" />
+        </Parameters>
+        <Return name="ProcessContext::VehicleTypes" />
+        <TransitionTo action="ShowTrailer1Lookup" />
+      </Action>
+      <Action actionType="PROCESS" name="ShowTrailer1Lookup" process="TourManagement::FlyoutSelectVehicleProcess">
+        <Parameters>
+          <Input name="VehicleTypes" type="String" value="ProcessContext::VehicleTypes" />
+          <Input name="EtpWarehousePKey" type="DomPKey" value="ProcessContext::TourDetail.startEtpWarehousePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::Trailer1PKey" value="vehiclePKey" />
+        </ReturnValues>
+        <TransitionTo action="Trailer1Selected" />
+      </Action>
+      <Action name="Trailer1Selected" actionType="DECISION" parameter="ProcessContext::Trailer1PKey">
+        <Case value=" " action="ShowTourList" />
+        <CaseEmpty action="ShowTourList" />
+        <CaseElse action="SetTrailer1PKey" />
+      </Action>
+      <Action actionType="LOGIC" name="SetTrailer1PKey" call="ProcessContext::TourDetail.setEtpVehicleTrailer1PKey">
+        <Parameters>
+          <Input name="newValue" value="ProcessContext::Trailer1PKey" />
+        </Parameters>
+        <TransitionTo action="LoadTrailer1Lookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadTrailer1Lookup" type="LuEtpVehicle">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::Trailer1PKey" />
+        </Parameters>
+        <Return name="ProcessContext::TourDetail.luTrailer1" />
+      </Action>
+      <!-- Trailer 2 Lookup -->
+      <Action name="LoadTrailer2VehicleTypes" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="vehicleTypes" type="Literal" value="'Trailer'" />
+        </Parameters>
+        <Return name="ProcessContext::VehicleTypes" />
+        <TransitionTo action="ShowTrailer2Lookup" />
+      </Action>
+      <Action actionType="PROCESS" name="ShowTrailer2Lookup" process="TourManagement::FlyoutSelectVehicleProcess">
+        <Parameters>
+          <Input name="VehicleTypes" type="String" value="ProcessContext::VehicleTypes" />
+          <Input name="EtpWarehousePKey" type="DomPKey" value="ProcessContext::TourDetail.startEtpWarehousePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::Trailer2PKey" value="vehiclePKey" />
+        </ReturnValues>
+        <TransitionTo action="Trailer2Selected" />
+      </Action>
+      <Action name="Trailer2Selected" actionType="DECISION" parameter="ProcessContext::Trailer2PKey">
+        <Case value=" " action="ShowTourList" />
+        <CaseEmpty action="ShowTourList" />
+        <CaseElse action="SetTrailer2PKey" />
+      </Action>
+      <Action actionType="LOGIC" name="SetTrailer2PKey" call="ProcessContext::TourDetail.setEtpVehicleTrailer2PKey">
+        <Parameters>
+          <Input name="newValue" value="ProcessContext::Trailer2PKey" />
+        </Parameters>
+        <TransitionTo action="LoadTrailer2Lookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadTrailer2Lookup" type="LuEtpVehicle">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::Trailer2PKey" />
+        </Parameters>
+        <Return name="ProcessContext::TourDetail.luTrailer2" />
+      </Action>
+      <Action name="ValidateForRelease" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::TourDetail.validateForRelease" />
+        </Validations>
+        <!--Return name="ProcessContext::validationResult" /-->
+        <TransitionTo action="ValidationResultForRelease_Decision" />
+      </Action>
+      <Action name="ValidationResultForRelease_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="TourStartsToday" />
+        <CaseElse action="ShowTourList" />
+      </Action>
+      <Action name="TourStartsToday" actionType="LOGIC" call="ProcessContext::TourDetail.isOpenTourForToday">
+        <Parameters></Parameters>
+        <Return name="ProcessContext::tourStartsToday" />
+        <TransitionTo action="CheckIfTourStartsToday" />
+      </Action>
+      <Action name="CheckIfTourStartsToday" actionType="DECISION" parameter="ProcessContext::tourStartsToday">
+        <Case value="false" action="ConfirmReleaseTour" />
+        <CaseElse action="ReleaseTour" />
+      </Action>
+      <Action name="ConfirmReleaseTour" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasTmgTourDateWillBeSetToToday" />
+        <Cases>
+          <Case value="Yes" action="ShowBusyIndicatorBeforeRelease" />
+          <Case value="No" action="ShowTourList" />
+        </Cases>
+      </Action>
+      <Action name="HandleButtonVisibilityNotReleased" actionType="LOGIC" call="ProcessContext::TourDetail.handleButtonVisibility">
+        <Parameters>
+          <Input name="navigationMode" value="ProcessContext::NavigationMode" />
+          <Input name="tourMode" type="Literal" value="NotReleased" />
+        </Parameters>
+        <TransitionTo action="RollbackTourStateTransition" />
+      </Action>
+      <Action name="ProcessStartInvActions" actionType="LOGIC" call="ProcessContext::TourDetail.processTourStartInventoryActions">
+        <Parameters />
+        <TransitionTo action="OpenReleaseProcess" />
+      </Action>
+      <!-- Integration of release process -->
+      <Action actionType="PROCESS" name="OpenReleaseProcess" process="System::ReleaseHandlerProcess">
+        <Parameters>
+          <Input name="referenceObject" value="ProcessContext::TourDetail" />
+          <Input name="phaseFilter" type="Literal" value="Running" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::releaseResultByProcess" value="releaseProcessOutcome" />
+        </ReturnValues>
+        <TransitionTo action="CheckReleaseResultByProcess" />
+      </Action>
+      <Action name="CheckReleaseResultByProcess" actionType="DECISION" parameter="ProcessContext::releaseResultByProcess">
+        <Case value="Confirm" action="Backend_Decision" />
+        <Case value="Cancel" action="RollbackTourStateTransition" />
+        <CaseElse action="ShowTourList" />
+      </Action>
+      <Action actionType="DECISION" name="Backend_Decision" parameter="ProcessContext::isSfBackend">
+        <Case value="false" action="CreateTimeCard" />
+        <CaseElse action="SaveTour" />
+      </Action>
+      <!-- End Integration of release process -->
+      <Action name="CreateTimeCard" actionType="LOGIC" call="ProcessContext::TourDetail.createTimeCard">
+        <TransitionTo action="SaveTour" />
+      </Action>
+      <!-- This action is necessary because the FW does not display the busy indicator automatically if a message box was displayed -->
+      <Action name="ShowBusyIndicatorBeforeRelease" actionType="LOGIC" call="BusyIndicator.show">
+        <TransitionTo action="ReleaseTour" />
+      </Action>
+      <Action name="ReleaseTour" actionType="LOGIC" call="ProcessContext::TourDetail.tourStateTransition">
+        <TransitionTo action="ProcessStartInvActions" />
+      </Action>
+      <Action name="RollbackTourStateTransition" actionType="LOGIC" call="ProcessContext::TourDetail.rollbackStateTransition">
+        <TransitionTo action="setEARights" />
+      </Action>
+      <Action name="SaveTour" actionType="LOGIC" call="ProcessContext::TourDetail.saveAsync">
+        <Parameters />
+        <TransitionTo action="CommitSave" />
+      </Action>
+      <Action name="CommitSave" actionType="LOGIC" call="Facade.commitTransaction">
+        <Parameters />
+        <TransitionTo action="isExpressCheckOutEnabled" />
+      </Action>
+      <Action name="SaveTourAfterComplete" actionType="LOGIC" call="ProcessContext::TourDetail.saveAsync">
+        <Parameters />
+        <TransitionTo action="CommitSaveAfterComplete" />
+      </Action>
+      <Action name="CommitSaveAfterComplete" actionType="LOGIC" call="Facade.commitTransaction">
+        <Parameters />
+        <TransitionTo action="CloseDetailAfterComplete" />
+      </Action>
+      <Action name="isExpressCheckOutEnabled" actionType="DECISION" parameter="ProcessContext::TourDetail.expressCheckOutAllowed">
+        <Case value="1" action="CheckForTourStatus" />
+        <CaseElse action="CloseDetail" />
+        <CaseEmpty action="CloseDetail" />
+      </Action>
+      <Action name="CheckForTourStatus" actionType="DECISION" parameter="ProcessContext::TourDetail.tmgStatus">
+        <Case value="Running" action="StartExpressCheckOutProcess" />
+        <CaseElse action="CloseDetail" />
+        <CaseEmpty action="CloseDetail" />
+      </Action>
+      <Action actionType="PROCESS" name="StartExpressCheckOutProcess" process="TruckLoad::ExpressCheckOutProcess">
+        <Parameters>
+          <Input name="CurrentTourPKey" value="ProcessContext::TourDetail.pKey" />
+        </Parameters>
+        <TransitionTo action="CloseDetail" />
+      </Action>
+      <!--Tour fields should not be editable. -->
+      <Action name="setEARights" actionType="LOGIC" call="ProcessContext::TourDetail.setEARights">
+        <TransitionTo action="ShowTourList" />
+      </Action>
+      <Action name="refreshEARights" actionType="LOGIC" call="BindingUtils.refreshEARights">
+        <TransitionTo action="ShowTourList" />
+      </Action>
+      <!-- Co Driver lookup -->
+      <Action actionType="PROCESS" name="ShowCoDriverLookup" process="TourManagement::FlyoutSelectCoDriverProcess">
+        <Parameters>
+          <Input name="EtpWarehousePKey" type="DomPKey" value="ProcessContext::TourDetail.startEtpWarehousePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CoDriverPKey" value="userPKey" />
+        </ReturnValues>
+        <TransitionTo action="CoDriverSelected" />
+      </Action>
+      <Action name="CoDriverSelected" actionType="DECISION" parameter="ProcessContext::CoDriverPKey">
+        <Case value=" " action="ShowTourList" />
+        <CaseEmpty action="ShowTourList" />
+        <CaseElse action="SetCoDriverPKey" />
+      </Action>
+      <Action actionType="LOGIC" name="SetCoDriverPKey" call="ProcessContext::TourDetail.setCoDriverUsrMainPKey">
+        <Parameters>
+          <Input name="newValue" value="ProcessContext::CoDriverPKey" />
+        </Parameters>
+        <TransitionTo action="LoadUserLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadUserLookup" type="LuUser">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::TourDetail.coDriverUsrMainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::TourDetail.luCoDriver" />
+      </Action>
+      <Action name="CompleteTour" actionType="LOGIC" call="ProcessContext::TourDetail.tourStateTransition">
+        <TransitionTo action="HandleButtonVisibilityCompleted" />
+      </Action>
+      <Action name="ValidateForCompleteTour" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::TourDetail.validateForRelease" />
+        </Validations>
+        <TransitionTo action="ValidationResultForComplete_Decision" />
+      </Action>
+      <Action name="ValidationResultForComplete_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="CompleteTour" />
+        <CaseElse action="ShowTourList" />
+      </Action>
+      <Action name="HandleButtonVisibilityCompleted" actionType="LOGIC" call="ProcessContext::TourDetail.handleButtonVisibility">
+        <Parameters>
+          <Input name="navigationMode" value="ProcessContext::NavigationMode" />
+          <Input name="tourMode" type="Literal" value="Completed" />
+        </Parameters>
+        <TransitionTo action="ProcessEndInvActions" />
+      </Action>
+      <Action name="ProcessEndInvActions" actionType="LOGIC" call="ProcessContext::TourDetail.processTourEndInventoryActions">
+        <Parameters />
+        <TransitionTo action="OpenCompleteProcess" />
+      </Action>
+      <!-- Integration of complete signature process -->
+      <Action actionType="PROCESS" name="OpenCompleteProcess" process="System::ReleaseHandlerProcess">
+        <Parameters>
+          <Input name="referenceObject" value="ProcessContext::TourDetail" />
+          <Input name="phaseFilter" type="Literal" value="Completed" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::releaseResultByProcess" value="releaseProcessOutcome" />
+        </ReturnValues>
+        <TransitionTo action="CheckCompleteResultByProcess" />
+      </Action>
+      <Action name="CheckCompleteResultByProcess" actionType="DECISION" parameter="ProcessContext::releaseResultByProcess">
+        <Case value="Confirm" action="UpdateTimeCard" />
+        <Case value="Cancel" action="RollbackTourStateTransition" />
+        <CaseElse action="ShowTourList" />
+      </Action>
+      <Action name="UpdateTimeCard" actionType="LOGIC" call="ProcessContext::TourDetail.timeCardOperations">
+        <TransitionTo action="SaveTourAfterComplete" />
+      </Action>
+      <!-- Release Information Review -->
+      <Action actionType="PROCESS" name="ReviewReleaseInformation" process="System::ReleaseHandlerProcess">
+        <Parameters>
+          <Input name="referenceObject" value="ProcessContext::TourDetail" />
+          <Input name="readOnlyMode" type="Literal" value="1" />
+          <Input name="phaseFilter" type="Literal" value="Running" />
+        </Parameters>
+        <TransitionTo action="ShowTourList" />
+      </Action>
+      <!-- End of Release Information Review -->
+      <!-- Complete Information Review -->
+      <Action actionType="PROCESS" name="ReviewCompleteInformation" process="System::ReleaseHandlerProcess">
+        <Parameters>
+          <Input name="referenceObject" value="ProcessContext::TourDetail" />
+          <Input name="readOnlyMode" type="Literal" value="1" />
+          <Input name="phaseFilter" type="Literal" value="Completed" />
+        </Parameters>
+        <TransitionTo action="ShowTourList" />
+      </Action>
+      <!-- End of Complete Information Review -->
+      <Action name="CloseDetail" actionType="END">
+        <ReturnValues>
+          <Return name="Released" type="Literal" value="1" />
+        </ReturnValues>
+      </Action>
+      <Action name="CloseDetailAfterComplete" actionType="END">
+        <ReturnValues>
+          <Return name="Released" type="Literal" value="2" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="End" />
+    </Actions>
+  </Body>
+</Process>

@@ -1,0 +1,93 @@
+<DataSource name="DsLoMePromotion" backendSystem="sf" businessObjectClass="LoMePromotion" external="true" readOnly="true" editableEntity="Tactic_Product__c" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+var customerPKey = "";		
+if (Utils.isDefined(jsonQuery.customerPKey)) {
+	customerPKey = Utils.convertForDBParam(jsonQuery.customerPKey, "DomPKey");
+}
+
+var sqlParams = {customerPKey};
+var sqlStmt_KAM = " SELECT Product2.Id as prdMainPKey";   
+sqlStmt_KAM += " FROM Product2 ";
+sqlStmt_KAM += " JOIN Tactic_Product__c ON Tactic_Product__c.Product__c=Product2.KAM_Product__c";
+sqlStmt_KAM += " JOIN Tactic__c ON Tactic_Product__c.Tactic__c=Tactic__c.Id";
+sqlStmt_KAM += " JOIN Promotion__c ON Promotion__c.Id=Promotion_Store__c.Promotion__c";
+sqlStmt_KAM += " JOIN Promotion_Template__c ON Promotion__c.Promotion_Template__c=Promotion_Template__c.Id";
+sqlStmt_KAM += " JOIN Promotion_Store__c ON Tactic__c.Promotion__c=Promotion_Store__c.Promotion__c";
+sqlStmt_KAM += " JOIN Product_Template__c ON Product2.Product_Template__c = Product_Template__c.Id ";
+sqlStmt_KAM += " JOIN RecordType ON Product_Template__c.RecordTypeId = RecordType.Id ";
+sqlStmt_KAM += " WHERE 1=1";
+sqlStmt_KAM += " AND Tactic__c.Included__c  = '1' ";
+sqlStmt_KAM += " AND Tactic_Product__c.Included__c = '1' ";
+sqlStmt_KAM += " AND Promotion_Store__c.Store__c = #customerPKey# ";
+sqlStmt_KAM += " AND RecordType.DeveloperName = 'Product_Group'";
+sqlStmt_KAM += " AND Promotion_Template__c.Selectable_Promotion__c = '0'";
+sqlStmt_KAM += " AND Promotion__c.Active__c = '1' ";
+sqlStmt_KAM += " AND Promotion__c.Phase__c = 'Committed' ";
+sqlStmt_KAM += " AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #TodayAsDate# , 'Date')# ";
+sqlStmt_KAM += " AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #TodayAsDate# , 'Date')# ";
+sqlStmt_KAM += " AND Product2.Sales_Org__c = '#SalesOrg#' ";
+
+
+var sqlStmt_PRM = " SELECT Tactic_Product__c.Product__c as prdMainPKey";
+sqlStmt_PRM += " FROM Tactic_Product__c ";
+sqlStmt_PRM += " JOIN Tactic__c ON Tactic_Product__c.Tactic__c=Tactic__c.Id";
+sqlStmt_PRM += " JOIN Promotion__c ON Tactic__c.Promotion__c=Promotion__c.Id";
+sqlStmt_PRM += " JOIN Promotion_Template__c ON Promotion__c.Promotion_Template__c=Promotion_Template__c.Id";
+sqlStmt_PRM += " JOIN Promotion_Store__c ON Tactic__c.Promotion__c=Promotion_Store__c.Promotion__c";
+sqlStmt_PRM += " JOIN Product2 ON Tactic_Product__c.Product__c=Product2.Id AND Product2.Sales_Org__c = '#SalesOrg#'";
+sqlStmt_PRM += " JOIN Product_Template__c ON Product2.Product_Template__c = Product_Template__c.Id ";
+sqlStmt_PRM += " JOIN RecordType ON Product_Template__c.RecordTypeId = RecordType.Id ";
+sqlStmt_PRM += " WHERE 1=1";
+sqlStmt_PRM += " AND Tactic__c.Included__c  = '1' ";
+sqlStmt_PRM += " AND Tactic_Product__c.Included__c = '1' ";
+sqlStmt_PRM += " AND Promotion_Store__c.Store__c = #customerPKey# ";
+sqlStmt_PRM += " AND RecordType.DeveloperName <> 'Product_Group'";
+sqlStmt_PRM += " AND Promotion_Template__c.Selectable_Promotion__c = '0'";
+sqlStmt_PRM += " AND Promotion__c.Active__c = '1' ";
+sqlStmt_PRM += " AND Promotion__c.Phase__c = 'Committed' ";
+sqlStmt_PRM += " AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #TodayAsDate# , 'Date')# ";
+sqlStmt_PRM += " AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #TodayAsDate# , 'Date')# ";
+
+var sqlStmt_PRMCUSSET = " SELECT Tactic_Product__c.Product__c as prdMainPKey";
+sqlStmt_PRMCUSSET += " FROM Tactic_Product__c";
+sqlStmt_PRMCUSSET += " JOIN Tactic__c ON Tactic_Product__c.Tactic__c=Tactic__c.Id";
+sqlStmt_PRMCUSSET += " JOIN Promotion__c ON Tactic__c.Promotion__c=Promotion__c.Id";
+sqlStmt_PRMCUSSET += " JOIN Promotion_Template__c ON Promotion__c.Promotion_Template__c=Promotion_Template__c.Id";
+sqlStmt_PRMCUSSET += " JOIN Account_Set_Account__c ON Promotion__c.Anchor_Account_Set__c = Account_Set_Account__c.Account_Set__c";
+sqlStmt_PRMCUSSET += " JOIN Product2 ON Tactic_Product__c.Product__c=Product2.Id AND Product2.Sales_Org__c = '#SalesOrg#'";
+sqlStmt_PRMCUSSET += " JOIN Product_Template__c ON Product2.Product_Template__c = Product_Template__c.Id ";
+sqlStmt_PRMCUSSET += " JOIN RecordType ON Product_Template__c.RecordTypeId = RecordType.Id ";
+sqlStmt_PRMCUSSET += " WHERE 1=1";
+sqlStmt_PRMCUSSET += " AND Tactic__c.Included__c  = '1' ";
+sqlStmt_PRMCUSSET += " AND Tactic_Product__c.Included__c = '1' ";
+sqlStmt_PRMCUSSET += " AND Account_Set_Account__c.Account_Set_Account__c = #customerPKey# ";
+sqlStmt_PRMCUSSET += " AND RecordType.DeveloperName <> 'Product_Group'";
+sqlStmt_PRMCUSSET += " AND Promotion_Template__c.Selectable_Promotion__c = '0'";
+sqlStmt_PRMCUSSET += " AND Promotion__c.Active__c = '1' ";
+sqlStmt_PRMCUSSET += " AND Promotion__c.Phase__c = 'Committed' ";
+sqlStmt_PRMCUSSET += " AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #TodayAsDate# , 'Date')# ";
+sqlStmt_PRMCUSSET += " AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #TodayAsDate# , 'Date')# ";
+
+var sqlStmt = "SELECT prdMainPKey, '1' as promoted, ' ' AS promotionPKey, ' ' AS rewardPKey, ' ' AS groupName, ' ' AS groupSort, ' ' AS groupIdSort FROM ";
+sqlStmt += "(" + sqlStmt_PRM + " UNION " + sqlStmt_KAM + " UNION " + sqlStmt_PRMCUSSET + ")";
+sqlStmt += " GROUP BY prdMainPKey";
+sqlStmt += " ORDER BY prdMainPKey ASC";
+
+return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+	]]></Load>
+    <Update><![CDATA[
+// Intended to be empty - Overview list => read only!
+return undefined;
+	]]></Update>
+    <Insert><![CDATA[
+// Intended to be empty - Overview list => read only!
+return undefined;     
+	]]></Insert>
+    <Delete><![CDATA[
+// Intended to be empty - Overview list => read only!
+return undefined;
+	]]></Delete>
+  </Database>
+</DataSource>

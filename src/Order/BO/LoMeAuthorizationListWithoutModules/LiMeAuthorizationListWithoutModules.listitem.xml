@@ -1,0 +1,12 @@
+<ListItem name="LiMeAuthorizationListWithoutModules" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty id="true" name="prdMainPKey" type="DomPKey" storable="false" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="listed" type="DomBool" storable="false" dataSourceProperty="listed" />
+    <SimpleProperty name="listing" type="DomSdoPdaListingFinding" storable="false" dataSourceProperty="listing" />
+    <SimpleProperty name="listingWithModules" type="DomSdoPdaListingFinding" storable="false" dataSourceProperty="listingWithModules" />
+    <SimpleProperty name="customerProductNumber" type="DomId" storable="false" dataSourceProperty="customerProductNumber" />
+    <SimpleProperty name="focusProductType" type="DomVariant" storable="false" dataSourceProperty="focusProductType" />
+    <SimpleProperty name="focusProductImage" type="DomString" storable="false" dataSourceProperty="focusProductImage" />
+  </SimpleProperties>
+</ListItem>

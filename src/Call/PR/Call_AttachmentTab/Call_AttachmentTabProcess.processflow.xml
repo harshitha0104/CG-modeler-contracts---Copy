@@ -1,0 +1,98 @@
+<Process name="Call::AttachmentTabProcess" defaultAction="FilterAttachments" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="ContextMenuList" type="LoCallAttachmentsContextMenu" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoCall" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CheckLoadOnDemand" actionType="LOGIC" call="ProcessContext::MainBO.loadOnDemand">
+        <Parameters>
+          <Input name="object" value="Attachments" type="Literal" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="FilterAttachments" actionType="LOGIC" call="ProcessContext::MainBO.loCallAttachments.filterRelevantAttachments">
+        <TransitionTo action="ShowUI" />
+      </Action>
+      <Action name="ShowUI" actionType="VIEW">
+        <UIDescription>Call::AttachmentTabUI</UIDescription>
+        <Events>
+          <Event name="takePicture" action="TakePicture" />
+          <Event name="selectPicture" action="SelectPicture" />
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+        </Events>
+      </Action>
+      <Action name="TakePicture" actionType="PROCESS" process="Call::CapturePictureProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::MainBO" />
+        </Parameters>
+      </Action>
+      <Action name="SelectPicture" actionType="PROCESS" process="Call::CapturePictureProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::MainBO" />
+          <Input name="openGallery" value="1" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="GetContextMenu" actionType="LOAD" type="LoCallAttachmentsContextMenu">
+        <Return name="ProcessContext::ContextMenuList" />
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="boCall" value="ProcessContext::MainBO" />
+        </Parameters>
+      </Action>
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Tag" action="TagAttachment" />
+        <Case value="Delete" action="DeleteAttachmentConfirm" />
+        <Case value="Sketch" action="SketchPicture" />
+        <CaseElse action="ShowUI" />
+      </Action>
+      <Action name="TagAttachment" actionType="PROCESS" process="Call::AttachmentTagsFlyoutProcess">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="boCall" value="ProcessContext::MainBO" />
+        </Parameters>
+        <TransitionTo action="SetIsTagged" />
+        <ReturnValues>
+          <Return name="ProcessContext::attachmentTags" value="attachmentTagsLi" />
+        </ReturnValues>
+      </Action>
+      <Action name="SetIsTagged" actionType="LOGIC" call="ProcessContext::MainBO.loCallAttachments.setIsTagged">
+        <Parameters>
+          <Input name="attachmentTagSet" value="ProcessContext::attachmentTags" />
+        </Parameters>
+      </Action>
+      <Action name="DeleteAttachmentConfirm" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmAttachmentDeletionMsg" />
+        <Cases>
+          <Case value="Yes" action="DeleteAttachment" />
+          <Case value="No" action="ShowUI" />
+        </Cases>
+      </Action>
+      <Action name="DeleteAttachment" actionType="LOGIC" call="ProcessContext::MainBO.loCallAttachments.deleteItem">
+        <TransitionTo action="DeleteAtmAttachment" />
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <Action name="DeleteAtmAttachment" actionType="LOGIC" call="ProcessContext::MainBO.loAtmAttachment.deleteItem">
+        <TransitionTo action="ShowUI" />
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <Action name="SketchPicture" actionType="LOGIC" call="ProcessContext::MainBO.loCallAttachments.sketchPicture">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

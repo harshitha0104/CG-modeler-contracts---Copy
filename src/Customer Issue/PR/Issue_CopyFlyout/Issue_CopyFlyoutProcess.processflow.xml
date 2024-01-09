@@ -1,0 +1,120 @@
+<Process name="Issue::CopyFlyoutProcess" defaultAction="ShowCopyWizard_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="ValidationBo" type="BoWizardCreateNewIssue" />
+        <Declaration name="CustomerPKey" type="DomPKey" />
+        <Declaration name="IsSubstitution" type="DomBool" />
+        <Declaration name="CopiedIssueDetail" type="BoIssue" />
+      </Declarations>
+      <Parameters>
+        <Input name="CallCustomerPKey" type="DomPKey" />
+        <Input name="IssueDetail" type="BoIssue" />
+        <Input name="CallPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateWizardBo" actionType="CREATE" type="BoWizardCreateNewIssue">
+        <Parameters>
+          <Input name="userPKey" value="ApplicationContext::User.pKey" />
+          <Input name="customerPKey" value="ProcessContext::IssueDetail.luCustomer.pKey" />
+          <Input name="callPKey" value="ProcessContext::CallPKey" />
+          <Input name="svcRequestMetaPKey" value="ProcessContext::IssueDetail.svcRequestMetaPKey" />
+          <Input name="text" value="ProcessContext::IssueDetail.text" />
+          <Input name="dueDate" value="ProcessContext::IssueDetail.dueDate" />
+          <Input name="CopyMode" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::ValidationBo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowCopyWizard_Decision" actionType="DECISION" parameter="ProcessContext::CallPKey">
+        <CaseEmpty action="ShowView" />
+        <CaseElse action="GetCustomerAndCopyIssue" />
+      </Action>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Issue::CopyFlyoutUI</UIDescription>
+        <Events>
+          <Event name="CustomerLookup" action="OpenCustomerNameLookup" />
+          <Event name="FinishWizard" action="setDirty" />
+        </Events>
+      </Action>
+      <Action name="GetCustomerAndCopyIssue" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::CallCustomerPKey" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerPKey" />
+        <TransitionTo action="ReloadManagementInfoAndCopy" />
+      </Action>
+      <Action actionType="LOGIC" name="ReloadManagementInfoAndCopy" call="ProcessContext::ValidationBo.reloadManagementInformation">
+        <TransitionTo action="CopyIssue" />
+      </Action>
+      <!-- Customer handling -->
+      <Action actionType="PROCESS" name="OpenCustomerNameLookup" process="Customer::LookupProcess">
+        <Parameters>
+          <Input name="HideSubstitutedCustomers" value="ProcessContext::IssueDetail.boSvcRequestMeta.isPrivate" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CustomerPKey" value="customerPKey" />
+        </ReturnValues>
+        <TransitionTo action="LoadCustomerLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadCustomerLookup" type="LuCustomer">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CustomerPKey" />
+        </Parameters>
+        <Return name="ProcessContext::ValidationBo.luCustomer" />
+        <TransitionTo action="ReloadManagementInformation" />
+      </Action>
+      <Action actionType="LOGIC" name="ReloadManagementInformation" call="ProcessContext::ValidationBo.reloadManagementInformation">
+        <TransitionTo action="setNew" />
+      </Action>
+      <!-- Set validation business object dirty on clicking done button-->
+      <Action actionType="LOGIC" name="setDirty" call="ProcessContext::ValidationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="5" />
+        </Parameters>
+        <TransitionTo action="WizardValidations" />
+      </Action>
+      <!-- Set validation business object to new if not the done button has been clicked-->
+      <Action actionType="LOGIC" name="setNew" call="ProcessContext::ValidationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="2" />
+        </Parameters>
+      </Action>
+      <!-- Validation actions -->
+      <Action actionType="VALIDATION" name="WizardValidations">
+        <Validations>
+          <Validation name="ProcessContext::ValidationBo.reloadManagementInformation" />
+          <Validation name="ProcessContext::ValidationBo.validateNotEmpty" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="CopyIssue" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action name="CopyIssue" actionType="LOGIC" call="ProcessContext::IssueDetail.copyAsync">
+        <Parameters>
+          <Input name="originalObject" value="ProcessContext::IssueDetail" />
+          <Input name="ownerBpaMainPKey" value="ProcessContext::ValidationBo.luCustomer.pKey" />
+          <Input name="substitutedUsrPKey" value="ProcessContext::ValidationBo.substitutedUsrPKey" />
+          <Input name="isManagedCustomer" value="ProcessContext::ValidationBo.isManagedCustomer" />
+          <Input name="clbMainPKey" value="ProcessContext::ValidationBo.callPKey" />
+        </Parameters>
+        <Return name="ProcessContext::CopiedIssueDetail" />
+        <TransitionTo action="EndCopyIssue" />
+      </Action>
+      <Action actionType="END" name="EndCopyIssue">
+        <ReturnValues>
+          <Return name="copiedIssueDetail" value="ProcessContext::CopiedIssueDetail" />
+          <Return name="buttonPressed" type="Literal" value="copy" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndCancel" />
+    </Actions>
+  </Body>
+</Process>

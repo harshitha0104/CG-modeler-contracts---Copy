@@ -1,0 +1,31 @@
+<BusinessObject name="BoSvcRequestMeta" schemaVersion="1.1">
+  <DataSource name="DsBoSvcRequestMeta"/>
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="id" type="DomSvcMetaIssueType" dataSourceProperty="id" />
+    <SimpleProperty name="issueType" type="DomSvcMetaIssueType" dataSourceProperty="issueType" />
+    <SimpleProperty name="sysNumberPKey" type="DomSvcMetaType" dataSourceProperty="sysNumberPKey" />
+    <SimpleProperty name="metaType" type="DomSvcMetaType" dataSourceProperty="metaType" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="managementType" type="DomBpaManagementType" dataSourceProperty="managementType" />
+    <SimpleProperty name="isPrivate" type="DomBool" dataSourceProperty="isPrivate" />
+    <SimpleProperty name="active" type="DomBool" dataSourceProperty="active" />
+    <SimpleProperty name="issueTypeText" type="DomText" dataSourceProperty="issueTypeText" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+  </Methods>
+</BusinessObject>

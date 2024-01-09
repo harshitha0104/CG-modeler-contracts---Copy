@@ -1,0 +1,46 @@
+<Process name="Cash::CheckOutNavigationProcess" defaultAction="StartNavigation" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="MainBo" type="BoCash" />
+        <Declaration name="currentTabPage" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBo" type="BoCash" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="NAVIGATION" name="StartNavigation">
+        <Parameters name="ProcessContext::NavigationName">
+          <Processes defaultProcess="CashCheckOutHeader">
+            <Process id="CashCheckOutHeader" image="Info" label="cashCheckOutHeader" defaultLabel="Header" process="Cash::CheckOutHeaderProcess" action="setCurrentTabName_header" />
+          </Processes>
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_header" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_header" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Header" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="StartHeaderProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartHeaderProcess" process="Cash::CheckOutHeaderProcess">
+        <Parameters>
+          <Input name="MainBo" value="ProcessContext::MainBo" />
+        </Parameters>
+      </Action>
+      <!-- On demand load of workflow BO-->
+      <!--<Action name="Workflow_Load_Decision" actionType="DECISION" parameter="ProcessContext::MainBo.boWorkflow">
+        <CaseEmpty action="Load_Workflow" />
+        <CaseElse action="setCurrentTabName_header" />
+      </Action>
+      <Action name="Load_Workflow" actionType="LOGIC" call="ProcessContext::MainBo.loadWorkflow">
+        <TransitionTo action="setCurrentTabName_header" />
+      </Action>-->
+    </Actions>
+  </Body>
+</Process>

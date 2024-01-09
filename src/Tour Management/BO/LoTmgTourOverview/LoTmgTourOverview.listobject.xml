@@ -1,0 +1,27 @@
+<ListObject name="LoTmgTourOverview" filter="InDatabase" generateLoadMethod="true"  schemaVersion="1.1">
+  <DataSource name="DsLoTmgTourOverview" />
+  <Item objectClass="LiTmgTourOverview" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="setTourFilter" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoTourOverview">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="AsoTourOverview_Template" property="tmgMetaPKey" lookupProcess="TourManagement::TourTemplateProcess" lookupProcessReturnValue="templatePKey" lookupObject="LuTourTemplate" lookupObjectDisplayValue="text" type="Lookup" />
+        <AdvancedSearchAttribute label="AsoTourOverview_Id" property="text" type="Text" />
+        <AdvancedSearchAttribute label="AsoTourOverview_DateFrom" property="dateFrom" type="Date" />
+        <AdvancedSearchAttribute label="AsoTourOverview_WarehouseId" property="warehouseId" type="Text" />
+        <AdvancedSearchAttribute label="AsoTourOverview_Warehouse" property="startEtpWarehousePKey" lookupProcess="TourManagement::FlyoutSelectWarehouseProcess" lookupProcessReturnValue="warehousePKey" lookupObject="LuEtpWarehouse" lookupObjectDisplayValue="text" type="Lookup" />
+        <AdvancedSearchAttribute label="AsoTourOverview_TmgStatus" property="tmgStatus" type="Selection" toggleId="TmgStatus" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

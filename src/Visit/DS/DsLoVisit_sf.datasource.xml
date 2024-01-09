@@ -1,0 +1,122 @@
+<DataSource name="DsLoVisit" backendSystem="sf" businessObjectClass="LoVisit" external="true" editableEntity="Visit" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Visit" column="Id" />
+    <Attribute name="name" table="Visit" column="Name" />
+    <Attribute name="instructionDescription" table="Visit" column="InstructionDescription" />
+    <Attribute name="placeId" table="Visit" column="PlaceId" />
+    <Attribute name="visitStatus" table="Visit" column="VisitStatus" />
+    <Attribute name="retailStoreName" table="RetailStore" column="Name" />
+    <Attribute name="retailStoreCity" table="RetailStore" column="City" />
+    <Attribute name="retailStorePostalCode" table="RetailStore" column="PostalCode" />
+    <Attribute name="retailStoreStreet" table="RetailStore" column="Street" />
+    <Attribute name="retailStoreLongitude" table="RetailStore" column="Longitude" />
+    <Attribute name="retailStoreLatitude" table="RetailStore" column="Latitude" />
+    <!-- Visitor Address-->
+    <Attribute name="visitorCity" table="Address" column="City" />
+    <Attribute name="visitorStreet" table="Address" column="Street" />
+    <Attribute name="visitorPostalCode" table="Address" column="PostalCode" />
+    <Attribute name="city" table="RetailStore" column="City" />
+    <Attribute name="street" table="RetailStore" column="Street" />
+    <Attribute name="postalCode" table="RetailStore" column="PostalCode" />
+    <Attribute name="latitude" table="RetailStore" column="Latitude" />
+    <Attribute name="longitude" table="RetailStore" column="Longitude" />
+    <Attribute name="plannedVisitStartTime" table="Visit" column="PlannedVisitStartTime" />
+    <Attribute name="plannedVisitEndTime" table="Visit" column="PlannedVisitEndTime" />
+    <DateTimeAttribute dateName="plannedStartDate" timeName="plannedStartTime" table="Visit" column="PlannedVisitStartTime" />
+    <DateTimeAttribute dateName="plannedEndDate" timeName="plannedEndTime" table="Visit" column="PlannedVisitEndTime" />
+    <DerivedAttribute name="allDay" value="'0'" />
+    <DerivedAttribute name="color" value="'6688BB'" />
+    <DerivedAttribute name="visitName" value="RetailStore.Name || ' - ' || Visit.Name" />
+    <DerivedAttribute name="mapPinId" value="''" />
+    <DerivedAttribute name="mapPinImage" value="''" />
+    <DerivedAttribute name="toolTipText" value="''" />
+    <DerivedAttribute name="visitTypeStatus" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="Visit" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+      
+      var plannedStartDate;
+      var plannedEndDate;
+	  var visitStatus;
+      var visitStatusCondition;
+
+      if(Utils.isDefined(jsonQuery.plannedStartDate)){
+          plannedStartDate = Utils.convertForDBParam(Utils.convertFullDate2Ansi(Utils.convertAnsiDate2Date(Utils.convertDate2Ansi(jsonQuery.plannedStartDate))),'DomDate');
+      }
+      if(Utils.isDefined(jsonQuery.plannedEndDate)){
+         plannedEndDate = Utils.convertForDBParam(Utils.convertFullDate2Ansi(Utils.convertAnsiDate2Date(Utils.convertDate2Ansi(jsonQuery.plannedEndDate))),'DomDate');
+      }
+
+
+	  if(Utils.isDefined(jsonQuery.filterVisits) && jsonQuery.filterVisits == "Open"){
+		visitStatus = "'Planned','InProgress'";
+	  }
+
+	  if(Utils.isDefined(jsonQuery.VisitStatus)){
+		visitStatus = jsonQuery.VisitStatus;
+	  }
+	
+      if (Utils.isDefined(visitStatus)) {
+        visitStatusCondition = Utils.getListParams(visitStatus);
+     }
+
+     var sqlParams = {plannedStartDate, plannedEndDate};
+
+     var sql = "SELECT Visit.Id AS pKey, Visit.Status as visitStatus ";
+	 sql 	+= ",'VisitTypeStatus_Visit_' || Visit.Status AS visitTypeStatus ";
+     sql    += ",Visit.Name AS name,  Visit.PlaceId AS placeId ";
+     sql    += ",Visit.InstructionDescription AS instructionDescription ";
+     sql    += ",Address.City AS visitorCity ";
+     sql    += ",Address.Street AS visitorStreet ";
+     sql    += ",Address.PostalCode AS visitorPostalCode ";
+     sql    += ",RetailStore.Longitude AS retailStoreLongitude ";
+     sql    += ",RetailStore.Latitude AS retailStoreLatitude ";
+     sql    += ",RetailStore.City AS retailStoreCity "
+     sql    += ",RetailStore.Street AS retailStoreStreet "
+     sql    += ",RetailStore.PostalCode AS retailStorePostalCode "
+     sql    += ",RetailStore.Name AS retailStoreName ";
+	 sql	+= ",Visit.PlannedVisitStartTime AS plannedVisitStartTime ";
+     sql	+= ",Visit.PlannedVisitEndTime AS plannedVisitEndTime ";
+     sql    += ",#dateAsUnixepochLocaltime('Visit.PlannedVisitStartTime')# AS plannedStartDate ";
+     sql    += ",Visit.PlannedVisitStartTime AS plannedStartTime ";
+     sql    += ",#dateAsUnixepochLocaltime('Visit.PlannedVisitEndTime')# AS plannedEndDate ";
+     sql    += ",(CASE WHEN RetailStore.longitude == 0 THEN Location.longitude ELSE RetailStore.longitude END) AS longitude ";
+     sql    += ",(CASE WHEN RetailStore.latitude == 0 THEN Location.latitude   ELSE RetailStore.latitude END) AS latitude ";
+     sql    += ",(CASE WHEN RetailStore.Street != ' ' OR RetailStore.City != ' ' OR RetailStore.PostalCode != ' ' THEN RetailStore.Street ELSE Address.Street END) AS street ";
+     sql    += ",(CASE WHEN RetailStore.Street != ' ' OR RetailStore.City != ' ' OR RetailStore.PostalCode != ' ' THEN RetailStore.City ELSE Address.City END) AS city ";
+     sql    += ",(CASE WHEN RetailStore.Street != ' ' OR RetailStore.City != ' ' OR RetailStore.PostalCode != ' ' THEN RetailStore.PostalCode ELSE Address.PostalCode END) AS postalCode "
+     sql    += ",'0' AS allDay ";
+     sql    += ",(CASE WHEN ((Select Default_Mobility_Visit_Color__C from Sales_Organization__c where Name='#SALESORG#') != ' ') THEN (Select Default_Mobility_Visit_Color__C from Sales_Organization__c where Name='#SALESORG#') ELSE '6688BB' END)  AS color ";
+     sql    += ",(CASE WHEN STATUS == 'Abandoned' THEN '\u274C   ' || RetailStore.Name  WHEN STATUS = 'Completed' THEN '\u2713   ' || RetailStore.Name ELSE RetailStore.Name END)  AS visitName ";
+     sql    += "FROM Visit INNER JOIN RetailStore ON Visit.PlaceId = RetailStore.Id ";
+     sql    += "Left Outer JOIN Location ON RetailStore.LocationId = Location.Id ";
+     sql    += "Left Outer JOIN Address ON Location.VisitorAddressId = Address.Id ";
+     sql    += "WHERE Visit.VisitorId = '#UserPKey#' ";
+	 sql    += "AND Visit.IsDeleted = '0' ";
+	 sql    += "AND Visit.Visit_Template__c = ' ' ";
+
+     if (Utils.isDefined(plannedStartDate)) {
+          sql += "AND #compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','>=' ,#plannedStartDate#, 'Date')# ";
+          sql += "AND #compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','<=' ,#plannedEndDate#, 'Date')# ";
+                  
+      } 
+
+      if (Utils.isDefined(visitStatus)) {
+          sql += "AND  Visit.Status IN( " + visitStatusCondition.sql  + ") ";
+      }
+
+      sql    += "Order By Visit.PlannedVisitStartTime asc";
+     
+      var finalQuery=Utils.replaceMacrosParam(sql, sqlParams);
+      var finalParams = finalQuery.params;
+      if (Utils.isDefined(visitStatus)) {
+        finalParams =finalParams.concat(visitStatusCondition.params);
+      }
+      return {sql:finalQuery.sql, params:finalParams};
+]]></Load>
+  </Database>
+</DataSource>

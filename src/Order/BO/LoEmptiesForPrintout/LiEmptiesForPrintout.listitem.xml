@@ -1,0 +1,12 @@
+<ListItem name="LiEmptiesForPrintout">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false"/>
+    <SimpleProperty name="prdMainPKey" type="DomPKey" storable="false" />
+    <SimpleProperty name="prdId" type="DomId" storable="false" />
+    <SimpleProperty name="text1" type="DomText" storable="false" />
+    <SimpleProperty name="quantityDelivered" type="DomInteger" storable="false" />
+    <SimpleProperty name="quantityReturned" type="DomInteger" storable="false" />
+    <SimpleProperty name="totalQuantity" type="DomInteger" storable="false" />
+    <SimpleProperty name="taxClassification" type="DomTaxClassification" storable="false"/>
+  </SimpleProperties>
+</ListItem>

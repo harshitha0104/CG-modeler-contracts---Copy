@@ -1,0 +1,11 @@
+<LookupObject name="LuSalesFolderCount" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuSalesFolderCount" />
+  <SimpleProperties>
+    <SimpleProperty name="salesFolderCallCustomerCount" type="DomInteger" dataSourceProperty="salesFolderCallCustomerCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

@@ -1,0 +1,20 @@
+<Datasource objectClass="LoBpaPOSGeometry" backendSystem="sf" businessObjectClass="LoBpaPOSGeometry" distinct="false" readOnly="true" editableEntity="POS__c" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+      // POS GEOMETRY DOES NOT EXIST IN SALESFORCE
+      return undefined;
+   ]]></Load>
+    <Update><![CDATA[
+      // POS GEOMETRY DOES NOT EXIST IN SALESFORCE
+      return undefined;
+   ]]></Update>
+    <Insert><![CDATA[
+      // POS GEOMETRY DOES NOT EXIST IN SALESFORCE
+      return undefined;
+   ]]></Insert>
+    <Delete><![CDATA[
+      // POS GEOMETRY DOES NOT EXIST IN SALESFORCE
+      return undefined;
+   ]]></Delete>
+  </Database>
+</Datasource>

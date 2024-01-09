@@ -1,0 +1,30 @@
+<DataSource name="DsBoPromotion" businessObjectClass="BoPromotion" distinct="false" readonly="false" external="false" editableEntity="PrmPromotion" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="PrmPromotion" column="PKey" />
+    <Attribute name="prmId" table="PrmPromotion" column="Id" />
+    <Attribute name="bpaCustomerPKey" table="PrmPromotion" column="BpaCustomerPKey" />
+    <Attribute name="dateFrom" table="PrmPromotion" column="DateFrom" />
+    <Attribute name="dateThru" table="PrmPromotion" column="DateThru" />
+    <Attribute name="dateInitiation" table="PrmPromotion" column="DateInitiation" />
+    <Attribute name="actualStatePKey" table="PrmPromotion" column="ActualStatePKey" />
+    <Attribute name="nextStatePKey" table="PrmPromotion" column="NextStatePKey" />
+    <Attribute name="wfeWorkflowPKey" table="PrmPromotion" column="WfeWorkflowPKey" />
+    <Attribute name="initiatorPKey" table="PrmPromotion" column="InitiatorPKey" />
+    <Attribute name="responsiblePKey" table="PrmPromotion" column="ResponsiblePKey" />
+    <Attribute name="phase" table="PrmPromotion" column="Phase" />
+    <Attribute name="metaId" table="PrmPromotion" column="MetaId" />
+    <Attribute name="prmMetaPKey" table="PrmPromotion" column="PrmMetaPKey" />
+    <Attribute name="commitDate" table="PrmPromotion" column="CommitDate" />
+    <Attribute name="ownerPKey" table="PrmPromotion" column="OwnerPKey" />
+  </Attributes>
+  <Entities>
+    <Entity name="PrmPromotion" alias="" idAttribute="PKey" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   PrmPromotion.PKey = #pKey#
+  ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

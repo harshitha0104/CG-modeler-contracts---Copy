@@ -1,0 +1,12 @@
+<ListItem name="LiUsrAttachments">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="fileName" type="DomFileName" dataSourceProperty="fileName" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+    <SimpleProperty name="description" type="DomText" dataSourceProperty="description" />
+    <SimpleProperty name="attachmentBlobPKey" type="DomPKey" dataSourceProperty="attachmentBlobPKey" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" blobTable="UsrAttachmentBlob" blobPKeyField="attachmentBlobPKey" />
+    <SimpleProperty name="creationDate" type="DomDate" dataSourceProperty="creationDate" />
+    <SimpleProperty name="usage" type="DomAttachUsage" dataSourceProperty="usage" />
+  </SimpleProperties>
+</ListItem>

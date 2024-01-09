@@ -1,0 +1,13 @@
+<LookupObject name="LuTourCheck" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuTourCheck" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="checkType" type="DomTmgCheckType" dataSourceProperty="checkType" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" /> 
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

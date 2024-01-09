@@ -1,0 +1,28 @@
+<DataSource name="DsLoAtmAttachment" backendSystem="sf" objectClass="LoAtmAttachment" businessObjectClass="LoAtmAttachment" external="true" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="pKey" value="''" />
+    <DerivedAttribute name="businessModified" value="''" />
+    <DerivedAttribute name="attachmentPKey" value="''" />
+    <DerivedAttribute name="referencePKey" value="''" />
+    <DerivedAttribute name="objectType" value="''" />
+    <DerivedAttribute name="creationDate" value="''" />
+    <DerivedAttribute name="fileName" value="''" />
+    <DerivedAttribute name="fileType" value="''" />
+    <DerivedAttribute name="text" value="''" />
+    <DerivedAttribute name="textPKey" value="''" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+ return undefined;
+      ]]></Load>
+    <Update><![CDATA[
+ return undefined;
+      ]]></Update>
+    <Insert><![CDATA[   
+ return undefined;
+      ]]></Insert>
+    <Delete><![CDATA[
+ return undefined;
+      ]]></Delete>
+  </Database>
+</DataSource>

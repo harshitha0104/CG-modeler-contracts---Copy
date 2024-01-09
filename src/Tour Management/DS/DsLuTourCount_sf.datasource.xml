@@ -1,0 +1,23 @@
+<DataSource name="DsLuTourCount" backendSystem="sf" businessObjectClass="LuTourCount" external="false" readOnly="true" editableEntity="Tour__c" schemaVersion="2.0">
+  <Attributes>
+    <!-- First attribute is a workaround to get the DS generated - "Could not find table column type for  in table Tour__c!" -->
+    <Attribute name="pKey" table="Tour__c" column="Id" />
+    <DerivedAttribute name="tourCount" value="Count(*)" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tour__c" alias="" idAttribute="Id" />
+    <Entity name="Tour_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Tour_Template__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Tour__c.Tour_Template__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+    Tour__c.Default_Driver__c= '#UserPKey#'
+    AND (Tour__c.Status__c='Initial' OR Tour__c.Status__c='Open')
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters></Parameters>
+</DataSource>

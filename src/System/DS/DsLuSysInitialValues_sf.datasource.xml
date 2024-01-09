@@ -1,0 +1,13 @@
+<DataSource name="DsLuSysInitialValues" backendSystem="sf" businessObjectClass="LuSysInitialValues" external="false" distinct="false" readOnly="true" editableEntity="User" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="defaultSalesOrg" value="' '" />
+    <DerivedAttribute name="defaultLanguage" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="User" alias="" />
+  </Entities>
+  <OrderCriteria />
+  <QueryCondition><![CDATA[
+		]]></QueryCondition>
+  <Parameters></Parameters>
+</DataSource>

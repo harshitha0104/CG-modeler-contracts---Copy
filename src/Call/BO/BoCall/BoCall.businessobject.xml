@@ -1,0 +1,164 @@
+<BusinessObject name="BoCall"  generateLoadMethod="false" generateCreateMethod="false" OERReference="ClbMain">
+  <DataSource name="DsBoCall" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" id="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="bpaMainPKey" type="DomPKey" dataSourceProperty="bpaMainPKey" />
+    <SimpleProperty name="clbMetaPKey" type="DomPKey" dataSourceProperty="clbMetaPKey" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="initiatorPKey" type="DomPKey" dataSourceProperty="initiatorPKey" />
+    <SimpleProperty name="ownerPKey" type="DomPKey" dataSourceProperty="ownerPKey" />
+    <SimpleProperty name="subject" type="DomText" dataSourceProperty="subject" />
+    <SimpleProperty name="clbStatus" type="DomVisitStatus" dataSourceProperty="clbStatus">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="dateFrom" type="DomDate" dataSourceProperty="dateFrom">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="dateThru" type="DomDate" dataSourceProperty="dateThru">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="timeFrom" type="DomTime" dataSourceProperty="timeFrom">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="timeThru" type="DomTime" dataSourceProperty="timeThru">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="allDay" type="DomBool" dataSourceProperty="allDay" />
+    <SimpleProperty name="placeId" type="DomPKey" dataSourceProperty="placeId" />
+    <SimpleProperty name="isPrivate" type="DomBool" dataSourceProperty="isPrivate" />
+    <SimpleProperty name="duration" type="DomDurationUnit" dataSourceProperty="duration" />
+    <SimpleProperty name="fixed" type="DomBool" dataSourceProperty="fixed" />
+    <SimpleProperty name="reasonCode" type="DomClbReasonCode" dataSourceProperty="reasonCode" />
+    <SimpleProperty name="note" type="DomText" dataSourceProperty="note" />
+    <SimpleProperty name="noteInitialized" type="DomBool" dataSourceProperty="noteInitialized" />
+    <SimpleProperty name="beginTime" type="DomDateTime" dataSourceProperty="beginTime" />
+    <SimpleProperty name="finishTime" type="DomDateTime" dataSourceProperty="finishTime" />
+    <SimpleProperty name="creationDateTime" type="DomDateTime" dataSourceProperty="creationDateTime" />
+    <SimpleProperty name="completedDate" type="DomDate" dataSourceProperty="completedDate" />
+    <SimpleProperty name="originalClbStatus" type="DomVisitStatus" dataSourceProperty="originalClbStatus" />
+    <SimpleProperty name="substitution" type="DomBool" dataSourceProperty="substitution" />
+    <SimpleProperty name="subMainPKey" type="DomPKey" dataSourceProperty="subMainPKey" />
+    <SimpleProperty name="readOnlyBySubstitution" type="DomBool" />
+    <SimpleProperty name="week" type="DomWeek" dataSourceProperty="week" />
+    <SimpleProperty name="startTimeEffective" type="DomDateTime" dataSourceProperty="startTimeEffective" />
+    <SimpleProperty name="startTimeEffectiveTimezoneOffset" type="DomInteger"/>
+    <SimpleProperty name="stopTimeEffective" type="DomDateTime" dataSourceProperty="stopTimeEffective" />
+    <SimpleProperty name="stopTimeEffectiveTimezoneOffset" type="DomInteger"/>
+    <SimpleProperty name="startTimeEffectiveUI" type="DomTime" dataSourceProperty="startTimeEffectiveUI" />
+    <SimpleProperty name="stopTimeEffectiveUI" type="DomTime" dataSourceProperty="stopTimeEffectiveUI" />
+    <SimpleProperty name="durationEffective" type="DomDurationUnit" dataSourceProperty="durationEffective" />
+    <SimpleProperty name="tmgMainPKey" type="DomPKey" dataSourceProperty="tmgMainPKey" />
+    <SimpleProperty name="tmgMainId" type="DomId" dataSourceProperty="tmgMainId" />
+    <SimpleProperty name="usrTimeEntryMetaPKey" type="DomPKey" dataSourceProperty="usrTimeEntryMetaPKey" />
+    <SimpleProperty name="timeEntryPKey" type="DomPKey" dataSourceProperty="timeEntryPKey" />
+    <SimpleProperty name="closeTimeEntry" type="DomBool" />
+    <SimpleProperty name="cancelSalesDocuments" type="DomBool" dataSourceProperty="cancelSalesDocuments" />
+    <SimpleProperty name="eventId" type="DomPKey" />
+    <SimpleProperty name="geolocationLatitude" type="DomDecimal" dataSourceProperty="geolocationLatitude" />
+    <SimpleProperty name="geolocationLongitude" type="DomDecimal" dataSourceProperty="geolocationLongitude" />
+    <SimpleProperty name="isManagedCustomer" type="DomBool" />
+    <SimpleProperty name="isSubstituted" type="DomBool" />
+    <SimpleProperty name="subValidFrom" type="DomDate" />
+    <SimpleProperty name="subValidThru" type="DomValidThru" />
+    <SimpleProperty name="substitutedUsrPKey" type="DomPKey" />
+    <SimpleProperty name="hasSubstitute" type="DomBool" />
+    <SimpleProperty name="considerModule" type="DomBool" dataSourceProperty="considerModule" />
+    <SimpleProperty name="creationMode" type="DomText" dataSourceProperty="creationMode" />
+    <SimpleProperty name="groupQuickFilterCache" type="DomString" />
+    <SimpleProperty name="distributionRate" type="DomDecimal" id="false" dataSourceProperty="distributionRate" />
+    <SimpleProperty name="distributionIssue" type="DomBool" id="false" dataSourceProperty="distributionIssue" />
+    <SimpleProperty name="outOfStockRate" type="DomDecimal" id="false" dataSourceProperty="outOfStockRate" />
+    <SimpleProperty name="outOfStockIssue" type="DomBool" id="false" dataSourceProperty="outOfStockIssue" />
+    <SimpleProperty name="kpiRelevant" type="DomText" id="false" dataSourceProperty="kpiRelevant" />
+  </SimpleProperties>
+  <ObjectLookups>
+    <ObjectLookup name="luCustomer" objectClass="LuCustomer" dataSourceProperty="bpaMainPKey" lookupProperty="pKey" />
+    <ObjectLookup name="luCallMeta" objectClass="LuCallMeta" dataSourceProperty="clbMetaPKey" lookupProperty="pKey" />
+    <ObjectLookup name="luUser" objectClass="LuUser" dataSourceProperty="responsiblePKey" lookupProperty="pKey" />
+    <ObjectLookup name="luCustomerManagementInfo" objectClass="LuCustomerManagementInfo" dataSourceProperty="bpaMainPKey" lookupProperty="pKey" />
+    <ObjectLookup name="luStoreManager" objectClass="LuStoreManager" dataSourceProperty="bpaMainPKey" lookupProperty="pKey" />
+  </ObjectLookups>
+  <NestedObjects>
+    <NestedObject name="boJobManager" objectClass="BoJobManager" dataSourceProperty="pKey" nestingProperty="clbMainPKey" />
+    <NestedObject name="boUserDailyReport" objectClass="BoUserDailyReport" dataSourceProperty="pKey" nestingProperty="clbMainPKey" />
+  </NestedObjects>
+  <ListObjects>
+    <ListObject name="loNotes" objectClass="LoCallNotes" dataSourceProperty="pKey" listProperty="clbMainPKey">
+      <Events>
+        <Event name="listItemChanged" eventHandler="onNotesChanged" />
+      </Events>
+    </ListObject>
+    <ListObject name="loCallAssetOverview" objectClass="LoCallAssetOverview" dataSourceProperty="pKey" listProperty="clbMainPKey">
+      <Events>
+        <Event name="listItemChanged" eventHandler="onAssetSurveyChanged" />
+      </Events>
+    </ListObject>
+    <ListObject name="loCallLocation" objectClass="LoCallLocation" dataSourceProperty="pKey" listProperty="referencePKey" />
+    <ListObject name="loCssBLProcessingSchedule" objectClass="LoCssBLProcessingSchedule" dataSourceProperty="pKey" listProperty="objectPKey" />
+    <ListObject name="loCallAttachments" objectClass="LoCallAttachments" dataSourceProperty="pKey" listProperty="clbMainPKey" />
+    <ListObject name="loAtmAttachment" objectClass="LoAtmAttachment" dataSourceProperty="pKey" listProperty="attachmentPKey" />
+    <ListObject name="loBpaUsrCallSettings" objectClass="LoBpaUsrCallSettings" dataSourceProperty="bpaMainPKey" listProperty="customerPKey" />
+    <ListObject name="loCategoriesQuickFilter" objectClass="LoProductQuickFilter" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loProductQuickFilter" objectClass="LoProductQuickFilter" dataSourceProperty="empty" listProperty="empty" />
+  </ListObjects>
+  <Methods>
+    <Method name="addNote" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="beforeSaveAsync" />
+    <Method name="captureProceedingTime" />
+    <Method name="cancel" />
+    <Method name="createAsync" />
+    <Method name="getButtonVisibility" />
+    <Method name="getCallDuration" />
+    <Method name="getCurrentTime" />
+    <Method name="getPosition" />
+    <Method name="hasOpenOrders" />
+    <Method name="isReadOnly" />
+    <Method name="loadAsync" />
+    <Method name="loadOnDemand" />
+    <Method name="onAssetSurveyChanged" />
+    <Method name="onNotesChanged" />
+    <Method name="onPropertyChanged" />
+    <Method name="reschedule" />
+    <Method name="saveAsync" />
+    <Method name="setDeleted" />
+    <Method name="setEARights" />
+    <Method name="updateCustomerInfo" />
+    <Method name="updateJobListMagnetization" />
+    <Method name="updateSubstitutionInfo" />
+    <Method name="validateMaxPictures" />
+    <Method name="hasTimeEntries" />
+    <Method name="checkReportTabVisibility" />
+    <Method name="cancelDeliveries" />
+    <Method name="checkForEmptyCallDate" />
+    <Method name="updateCssBLProcessingSchedule" />
+    <Method name="getCockpitMenuVisibility" />
+    <Method name="validateMandatoryQuestions" />
+    <Method name="validateMandatorySurveys" />
+    <Method name="updateCustomerCallSetting" />
+    <Method name="filterProductsByQuickFilter" />
+    <Method name="prepareCategoryQuickFilterList" />
+    <Method name="checkIfPictureTaken" />
+    <Method name="calculateKpi" />
+    <Method name="updatePictureCountOnLoad" />
+    <Method name="validateCallDeletion" />
+     <Method name="checkStartEndTime"/>
+  </Methods>
+  <Validations>
+    <Validation name="validateBase" />
+    <Validation name="validateCallDate" />
+    <Validation name="validateIfZeroDuration" />
+    <Validation name="validateCustomer" />
+  </Validations>
+</BusinessObject>

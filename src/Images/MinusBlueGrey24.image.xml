@@ -1,0 +1,6 @@
+<Image xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MinusBlueGrey24" schemaVersion="0.0.0.5">
+  <default mimetype="image/png">iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG4nAABzrwABBrIAAHktAABLywABA8QAADD7AAAQ3uW9d1sAAACASURBVHjaYvz//z8DLQHjqAWjFoxaMNws8AlNec/OwSnAzMJKtoF///xm+Pnj+4ctq+cIYlgQEpv3n4OTm4GFlY1sC/78/sXw4/tXhjWLJzFiWBAan/+eg5NbgIWFhYGBgZEM4/8z/Pnzh+HH968fVi+cKDiaikYtGLVguFgAGAA2OGjRjH5SQgAAAABJRU5ErkJggg==</default>
+  <Android>
+    <default mimetype="Image">iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG4nAABzrwABBrIAAHktAABLywABA8QAADD7AAAQ3uW9d1sAAABGSURBVHjaYvz//z8DLQHjqAWjFoxaMNwsOHXq1HsGBgYBKpj7wczMTBCbBVTzjpmZGSP9fTCaikYtGLVgiFoAAAAA//8DAGmjVdE0G/nqAAAAAElFTkSuQmCC</default>
+  </Android>
+</Image>

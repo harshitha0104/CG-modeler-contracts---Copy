@@ -1,0 +1,92 @@
+<DataSource name="DsLoTeamOfSupervisor" businessObjectClass="LoTeamOfSupervisor" backendSystem="sf" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[    
+
+			var currentUsrPKey = "";
+
+			if(Utils.isDefined(jsonQuery.usrPKey)) {
+            	currentUsrPKey = Utils.convertForDBParam(jsonQuery.usrPKey, "DomPKey");
+			}
+			var sqlParams = {currentUsrPKey};
+
+			var sqlStmt = "SELECT Org_Unit_User__c.User__c AS usrPKey from ";
+			sqlStmt +=      "(SELECT ";
+			sqlStmt +=         "Org_Unit__c, Management_Type__c "; 
+			sqlStmt +=     "FROM ";
+			sqlStmt +=         "Org_Unit_User__c "; 
+			sqlStmt +=     "WHERE ";
+			sqlStmt +=         "User__c = #currentUsrPKey# ";  
+            sqlStmt +=         "AND #compareAsDate('Org_Unit_User__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+			sqlStmt +=         "AND #compareAsDate('Org_Unit_User__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";                      
+			sqlStmt +=      ")AS EtpOrgUnitsOfUser "; 
+			sqlStmt +=         "INNER JOIN Org_Unit_User__c ";
+			sqlStmt +=           "ON EtpOrgUnitsOfUser.Org_Unit__c = Org_Unit_User__c.Org_Unit__c ";
+			sqlStmt +=            "AND EtpOrgUnitsOfUser.Management_Type__c = Org_Unit_User__c.Management_Type__c ";
+			sqlStmt +=            "AND #compareAsDate('Org_Unit_User__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";
+			sqlStmt +=            "AND #compareAsDate('Org_Unit_User__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+			sqlStmt +=    "UNION ";
+			sqlStmt +=    "SELECT ";
+			sqlStmt +=        "User__c AS usrPKey ";
+			sqlStmt +=    "FROM ";
+			sqlStmt +=    "    Org_Unit_User__c "; 
+			sqlStmt +=    "WHERE ";
+			sqlStmt +=        "Org_Unit__c in ( ";
+
+			//#####################################
+			//### child org units of given user ###
+			//#####################################
+
+			sqlStmt +=                        "SELECT ";
+			sqlStmt +=                          "Child_Org_Unit__c ";
+			sqlStmt +=                        "FROM ";
+			sqlStmt +=                         "Org_Unit_Hierarchy__c "; 
+			sqlStmt +=                        "WHERE ";
+			sqlStmt +=                         "Parent_Org_Unit__c IN ( ";
+			sqlStmt +=                                         "SELECT ";
+			sqlStmt +=                                           "Org_Unit__c ";
+			sqlStmt +=                                          "FROM ";
+			sqlStmt +=                                            "Org_Unit_User__c "; 
+			sqlStmt +=                                          "WHERE ";
+			sqlStmt +=                                          "User__c = #currentUsrPKey# " ;   
+            sqlStmt +=                                          "AND #compareAsDate('Org_Unit_User__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";                                                                                          
+			sqlStmt +=                                          "AND #compareAsDate('Org_Unit_User__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";                                                                                
+			sqlStmt +=                                        ") ";                                                                               
+			sqlStmt +=                          "AND #compareAsDate('Org_Unit_Hierarchy__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";                                 
+			sqlStmt +=                          "AND #compareAsDate('Org_Unit_Hierarchy__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+			sqlStmt +=                    ") ";
+
+			//####################################################################################################
+			//### Only Management_Type__cs are allowed which exists between given user and org unit of first level ###
+			//### e.g. if given user is related to first level note with management type "sales" only "sales"  ###
+			//### relations between user and child org unit notes are considered                               ###
+			//####################################################################################################  
+            
+			sqlStmt +=    "AND Management_Type__c IN (SELECT ";
+			sqlStmt +=                             "Distinct(Management_Type__c) "; 
+			sqlStmt +=                           "FROM ";
+			sqlStmt +=                             "Org_Unit_User__c "; 
+			sqlStmt +=                           "WHERE ";
+			sqlStmt +=                             "User__c = #currentUsrPKey# " ;
+            sqlStmt +=                             "AND #compareAsDate('Org_Unit_User__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";                            
+			sqlStmt +=                             "AND #compareAsDate('Org_Unit_User__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";  
+			sqlStmt +=                           ")";
+			sqlStmt +=     "AND #compareAsDate('Org_Unit_User__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# ";                            
+			sqlStmt +=     "AND #compareAsDate('Org_Unit_User__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')# ";
+
+	  		return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+ 
+		]]></Load>
+    <Update><![CDATA[
+			// Intended to be empty
+			return undefined;
+		]]></Update>
+    <Insert><![CDATA[   
+			// Intended to be empty     
+			return undefined;           
+		]]></Insert>
+    <Delete><![CDATA[
+			// Intended to be empty
+			return undefined;  
+		]]></Delete>
+  </Database>
+</DataSource>

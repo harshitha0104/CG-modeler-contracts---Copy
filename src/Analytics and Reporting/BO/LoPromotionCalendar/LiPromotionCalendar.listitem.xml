@@ -1,0 +1,19 @@
+<ListItem name="LiPromotionCalendar" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="bpaMainPKey" type="DomPKey" dataSourceProperty="bpaMainPKey" />
+    <SimpleProperty name="dateFrom" type="DomDate" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" dataSourceProperty="dateThru" />
+    <SimpleProperty name="orderDateFrom" type="DomDate" dataSourceProperty="orderDateFrom" />
+    <SimpleProperty name="orderDateThru" type="DomDate" dataSourceProperty="orderDateThru" />
+    <SimpleProperty name="placementDateFrom" type="DomDate" dataSourceProperty="placementDateFrom" />
+    <SimpleProperty name="placementDateThru" type="DomDate" dataSourceProperty="placementDateThru" />
+    <SimpleProperty name="anchor" type="DomText" dataSourceProperty="anchor" />
+    <SimpleProperty name="slogan" type="DomText" dataSourceProperty="slogan" />
+    <SimpleProperty name="type" type="DomText" dataSourceProperty="type" />
+    <SimpleProperty name="color" type="DomRgbColor" dataSourceProperty="color" />
+    <SimpleProperty name="promotionType" type="DomPrmType" dataSourceProperty="promotionType" />
+    <SimpleProperty name="prmGroup" type="DomText" dataSourceProperty="prmGroup" />
+    <SimpleProperty name="isSelectablePromotion" type="DomBool" dataSourceProperty="isSelectablePromotion" />
+  </SimpleProperties>
+</ListItem>

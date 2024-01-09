@@ -1,0 +1,19 @@
+<UIDescription name="Order::MessageTabUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader titleBinding="ProcessContext::MainBO.luOrderer.name"></PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="MessageGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="MessageId" defaultLabel="Message" />
+          </Bindings>
+          <InputAreaMultiLine name="MessageInput" noOfRows="8" disabled="true">
+            <Bindings>
+              <Binding target="Value" binding="ProcessContext::MainBO.message" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

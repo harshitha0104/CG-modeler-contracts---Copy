@@ -1,0 +1,14 @@
+<BusinessObject name="BoBpaSales"  generateLoadMethod="true">
+  <DataSource name="DsBoBpaSales" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="businessPartnerPKey" type="DomPKey" storable="true" dataSourceProperty="businessPartnerPKey" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" storable="true" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="collectListingClosed" type="DomBool" storable="true" dataSourceProperty="collectListingClosed" />
+    <SimpleProperty name="hitListingClosed" type="DomBool" storable="true" dataSourceProperty="hitListingClosed" />
+    <SimpleProperty name="deleted" type="DomBool" storable="true" dataSourceProperty="deleted" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="saveAsync" />
+  </Methods>
+</BusinessObject>

@@ -1,0 +1,41 @@
+<BusinessObject name="BoTruckLoadWizardAddProduct" schemaVersion="1.1">
+  <DataSource name="DsBoTruckLoadWizardAddProduct" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="productPKey" type="DomPKey" storable="false" dataSourceProperty="productPKey" />
+    <SimpleProperty name="sdoItemMetaPKey" type="DomString" storable="false" />
+    <SimpleProperty name="subType" type="DomString" storable="false" />
+    <SimpleProperty name="uoM" type="DomString" storable="false" dataSourceProperty="unit" />
+    <SimpleProperty name="loLogisticUnit" type="Object" storable="false" dataSourceProperty="empty" />
+    <SimpleProperty name="loLogisticUnitSelectionBox" type="Object" storable="false" dataSourceProperty="empty" />
+  </SimpleProperties>
+  <ObjectLookups>
+    <ObjectLookup name="luProduct" objectClass="LuProduct" dataSourceProperty="productPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <ListObjects>
+    <ListObject name="loEtpWarehouseProducts" objectClass="LoEtpWarehouseProducts" dataSourceProperty="etpWarehousePKey" listProperty="etpWarehousePKey" loadMode="LoadImmediate" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+    <Method name="setEARights" />
+    <Method name="loadProductForAdd" />
+    <Method name="getAvailableUoMForProduct" />
+    <Method name="getDefaultUoMForProduct" />
+    <Method name="getAvailableUoMSelectionBox" />
+  </Methods>
+  <Validations>
+    <Validation name="validateNotEmpty" />
+  </Validations>
+</BusinessObject>

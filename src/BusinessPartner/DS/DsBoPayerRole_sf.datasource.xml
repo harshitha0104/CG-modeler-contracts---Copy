@@ -1,0 +1,24 @@
+<DataSource name="DsBoPayerRole" backendSystem="sf" businessObjectClass="BoPayerRole" external="false" editableEntity="Account_Extension__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Extension__c" column="Id" />
+    <Attribute name="customerPKey" table="Account_Extension__c" column="Account__c" />
+    <DerivedAttribute name="bpaRolePKey" value="' '" />
+    <Attribute name="overAllCreditLimit" table="Account_Extension__c" column=" Payer_Role_Overall_Credit_Limit__c" />
+    <Attribute name="creditBlock" table="Account_Extension__c" column="Payer_Role_Credit_Block__c" />
+    <Attribute name="creditRating" table="Account_Extension__c" column="Payer_Role_Credit_Rating__c" />
+    <DerivedAttribute name="salesOrg" value="'#SalesOrg#'" />
+    <DerivedAttribute name="docTaType" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Extension__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   Account_Extension__c.Account__c = #customerPKey#
+   AND #compareAsDate('Account_Extension__c.Payer_Role_Valid_From__c', 'Date','<=', #TodayAsDate# , 'Date')#
+   AND #compareAsDate('Account_Extension__c.Payer_Role_Valid_Thru__c', 'Date','>=', #TodayAsDate# , 'Date')#
+        ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="customerPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

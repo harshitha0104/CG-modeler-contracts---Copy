@@ -1,0 +1,43 @@
+<DataSource name="DsLoPayCttTactic" backendSystem="sf" businessObjectClass="LoPayCttTactic" external="false" editableEntity="Contract_Payment_Tactic__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contract_Payment_Tactic__c" column="Id" />
+    <Attribute name="prmText" table="Contract__c" column="Description_#Language#__c" />
+    <Attribute name="actualCosts" table="Contract_Payment_Tactic__c" column="Actual_Costs__c" />
+    <Attribute name="rejectedAmount" table="Contract_Payment_Tactic__c" column="Rejected_Amount__c" />
+    <Attribute name="tacticType" table="Contract_Template__c" column="Description_#Language#__c" />
+    <Attribute name="dateFrom" table="Contract_Tactic__c" column="Valid_From__c" />
+    <Attribute name="dateThru" table="Contract_Tactic__c" column="Valid_Thru__c" />
+    <Attribute name="tacticStatus" table="Contract_Payment_Tactic__c" column="Status__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contract_Payment_Tactic__c" alias="" idAttribute="Id" />
+    <Entity name="Contract_Tactic__c" alias="">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="Contract_Payment_Tactic__c.Contract_Tactic__c" comparator="eq" rightSideType="Attribute" rightSideValue="Contract_Tactic__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Contract_Template__c" alias="">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="Contract_Tactic__c.Contract_Tactic_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="Contract_Template__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Contract__c" alias="">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="Contract_Payment_Tactic__c.Contract__c" comparator="eq" rightSideType="Attribute" rightSideValue="Contract__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Contract_Payment_Tactic__c.Contract_Payment__c= #payCttPaymentPKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="payCttPaymentPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

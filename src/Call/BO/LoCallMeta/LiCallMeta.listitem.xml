@@ -1,0 +1,12 @@
+<ListItem name="LiCallMeta">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="id" type="DomId" storable="true" dataSourceProperty="id" />
+    <SimpleProperty name="active" type="DomBool" storable="true" dataSourceProperty="active" />
+    <SimpleProperty name="metaType" type="DomClbMetaType" storable="true" dataSourceProperty="metaType" />
+    <SimpleProperty name="creationPlatform" type="DomCreationPlatform" storable="true" dataSourceProperty="creationPlatform" />
+    <SimpleProperty name="companyRequired" type="DomClbCompanyRequired" storable="true" dataSourceProperty="companyRequired" />
+    <SimpleProperty name="sort" type="DomSort" storable="true" dataSourceProperty="sort" />
+    <SimpleProperty name="text" type="DomText" storable="true" dataSourceProperty="text" />
+  </SimpleProperties>
+</ListItem>

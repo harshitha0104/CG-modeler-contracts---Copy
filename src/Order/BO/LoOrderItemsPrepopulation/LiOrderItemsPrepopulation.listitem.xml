@@ -1,0 +1,60 @@
+<ListItem name="LiOrderItemsPrepopulation">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="sdoMainPKey" type="DomPKey" dataSourceProperty="sdoMainPKey" />
+    <SimpleProperty name="sdoItemMetaPKey" type="DomPKey" dataSourceProperty="sdoItemMetaPKey" />
+    <SimpleProperty name="sdoParentItemPKey" type="DomPKey" dataSourceProperty="sdoParentItemPKey" />
+    <SimpleProperty name="quantity" type="DomDecimal" dataSourceProperty="quantity" />
+    <SimpleProperty name="discount" type="DomPercentage" dataSourceProperty="discount" />
+    <SimpleProperty name="specialPrice" type="DomMoney" dataSourceProperty="specialPrice" />
+    <SimpleProperty name="specialPriceReceipt" type="DomMoney" dataSourceProperty="specialPriceReceipt" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="text1" type="DomText" dataSourceProperty="text1" />
+    <SimpleProperty name="prdId" type="DomId" dataSourceProperty="prdId" />
+    <SimpleProperty name="shortId" type="DomId" dataSourceProperty="shortId" />
+    <SimpleProperty name="quantityLogisticUnit" type="DomPrdLogisticUnit" dataSourceProperty="quantityLogisticUnit" />
+    <SimpleProperty name="value" type="DomMoney" dataSourceProperty="value" />
+    <SimpleProperty name="valueReceipt" type="DomMoney" dataSourceProperty="valueReceipt" />
+    <SimpleProperty name="type" type="DomId" dataSourceProperty="type" />
+    <SimpleProperty name="shortType" type="DomId" dataSourceProperty="shortType" />
+    <SimpleProperty name="promoted" type="DomBool" dataSourceProperty="promoted" />
+    <SimpleProperty name="listed" type="DomBool" dataSourceProperty="listed" />
+    <SimpleProperty name="customerAssortment" type="DomBool" dataSourceProperty="customerAssortment" />
+    <SimpleProperty name="deliveryState" type="DomPrdState" dataSourceProperty="deliveryState" />
+    <SimpleProperty name="fieldState" type="DomPrdState" dataSourceProperty="fieldState" />
+    <SimpleProperty name="simplePricingBasePrice" type="DomMoney" dataSourceProperty="simplePricingBasePrice" />
+    <SimpleProperty name="basePrice" type="DomMoney" dataSourceProperty="basePrice" />
+    <SimpleProperty name="basePriceReceipt" type="DomMoney" dataSourceProperty="basePriceReceipt" />
+    <SimpleProperty name="itemState" type="DomPrdListedPromoted" dataSourceProperty="itemState" />
+    <SimpleProperty name="eAN" type="DomPrdNumber" dataSourceProperty="eAN" />
+    <SimpleProperty name="newState" type="DomPrdState" dataSourceProperty="newState" />
+    <SimpleProperty name="outOfStock" type="DomBool" dataSourceProperty="outOfStock" />
+    <SimpleProperty name="piecesPerSmallestUnitForBasePrice" type="DomDecimal" dataSourceProperty="piecesPerSmallestUnitForBasePrice" />
+    <SimpleProperty name="priceEffect" type="DomSdoItemMetaPriceEffect" dataSourceProperty="priceEffect" />
+    <SimpleProperty name="price" type="DomMoney" dataSourceProperty="price" />
+    <SimpleProperty name="priceReceipt" type="DomMoney" dataSourceProperty="priceReceipt" />
+    <SimpleProperty name="piecesPerSmallestUnit" type="DomDecimal" dataSourceProperty="piecesPerSmallestUnit" />
+    <SimpleProperty name="history" type="DomBool" dataSourceProperty="history" />
+    <SimpleProperty name="groupText" type="DomString" dataSourceProperty="groupText" />
+    <SimpleProperty name="groupId" type="DomId" dataSourceProperty="groupId" />
+    <SimpleProperty name="saveZeroQuantity" type="DomBool" dataSourceProperty="saveZeroQuantity" />
+    <SimpleProperty name="mergeEngine_invalidated" type="DomBool" dataSourceProperty="mergeEngine_invalidated" />
+    <SimpleProperty name="grossValue" type="DomMoney" dataSourceProperty="grossValue" />
+    <SimpleProperty name="grossValueReceipt" type="DomMoney" dataSourceProperty="grossValueReceipt" />
+    <SimpleProperty name="erpId" type="DomId" dataSourceProperty="erpId" />
+    <SimpleProperty name="modReason" type="DomSdoModReason" dataSourceProperty="modReason" />
+    <SimpleProperty name="targetQuantity" type="DomDecimal" dataSourceProperty="targetQuantity" />
+    <SimpleProperty name="prdType" type="DomPrdType" dataSourceProperty="prdType" />
+    <SimpleProperty name="movementDirection" type="DomSdoItemMovementDirection" dataSourceProperty="movementDirection" />
+    <SimpleProperty name="suggestedQuantity" type="DomDecimal" dataSourceProperty="suggestedQuantity" />
+    <SimpleProperty name="minStepperValue" type="DomInteger" />
+    <SimpleProperty name="freeItemCreationStep" type="DomString" dataSourceProperty="freeItemCreationStep" />
+    <SimpleProperty name="taxClassification" type="DomTaxClassification" dataSourceProperty="taxClassification" />
+    <SimpleProperty name="calculationGroup" type="DomSdoCalculationGroup" dataSourceProperty="calculationGroup" />
+    <SimpleProperty name="deletedFreeItem" type="DomBool" storable="false" dataSourceProperty="deletedFreeItem" />
+    <SimpleProperty name="isOrderUnit" type="DomBool" storable="false" dataSourceProperty="isOrderUnit" />
+    <SimpleProperty name="sort" type="DomBool" storable="false" dataSourceProperty="sort" />
+    <SimpleProperty name="category" type="DomPrdCategory" dataSourceProperty="category" />
+    <SimpleProperty name="refPKey" type="DomId" dataSourceProperty="refPKey" />
+  </SimpleProperties>
+</ListItem>

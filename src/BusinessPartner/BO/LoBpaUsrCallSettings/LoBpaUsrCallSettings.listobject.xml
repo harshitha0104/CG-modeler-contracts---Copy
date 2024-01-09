@@ -1,0 +1,8 @@
+<ListObject name="LoBpaUsrCallSettings" generateLoadMethod="true" >
+  <DataSource name="DsLoBpaUsrCallSettings" />
+  <Item objectClass="LiBpaUsrCallSetting" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+  </Methods>
+</ListObject>

@@ -1,0 +1,70 @@
+<ListItem name="LiTruckLoadItems">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="sdoMainPKey" type="DomPKey" dataSourceProperty="sdoMainPKey" />
+    <SimpleProperty name="sdoItemMetaPKey" type="DomPKey" dataSourceProperty="sdoItemMetaPKey" />
+    <SimpleProperty name="sdoItemMetaText" type="DomText" />
+    <SimpleProperty name="quantity" type="DomDecimal" dataSourceProperty="quantity" nullable="true" />
+    <SimpleProperty name="quantityLogisticUnit" type="DomPrdLogisticUnit" dataSourceProperty="quantityLogisticUnit" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="suggestedQuantity" type="DomDecimal" storable="true" dataSourceProperty="suggestedQuantity" />
+    <SimpleProperty name="targetQuantity" type="DomDecimal" storable="true" dataSourceProperty="targetQuantity" />
+    <SimpleProperty name="text1" type="DomText" storable="false" dataSourceProperty="text1" />
+    <SimpleProperty name="prdId" type="DomId" storable="false" dataSourceProperty="prdId" />
+    <SimpleProperty name="prdType" type="DomPrdType" storable="false" dataSourceProperty="prdType" />
+    <SimpleProperty name="shortText" type="DomString" storable="false" dataSourceProperty="shortText" />
+    <SimpleProperty name="eAN" type="DomPrdNumber" storable="false" dataSourceProperty="eAN" />
+    <SimpleProperty name="modReason" type="DomSdoModReason" storable="true" dataSourceProperty="modReason" />
+    <SimpleProperty name="value" type="DomMoney" storable="true" dataSourceProperty="value" />
+    <SimpleProperty name="priceEffect" type="DomSdoItemMetaPriceEffect" storable="false" dataSourceProperty="priceEffect" />
+    <SimpleProperty name="calculationGroup" type="DomSdoCalculationGroup" storable="false" dataSourceProperty="calculationGroup" />
+    <SimpleProperty name="saveZeroQuantity" type="DomBool" storable="false" dataSourceProperty="saveZeroQuantity" />
+    <SimpleProperty name="modReasonEntered" type="DomString" />
+    <SimpleProperty name="availableUOMs" type="Object" />
+    <SimpleProperty name="availableModReasons" type="Object" />
+    <SimpleProperty name="qtyDifference" type="DomDecimal" />
+    <SimpleProperty name="targetValue" type="DomDecimal" />
+    <SimpleProperty name="valueDifference" type="DomDecimal" />
+    <SimpleProperty name="price" type="DomMoney" storable="true" dataSourceProperty="price" />
+    <SimpleProperty name="priceReceipt" type="DomMoney" storable="true" dataSourceProperty="priceReceipt" />
+    <SimpleProperty name="specialPrice" type="DomMoney" storable="true" dataSourceProperty="specialPrice" />
+    <SimpleProperty name="specialPriceReceipt" type="DomMoney" storable="true" dataSourceProperty="specialPriceReceipt" />
+    <SimpleProperty name="basePrice" type="DomMoney" storable="false" dataSourceProperty="basePrice" />
+    <SimpleProperty name="basePriceReceipt" type="DomMoney" storable="true" dataSourceProperty="basePriceReceipt" />
+    <SimpleProperty name="valueReceipt" type="DomMoney" storable="true" dataSourceProperty="valueReceipt" />
+    <SimpleProperty name="grossValue" type="DomMoney" storable="true" dataSourceProperty="grossValue" />
+    <SimpleProperty name="grossValueReceipt" type="DomMoney" storable="true" dataSourceProperty="grossValueReceipt" />
+    <SimpleProperty name="promoted" type="DomBool" storable="true" dataSourceProperty="promoted" />
+    <SimpleProperty name="listed" type="DomBool" storable="true" dataSourceProperty="listed" />
+    <SimpleProperty name="history" type="DomBool" storable="true" dataSourceProperty="history" />
+    <SimpleProperty name="outOfStock" type="DomBool" storable="true" dataSourceProperty="outOfStock" />
+    <SimpleProperty name="discount" type="DomPercentage" storable="true" dataSourceProperty="discount" />
+    <SimpleProperty name="erpId" type="DomId" storable="true" dataSourceProperty="erpId" />
+    <SimpleProperty name="freeItemCreationStep" type="DomString" storable="true" dataSourceProperty="freeItemCreationStep" />
+    <SimpleProperty name="sdoParentItemPKey" type="DomPKey" storable="true" dataSourceProperty="sdoParentItemPKey" />
+    <SimpleProperty name="edited" type="DomBool" storable="true" dataSourceProperty="edited" />
+    <SimpleProperty name="sort" type="DomSort" storable="false" dataSourceProperty="sort" />
+    <!-- inventory handling -->
+    <SimpleProperty name="ivcInformationObject" type="Object" />
+    <!--Attributes for handling of nested Items and displaying-->
+    <SimpleProperty name="isOrderUnit" type="DomBool" storable="false" dataSourceProperty="isOrderUnit" />
+    <SimpleProperty name="refPKey" type="DomPKey" storable="true" dataSourceProperty="refPKey" />
+    <SimpleProperty name="currentHandlerParams" type="Object" />
+    <SimpleProperty name="orderUnitInformation" type="DomText" />
+    <SimpleProperty name="unitInformation" type="DomText" />
+    <SimpleProperty name="ivcBalance" type="DomDecimal" />
+    <SimpleProperty name="ivcBalanceUnitType" type="DomText" />
+    <SimpleProperty name="oqtyInfo" type="DomText" />
+    <SimpleProperty name="differenceInfo" type="DomText" />
+    <!-- For free items in current stock -->
+    <SimpleProperty name="orderUnitInformationForFreeItems" type="DomText" />
+    <SimpleProperty name="unitInformationForFreeItems" type="DomText" />
+    <SimpleProperty name="freeItemBalance" type="DomDecimal" />
+    <SimpleProperty name="oqtyInfoForFreeItems" type="DomText" />
+    <SimpleProperty name="detailOqtyForFreeItems" type="DomText" />
+    <SimpleProperty name="detailOqtyInfoForTruck" type="DomText" />
+    <SimpleProperty name="quantityForFreeItems" type="DomDecimal" dataSourceProperty="quantity" nullable="true" />
+    <SimpleProperty name="targetQuantityForFreeItems" type="DomDecimal" />
+    <SimpleProperty name="metaId" type="DomIvcMetaType" />
+  </SimpleProperties>
+</ListItem>

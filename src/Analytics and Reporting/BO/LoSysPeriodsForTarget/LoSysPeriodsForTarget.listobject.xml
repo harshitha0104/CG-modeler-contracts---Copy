@@ -1,0 +1,15 @@
+<ListObject name="LoSysPeriodsForTarget" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoSysPeriodForTarget" />
+  <Item objectClass="LiSysPeriodsForTarget" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="prepareTargetFulfillmentData"/>
+  </Methods>
+</ListObject>

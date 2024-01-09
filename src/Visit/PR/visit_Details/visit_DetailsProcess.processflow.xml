@@ -1,0 +1,48 @@
+<Process name="Visit::DetailsProcess" defaultAction="showVisitDetails" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="RetailStoreDetail" type="BoRetailStore" />
+        <Declaration name="Account" type="BoAccount" />
+      </Declarations>
+      <Parameters>
+        <Input name="BoVisit" type="BoVisit" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="LoadRetailStore" type="BoRetailStore">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::BoVisit.StoreId" />
+        </Parameters>
+        <Return name="ProcessContext::RetailStoreDetail" />
+      </Action>
+      <Action actionType="LOAD" name="LoadAccount" type="BoAccount">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::BoVisit.AccountId" />
+        </Parameters>
+        <Return name="ProcessContext::Account" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="showVisitDetails">
+        <UIDescription>Visit::DetailsUI</UIDescription>
+      </Action>
+      <Action actionType="View" name="ShowDetail">
+        <UIDescription>Visit::DetailsUI</UIDescription>
+        <Events>
+          <Event name="editVisit" action="showRetailOverview" />
+        </Events>
+      </Action>
+      <Action actionType="View" name="showRetailOverview">
+        <UIDescription>Visit::RetailStoreCockpitUI</UIDescription>
+      </Action>
+    </Actions>
+  </Body>
+  <ExitHandlers>
+    <ExitHandler handlerName="beforeExit1" type="Validate" name="ProcessContext::BoVisit" >
+      <OnValidationError transitionTo="showVisitDetails" />
+    </ExitHandler>
+  </ExitHandlers>
+</Process>

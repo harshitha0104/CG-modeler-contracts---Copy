@@ -1,0 +1,19 @@
+<UIDescription name="Reporting::CardExceptionsMaximizedUI" schemaVersion="0.0.0.5"  layoutType="blank" simpleEditorOnly="true">
+  <Page pagePattern="SingleSectionPage" onBackDiscard="true" useSolidBackground="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="CardReportingSurveyExceptionsMaximizedTitleId" defaultLabel="Reporting - Survey Exceptions" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <UIPluginV2 name="CardSurveyExceptionsUiPlugin" uiPlugin="CardSurveyExceptionsUiPluginV2">
+          <Bindings>
+            <Binding target="surveys" binding="ProcessContext::SurveyExceptions" type="Blob" bindingMode="ONE_WAY" />
+            <Binding target="maximizedMode" type="Text" binding="ProcessContext::CardReportingSurveyExceptions_ModeMaximized" bindingMode="ONE_WAY" />
+          </Bindings>
+        </UIPluginV2>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

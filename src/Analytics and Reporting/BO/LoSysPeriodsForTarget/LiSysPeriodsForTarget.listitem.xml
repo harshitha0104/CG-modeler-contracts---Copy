@@ -1,0 +1,11 @@
+<ListItem name="LiSysPeriodsForTarget">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="sysPeriodPKey" type="DomPKey" storable="false" dataSourceProperty="sysPeriodPKey" />
+    <SimpleProperty name="referencePKey" type="DomPKey" storable="false" dataSourceProperty="referencePKey" />
+    <SimpleProperty name="periodText" type="DomId" storable="false" dataSourceProperty="periodText" />
+    <SimpleProperty name="plannedTarget" type="DomDecimal" storable="false" dataSourceProperty="plannedTarget" />
+    <SimpleProperty name="validFrom" type="DomDate" storable="false" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomValidThru" storable="false" dataSourceProperty="validThru" />
+  </SimpleProperties>
+</ListItem>

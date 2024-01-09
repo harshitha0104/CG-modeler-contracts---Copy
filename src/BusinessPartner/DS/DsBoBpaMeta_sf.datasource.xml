@@ -1,0 +1,29 @@
+<DataSource name="DsBoBpaMeta" backendSystem="sf" businessObjectClass="BoBpaMeta" external="false" editableEntity="Account_Template__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Template__c" column="Id" />
+    <Attribute name="id" table="Account_Template__c" column="Name" />
+    <Attribute name="active" table="Account_Template__c" column="Active__c" />
+    <DerivedAttribute name="bpaType" value="CASE RecordType.DeveloperName WHEN 'Contact_Person' THEN 'P' WHEN 'Customer' THEN 'C' ELSE 'C' END" />
+    <Attribute name="text" table="Account_Template__c" column="Description_#Language#__c" />
+    <DerivedAttribute name="mobilityRelevant" value="'1'" />
+    <DerivedAttribute name="docTATypeForNew" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Template__c" alias="" idAttribute="Id" />
+    <Entity name="RecordType" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Account_Template__c.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+   Account_Template__c.Id = #pKey#
+   AND Account_Template__c.Active__c = '1'
+        ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,76 @@
+<Process name="DailyReport::TimeEntryCreateNewProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="ValidationBo" type="BoCreateNewTimeEntry" />
+        <Declaration name="TemplateList" type="LoTimeEntryType" />
+      </Declarations>
+      <Parameters>
+        <Input name="TimeEntryDetails" type="LoUsrTimeEntry" />
+        <Input name="WorkUsrTimeEntryMetaPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateValidationBo" actionType="CREATE" type="BoCreateNewTimeEntry">
+        <Parameters>
+          <Input name="TimeEntries" value="ProcessContext::TimeEntryDetails" />
+          <Input name="WorkUsrTimeEntryMetaPKey" value="ProcessContext::WorkUsrTimeEntryMetaPKey" />
+        </Parameters>
+        <Return name="ProcessContext::ValidationBo" />
+      </Action>
+      <Action name="GetTemplateList" actionType="LOAD" type="LoTimeEntryType">
+        <Return name="ProcessContext::TemplateList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="WizardShowMoreDetails" actionType="LOGIC" call="ProcessContext::ValidationBo.setEARights">
+        <TransitionTo action="ShowView" />
+      </Action>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>DailyReport::TimeEntryCreateNewUI</UIDescription>
+        <Events>
+          <Event name="createTimeEntry" action="WizardValidations" />
+          <Event name="showMoreDetails" action="WizardShowMoreDetails" />
+          <Event name="typeSelected" action="TypeSelected" />
+        </Events>
+      </Action>
+      <Action name="TypeSelected" actionType="LOGIC" call="ProcessContext::ValidationBo.setDescription">
+        <Parameters>
+          <Input name="dateFrom" value="Event.text" />
+        </Parameters>
+      </Action>
+      <!-- Validation actions -->
+      <Action actionType="VALIDATION" name="WizardValidations">
+        <Validations>
+          <Validation name="ProcessContext::ValidationBo.validateTimeEntry" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="EndCreateTimeEntry" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action actionType="END" name="EndCreateTimeEntry">
+        <ReturnValues>
+          <Return name="timeEntryValid" value="ProcessContext::ValidationBo.timeEntryValid" />
+          <Return name="timetemplatePKey" value="ProcessContext::ValidationBo.timeEntryMetaPKey" />
+          <Return name="description" value="ProcessContext::ValidationBo.description" />
+          <Return name="startdate" value="ProcessContext::ValidationBo.startdate" />
+          <Return name="enddate" value="ProcessContext::ValidationBo.enddate" />
+          <Return name="endtime" value="ProcessContext::ValidationBo.endtime" />
+          <Return name="starttime" value="ProcessContext::ValidationBo.starttime" />
+          <Return name="note" value="ProcessContext::ValidationBo.note" />
+          <Return name="reasoncodetext" value="ProcessContext::ValidationBo.reasoncodetext" />
+          <Return name="timeFromGeoOffset" value="ProcessContext::ValidationBo.timeFromGeoOffset" />
+          <Return name="timeThruGeoOffset" value="ProcessContext::ValidationBo.timeThruGeoOffset" />
+          <Return name="timeFromDSTOffset" value="ProcessContext::ValidationBo.timeFromDSTOffset" />
+          <Return name="timeThruDSTOffset" value="ProcessContext::ValidationBo.timeThruDSTOffset" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndCancel"></Action>
+    </Actions>
+  </Body>
+</Process>

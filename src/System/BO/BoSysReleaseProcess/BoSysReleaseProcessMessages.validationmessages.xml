@@ -1,0 +1,5 @@
+<ValidationMessages name="BoSysReleaseProcessMessages" businessObject="BoSysReleaseProcess" schemaVersion="0.0.0.5">
+  <ValidationMessage name="CasSysReleaseProcess_FillInName" defaultMessage="Name for #stepName# missing." comment="Name for '#stepName#' missing" />
+  <ValidationMessage name="CasSysReleaseProcess_SignatureMissing" defaultMessage="You haven’t recorded signature for #stepName#." comment="You haven’t recorded signature for #stepName#" />
+  <ValidationMessage name="CasSysReleaseProcess_ApprovalCodeMismatch" defaultMessage="Authentication for #stepName# unsuccessful. User role, id, or approval code wrong or user is not assigned to the required warehouse." comment="Authentication for #stepName# unsuccessful. User role, id, or approval code wrong or user is not assigned to the required warehouse." />
+</ValidationMessages>

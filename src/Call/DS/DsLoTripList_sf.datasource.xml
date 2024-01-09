@@ -1,0 +1,30 @@
+<DataSource name="DsLoTripList" backendSystem="sf" businessObjectClass="LoTripList" external="false" editableEntity="Trip_List__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Trip_List__c" column="Id" />
+    <Attribute name="validFrom" table="Trip_List__c" column="Valid_From__c" />
+    <Attribute name="validThru" table="Trip_List__c" column="Valid_Thru__c" />
+    <Attribute name="text" table="Trip_List__c" column="Description_#Language#__c" />
+    <Attribute name="metaType" table="Trip_List__c" column="Type__c" />
+    <Attribute name="responsiblePKey" table="Trip_List__c" column="Responsible__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Trip_List__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+      ((#referenceDateFrom# = '' AND #referenceDateThru# = '')
+      OR (#compareAsDate('Trip_List__c.Valid_From__c', 'DateTime','<=',#referenceDateThru#, 'Date')#
+      AND #compareAsDate('Trip_List__c.Valid_Thru__c ', 'DateTime','>=',#referenceDateFrom#, 'Date')#))      
+      AND Trip_List__c.OwnerId = #responsiblePKey#
+      #cond#
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Trip_List__c" attribute="Description_#Language#__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="referenceDateFrom" type="INTEGER" />
+    <Parameter name="referenceDateThru" type="INTEGER" />
+    <Parameter name="responsiblePKey" type="TEXT" />
+    <Parameter name="cond" treatAs="sqlSnippet" />
+    <Parameter name="tplMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

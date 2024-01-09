@@ -1,0 +1,445 @@
+<Process name="Call::NavigationProcess" defaultAction="Navigation_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CustomerObjectStatus" type="String" />
+        <Declaration name="SaveFlag" type="String" />
+        <Declaration name="CurrentTabPage" type="String" />
+        <Declaration name="boCallReports" type="BoCallReports" />
+        <Declaration name="IsSfBackend" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="CallBO" type="BoCall" />
+        <Input name="defaultProcess" type="String" />
+        <Input name="CustomerTaskPKey" type="String" />
+        <Input name="SalesFolderPKey" type="String" />
+        <Input name="SalesFolderSloganText" type="String" />
+        <Input name="Mode" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateCallReportsBo" actionType="CREATE" type="BoCallReports">
+        <Return name="ProcessContext::boCallReports" />
+      </Action>
+      <Action name="SetSfBackend_Logic" actionType="LOGIC" call="Utils.isSfBackend">
+        <Return name="ProcessContext::IsSfBackend" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="Navigation_Decision" actionType="DECISION" parameter="ProcessContext::CallBO.luCallMeta.mobilityUserGuidance">
+        <Case value="Sales" action="StartSalesNavigation" />
+        <Case value="Merchandizing" action="StartMerchandizingNavigation" />
+        <Case value="Delivery" action="StartDeliveryNavigation" />
+        <Case value="NonCustomer" action="OnlyCallInfoNavigation" />
+        <CaseElse action="OnlyCallInfoNavigation" />
+      </Action>
+      <Action actionType="NAVIGATION" name="StartSalesNavigation">
+        <Parameters name="ProcessContext::NavigationName">
+          <Processes defaultProcess="ProcessContext::defaultProcess">
+            <Process id="Questionaire" image="TaskList" label="storeCheck" defaultLabel="Store Check" action="StartQuestionProcess" process="Call::QuestionTabProcess" />
+            <Process id="Survey" image="Survey" label="survey" defaultLabel="Survey" action="StartSurveyProcess" process="Call::SurveyTabProcess" />
+            <Process id="Attachments" image="Camera" label="pictures" defaultLabel="Pictures" action="StartAttachmentProcess" />
+            <!--UIPluginV2 required 
+            <Process id="PromotionCalendar" image="Month" label="promotionCalendar" defaultLabel="Promotion Calendar" action="StartPromotionCalendarProcess" process="Call::PromotionStoreCalendarProcess" />
+            UIPluginV2 required-->
+            <Process id="Promotions" image="Promotion" label="promotions" defaultLabel="Promotions" action="StartPromotionReviewProcess" />
+            <Process id="Sales" image="NavSalesFolder" label="salesFolder" defaultLabel="Sales Folder" action="StartSalesFolderOverviewProcess__Decision" process="SalesFolder::SalesFolderOverviewProcess" />
+            <Process id="Notes" image="Note" label="notes" defaultLabel="Notes" action="StartNotesProcess" />
+            <Process id="CustomerData" image="UserTie" label="customerData" defaultLabel="Customer Data" action="SaveBeforeCustomerSubProcess" process="Customer::CallCustomerReviewProcess" />
+            <Process id="Order" image="Clipboard" label="orderOverview" defaultLabel="Orders" action="SaveBeforeOrderSubProcess_Decision" process="Order::OverviewCallProcess" />
+            <Process id="Issue" image="Bolt" label="issueOverview" defaultLabel="Customer Tasks" action="StartIssueSubProcess" process="Issue::OverviewProcess" />
+            <Process id="Complete_Call" image="Complete" label="callSummary" defaultLabel="Call Summary" action="Save_LoadAndSetPrerequisites_Complete" process="Call::CompleteTabProcess" />
+          </Processes>
+        </Parameters>
+        <TransitionTo action="StartQuestionProcess" />
+      </Action>
+      <Action actionType="NAVIGATION" name="StartMerchandizingNavigation">
+        <Parameters name="ProcessContext::NavigationName">
+          <Processes defaultProcess="ProcessContext::defaultProcess">
+            <Process id="Questionaire" image="TaskList" label="storeCheck" defaultLabel="Store Check" action="StartQuestionProcess" process="Call::QuestionTabProcess" />
+            <Process id="Survey" image="Survey" label="survey" defaultLabel="Survey" action="StartSurveyProcess" process="Call::SurveyTabProcess" />
+            <Process id="Attachments" image="Camera" label="pictures" defaultLabel="Pictures" action="StartAttachmentProcess" />
+            <Process id="Notes" image="Note" label="notes" defaultLabel="Notes" action="StartNotesProcess" />
+            <Process id="CustomerData" image="UserTie" label="customerData" defaultLabel="Customer Data" action="StartCustomerSubProcess" process="Customer::CallCustomerReviewProcess" />
+            <Process id="Assets" image="Fridge" label="assets" defaultLabel="Assets" action="StartAssetSubProcess" />
+            <Process id="Issue" image="Bolt" label="issueOverview" defaultLabel="Customer Tasks" action="StartIssueSubProcess" process="Issue::OverviewProcess" />
+            <Process id="Complete_Call" image="Complete" label="callSummary" defaultLabel="Call Summary" action="Save_LoadAndSetPrerequisites_Complete" process="Call::CompleteTabProcess" />
+          </Processes>
+        </Parameters>
+        <TransitionTo action="StartQuestionProcess" />
+      </Action>
+      <Action actionType="NAVIGATION" name="OnlyCallInfoNavigation">
+        <Parameters name="ProcessContext::NavigationName">
+          <Processes defaultProcess="CompletePrivate_Call">
+            <Process id="CompletePrivate_Call" image="Complete" label="callSummary" defaultLabel="Call Summary" action="LoadAndSetPrerequisites_Complete" process="Call::CompleteTabProcess" />
+          </Processes>
+        </Parameters>
+        <TransitionTo action="StartCompleteProcess" />
+      </Action>
+      <Action actionType="NAVIGATION" name="StartDeliveryNavigation">
+        <Parameters name="ProcessContext::NavigationName">
+          <Processes defaultProcess="Delivery">
+            <Process id="Delivery" image="Clipboard" label="deliveryOverview" defaultLabel="Delivery" action="SaveBeforeDeliverySubProcess_Decision" process="Order::OverviewCallDeliveryProcess" />
+            <Process id="Assets" image="Fridge" label="assets" defaultLabel="Assets" action="StartAssetSubProcess" />
+            <Process id="Survey" image="Survey" label="survey" defaultLabel="Survey" action="StartSurveyProcess" />
+            <Process id="Notes" image="Note" label="notes" defaultLabel="Notes" action="StartNotesProcess" />
+            <Process id="CustomerData" image="UserTie" label="customerData" defaultLabel="Customer Data" action="SaveBeforeCustomerSubProcess" process="Customer::CallCustomerReviewProcess" />
+            <Process id="Complete_Call" image="Complete" label="callSummary" defaultLabel="Call Summary" action="Save_LoadAndSetPrerequisites_Complete" process="Call::CompleteTabProcess" />
+          </Processes>
+        </Parameters>
+        <TransitionTo action="StartDeliverySubProcess" />
+      </Action>
+      <!--START: Question -->
+      <Action actionType="PROCESS" name="StartQuestionProcess" process="Call::QuestionTabProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::CallBO" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_Question" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Question" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Question" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTabPage" />
+      </Action>
+      <!--START: Survey -->
+      <Action actionType="PROCESS" name="StartSurveyProcess" process="Call::SurveyTabProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::CallBO" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_Survey" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Survey" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Survey" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTabPage" />
+      </Action>
+      <!--START: Attachments -->
+      <Action actionType="PROCESS" name="StartAttachmentProcess" process="Call::AttachmentTabProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::CallBO" />
+          <Input name="TypeFilter" type="Literal" value="PicturesVideos" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_Attachments" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Attachments" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Attachments" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTabPage" />
+      </Action>
+      <!--START: PromotionCalendar-->
+      <Action actionType="PROCESS" name="StartPromotionCalendarProcess" process="Call::PromotionStoreCalendarProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::CallBO" />
+          <Input name="CallDate" value="ProcessContext::CallBO.DateFrom" />
+          <Input name="CustomerPKey" value="ProcessContext::CallBO.BpaMainPKey" />
+          <Input name="LeadTime" value="ProcessContext::CallBO.LuCallMeta.PrmFindingLeadTime" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_PromotionCalendar" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_PromotionCalendar" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_PromotionCalendar" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTabPage" />
+      </Action>
+      <!--START: PromotionReview -->
+      <Action actionType="PROCESS" name="StartPromotionReviewProcess" process="Call::PromotionReviewProcess">
+        <Parameters>
+          <Input name="CallDate" value="ProcessContext::CallBO.DateFrom" />
+          <Input name="CustomerPKey" value="ProcessContext::CallBO.BpaMainPKey" />
+          <Input name="LeadTime" value="ProcessContext::CallBO.LuCallMeta.PrmFindingLeadTime" />
+          <Input name="CustomerName" value="ProcessContext::CallBO.luCustomer.name" />
+          <Input name="CallDateThru" value="ProcessContext::CallBO.DateThru" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_PromotionReview" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_PromotionReview" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_PromotionReview" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTabPage" />
+      </Action>
+      <!--START: SalesFolderOverviewProcess -->
+      <Action name="StartSalesFolderOverviewProcess__Decision" actionType="DECISION" parameter="ProcessContext::SalesFolderPKey">
+        <CaseEmpty action="StartSalesFolderOverviewProcessSF__Decision" />
+        <CaseElse action="CardSellIns_LoadSellIn" />
+      </Action>
+      <Action actionType="PROCESS" name="CardSellIns_LoadSellIn" process="SalesFolder::SalesFolderPromotionProcess">
+        <Parameters>
+          <Input name="MainPKey" value="ProcessContext::SalesFolderPKey" />
+          <Input name="SloganText" value="ProcessContext::SalesFoldersloganText" />
+        </Parameters>
+        <TransitionTo action="resetSalesFolderPkey" />
+      </Action>
+      <Action actionType="LOGIC" name="resetSalesFolderPkey" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="" />
+        </Parameters>
+        <Return name="ProcessContext::SalesFolderPKey" />
+        <TransitionTo action="setCurrentTabName_SalesFolderOverview" />
+      </Action>
+      <Action name="StartSalesFolderOverviewProcessSF__Decision" actionType="DECISION" parameter="ProcessContext::IsSfBackend">
+        <Case value="true" action="StartSalesFolderOverviewProcess_SalesForce" />
+        <CaseElse action="StartSalesFolderOverviewProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartSalesFolderOverviewProcess_SalesForce" process="SalesFolder::SalesFolderOverviewProcess">
+        <Parameters>
+          <Input name="CurrentCustomerPKey" value="ProcessContext::CallBO.BpaMainPKey" />
+          <Input name="CurrentCustomerName" value="ProcessContext::CallBO.luCustomer.name" />
+          <Input name="CallDate" value="ProcessContext::CallBO.DateFrom" />
+          <Input name="NavigationMode" type="Literal" value="CustomerSalesFolder" />
+          <Input name="CallDateThru" value="ProcessContext::CallBO.DateThru" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_SalesFolderOverview" />
+      </Action>
+      <Action actionType="PROCESS" name="StartSalesFolderOverviewProcess" process="SalesFolder::SalesFolderOverviewProcess">
+        <Parameters>
+          <Input name="CurrentCustomerPKey" value="ProcessContext::CallBO.BpaMainPKey" />
+          <Input name="CurrentCustomerName" value="ProcessContext::CallBO.luCustomer.name" />
+          <Input name="CallDate" value="ProcessContext::CallBO.DateFrom" />
+          <Input name="LeadTime" value="ProcessContext::CallBO.LuCallMeta.PrmFindingLeadTime" />
+          <Input name="NavigationMode" type="Literal" value="CustomerSalesFolder" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_SalesFolderOverview" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_SalesFolderOverview" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_SalesFolderOverview" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTabPage" />
+      </Action>
+      <!--START: Pictures -->
+      <Action actionType="PROCESS" name="StartPicturesProcess" process="Call::PicturesTabProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::CallBO" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_Pictures" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Pictures" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Pictures" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTabPage" />
+      </Action>
+      <!--START: Notes -->
+      <Action actionType="PROCESS" name="StartNotesProcess" process="Call::NotesTabProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::CallBO" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_Notes" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Notes" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Notes" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTabPage" />
+      </Action>
+      <!--START: Customer -->
+      <Action name="SaveBeforeCustomerSubProcess" actionType="SAVE">
+        <TransitionTo action="StartCustomerSubProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartCustomerSubProcess" process="Customer::CallCustomerReviewProcess">
+        <Parameters>
+          <Input name="CustomerPKey" value="ProcessContext::CallBO.bpaMainPKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CustomerObjectStatus" value="customerObjectState" />
+          <Return name="ProcessContext::SaveFlag" value="saveFlag" />
+        </ReturnValues>
+        <TransitionTo action="ReloadCustomer" />
+      </Action>
+      <Action name="ReloadCustomer" actionType="Logic" call="ProcessContext::CallBO.updateCustomerInfo">
+        <Parameters>
+          <Input name="customerObjectStatus" value="ProcessContext::CustomerObjectStatus" />
+          <Input name="saveFlag" value="ProcessContext::SaveFlag" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_Customer" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Customer" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Customer" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTabPage" />
+      </Action>
+      <!--START: ASSET -->
+      <Action actionType="PROCESS" name="StartAssetSubProcess" process="AssetManagement::CallAssetOverviewProcess">
+        <Parameters>
+          <Input name="ClbBO" value="ProcessContext::CallBO" />
+          <Input name="From" type="Literal" value="Navigation" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_Asset" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Asset" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Asset" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTabPage" />
+      </Action>
+      <!--START: ISSUE -->
+      <Action actionType="PROCESS" name="StartIssueSubProcess" process="Issue::OverviewProcess">
+        <Parameters>
+          <Input name="CallCustomerPKey" value="ProcessContext::CallBO.bpaMainPKey" />
+          <Input name="IsManagedCustomer" value="ProcessContext::CallBO.luCustomerManagementInfo.isManaged" />
+          <Input name="CallPKey" value="ProcessContext::CallBO.pKey" />
+          <Input name="CustomerName" value="ProcessContext::CallBO.luCustomer.name" />
+          <Input name="CustomerTaskPKey" value="ProcessContext::CustomerTaskPKey" />
+          <Input name="Mode" value="ProcessContext::Mode" />
+        </Parameters>
+        <TransitionTo action="resetCustomerTaskPKey" />
+      </Action>
+      <Action actionType="LOGIC" name="resetCustomerTaskPKey" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerTaskPKey" />
+        <TransitionTo action="setCurrentTabName_Issue" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Issue" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Issue" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTabPage" />
+      </Action>
+      <!--START: Delivery -->
+      <Action name="SaveBeforeDeliverySubProcess_Decision" actionType="DECISION" parameter="ProcessContext::CallBO.objectStatus">
+        <Case value="3" action="SaveBeforeDeliverySubProcess" />
+        <Case value="5" action="SaveBeforeDeliverySubProcess" />
+        <CaseElse action="StartDeliverySubProcess" />
+      </Action>
+      <Action actionType="VALIDATION" name="SaveBeforeDeliverySubProcess">
+        <Validations>
+          <Validation name="ProcessContext::CallBO.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="SaveBeforeDeliverySubProcessValidationResult_Decision" />
+      </Action>
+      <Action name="SaveBeforeDeliverySubProcessValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="SaveBeforeDeliverySubProcessSave" />
+        <Case value="validateIgnore" action="StartDeliverySubProcess" />
+        <CaseElse action="AfterValidationErrorUIRedirect_Decision" />
+      </Action>
+      <Action actionType="LOGIC" name="SaveBeforeDeliverySubProcessSave" call="Facade.startTransaction">
+        <TransitionTo action="doSaveBeforeDeliverySubProcessSave" />
+      </Action>
+      <Action actionType="LOGIC" name="doSaveBeforeDeliverySubProcessSave" call="ProcessContext::CallBO.saveAsync">
+        <TransitionTo action="SaveBeforeDeliverySubProcessCommit" />
+      </Action>
+      <Action actionType="LOGIC" name="SaveBeforeDeliverySubProcessCommit" call="Facade.commitTransaction">
+        <TransitionTo action="StartDeliverySubProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartDeliverySubProcess" process="Order::OverviewCallDeliveryProcess">
+        <Parameters>
+          <Input name="CallCustomerPKey" value="ProcessContext::CallBO.bpaMainPKey" />
+          <Input name="CallPKey" value="ProcessContext::CallBO.pKey" />
+          <Input name="CallOutOfStockProducts" value="ProcessContext::CallBO.boJobManager.outOfStockProducts" />
+          <Input name="UIPosition" type="Literal" value="Delivery" />
+          <Input name="TmgTourPKey" value="ProcessContext::CallBO.tmgMainPKey" />
+          <Input name="ClbBO" value="ProcessContext::CallBO" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_Delivery" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Delivery" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Delivery" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTabPage" />
+      </Action>
+      <!--START: Order -->
+      <Action name="SaveBeforeOrderSubProcess_Decision" actionType="DECISION" parameter="ProcessContext::CallBO.objectStatus">
+        <Case value="1" action="SaveBeforeOrderSubProcess" />
+        <Case value="3" action="SaveBeforeOrderSubProcess" />
+        <Case value="5" action="SaveBeforeOrderSubProcess" />
+        <CaseElse action="StartOrderSubProcess" />
+      </Action>
+      <Action actionType="VALIDATION" name="SaveBeforeOrderSubProcess">
+        <Validations>
+          <Validation name="ProcessContext::CallBO.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="SaveBeforeOrderSubProcessValidationResult_Decision" />
+      </Action>
+      <Action name="SaveBeforeOrderSubProcessValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="SaveBeforeOrderSubProcessSave" />
+        <Case value="validateIgnore" action="StartOrderSubProcess" />
+        <CaseElse action="AfterValidationErrorUIRedirect_Decision" />
+      </Action>
+      <Action actionType="LOGIC" name="SaveBeforeOrderSubProcessSave" call="Facade.startTransaction">
+        <TransitionTo action="doSaveBeforeOrderSubProcessSave" />
+      </Action>
+      <Action actionType="LOGIC" name="doSaveBeforeOrderSubProcessSave" call="ProcessContext::CallBO.saveAsync">
+        <TransitionTo action="SaveBeforeOrderSubProcessCommit" />
+      </Action>
+      <Action actionType="LOGIC" name="SaveBeforeOrderSubProcessCommit" call="Facade.commitTransaction">
+        <TransitionTo action="StartOrderSubProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartOrderSubProcess" process="Order::OverviewCallProcess">
+        <Parameters>
+          <Input name="CallCustomerPKey" value="ProcessContext::CallBO.bpaMainPKey" />
+          <Input name="CallPKey" value="ProcessContext::CallBO.pKey" />
+          <Input name="CallOutOfStockProducts" value="ProcessContext::CallBO.boJobManager.outOfStockProducts" />
+          <Input name="UIPosition" type="Literal" value="Order" />
+          <Input name="MainBO" value="ProcessContext::CallBO" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_Order" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Order" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Order" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTabPage" />
+      </Action>
+      <!--START: Complete -->
+      <Action actionType="LOGIC" name="Save_LoadAndSetPrerequisites_Complete" call="Facade.startTransaction">
+        <TransitionTo action="doSave_LoadAndSetPrerequisites_Complete" />
+      </Action>
+      <Action actionType="LOGIC" name="doSave_LoadAndSetPrerequisites_Complete" call="ProcessContext::CallBO.saveAsync">
+        <TransitionTo action="Save_LoadAndSetPrerequisites_Complete_Commit" />
+      </Action>
+      <Action actionType="LOGIC" name="Save_LoadAndSetPrerequisites_Complete_Commit" call="Facade.commitTransaction">
+        <TransitionTo action="LoadAndSetPrerequisites_Complete" />
+      </Action>
+      <Action name="LoadAndSetPrerequisites_Complete" actionType="LOGIC" call="ProcessContext::CallBO.boJobManager.loadAndSetPrerequisites">
+        <Parameters>
+          <Input name="loadType" type="Literal" value="StatusChange_Complete" />
+        </Parameters>
+        <TransitionTo action="StartCompleteProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartCompleteProcess" process="Call::CompleteTabProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::CallBO" />
+          <Input name="boCallReports" value="ProcessContext::boCallReports" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_Complete" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Complete" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Complete" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentTabPage" />
+      </Action>
+      <!-- Redirect decission for validation errors to stay on the page where the user was before the validation -->
+      <Action name="AfterValidationErrorUIRedirect_Decision" actionType="DECISION" parameter="ProcessContext::CurrentTabPage">
+        <Case value="tab_Question" action="StartQuestionProcess" />
+        <Case value="tab_Survey" action="StartSurveyProcess" />
+        <Case value="tab_Attachments" action="StartAttachmentProcess" />
+        <Case value="tab_PromotionReview" action="StartPromotionReviewProcess" />
+        <Case value="tab_PromotionCalendar" action="StartPromotionCalendarProcess" />
+        <Case value="tab_Pictures" action="StartPicturesProcess" />
+        <Case value="tab_Notes" action="StartNotesProcess" />
+        <Case value="tab_Customer" action="StartCustomerSubProcess" />
+        <Case value="tab_Order" action="StartOrderSubProcess" />
+        <Case value="tab_Issue" action="StartIssueSubProcess" />
+        <Case value="tab_Complete" action="StartCompleteProcess" />
+        <CaseElse action="Navigation_Decision" />
+      </Action>
+    </Actions>
+  </Body>
+  <ExitHandlers>
+    <ExitHandler handlerName="beforeExit1" type="Validate" name="ProcessContext::CallBO">
+      <OnValidationError transitionTo="AfterValidationErrorUIRedirect_Decision" />
+    </ExitHandler>
+  </ExitHandlers>
+</Process>

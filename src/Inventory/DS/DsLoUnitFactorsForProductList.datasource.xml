@@ -1,0 +1,21 @@
+<DataSource name="DsLoUnitFactorsForProductList" businessObjectClass="LoUnitFactorsForProductList" external="false" editableEntity="PrdLogistic" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="PrdLogistic" column="PKey" />
+    <Attribute name="productPKey" table="PrdLogistic" column="ProductPKey" />
+    <Attribute name="piecesPerSmallestUnit" table="PrdLogistic" column="PiecesPerSmallestUnit" />
+    <Attribute name="isOrderUnit" table="PrdLogistic" column="IsOrderUnit" />
+    <Attribute name="isConsumerUnit" table="PrdLogistic" column="IsConsumerUnit" />
+    <Attribute name="isStocktakingUnit" table="PrdLogistic" column="IsStocktakingUnit" />
+    <Attribute name="unitType" table="PrdLogistic" column="UnitType" />
+  </Attributes>
+  <Entities>
+    <Entity name="PrdLogistic" alias="" idAttribute="PKey" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        PrdLogistic.ProductPKey IN (#prdPKeyList#)
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="prdPKeyList" type="LIST" />
+  </Parameters>
+</DataSource>

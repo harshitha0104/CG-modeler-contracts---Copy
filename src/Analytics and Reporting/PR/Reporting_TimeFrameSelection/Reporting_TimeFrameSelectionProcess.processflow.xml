@@ -1,0 +1,88 @@
+<Process name="Reporting::TimeFrameSelectionProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="WizardBO" type="BoWizardTimeFrameSelection" />
+        <Declaration name="result" type="String" />
+        <Declaration name="userPKey" type="DomPKey" />
+        <Declaration name="userName" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="team" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateWizardBO" actionType="CREATE" type="BoWizardTimeFrameSelection">
+        <Parameters />
+        <Return name="ProcessContext::WizardBO" />
+      </Action>
+      <Action name="SetEARights" actionType="LOGIC" call="ProcessContext::WizardBO.setEARights">
+        <Parameters>
+          <Input name="team" value="ProcessContext::team" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Reporting::TimeFrameSelectionUI</UIDescription>
+        <Events>
+          <Event name="FinishWizard" action="setDirty" />
+          <Event name="OpenUserNameLookup" action="OpenUserNameLookup" />
+        </Events>
+      </Action>
+      <Action actionType="PROCESS" name="OpenUserNameLookup" process="User::TeamLookupProcess">
+        <Parameters>
+          <Input name="ReferenceUserPKey" value="ProcessContext::ResponsiblePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::userPKey" value="userPKey" />
+          <Return name="ProcessContext::userName" value="name" />
+        </ReturnValues>
+        <TransitionTo action="UpdateWizardBO" />
+      </Action>
+      <Action actionType="LOGIC" name="UpdateWizardBO" call="ProcessContext::WizardBO.update">
+        <Parameters>
+          <Input name="userPKey" value="ProcessContext::userPKey" />
+          <Input name="userName" value="ProcessContext::userName" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="setDirty" call="ProcessContext::WizardBO.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="5" />
+        </Parameters>
+        <TransitionTo action="WizardValidation" />
+      </Action>
+      <Action actionType="VALIDATION" name="WizardValidation">
+        <Validations>
+          <Validation name="ProcessContext::WizardBO.validateDate" />
+          <Validation name="ProcessContext::WizardBO.validateUser" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="validationOK" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action actionType="LOGIC" name="validationOK" call="Utils.identity">
+        <Parameters>
+          <Input name="param" type="Literal" value="dateSelected" />
+        </Parameters>
+        <Return name="ProcessContext::result" />
+        <TransitionTo action="EndDateSelected" />
+      </Action>
+      <Action actionType="END" name="EndCancel" />
+      <Action actionType="END" name="EndDateSelected">
+        <ReturnValues>
+          <Return name="startDate" value="ProcessContext::WizardBO.startDate" />
+          <Return name="endDate" value="ProcessContext::WizardBO.endDate" />
+          <Return name="userPKey" value="ProcessContext::WizardBO.userPKey" />
+          <Return name="userName" value="ProcessContext::WizardBO.userName" />
+          <Return name="result" value="ProcessContext::result" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

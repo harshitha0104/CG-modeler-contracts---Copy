@@ -1,0 +1,13 @@
+<ListItem name="LiPreviousVisit">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="name" type="DomText" dataSourceProperty="name" />
+    <SimpleProperty name="status" type="DomText" dataSourceProperty="status" />
+    <SimpleProperty name="plannedStartDate" type="DomDate" id="false" dataSourceProperty="plannedStartDate" />
+    <SimpleProperty name="plannedStartTime" type="DomTime" id="false" dataSourceProperty="plannedStartTime" />
+    <SimpleProperty name="plannedEndDate" type="DomDate" id="false" dataSourceProperty="plannedEndDate" />
+    <SimpleProperty name="plannedEndTime" type="DomTime" id="false" dataSourceProperty="plannedEndTime" />
+    <SimpleProperty name="visitorName" type="DomText" dataSourceProperty="visitorName" />
+    <SimpleProperty name="duration" type="DomInteger" dataSourceProperty="visitDuration" />
+  </SimpleProperties>
+</ListItem>

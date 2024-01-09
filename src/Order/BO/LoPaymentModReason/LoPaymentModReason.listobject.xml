@@ -1,0 +1,14 @@
+<ListObject name="LoPaymentModReason" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoPaymentModReason" />
+  <Item objectClass="LiPaymentModReason" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+  </Methods>
+</ListObject>

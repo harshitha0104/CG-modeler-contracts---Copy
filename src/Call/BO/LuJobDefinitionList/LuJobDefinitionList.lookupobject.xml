@@ -1,0 +1,10 @@
+<LookupObject name="LuJobDefinitionList" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuJobDefinitionList" />
+  <SimpleProperties>
+    <SimpleProperty name="jDLPKeys" type="DomText" storable="false" dataSourceProperty="jDLPKeys" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

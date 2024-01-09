@@ -1,0 +1,33 @@
+<ListItem name="LiOrderOverview" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="id" type="DomId" storable="true" dataSourceProperty="id" />
+    <SimpleProperty name="phase" type="DomSdoPhase" storable="true" dataSourceProperty="phase" />
+    <SimpleProperty name="commitDate" type="DomDate" storable="true" dataSourceProperty="commitDate" />
+    <SimpleProperty name="deliveryDate" type="DomDate" storable="true" dataSourceProperty="deliveryDate" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" storable="true" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="responsibleName" type="DomText" storable="false" dataSourceProperty="responsibleName" />
+    <SimpleProperty name="initiatorPKey" type="DomPKey" storable="true" dataSourceProperty="initiatorPKey" />
+    <SimpleProperty name="initiatorName" type="DomText" storable="false" dataSourceProperty="initiatorName" />
+    <SimpleProperty name="grossTotalValue" type="DomMoney" storable="true" dataSourceProperty="grossTotalValue" />
+    <SimpleProperty name="customerName" type="DomText" storable="true" dataSourceProperty="customerName" />
+    <SimpleProperty name="customerPKey" type="DomPKey" storable="true" dataSourceProperty="customerPKey" />
+    <SimpleProperty name="deletionAllowed" type="DomBool" storable="false" dataSourceProperty="deletionAllowed" />
+    <SimpleProperty name="orderType" type="DomText" storable="true" dataSourceProperty="orderType" />
+    <SimpleProperty name="orderMetaPKey" type="DomPKey" storable="true" dataSourceProperty="orderMetaPKey" />
+    <SimpleProperty name="mobilityRelevant" type="DomBool" storable="false" dataSourceProperty="mobilityRelevant" />
+    <SimpleProperty name="message" type="DomString" storable="false" dataSourceProperty="message" />
+    <SimpleProperty name="clbMainPKey" type="DomPKey" storable="false" dataSourceProperty="clbMainPKey" />
+    <SimpleProperty name="sdoSubType" type="DomSdoSubType" storable="false" dataSourceProperty="sdoSubType" />
+    <SimpleProperty name="orderPhaseImage" type="DomString" storable="false" dataSourceProperty="orderPhaseImage" />
+    <SimpleProperty name="syncStatusIcon" type="DomString" dataSourceProperty="syncStatusIcon" />
+    <SimpleProperty name="paymentMethod" type="DomString" dataSourceProperty="paymentMethod" />
+    <SimpleProperty name="paymentMethodText" type="DomString" />
+    <SimpleProperty name="paidAmount" type="DomMoney" dataSourceProperty="paidAmount" />
+    <SimpleProperty name="paidAmountText" type="DomString" />
+    <SimpleProperty name="docTaType" type="DomBpaPaymentPolicy" dataSourceProperty="docTaType" />
+    <SimpleProperty name="payerValidFrom" type="DomDate" dataSourceProperty="payerValidFrom" />
+    <SimpleProperty name="payerValidThru" type="DomDate" dataSourceProperty="payerValidThru" />
+    <SimpleProperty name="syncStatus" type="DomInteger" storable="false" dataSourceProperty="syncStatus" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,39 @@
+<DataSource name="DsLoBpaHistSurveyProduct" backendSystem="sf" businessObjectClass="LoBpaHistSurveyProduct" external="false" editableEntity="Historic_Product__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Historic_Product__c" column="Id" />
+    <Attribute name="bpaCustomerPKey" table="Historic_Product__c" column="Account__c" />
+    <DerivedAttribute name="bpaPOSPKey" value="' '" />
+    <Attribute name="prdMainPKey" table="Historic_Product__c" column="Product__c" />
+    <Attribute name="clbMetaPKey" table="Historic_Product__c" column="Visit_Template__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Historic_Product__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition />
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="clbMetaPKeyComp" type="TEXT" />
+    <Parameter name="clbMetaPKey" type="TEXT" />
+    <Parameter name="bpaCustomerPKeyComp" type="TEXT" />
+    <Parameter name="bpaCustomerPKey" type="TEXT" />
+    <Parameter name="prdMainPKeyComp" type="TEXT" />
+    <Parameter name="prdMainPKey" type="TEXT" />
+  </Parameters>
+  <ConditionalParameters>
+    <ConditionalParameter name="clbMetaPKey">
+      <SimpleConditions>
+        <Condition leftSideValue="Historic_Product__c.Visit_Template__c" comparator="#clbMetaPKeyComp#" rightSideType="Attribute" rightSideValue="'#clbMetaPKey#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="bpaCustomerPKey">
+      <SimpleConditions>
+        <Condition leftSideValue="Historic_Product__c.Account__c" comparator="#bpaCustomerPKeyComp#" rightSideType="Attribute" rightSideValue="'#bpaCustomerPKey#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="prdMainPKey">
+      <SimpleConditions>
+        <Condition leftSideValue="Historic_Product__c.Product__c" comparator="#prdMainPKeyComp#" rightSideType="Attribute" rightSideValue="'#prdMainPKey#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+  </ConditionalParameters>
+</DataSource>

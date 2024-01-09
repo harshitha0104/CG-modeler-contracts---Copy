@@ -1,0 +1,16 @@
+<ListItem name="LiSalesFolder">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="id" type="DomId" storable="false" dataSourceProperty="id" />
+    <SimpleProperty name="customerName" type="DomText" storable="true" dataSourceProperty="customerName" />
+    <SimpleProperty name="customerPKey" type="DomPKey" storable="true" dataSourceProperty="customerPKey" />
+    <SimpleProperty name="sloganText" type="DomText" storable="false" dataSourceProperty="sloganText" />
+    <SimpleProperty name="dateFrom" type="DomDate" storable="false" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" storable="false" dataSourceProperty="dateThru" />
+    <SimpleProperty name="metaText" type="DomText" storable="false" dataSourceProperty="metaText" />
+    <SimpleProperty name="businessModified" type="DomDate" storable="false" dataSourceProperty="businessModified" />
+    <SimpleProperty name="attachmentBlobPKey" type="DomPKey" storable="false" dataSourceProperty="attachmentBlobPKey" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" blobTable="PrmAttachmentBlob" blobPKeyField="attachmentBlobPKey" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+  </SimpleProperties>
+</ListItem>

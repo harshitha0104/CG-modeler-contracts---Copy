@@ -1,0 +1,13 @@
+<ListItem name="LiWfeState" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="stateType" type="DomWfeStateType" storable="true" dataSourceProperty="stateType" />
+    <SimpleProperty name="initialState" type="DomBool" storable="true" dataSourceProperty="initialState" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" storable="true" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" storable="true" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="owner" type="DomBool" storable="true" dataSourceProperty="owner" />
+    <SimpleProperty name="usrRolePKey" type="DomPKey" storable="true" dataSourceProperty="usrRolePKey" />
+    <SimpleProperty name="usrRoleId" type="DomId" storable="true" dataSourceProperty="usrRoleId" />
+    <SimpleProperty name="text" type="DomText" storable="true" dataSourceProperty="text" />
+  </SimpleProperties>
+</ListItem>

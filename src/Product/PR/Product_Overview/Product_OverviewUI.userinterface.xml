@@ -1,0 +1,618 @@
+<UIDescription name="Product::OverviewUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="MasterDetailSectionPage" selectFirstItemInList="true" masterSectionFlex="40" detailSectionFlex="60">
+    <ViewVariables>
+      <ViewVariable name="currentTabName" value="Main" />
+    </ViewVariables>
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="ProductTitleId" defaultLabel="Products" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="ProductList" groupBy="grouping1" indexBar="true" searchable="true" master="true" dataSource="ProcessContext::ProductList.Items[]">
+          <Items name="Items" itemPattern="ProductOverviewItemPattern">
+            <Bindings>
+              <Binding target="ProductNumber" type="Text" binding=".id" bindingMode="ONE_WAY" />
+              <Binding target="Description" type="Text" binding=".text1" bindingMode="ONE_WAY" />
+              <Binding target="GTIN" type="Text" binding=".ean" bindingMode="ONE_WAY" />
+              <Binding target="IsForeignProduct" type="Image" binding=".isForeignProductImage" bindingMode="ONE_WAY" />
+              <Resource target="Spacer" type="Label" id="Spacer" defaultLabel="    " />
+              <Resource target="GTINLabel" type="Label" id="GTINLabel" defaultLabel="GTIN:" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col width="24em">
+                  <Row layoutType="itemIdentifier" bindingId="Description" />
+                  <Row>
+                    <Col width="2em" height="1.4em" layoutType="Image" bindingId="IsForeignProduct" />
+                    <Col width="22em">
+                      <Row layoutType="itemSecondary" bindingId="ProductNumber" />
+                      <Row>
+                        <Col width="2.2em">
+                          <Row layoutType="itemLabel" bindingId="GTINLabel" />
+                        </Col>
+                        <Col width="19.8em" layoutType="itemValue" bindingId="GTIN" />
+                      </Row>
+                    </Col>
+                  </Row>
+                </Col>
+              </Default>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected" resetMultiAreas="true">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="tabName" value="View::currentTabName" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+          <SearchAttributes>
+            <SearchAttribute name="id" />
+            <SearchAttribute name="text1" />
+            <SearchAttribute name="ean" />
+          </SearchAttributes>
+        </GroupedList>
+      </Area>
+    </Section>
+    <Section sectionName="detailSection" sectionPattern="TabbedViewAreaSection" currentTab="View::currentTabName">
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="Main">
+              <Bindings>
+                <Resource target="image" type="Image" id="MainGrey24" defaultImage="MainGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="MainId" defaultLabel="Main" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Logistics">
+              <Bindings>
+                <Binding type="Visible" target="Visible" call="ProcessContext::ProductDetail.checkLogisticsTabVisible" />
+                <Resource target="image" type="Image" id="LogisticsGrey24" defaultImage="LogisticsGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="LogisticsId" defaultLabel="Logistics" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="BoM">
+              <Bindings>
+                <Binding type="Visible" target="Visible" call="ProcessContext::ProductDetail.checkBoMTabVisible" />
+                <Resource target="image" type="Image" id="ProductsGrey24" defaultImage="ProductsGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="BoMId" defaultLabel="BoM" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Attachments">
+              <Bindings>
+                <Resource target="image" type="Image" id="ClipGrey24" defaultImage="ClipGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="AttachmentsId" defaultLabel="Attachments" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="tabSelected" storeTabNameIn="currentTabName" />
+          </Events>
+        </TabSelector>
+      </Area>
+      <Area areaPattern="MultiArea" areaName="Main">
+        <Area areaName="Main" areaPattern="GroupedElementsArea">
+          <GroupElement name="IdentificationGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="IdentificationId" defaultLabel="Identification" />
+            </Bindings>
+            <InputArea name="Description" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="DescriptionId" defaultLabel="Description" />
+                <Binding target="Value" binding="ProcessContext::ProductDetail.text1" bindiDescriptionngMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="ProductNumber" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="ProductNumberId" defaultLabel="Product Number" />
+                <Binding target="Value" binding="ProcessContext::ProductDetail.id" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="ShortId" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="ShortIdId" defaultLabel="Short Id" />
+                <Binding target="Value" binding="ProcessContext::ProductDetail.shortId" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="GTIN" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="GTINId" defaultLabel="GTIN" />
+                <Binding target="Value" binding="ProcessContext::ProductDetail.ean" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="BasePrice" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="BasePriceId" defaultLabel="Base Price" />
+                <Binding target="Value" binding="ProcessContext::ProductDetail.LuProductBasePrice.basePrice" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </GroupElement>
+          <!--<MediaListControl name="PrdAttachments" dataSource="ProcessContext::ProductDetail.loPrdUsageIcon.Items[]">
+            <Bindings>
+              <Binding bindingMode="ONE_WAY" binding=".mediaPath" type="Text" target="MediaPath" />
+              <Binding bindingMode="ONE_WAY" binding=".description" type="Text" target="Description" />
+              <Binding bindingMode="ONE_WAY" binding=".fileType" type="Text" target="Type" />
+            </Bindings>
+            <Events></Events>
+          </MediaListControl>-->
+          <GroupElement name="ImageGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="ImageId" defaultLabel="Image" />
+            </Bindings>
+            <MediaControl name="MyMediaControl">
+              <Bindings>
+                <Binding type="Visible" target="Visible" call="ProcessContext::ProductDetail.checkPrdUsageIconVisibility" />
+                <Binding target="MediaPath" type="Text" binding="ProcessContext::ProductDetail.luPrdUsageIcon.mediaPath" bindingMode="ONE_WAY" />
+                <Binding target="Type" type="Text" binding="ProcessContext::ProductDetail.luPrdUsageIcon.fileType" bindingMode="ONE_WAY" />
+              </Bindings>
+            </MediaControl>
+          </GroupElement>
+          <GroupElement name="ClassificationGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="ClassificationId" defaultLabel="Classification" />
+            </Bindings>
+            <SelectionBox name="ProductType" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="ProductTypeId" defaultLabel="Product Type" />
+                <Binding target="DataSource" toggleId="PrdType" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::ProductDetail.prdType" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="Category" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CategoryId" defaultLabel="Category" />
+                <Binding target="DataSource" toggleId="PrdCategory" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::ProductDetail.category" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="TaxClassification" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="TaxClassificationId" defaultLabel="Tax Classification" />
+                <Binding target="DataSource" toggleId="TaxClassification" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::ProductDetail.taxClassification" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <CheckBox name="isCompetitor" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="ReadId" defaultLabel="Competitor" />
+                <Binding target="checkedValue" binding="ProcessContext::ProductDetail.foreignProduct" bindingMode="ONE_WAY" />
+              </Bindings>
+            </CheckBox>
+          </GroupElement>
+          <EmbeddedList name="HierarchyList" dataSource="ProcessContext::ProductDetail.loProductHierarchy.Items[]">
+            <Bindings>
+              <Resource target="Title" type="Label" id="HierarchyId" defaultLabel="Hierarchy" />
+            </Bindings>
+            <Items name="Items" itemPattern="ProductHierarchyListItem">
+              <Bindings>
+                <Binding target="Description" type="Text" binding=".description" bindingMode="ONE_WAY" />
+                <Binding target="ProductGroupLevel" type="Text" binding=".productGroupLevel.text" bindingMode="ONE_WAY" />
+                <Resource target="DescriptionLabel" type="Label" id="DescriptionTextLabel" defaultLabel="Description" />
+                <Resource target="ProductGroupLevelLabel" type="Label" id="ProductGroupLevelLabel" defaultLabel="Product Group Level" />
+              </Bindings>
+              <ItemListLayout>
+                <Default>
+                  <Header>
+                    <Col bindingId="ProductGroupLevelLabel" align="left" />
+                    <Col bindingId="DescriptionLabel" align="left" />
+                  </Header>
+                  <Col width="10em" layoutType="itemSecondary" bindingId="ProductGroupLevel" />
+                  <Col layoutType="itemSecondary" bindingId="Description" />
+                </Default>
+              </ItemListLayout>
+            </Items>
+            <Events></Events>
+          </EmbeddedList>
+          <EmbeddedList name="StatusList" dataSource="ProcessContext::ProductDetail.loPrdStateForMasterData.Items[]">
+            <Bindings>
+              <Resource target="Title" type="Label" id="StatusListId" defaultLabel="Status" />
+            </Bindings>
+            <Items name="Items" itemPattern="StatusListItem">
+              <Bindings>
+                <Binding target="StateType" type="Text" binding=".prdStateType.text" bindingMode="ONE_WAY" />
+                <Binding target="State" type="Text" binding=".state.text" bindingMode="ONE_WAY" />
+                <Binding target="ValidFrom" type="Date" binding=".validFrom" bindingMode="ONE_WAY" />
+                <Binding target="ValidThru" type="Date" binding=".validThru" bindingMode="ONE_WAY" />
+                <Resource target="StateTypeLabel" type="Label" id="StateTypeLabel" defaultLabel="State Type" />
+                <Resource target="StateLabel" type="Label" id="StateLabel" defaultLabel="Status" />
+                <Resource target="DateLabel" type="Label" id="DateLabel" defaultLabel="Date" />
+              </Bindings>
+              <ItemListLayout>
+                <Default>
+                  <Header>
+                    <Col bindingId="StateTypeLabel" align="left" />
+                    <Col bindingId="StateLabel" align="left" />
+                    <Col bindingId="DateLabel" align="left" />
+                  </Header>
+                  <Col width="6em" layoutType="itemSecondary" bindingId="StateType" />
+                  <Col width="6em" layoutType="itemSecondary" bindingId="State" />
+                  <Col>
+                    <Row>
+                      <Col width="6em">
+                        <Row layoutType="itemSecondary" bindingId="ValidFrom" />
+                        <Row layoutType="itemSecondary" bindingId="ValidThru" />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Default>
+              </ItemListLayout>
+            </Items>
+            <Events></Events>
+          </EmbeddedList>
+        </Area>
+      </Area>
+      <Area areaPattern="MultiArea" areaName="Logistics">
+        <Area areaName="Logistics" areaPattern="GroupedElementsArea">
+          <EmbeddedList name="LogisticsList" dataSource="ProcessContext::ProductDetail.loLogistics.Items[]">
+            <Items name="Items" itemPattern="LogisticsListItem">
+              <Bindings>
+                <Binding target="PiecesPerParentUnit" type="Text" binding=".piecesPerParentUnit" bindingMode="ONE_WAY" />
+                <Binding target="UnitType" type="Text" binding=".unitType.text" bindingMode="ONE_WAY" />
+                <Binding target="CndCpWeight" type="Text" binding=".cndCpWeight" bindingMode="ONE_WAY" />
+                <Binding target="EAN" type="Text" binding=".eAN" bindingMode="ONE_WAY" />
+                <Resource target="PiecesPerParentUnitLabel" type="Label" id="PiecesPerParentUnitLabel" defaultLabel="No." />
+                <Resource target="UnitTypeGTINLabel" type="Label" id="UnitTypeGTINLabel" defaultLabel="Unit/GTIN" />
+                <Resource target="CndCpWeightLabel" type="Label" id="CndCpWeightLabel" defaultLabel="Weight" />
+              </Bindings>
+              <ItemListLayout>
+                <Default>
+                  <Header>
+                    <Col bindingId="UnitTypeGTINLabel" align="left" />
+                    <Col bindingId="CndCpWeightLabel" align="left" />
+                    <Col bindingId="PiecesPerParentUnitLabel" align="left" />
+                  </Header>
+                  <Col width="7em">
+                    <Row>
+                      <Col width="7em" layoutType="itemIdentifier" bindingId="EAN" />
+                    </Row>
+                    <Row>
+                      <Col width="7em" layoutType="itemSecondary" bindingId="UnitType" />
+                    </Row>
+                  </Col>
+                  <Col width="2em" layoutType="itemValue" bindingId="CndCpWeight" />
+                  <Col width="1.3em" layoutType="itemValue" bindingId="PiecesPerParentUnit" />
+                </Default>
+                <Tablet>
+                  <Default>
+                    <Header>
+                      <Col bindingId="UnitTypeGTINLabel" align="left" />
+                      <Col bindingId="CndCpWeightLabel" align="left" />
+                      <Col bindingId="PiecesPerParentUnitLabel" align="left" />
+                    </Header>
+                    <Col width="7em">
+                      <Row>
+                        <Col width="7em" layoutType="itemIdentifier" bindingId="EAN" />
+                      </Row>
+                      <Row>
+                        <Col width="7em" layoutType="itemSecondary" bindingId="UnitType" />
+                      </Row>
+                    </Col>
+                    <Col width="2em" layoutType="itemValue" bindingId="CndCpWeight" />
+                    <Col flex="1" layoutType="itemValue" bindingId="PiecesPerParentUnit" />
+                  </Default>
+                  <Apple>
+                    <Header>
+                      <Col bindingId="UnitTypeGTINLabel" align="left" />
+                      <Col bindingId="CndCpWeightLabel" align="left" />
+                      <Col bindingId="PiecesPerParentUnitLabel" align="left" />
+                    </Header>
+                    <Col width="7em">
+                      <Row>
+                        <Col width="7em" layoutType="itemIdentifier" bindingId="EAN" />
+                      </Row>
+                      <Row>
+                        <Col width="7em" layoutType="itemSecondary" bindingId="UnitType" />
+                      </Row>
+                    </Col>
+                    <Col width="2em" layoutType="itemValue" bindingId="CndCpWeight" />
+                    <Col flex="1" layoutType="itemValue" bindingId="PiecesPerParentUnit" />
+                  </Apple>
+                </Tablet>
+                <Phone>
+                  <Default>
+                    <Header>
+                      <Col bindingId="UnitTypeGTINLabel" align="left" />
+                      <Col bindingId="CndCpWeightLabel" align="left" />
+                      <Col bindingId="PiecesPerParentUnitLabel" align="left" />
+                    </Header>
+                    <Col width="7em">
+                      <Row layoutType="itemIdentifier" bindingId="EAN" />
+                      <Row layoutType="itemSecondary" bindingId="UnitType" />
+                    </Col>
+                    <Col width="1.7em" layoutType="itemValue" bindingId="CndCpWeight" />
+                    <Col flex="1" layoutType="itemValue" bindingId="PiecesPerParentUnit" />
+                  </Default>
+                  <Android>
+                    <Header>
+                      <Col bindingId="UnitTypeGTINLabel" align="left" />
+                      <Col bindingId="CndCpWeightLabel" align="left" />
+                      <Col bindingId="PiecesPerParentUnitLabel" align="left" />
+                    </Header>
+                    <Col width="7em">
+                      <Row layoutType="itemIdentifier" bindingId="EAN" />
+                      <Row layoutType="itemSecondary" bindingId="UnitType" />
+                    </Col>
+                    <Col width="1.7em" layoutType="itemValue" bindingId="CndCpWeight" />
+                    <Col flex="1" layoutType="itemValue" bindingId="PiecesPerParentUnit" />
+                  </Android>
+                  <Apple>
+                    <Header>
+                      <Col bindingId="UnitTypeGTINLabel" align="left" />
+                      <Col bindingId="CndCpWeightLabel" align="left" />
+                      <Col bindingId="PiecesPerParentUnitLabel" align="left" />
+                    </Header>
+                    <Col width="7em">
+                      <Row layoutType="itemIdentifier" bindingId="EAN" />
+                      <Row layoutType="itemSecondary" bindingId="UnitType" />
+                    </Col>
+                    <Col width="1.7em" layoutType="itemValue" bindingId="CndCpWeight" />
+                    <Col flex="1" layoutType="itemValue" bindingId="PiecesPerParentUnit" />
+                  </Apple>
+                </Phone>
+              </ItemListLayout>
+            </Items>
+            <Events></Events>
+          </EmbeddedList>
+        </Area>
+      </Area>
+      <Area areaPattern="MultiArea" areaName="BoM">
+        <Area areaName="BoM" areaPattern="GroupedElementsArea">
+          <EmbeddedList name="BoMList" dataSource="ProcessContext::ProductDetail.loProductBoM.Items[]">
+            <Items name="Items" itemPattern="BoMListItem">
+              <Bindings>
+                <Binding target="ProductNumber" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="Text1" type="Text" binding=".text1" bindingMode="ONE_WAY" />
+                <Binding target="EAN" type="Text" binding=".ean" bindingMode="ONE_WAY" />
+                <Binding target="ProductType" type="Text" binding=".prdType.text" bindingMode="ONE_WAY" />
+                <Binding target="Quantity" type="Decimal" binding=".quantity" bindingMode="ONE_WAY" />
+                <Binding target="From" type="Date" binding=".validFrom" bindingMode="ONE_WAY" />
+                <Binding target="Thru" type="Date" binding=".validThru" bindingMode="ONE_WAY" />
+                <Resource target="ProductNumberGTINLabel" type="Label" id="ProductNumberGTINLabel" defaultLabel="Number/GTIN" />
+                <Resource target="Text1Label" type="Label" id="Text1Label" defaultLabel="Description" />
+                <Resource target="ProductTypeLabel" type="Label" id="ProductTypeLabel" defaultLabel="Type" />
+                <Resource target="QtyLabel" type="Label" id="QtyLabel" defaultLabel="Qty" />
+                <Resource target="FromLabel" type="Label" id="FromLabel" defaultLabel="From" />
+                <Resource target="ThruLabel" type="Label" id="ThruLabel" defaultLabel="Thru" />
+                <Resource target="ValidityLabel" type="Label" id="ValidityLabel" defaultLabel="Validity" />
+                <Resource target="PrdType" type="Label" id="PrdType" defaultLabel="Type: " />
+                <Resource target="Spacer" type="Label" id="Spacer" defaultLabel=" " />
+              </Bindings>
+              <ItemListLayout>
+                <Default>
+                  <Header>
+                    <Col bindingId="ProductNumberGTINLabel" align="left" />
+                    <Col bindingId="Text1Label" align="left" />
+                    <Col bindingId="QtyLabel" align="left" />
+                    <Col bindingId="Spacer" align="left" />
+                    <Col bindingId="ValidityLabel" align="left" />
+                  </Header>
+                  <Col width="5em">
+                    <Row layoutType="itemIdentifier" bindingId="ProductNumber" />
+                    <Row layoutType="itemSecondary" bindingId="EAN" />
+                  </Col>
+                  <Col width="6em">
+                    <Row layoutType="itemValue" bindingId="Text1" />
+                    <Row>
+                      <Col width="3em">
+                        <Row layoutType="itemLabel" bindingId="PrdType" />
+                      </Col>
+                      <Col width="5em">
+                        <Row layoutType="itemImportantValue" bindingId="ProductType" />
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col width="1.2em" layoutType="itemValueVerySmall" bindingId="Quantity" />
+                  <Col width="1.3em">
+                    <Row layoutType="itemLabel" bindingId="FromLabel" />
+                    <Row layoutType="itemLabel" bindingId="ThruLabel" />
+                  </Col>
+                  <Col width="4em">
+                    <Row layoutType="itemValue" bindingId="From" />
+                    <Row layoutType="itemValue" bindingId="Thru" />
+                  </Col>
+                </Default>
+                <Tablet>
+                  <Default>
+                    <Header>
+                      <Col bindingId="ProductNumberGTINLabel" align="left" />
+                      <Col bindingId="Text1Label" align="left" />
+                      <Col bindingId="QtyLabel" align="left" />
+                      <Col bindingId="Spacer" align="left" />
+                      <Col bindingId="ValidityLabel" align="left" />
+                    </Header>
+                    <Col width="6em">
+                      <Row layoutType="itemIdentifier" bindingId="ProductNumber" />
+                      <Row layoutType="itemSecondary" bindingId="EAN" />
+                    </Col>
+                    <Col width="6em">
+                      <Row layoutType="itemValue" bindingId="Text1" />
+                      <Row>
+                        <Col width="2em">
+                          <Row layoutType="itemLabel" bindingId="PrdType" />
+                        </Col>
+                        <Col width="5em">
+                          <Row layoutType="itemImportantValue" bindingId="ProductType" />
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col width="1.2em" layoutType="itemValueVerySmall" bindingId="Quantity" />
+                    <Col width="1.3em">
+                      <Row layoutType="itemLabel" bindingId="FromLabel" />
+                      <Row layoutType="itemLabel" bindingId="ThruLabel" />
+                    </Col>
+                    <Col width="4em">
+                      <Row layoutType="itemValue" bindingId="From" />
+                      <Row layoutType="itemValue" bindingId="Thru" />
+                    </Col>
+                  </Default>
+                  <Apple>
+                    <Header>
+                      <Col bindingId="ProductNumberGTINLabel" align="left" />
+                      <Col bindingId="Text1Label" align="left" />
+                      <Col bindingId="QtyLabel" align="left" />
+                      <Col bindingId="Spacer" align="left" />
+                      <Col bindingId="ValidityLabel" align="left" />
+                    </Header>
+                    <Col width="6em">
+                      <Row layoutType="itemIdentifier" bindingId="ProductNumber" />
+                      <Row layoutType="itemSecondary" bindingId="EAN" />
+                    </Col>
+                    <Col width="6em">
+                      <Row layoutType="itemValue" bindingId="Text1" />
+                      <Row>
+                        <Col width="2em">
+                          <Row layoutType="itemLabel" bindingId="PrdType" />
+                        </Col>
+                        <Col width="5em">
+                          <Row layoutType="itemImportantValue" bindingId="ProductType" />
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col width="1.2em" layoutType="itemValueVerySmall" bindingId="Quantity" />
+                    <Col width="1.3em">
+                      <Row layoutType="itemLabel" bindingId="FromLabel" />
+                      <Row layoutType="itemLabel" bindingId="ThruLabel" />
+                    </Col>
+                    <Col width="4em">
+                      <Row layoutType="itemValue" bindingId="From" />
+                      <Row layoutType="itemValue" bindingId="Thru" />
+                    </Col>
+                  </Apple>
+                </Tablet>
+                <Phone>
+                  <Default>
+                    <Header>
+                      <Col bindingId="ProductNumberGTINLabel" align="left" />
+                      <Col bindingId="Text1Label" align="left" />
+                      <Col bindingId="QtyLabel" align="left" />
+                      <Col width="0.5em" bindingId="Spacer" align="left" />
+                      <Col bindingId="ValidityLabel" align="left" />
+                    </Header>
+                    <Col width="5.2em">
+                      <Row layoutType="itemIdentifier" bindingId="ProductNumber" />
+                      <Row layoutType="itemSecondary" bindingId="EAN" />
+                    </Col>
+                    <Col width="4.4em">
+                      <Row layoutType="itemValue" bindingId="Text1" />
+                      <Row>
+                        <Col width="2em">
+                          <Row layoutType="itemLabel" bindingId="PrdType" />
+                        </Col>
+                        <Col width="2.4em">
+                          <Row layoutType="itemImportantValue" bindingId="ProductType" />
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col width="1.3em" layoutType="itemValueVerySmall" bindingId="Quantity" />
+                    <Col width="1.7em">
+                      <Row layoutType="itemLabel" bindingId="FromLabel" />
+                      <Row layoutType="itemLabel" bindingId="ThruLabel" />
+                    </Col>
+                    <Col flex="1">
+                      <Row layoutType="itemValue" bindingId="From" />
+                      <Row layoutType="itemValue" bindingId="Thru" />
+                    </Col>
+                  </Default>
+                  <Android>
+                    <Header>
+                      <Col bindingId="ProductNumberGTINLabel" align="left" />
+                      <Col bindingId="Text1Label" align="left" />
+                      <Col bindingId="QtyLabel" align="left" />
+                      <Col width="0.5em" bindingId="Spacer" align="left" />
+                      <Col bindingId="ValidityLabel" align="left" />
+                    </Header>
+                    <Col width="5.2em">
+                      <Row layoutType="itemIdentifier" bindingId="ProductNumber" />
+                      <Row layoutType="itemSecondary" bindingId="EAN" />
+                    </Col>
+                    <Col width="4.4em">
+                      <Row layoutType="itemValue" bindingId="Text1" />
+                      <Row>
+                        <Col width="2em">
+                          <Row layoutType="itemLabel" bindingId="PrdType" />
+                        </Col>
+                        <Col width="2.4em">
+                          <Row layoutType="itemImportantValue" bindingId="ProductType" />
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col width="1.3em" layoutType="itemValueVerySmall" bindingId="Quantity" />
+                    <Col width="1.7em">
+                      <Row layoutType="itemLabel" bindingId="FromLabel" />
+                      <Row layoutType="itemLabel" bindingId="ThruLabel" />
+                    </Col>
+                    <Col flex="1">
+                      <Row layoutType="itemValue" bindingId="From" />
+                      <Row layoutType="itemValue" bindingId="Thru" />
+                    </Col>
+                  </Android>
+                  <Apple>
+                    <Header>
+                      <Col bindingId="ProductNumberGTINLabel" align="left" />
+                      <Col bindingId="Text1Label" align="left" />
+                      <Col bindingId="QtyLabel" align="left" />
+                      <Col bindingId="ValidityLabel" align="left" />
+                    </Header>
+                    <Col width="7.2em">
+                      <Row layoutType="itemIdentifier" bindingId="ProductNumber" />
+                      <Row layoutType="itemSecondary" bindingId="EAN" />
+                    </Col>
+                    <Col width="6.6em">
+                      <Row layoutType="itemValue" bindingId="Text1" />
+                      <Row>
+                        <Col width="2.2em">
+                          <Row layoutType="itemLabel" bindingId="PrdType" />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col width="4.4em">
+                          <Row layoutType="itemImportantValue" bindingId="ProductType" />
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col width="1.3em" layoutType="itemValueVerySmall" bindingId="Quantity" />
+                    <Col flex="1">
+                      <Row layoutType="itemValue" bindingId="From" />
+                      <Row layoutType="itemValue" bindingId="Thru" />
+                    </Col>
+                  </Apple>
+                </Phone>
+              </ItemListLayout>
+            </Items>
+            <Events></Events>
+          </EmbeddedList>
+        </Area>
+      </Area>
+      <Area areaName="Attachments" areaPattern="GroupedElementsArea">
+        <MediaListControl name="PrdAttachments" dataSource="ProcessContext::ProductDetail.loPrdAttachments.Items[]">
+          <Bindings>
+            <Binding bindingMode="ONE_WAY" binding=".mediaPath" type="Text" target="MediaPath" />
+            <Binding bindingMode="ONE_WAY" binding=".description" type="Text" target="Description" />
+            <Binding bindingMode="ONE_WAY" binding=".fileType" type="Text" target="Type" />
+          </Bindings>
+          <Events></Events>
+        </MediaListControl>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

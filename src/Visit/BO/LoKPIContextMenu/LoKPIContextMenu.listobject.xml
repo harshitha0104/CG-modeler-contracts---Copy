@@ -1,0 +1,7 @@
+<ListObject name="LoKPIContextMenu" generateLoadMethod="false" schemaVersion="1.1">
+  <DataSource name="DsLoKPIContextMenu" />
+  <Item objectClass="LiKPIContextMenu" />
+  <Methods>
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</ListObject>

@@ -1,0 +1,16 @@
+<DataSource name="DsLoBpaCallSetting" backendSystem="sf" businessObjectClass="LoBpaCallSetting" external="true" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="pKey" value="''" />
+    <DerivedAttribute name="customerPKey" value="''" />
+    <DerivedAttribute name="clbMetaPKey" value="''" />
+    <DerivedAttribute name="lastCall" value="''" />
+    <DerivedAttribute name="salesOrg" value="''" />
+    <DerivedAttribute name="validFrom" value="''" />
+    <DerivedAttribute name="validThru" value="''" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+    return undefined;
+   ]]></Load>
+  </Database>
+</DataSource>

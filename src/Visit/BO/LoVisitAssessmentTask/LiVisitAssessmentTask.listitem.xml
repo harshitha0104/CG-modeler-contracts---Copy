@@ -1,0 +1,13 @@
+<ListItem name="LiVisitAssessmentTask">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="visitId" type="DomPKey" dataSourceProperty="visitId" />
+    <SimpleProperty name="name" type="DomText" dataSourceProperty="name" />
+    <SimpleProperty name="status" type="DomAssessmentTaskStatus" dataSourceProperty="status" />
+    <SimpleProperty name="taskType" type="DomAssessmentTaskType" dataSourceProperty="taskType" />
+    <SimpleProperty name="isRequired" type="DomBool" dataSourceProperty="isRequired" />
+    <SimpleProperty name="isMandatory" type="DomText" dataSourceProperty="isMandatory" />
+    <SimpleProperty name="statusImage" type="DomText" dataSourceProperty="statusImage" />
+    <SimpleProperty name="visibleInUI" type="DomBool" dataSourceProperty="visibleInUI" />
+  </SimpleProperties>
+</ListItem>

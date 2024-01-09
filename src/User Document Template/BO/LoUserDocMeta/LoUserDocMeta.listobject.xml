@@ -1,0 +1,5 @@
+<ListObject name="LoUserDocMeta" generateLoadMethod="true" >
+  <DataSource name="DsLoUserDocMeta" />
+  <Item objectClass="LiUserDocMeta" />
+  <Methods />
+</ListObject>

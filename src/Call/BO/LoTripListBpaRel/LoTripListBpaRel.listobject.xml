@@ -1,0 +1,8 @@
+<ListObject name="LoTripListBpaRel" generateLoadMethod="true">
+  <DataSource name="DsLoTripListBpaRel" />
+  <Item objectClass="LiTripListBpaRel" />
+  <Methods>
+    <Method name="saveAsync" />
+    <Method name="assignTripListCustomers" />
+  </Methods>
+</ListObject>

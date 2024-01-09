@@ -1,0 +1,172 @@
+<Datasource name="DsLoJobDefinitionMetas" objectClass="LoJobDefinitionMetas" backendSystem="sf" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+		var pos = "";
+		var jobMetaId = "";
+		var addCondJobMetaId = "";
+		
+		if (Utils.isDefined(jsonQuery.posId)) {
+		  if (Utils.isEmptyString(jsonQuery.posId)){pos="Store";} else {pos="POS";}
+		}
+		if(Utils.isDefined(jsonQuery.jobMetaId)) {      		
+        	jobMetaId = Utils.convertForDBParam(jsonQuery.jobMetaId, "DomText");
+			addCondJobMetaId = "AND Job_Template__c.Name= #jobMetaId# ";
+        }
+
+		var sqlParams = {pos, jobMetaId};
+
+		var sqlStmt ="SELECT Job_Definition_Template__c.Id AS pKey, ";
+		sqlStmt += "   CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN '0' ";
+		sqlStmt += "     WHEN Data_Type__c.Data_Type__c = 'Date' THEN #dateAsStringLocaltime(#TodayAsDate#)# ";
+		sqlStmt += "     WHEN Data_Type__c.Data_Type__c = 'Toggle' THEN ";
+		sqlStmt += "       CASE WHEN substr(Data_Type__c.Name, 4) = 'Bool' THEN '0' ";
+		sqlStmt += "       ELSE ' ' ";
+		sqlStmt += "       END ";
+		sqlStmt += "     WHEN Data_Type__c.Data_Type__c = 'String' THEN ' ' ";
+		sqlStmt += "     END AS defaultValue, ";
+		sqlStmt += "Job_Definition_Template__c.Description_#Language#__c AS text, ";
+		sqlStmt += "Job_Definition_Template__c.Picture_Taking__c AS pictureTaking, ";
+		sqlStmt += "Data_Type__c.Data_Type__c AS dataType, Data_Type__c.Data_Length__c || ',' || Data_Type__c.Data_Length_Decimal_Places__c AS dataLength, ";
+		sqlStmt += "CASE WHEN (Data_Type__c.Name like 'Dom%') THEN substr(Data_Type__c.Name, 4) ELSE ' ' END as toggleId, ";
+		sqlStmt += "CASE WHEN Job_Definition_Template__c.Measure_Type__c = 'POS' THEN '1' ELSE '0' END AS pOS, ";
+		sqlStmt += "Job_Definition_Template__c.Job_Template__c AS jobMetaPKey, ";
+		sqlStmt += "Job_Definition_Template__c.Use_Stepper__c AS useStepper, ";
+		sqlStmt += "Job_Definition_Template__c.Step_Size__c AS stepSize, ";
+		sqlStmt += "Job_Definition_Template__c.Consider_Min_Value__c AS considerMinValue, ";
+		sqlStmt += "   CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN  ";
+		sqlStmt += "     CASE WHEN Job_Definition_Template__c.Consider_Min_Value__c = '1' THEN Job_Definition_Template__c.Min_Value__c ";
+		sqlStmt += "     ELSE '0.0' ";
+		sqlStmt += "     END ";
+		sqlStmt += "   ELSE ";
+		sqlStmt += "     CASE WHEN Data_Type__c.Data_Type__c = 'Date' THEN ";
+		sqlStmt += "       CASE WHEN  Job_Definition_Template__c.Min_Date_Policy__c = 'Today' THEN #dateAsStringLocaltime(#TodayAsDate#)# ";
+		sqlStmt += "       WHEN  Job_Definition_Template__c.Min_Date_Policy__c = 'MinDate'  THEN #dateAsStringLocaltime('#MinDate#')# ";
+		sqlStmt += "       ELSE #dateAsStringLocaltime('#MinDate#')# ";
+		sqlStmt += "       END ";
+		sqlStmt += "     END ";
+		sqlStmt += "   END AS minValue , ";
+		sqlStmt += "   CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN  ";
+		sqlStmt += "     CASE WHEN Job_Definition_Template__c.Consider_Max_Value__c = '1' THEN Job_Definition_Template__c.Max_Value__c ";
+		sqlStmt += "     ELSE '9999999' ";
+		sqlStmt += "   END ";
+		sqlStmt += "   ELSE ";
+		sqlStmt += "     CASE WHEN Data_Type__c.Data_Type__c = 'Date' THEN ";
+		sqlStmt += "       CASE WHEN Job_Definition_Template__c.Max_Date_Policy__c = 'Today' THEN #dateAsStringLocaltime(#TodayAsDate#)# ";
+		sqlStmt += "       WHEN Job_Definition_Template__c.Max_Date_Policy__c = 'MaxDate' THEN #dateAsStringLocaltime('#MaxDate#')# ";
+		sqlStmt += "       WHEN Job_Definition_Template__c.Max_Date_Policy__c = 'NextYear' THEN date(#TodayAsDate#, 'unixepoch', 'localtime', '1 year') ";
+		sqlStmt += "       ELSE #dateAsStringLocaltime('#MaxDate#')#  ";
+		sqlStmt += "       END ";
+		sqlStmt += "     END ";
+		sqlStmt += "   END AS maxValue, ";                  
+		sqlStmt += "Job_Definition_Template__c.Min_Date_Policy__c AS Min_Date_Policy__c, ";
+		sqlStmt += "Job_Definition_Template__c.Consider_Max_Value__c AS considerMaxValue, ";          
+		sqlStmt += "Data_Type__c.Data_Length_Decimal_Places__c AS decimalPlaces, ";
+		sqlStmt += "Job_Definition_Template__c.Max_Date_Policy__c AS maxDatePolicy ";    
+
+		sqlStmt += "FROM Job_Definition_Template__c, Data_Type__c, Job_Template__c  ";
+		sqlStmt += "WHERE Job_Definition_Template__c.Data_Type__c = Data_Type__c.Id ";
+		sqlStmt += "AND Job_Definition_Template__c.Job_Template__c = Job_Template__c.Id ";
+		sqlStmt += "AND Job_Definition_Template__c.Measure_Type__c = #pos# ";
+		sqlStmt += addCondJobMetaId;
+
+		return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+    <Custom>
+      <JobDefinitionMetaInfoById><![CDATA[
+			var jobDefinitionMetaIdsObj = [];
+			if (Utils.isDefined(jsonParams.jobDefinitionMetaIds)) {
+				jobDefinitionMetaIdsObj = jsonParams.jobDefinitionMetaIds;
+			}
+			var sqlParams1 = {};
+			var sqlParams2 = {};
+			
+			var sqlStmt1 = "SELECT Job_Definition_Template__c.Id as jobDefinitionMetaPKey,";
+			sqlStmt1 += "   CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN '0' ";
+			sqlStmt1 += "     WHEN Data_Type__c.Data_Type__c = 'Date' THEN #dateAsStringLocaltime(#TodayAsDate#)# ";
+			sqlStmt1 += "     WHEN Data_Type__c.Data_Type__c = 'Toggle' THEN ";
+			sqlStmt1 += "       CASE WHEN substr(Data_Type__c.Name, 4) = 'Bool' THEN '0' ";
+			sqlStmt1 += "       ELSE ' ' ";
+			sqlStmt1 += "       END ";
+			sqlStmt1 += "     WHEN Data_Type__c.Data_Type__c = 'String' THEN ' ' ";
+			sqlStmt1 += "     END AS defaultValue, ";
+			//Adjust or check hardcoded values when Survey enabled
+			sqlStmt1 += " CASE Job_Definition_Template__c.Survey_Identification__c ";
+			sqlStmt1 += "   WHEN 'Facings' THEN '53001' ";
+			sqlStmt1 += "   WHEN 'Price' THEN '53002' ";
+			sqlStmt1 += "   WHEN 'Distribution' THEN '53003' ";
+			sqlStmt1 += "   WHEN 'POS Facings' THEN '540041' ";
+			sqlStmt1 += "   WHEN 'POS Price' THEN '54002' ";
+			sqlStmt1 += "   WHEN 'POS Distribution' THEN '54003' ";
+			sqlStmt1 += "   ELSE Job_Definition_Template__c.Name END ";
+			sqlStmt1 += "   as jobMetaId,";
+			sqlStmt1 += "Job_Definition_Template__c.Job_Template__c as jobMetaPKey, ";
+			sqlStmt1 += "Job_Definition_Template__c.Measure_Type__c as measureType,";
+			sqlStmt1 += "Job_DL_Job_Definition_Template__c.Presetting__c as presetting, ";
+			sqlStmt1 += "Job_Definition_Template__c.Target_Value_Column__c as targetValueColumn, ";
+			sqlStmt1 += "Data_Type__c.Data_Type__c as dataType,";
+			sqlStmt1 += "Data_Type__c.Data_Length__c || ',' || Data_Type__c.Data_Length_Decimal_Places__c AS dataLength, ";
+			sqlStmt1 += "Job_Definition_Template__c.Primary_Survey_Policy__c as dataWareHouseKey, ";
+			sqlStmt1 += "CASE WHEN (Data_Type__c.Name like 'Dom%') THEN Data_Type__c.Name ELSE ' ' END as toggleId,";
+			sqlStmt1 += "Job_Definition_Template__c.Description_#Language#__c as jobDefinitionMetaText, ";
+			sqlStmt1 += "Job_Definition_Template__c.Use_Stepper__c AS useStepper, ";
+			sqlStmt1 += "Job_Definition_Template__c.Step_Size__c AS stepSize, ";
+			sqlStmt1 += "Job_Definition_Template__c.Consider_Min_Value__c AS considerMinValue, ";
+			sqlStmt1 += "CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN  ";
+			sqlStmt1 += "  CASE WHEN Job_Definition_Template__c.Consider_Min_Value__c = '1' THEN Job_Definition_Template__c.Min_Value__c ";
+			sqlStmt1 += "   ELSE '0.0' ";
+			sqlStmt1 += "   END ";
+			sqlStmt1 += "   ELSE ";
+			sqlStmt1 += "   CASE WHEN Data_Type__c.Data_Type__c = 'Date' THEN ";
+			sqlStmt1 += "   CASE WHEN  Job_Definition_Template__c.Min_Date_Policy__c = 'Today' THEN #dateAsStringLocaltime(#TodayAsDate#)# ";
+			sqlStmt1 += "   WHEN  Job_Definition_Template__c.Min_Date_Policy__c = 'MinDate'  THEN #dateAsStringLocaltime('#MinDate#')# ";
+			sqlStmt1 += "   ELSE #dateAsStringLocaltime('#MinDate#')# ";
+			sqlStmt1 += "   END ";
+			sqlStmt1 += "   END ";
+			sqlStmt1 += "   END AS minValue , ";
+			sqlStmt1 += "    CASE  ";
+			sqlStmt1 += "   WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN ";
+			sqlStmt1 += "   CASE WHEN Job_Definition_Template__c.Consider_Max_Value__c = '1' THEN Job_Definition_Template__c.Max_Value__c ";
+			sqlStmt1 += "   ELSE '9999999' ";
+			sqlStmt1 += "  END ";
+			sqlStmt1 += "  ELSE ";
+			sqlStmt1 += "   CASE WHEN Job_Definition_Template__c.Data_Type__c = 'Date' THEN ";
+			sqlStmt1 += "   CASE WHEN Job_Definition_Template__c.Max_Date_Policy__c = 'Today' THEN #dateAsStringLocaltime(#TodayAsDate#)# ";
+			sqlStmt1 += "   WHEN Job_Definition_Template__c.Max_Date_Policy__c = 'MaxDate' THEN #dateAsStringLocaltime('#MaxDate#')# ";;
+			sqlStmt1 += "   WHEN Job_Definition_Template__c.Max_Date_Policy__c = 'NextYear' THEN date(#TodayAsDate#, 'unixepoch', 'localtime', '1 year') ";
+			sqlStmt1 += "   ELSE #dateAsStringLocaltime('#MaxDate#')#  ";
+			sqlStmt1 += "   END ";
+			sqlStmt1 += "   END ";
+			sqlStmt1 += "   END AS maxValue, ";
+			sqlStmt1 += "Job_Definition_Template__c.Min_Date_Policy__c AS minDatePolicy, ";
+			sqlStmt1 += "Job_Definition_Template__c.Consider_Max_Value__c AS considerMaxValue, ";    
+			sqlStmt1 += "2 AS decimalPlaces, ";
+			sqlStmt1 += "Job_Definition_Template__c.Max_Date_Policy__c AS maxDatePolicy ";   		
+			sqlStmt1 += "FROM Job_Definition_Template__c, Data_Type__c, Job_Template__c ";
+			sqlStmt1 += "LEFT JOIN Job_DL_Job_Definition_Template__c ON Job_Definition_Template__c.Id = Job_DL_Job_Definition_Template__c.Job_Definition_Template__c ";
+			sqlStmt1 += "WHERE (1=1) ";
+			sqlStmt1 += "AND Job_Definition_Template__c.Job_Template__c = Job_Template__c.Id ";
+			//Adjust or check hardcoded values when Survey enabled
+			sqlStmt1 += "AND jobMetaId IN (" ;
+			
+			//jobDefinitionMetaIdsObj
+			jobDefinitionMetaIdsObj = Utils.getListParams(jobDefinitionMetaIdsObj);
+			var sqlStmt2 =   ")";
+			sqlStmt2 += "AND Data_Type__c.Id = Job_Definition_Template__c.Data_Type__c ";
+			//Adjust or check hardcoded values when Survey enabled
+			sqlStmt2 += "AND Job_Definition_Template__c.Active__c = '1' ";
+			sqlStmt2 += "AND Job_Template__c.Name = 'Survey' ";
+			sqlStmt2 += "ORDER BY jobMetaId ASC ";
+
+			var sqlStmt1Result = Utils.replaceMacrosParam(sqlStmt1, sqlParams1);
+			var sqlStmt2Result = Utils.replaceMacrosParam(sqlStmt2, sqlParams2);
+			
+            var finalSql = sqlStmt1Result.sql + jobDefinitionMetaIdsObj.sql + sqlStmt2Result.sql;
+            var finalParams = sqlStmt1Result.params.concat(jobDefinitionMetaIdsObj.params).concat(sqlStmt2Result.params);
+
+			return {sql: finalSql, params: finalParams};
+
+		]]></JobDefinitionMetaInfoById>
+    </Custom>
+  </Database>
+</Datasource>

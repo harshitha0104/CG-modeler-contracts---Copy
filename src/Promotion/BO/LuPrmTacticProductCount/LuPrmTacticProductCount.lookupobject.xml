@@ -1,0 +1,7 @@
+<LookupObject name="LuPrmTacticProductCount">
+  <DataSource name="DsLuPrmTacticProductCount" />
+  <SimpleProperties>
+    <SimpleProperty name="productCount" type="DomInteger" dataSourceProperty="productCount" />
+    <SimpleProperty name="tacticCount" type="DomInteger" dataSourceProperty="tacticCount" />
+  </SimpleProperties>
+</LookupObject>

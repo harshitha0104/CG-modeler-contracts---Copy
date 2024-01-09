@@ -1,0 +1,28 @@
+<ListObject name="LoCallAttachments" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoCallAttachments" />
+  <Item objectClass="LiCallAttachments" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="addItem" />
+    <Method name="deleteItem" />
+    <Method name="calculateDistance" />
+    <Method name="getCameraSettings" />
+    <Method name="capturePicture" />
+    <Method name="setEARights" />
+    <Method name="getLiAttachmentByPKey" />
+    <Method name="getLatestLiAttachment" />
+    <Method name="getPicturesCount" />
+    <Method name="setIsTagged" />
+    <Method name="sketchPicture" />
+    <Method name="getLatestPictureForSketching" />
+    <Method name="filterRelevantAttachments" />
+    <Method name="showMessageBox" />
+  </Methods>
+</ListObject>

@@ -1,0 +1,147 @@
+<UIDescription name="Cash::CheckInItemsUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="MasterDetailSectionPage" masterSectionFlex="4.6" detailSectionFlex="2.7" cachable="false">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="CashCheckInTitleId" defaultLabel="Cash" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <!-- CheckIn Items -->
+        <GroupedList name="CheckInPayments" master="true" indexBar="false" searchable="false" dataSource="ProcessContext::MainBo.loCheckInPayment.Items[]">
+          <Items name="Items" itemPattern="CheckInItemsList2">
+            <Bindings>
+              <Binding target="Type" type="Text" binding=".displayId" bindingMode="ONE_WAY" />
+              <Binding target="ExpectedAmount" type="Text" binding=".displayExpectedAmount" bindingMode="ONE_WAY" />
+              <Binding target="ActualAmount" type="Dynamic" binding=".amount" formatBinding="formatType" typeField="dataType" stepSizeBinding="stepSize" stepperEnabledBinding="useStepper" maxBinding="maxValue" bindingMode="TWO_WAY" />
+              <Binding target="ModReasonEntered" type="Image" binding=".modReasonEntered" bindingMode="ONE_WAY" />
+              <Binding target="HierarchyIcon" type="Image" binding=".hierarchyIcon" bindingMode="ONE_WAY" />
+              <Binding target="InvoiceId" type="Text" binding=".invoiceId" bindingMode="ONE_WAY" />
+              <Binding target="CustomerName" type="Text" binding=".customerName" bindingMode="ONE_WAY" />
+              <Binding target="ExpenseType" type="Text" binding=".expenseType.text" bindingMode="ONE_WAY" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col width="1em" height="1.7em" layoutType="Image" bindingId="HierarchyIcon" />
+                <Col width="6em">
+                  <Row layoutType="itemValue" bindingId="Type" />
+                  <Row layoutType="itemSecondary" bindingId="ExpenseType" />
+                  <Row layoutType="itemSecondary" bindingId="CustomerName" />
+                  <Row layoutType="itemSecondary" bindingId="InvoiceId" />
+                </Col>
+                <Col width="5.5em" layoutType="itemImportantValueSmall itemRight" bindingId="ExpectedAmount" />
+                <Col width="8.7em" layoutType="itemImportantValue" bindingId="ActualAmount" />
+                <Col width="1em" height="1.7em" layoutType="Image" bindingId="ModReasonEntered" />
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="HierarchyIcon" />
+                  <Col width="6em">
+                    <Row layoutType="itemValue" bindingId="Type" />
+                    <Row layoutType="itemSecondary" bindingId="ExpenseType" />
+                    <Row layoutType="itemSecondary" bindingId="CustomerName" />
+                    <Row layoutType="itemSecondary" bindingId="InvoiceId" />
+                  </Col>
+                  <Col width="5.5em" layoutType="itemImportantValueSmall itemRight" bindingId="ExpectedAmount" />
+                  <Col width="8.7em" layoutType="itemImportantValue" bindingId="ActualAmount" />
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="ModReasonEntered" />
+                </Default>
+                <Android>
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="HierarchyIcon" />
+                  <Col width="6em">
+                    <Row layoutType="itemValue" bindingId="Type" />
+                    <Row layoutType="itemSecondary" bindingId="ExpenseType" />
+                    <Row layoutType="itemSecondary" bindingId="CustomerName" />
+                    <Row layoutType="itemSecondary" bindingId="InvoiceId" />
+                  </Col>
+                  <Col width="5.5em" layoutType="itemImportantValueSmall itemRight" bindingId="ExpectedAmount" />
+                  <Col width="8.7em" layoutType="itemImportantValue" bindingId="ActualAmount" />
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="ModReasonEntered" />
+                </Android>
+                <Apple>
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="HierarchyIcon" />
+                  <Col width="6em">
+                    <Row layoutType="itemValue" bindingId="Type" />
+                    <Row layoutType="itemSecondary" bindingId="ExpenseType" />
+                    <Row layoutType="itemSecondary" bindingId="CustomerName" />
+                    <Row layoutType="itemSecondary" bindingId="InvoiceId" />
+                  </Col>
+                  <Col width="5.5em" layoutType="itemImportantValueSmall itemRight" bindingId="ExpectedAmount" />
+                  <Col width="8.7em" layoutType="itemImportantValue" bindingId="ActualAmount" />
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="ModReasonEntered" />
+                </Apple>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col width="0.5em" height="1.7em" layoutType="Image" bindingId="HierarchyIcon" />
+                  <Col width="6em">
+                    <Row layoutType="itemValueSmall" bindingId="Type" />
+                    <Row layoutType="itemSecondary" bindingId="ExpenseType" />
+                    <Row layoutType="itemSecondarySmall" bindingId="CustomerName" />
+                    <Row layoutType="itemSecondarySmall" bindingId="InvoiceId" />
+                  </Col>
+                  <Col width="9em">
+                    <Row layoutType="itemRight itemImportantValueSmall" bindingId="ActualAmount" />
+                    <Row layoutType="itemRight itemImportantValueSmall" bindingId="ExpectedAmount" />
+                  </Col>
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="ModReasonEntered" />
+                </Default>
+                <Apple>
+                  <Col width="0.5em" height="1.7em" layoutType="Image" bindingId="HierarchyIcon" />
+                  <Col width="4.5em">
+                    <Row layoutType="itemValueSmall" bindingId="Type" />
+                    <Row layoutType="itemSecondary" bindingId="ExpenseType" />
+                    <Row layoutType="itemSecondarySmall" bindingId="CustomerName" />
+                    <Row layoutType="itemSecondarySmall" bindingId="InvoiceId" />
+                  </Col>
+                  <Col width="8.5em">
+                    <Row layoutType="itemRight itemImportantValueSmall" bindingId="ActualAmount" />
+                    <Row layoutType="itemRight itemImportantValueSmall" bindingId="ExpectedAmount" />
+                  </Col>
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="ModReasonEntered" />
+                </Apple>
+              </Phone>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+    <Section sectionName="detailSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="PaymentDetails">
+          <Bindings>
+            <Resource target="Title" type="Label" id="PmtDetailsId" defaultLabel="Details" />
+          </Bindings>
+          <!-- Reason  -->
+          <SelectionBox name="Reason" disabled="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="ReasonId" defaultLabel="Reason" />
+              <Binding target="DataSource" binding="ProcessContext::MainBo.loModReasonSelectionBox" bindingMode="ONE_WAY" />
+              <Binding target="Value" binding="ProcessContext::CurrentSelectedItem.modReason" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <!--Difference -->
+          <InputArea name="Difference" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Difference" id="DifferenceId" />
+              <Binding target="Value" type="Decimal" formatV2="15.2" binding="ProcessContext::CurrentSelectedItem.difference" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

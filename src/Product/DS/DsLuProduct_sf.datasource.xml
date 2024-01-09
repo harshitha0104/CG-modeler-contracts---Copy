@@ -1,0 +1,32 @@
+<DataSource name="DsLuProduct" backendSystem="sf" businessObjectClass="LuProduct" external="false" readOnly="true" editableEntity="Product2" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Product2" column="Id" />
+    <Attribute name="text1" table="Product2" column="Description_1_#Language#__c" />
+    <Attribute name="text2" table="Product2" column="Description_2_#Language#__c" />
+    <Attribute name="shortText" table="Product2" column="Short_Description_#Language#__c" />
+    <Attribute name="groupId" table="ProductGroup" column="Consumer_Goods_Product_Code__c" />
+    <Attribute name="groupShortText" table="ProductGroup" column="Short_Description_#Language#__c" />
+    <Attribute name="eAN" table="Product2" column="GTIN__c" />
+    <Attribute name="category" table="Product2" column="Category__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Product2" alias="" idAttribute="Id" />
+    <Entity name="Product2" alias="ProductGroup">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="Product2.Criterion_3_Product__c" comparator="eq" rightSideType="Attribute" rightSideValue="ProductGroup.Id" />
+          <Condition leftSideValue="ProductGroup.Sales_Org__c" comparator="eq" rightSideType="Parameter" rightSideValue="'#SalesOrg#'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Product2.Id = #pKey#
+        AND Product2.Sales_Org__c = '#SalesOrg#'
+      ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <GroupBy></GroupBy>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

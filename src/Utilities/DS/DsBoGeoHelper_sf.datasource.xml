@@ -1,0 +1,20 @@
+<DataSource objectClass="BoGeoHelper" backendSystem="sf" name="DsBoGeoHelper" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+      // Intended to be empty!
+      return undefined;
+   ]]></Load>
+    <Update><![CDATA[
+      // Intended to be empty!
+      return undefined;
+   ]]></Update>
+    <Insert><![CDATA[
+      // Intended to be empty!
+      return undefined;
+   ]]></Insert>
+    <Delete><![CDATA[
+      // Intended to be empty!
+      return undefined;
+   ]]></Delete>
+  </Database>
+</DataSource>

@@ -1,0 +1,30 @@
+<DataSource name="DsLoMeHistoricProducts" backendSystem="sf" businessObjectClass="LoMeHistoricProducts" external="false" readOnly="true" distinct="true" editableEntity="Order_Item__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="prdMainPKey" table="Order_Item__c" column="Product__c" />
+    <DerivedAttribute name="history" value="'1'" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order_Item__c" alias="" idAttribute="Id" />
+    <Entity name="Order__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Order_Item__c.Order__c" comparator="eq" rightSideType="Attribute" rightSideValue="Order__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        (Order__c.Phase__c='Ready' OR Order__c.Phase__c='SendFax' OR Order__c.Phase__c='Feedback' OR Order__c.Phase__c='Closed')
+        AND Order__c.Order_Account__c = '#ordererPKey#'
+        AND Order__c.Order_Template__c = '#sdoMetaPKey#'
+        AND #compareAsDate('Order__c.Order_Date__c', 'Date','>=',#dateFrom#, 'Date')#
+    ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Order_Item__c" attribute="Product__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="ordererPKey"  type="TEXT"/>
+    <Parameter name="sdoMetaPKey"  type="TEXT"/>
+    <Parameter name="dateFrom" baseType="Date"  type="INTEGER"/>
+  </Parameters>
+</DataSource>

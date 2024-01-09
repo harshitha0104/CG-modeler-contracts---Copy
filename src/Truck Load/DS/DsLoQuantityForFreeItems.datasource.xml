@@ -1,0 +1,64 @@
+<DataSource name="DsLoQuantityForFreeItems" backendSystem="cas" businessObjectClass="LoQuantityForFreeItems" external="false" editableEntity="SdoMain" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="quantitySumPerProduct" value="Sum(PrdLogistic.PiecesPerSmallestUnit * sdoitem.quantity)" />
+    <Attribute name="metaId" table="IvcMeta" column="MetaId" />
+  </Attributes>
+  <Entities>
+    <Entity name="SdoMain" alias="" idAttribute="PKey" />
+    <Entity name="SdoMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoMain.SdoMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoMeta.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="SdoItem" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoMain.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoItem.SdoMainPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="SdoItemMetaIvcMetaRel" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoItem.SdoItemMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoItemMetaIvcMetaRel.SdoItemMetaPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="IvcTAMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="IvcTAMeta.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoItemMetaIvcMetaRel.IvcTaMetaPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="IvcMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="IvcMeta.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoItemMetaIvcMetaRel.IvcMetaPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="PrdLogistic" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoItem.PrdMainPKey" comparator="eq" rightSideType="Attribute" rightSideValue="PrdLogistic.ProductPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[(SdoItem.PrdMainPKey = #prdMainPKey# 
+      AND SdoMain.Phase = 'Initial'
+      AND SdoMain.TmgMainPKey = #tmgTourPKey#
+      AND SdoMeta.SdoSubType = 'Delivery'
+      AND SdoItemMetaIvcMetaRel.UsedForDisplay = '1'
+      AND IvcTAMeta.TaControl = 'Withdraw'
+      AND PrdLogistic.UnitType = SdoItem.QuantityLogisticUnit)
+ ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="prdMainPKey" type="TEXT" />
+    <Parameter name="tmgTourPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

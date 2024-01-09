@@ -1,0 +1,11 @@
+<Datasource name="DsLuCashDocumentCount" objectClass="LuCashDocumentCount" backendSystem="sf" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+ 
+        var sqlParams = {};
+        var sqlStmt = "Select 0 as cashDocumentCount from Visit ";
+        sqlStmt +=    "where 1=2"                
+        return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+  </Database>
+</Datasource>

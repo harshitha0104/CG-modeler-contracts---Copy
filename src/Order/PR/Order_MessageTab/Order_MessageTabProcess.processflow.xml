@@ -1,0 +1,19 @@
+<Process name="Order::MessageTabProcess" defaultAction="ShowMessage" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="MainBO" type="BoOrder" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions/>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowMessage">
+        <UIDescription>Order::MessageTabUI</UIDescription>
+        <Events>       
+        </Events>
+      </Action>     
+    </Actions>
+  </Body>
+</Process>

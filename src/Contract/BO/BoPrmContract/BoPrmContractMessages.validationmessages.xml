@@ -1,0 +1,12 @@
+<ValidationMessages name="BoPrmContractMessages" businessObject="BoPrmContract" schemaVersion="">
+  <ValidationMessage name="CasPrmCttSloganEmpty" defaultMessage="Please enter a contract name." comment="" />
+  <ValidationMessage name="CasPrmCttDateFromGTDateThru" defaultMessage="Please enter a Date From that is less than or equal to Date Thru of contract: #slogan#." comment="" />
+  <ValidationMessage name="CasPrmCttTacticDateFromGTDateThru" defaultMessage="Please enter a Date From that is less than or equal to Date Thru of tactics #item#." comment="" />
+  <ValidationMessage name="CasPrmCttAtLeastOneProductRequired" defaultMessage="At least one Product is required." comment="" />
+  <ValidationMessage name="CasPrmCttNoProductsAllowed" defaultMessage="Only Product Groups are allowed." comment="" />
+  <ValidationMessage name="CasPrmCttDeleteNotResponsible" defaultMessage="Only the responsible User can delete this Contract." comment="" />
+  <ValidationMessage name="CasPrmCttDeletePhaseNotAllowed" defaultMessage="A contract in Phase committed cannot be deleted." comment="" />
+  <ValidationMessage name="CasPrmCttTacticDateThruGTCttDateThru" defaultMessage="Date Thru of tactics:  #item# has to be less than or equal to Date Thru of Customer Contract: #slogan#" comment="" />
+  <ValidationMessage name="CasPrmCttTacticDateFromLTCttDateFrom" defaultMessage="Date From of tactics:  #item# has to be greater or equal Date From of Customer Contract: #slogan#" comment="" />
+  <ValidationMessage name="CasClbFillInAllValues" defaultMessage="Please fill in all values." comment="All fields need to be filled with values." />
+</ValidationMessages>

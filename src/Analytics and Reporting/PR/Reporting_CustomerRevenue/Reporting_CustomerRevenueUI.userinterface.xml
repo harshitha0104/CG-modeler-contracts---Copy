@@ -1,0 +1,26 @@
+<UIDescription name="Reporting::CustomerRevenueUI" schemaVersion="0.0.0.5"  simpleEditorOnly="true">
+  <Page pagePattern="SingleSectionPage" cachable="false" useSolidBackground="true">
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::customerName" />
+      </Bindings>
+      <MenuItems></MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <UIPluginV2 name="CustomerRevenueReportUiPlugin" uiPlugin="CustomerRevenueReportUiPluginV2">
+          <Bindings>
+            <Binding target="maximizedMode" type="Text" binding="ProcessContext::MaximizedMode" bindingMode="ONE_WAY" />
+            <List target="customerSales" dataSource="ProcessContext::loCustomerSalesRevenue.items[]">
+              <Binding target="pKey" type="Text" binding=".pKey" />
+              <Binding target="netSales" type="Text" binding=".netSales" />
+              <Binding target="year " type="Text" binding=".year" />
+              <Binding target="month" type="Text" binding=".month" />
+            </List>
+          </Bindings>
+          <Events />
+        </UIPluginV2>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

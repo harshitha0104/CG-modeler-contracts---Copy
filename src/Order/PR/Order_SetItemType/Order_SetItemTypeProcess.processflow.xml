@@ -1,0 +1,86 @@
+<Process name="Order::SetItemTypeProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OrderItemMetaLookup_ButtonPressed" type="String" />
+        <Declaration name="OrderItemMetaLookupPKey" type="DomPKey" />
+        <Declaration name="boItemSettings" type="BoItemSettings" />
+      </Declarations>
+      <Parameters>
+        <Input name="OrderItemMetaList" type="LoOrderItemMetas" />
+        <Input name="CurrentItemMeta" type="LiOrderItemMeta" />
+        <Input name="scanSettings" type="BoItemSettings" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="CREATE" name="LoadSettings" type="BoItemSettings">
+        <Parameters>
+          <Input name="currentItemMeta" value="ProcessContext::CurrentItemMeta.pKey" />
+          <Input name="currentScanIncrementQuantity" value="ProcessContext::scanSettings.currentScanIncrementQuantity" />
+          <Input name="barcodeScanBehavior" value="ProcessContext::scanSettings.barcodeScanBehavior" />
+          <Input name="scanBehavior" value="ProcessContext::scanSettings.uoMScanBehavior" />
+          <Input name="defaultUnit" value="ProcessContext::scanSettings.uoMScanDefaultUnit" />
+        </Parameters>
+        <Return name="ProcessContext::boItemSettings" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Order::SetItemTypeUI</UIDescription>
+        <Events>
+          <Event name="itemMetaLookup" action="SetActiveFilterBeforeOrderMetaLookup" />
+          <Event name="done" action="EndSetItemType" />
+        </Events>
+      </Action>
+      <!-- Actions for Item Template Lookup -->
+      <Action name="SetActiveFilterBeforeOrderMetaLookup" actionType="LOGIC" call="ProcessContext::OrderItemMetaList.filterInvalidOrderItemMetas">
+        <TransitionTo action="ItemMetaLookup" />
+      </Action>
+      <Action actionType="PROCESS" name="ItemMetaLookup" process="Order::OrderItemMetaLookupProcess">
+        <Parameters>
+          <Input name="OrderItemMetaList" value="ProcessContext::OrderItemMetaList" />
+          <Input name="orderItemMetaPKey" value="ProcessContext::boItemSettings.luOrderItemMeta.pKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::OrderItemMetaLookupPKey" value="orderItemMetaPKey" />
+          <Return name="ProcessContext::OrderItemMetaLookup_ButtonPressed" value="buttonPressed" />
+        </ReturnValues>
+        <TransitionTo action="ResetActiveFilterAfterItemMetaLookup" />
+      </Action>
+      <Action name="ResetActiveFilterAfterItemMetaLookup" actionType="LOGIC" call="ProcessContext::OrderItemMetaList.resetFilter">
+        <Parameters>
+          <Input name="field" value="active" type="Literal" />
+        </Parameters>
+        <TransitionTo action="LoadOrderItemMetaLookup_Decision" />
+      </Action>
+      <Action name="LoadOrderItemMetaLookup_Decision" actionType="DECISION" parameter="ProcessContext::OrderItemMetaLookup_ButtonPressed">
+        <Case value="done" action="LoadOrderItemMetaLookup" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action actionType="LOAD" name="LoadOrderItemMetaLookup" type="LuOrderItemMeta">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::OrderItemMetaLookupPKey" />
+        </Parameters>
+        <Return name="ProcessContext::boItemSettings.luOrderItemMeta" />
+        <TransitionTo action="SetCurrentScanIncrementQuantity" />
+      </Action>
+      <Action actionType="LOGIC" name="SetCurrentScanIncrementQuantity" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="ProcessContext::boItemSettings.luOrderItemMeta.scanIncrementQuantity" />
+        </Parameters>
+        <Return name="ProcessContext::CurrentScanIncrementQuantity" />
+      </Action>
+      <!-- End action -->
+      <Action actionType="END" name="EndSetItemType">
+        <ReturnValues>
+          <Return name="scanSettings" value="ProcessContext::boItemSettings" />
+          <Return name="orderItemMetaPKey" value="ProcessContext::boItemSettings.luOrderItemMeta.pKey" />
+          <Return name="buttonPressed" value="Event.buttonPressed" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndCancel"></Action>
+    </Actions>
+  </Body>
+</Process>

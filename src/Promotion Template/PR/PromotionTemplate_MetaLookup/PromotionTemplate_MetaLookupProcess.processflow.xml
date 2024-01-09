@@ -1,0 +1,41 @@
+<Process name="PromotionTemplate::MetaLookupProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="PrmMetaList" type="LoPrmMeta" />
+      </Declarations>
+      <Parameters>
+        <Input name="PrmMetaPKey" type="String" />
+        <Input name="MetaType" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="GetPrmMetaList" type="LoPrmMeta">
+        <Parameters>
+          <Input name="metaType" value="ProcessContext::MetaType" />
+        </Parameters>
+        <Return name="ProcessContext::PrmMetaList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>PromotionTemplate::MetaLookupUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="EndWithReturnValues" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="EndWithReturnValues">
+        <ReturnValues>
+          <Return name="prmMetaPKey" value="Event.pKey" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="prmMetaPKey" value="ProcessContext::PrmMetaPKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

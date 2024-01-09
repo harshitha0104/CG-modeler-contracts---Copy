@@ -1,0 +1,18 @@
+<DataSource name="DsLoBpaManagement" backendSystem="sf" businessObjectClass="LoBpaManagement" external="false" editableEntity="Account_Manager__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Manager__c" column="Id" />
+    <Attribute name="bpaMainPKey" table="Account_Manager__c" column="Account__c" />
+    <Attribute name="usrMainPKey" table="Account_Manager__c" column="User__c" />
+    <Attribute name="main" table="Account_Manager__c" column="Main__c" />
+    <Attribute name="managementType" table="Account_Manager__c" column="Management_Type__c" />
+    <DerivedAttribute name="salesOrg" value="'#SalesOrg#'" />
+    <Attribute name="validFrom" table="Account_Manager__c" column="Valid_From__c" />
+    <Attribute name="validThru" table="Account_Manager__c" column="Valid_Thru__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Manager__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition />
+  <OrderCriteria />
+  <Parameters />
+</DataSource>

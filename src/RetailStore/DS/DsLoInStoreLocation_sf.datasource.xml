@@ -1,0 +1,22 @@
+<DataSource name="DsLoInStoreLocation" backendSystem="sf" businessObjectClass="LoInStoreLocation" external="false" editableEntity="" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="InStoreLocation" column="Id" />
+    <Attribute name="name" table="InStoreLocation" column="Name" />
+    <Attribute name="retailStoreId" table="InStoreLocation" column="RetailStoreId" />
+    <Attribute name="category" table="InStoreLocation" column="Category" />
+    <Attribute name="description" table="InStoreLocation" column="Description" />
+    <DerivedAttribute name="sort" value="'Z_' ||  InStoreLocation.Name " />
+  </Attributes>
+  <Entities>
+    <Entity name="InStoreLocation" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+       InStoreLocation.RetailStoreId = #retailStoreId# 
+        ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="InStoreLocation" attribute="Name" direction="ASC"/>
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="retailStoreId" type="TEXT" />
+  </Parameters>
+</DataSource>

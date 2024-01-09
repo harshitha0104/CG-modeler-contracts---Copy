@@ -1,0 +1,7 @@
+<DataSource name="DsBoUserCheck" backendSystem="sf" businessObjectClass="BoUserCheck" external="true" editableEntity="UsrUser" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+    return undefined;
+   ]]></Load>
+  </Database>
+</DataSource>

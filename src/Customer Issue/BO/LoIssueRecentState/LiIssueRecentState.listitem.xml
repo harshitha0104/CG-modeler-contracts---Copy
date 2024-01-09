@@ -1,0 +1,10 @@
+<ListItem name="LiIssueRecentState">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="svcIssuePKey" type="DomPKey" dataSourceProperty="svcIssuePKey" />
+    <SimpleProperty name="done" type="DomDate" dataSourceProperty="done" />
+    <SimpleProperty name="usrMainPKey" type="DomPKey" dataSourceProperty="usrMainPKey" />
+    <SimpleProperty name="wfeStatePKey" type="DomPKey" dataSourceProperty="wfeStatePKey" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" />
+  </SimpleProperties>
+</ListItem>

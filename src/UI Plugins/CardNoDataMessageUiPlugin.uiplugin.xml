@@ -1,0 +1,70 @@
+<UIPlugin name="CardNoDataMessageUiPlugin" mainComponent="main">
+  <Interface>
+    <Property id="infoIcon" />
+    <Property id="maintext" />
+    <Property id="subtext" />
+  </Interface>
+  <UIComponent name="main"><![CDATA[
+
+      var config = { 
+          margin: {top: 0, right: 15, bottom: 20, left: 15},
+          width:	280,
+          height:	80 
+      }
+
+      React.createClass({
+
+          setStyles: function () {           
+              config.infoIconStyle = {
+                  width: '36px',
+                  height: '36px',
+                  display: 'inline-block',
+                  paddingLeft: '8px',
+				  paddingRight: '8px'
+              };
+
+          config.mainMessageStyle = {
+              font: 	this.props.common.config.uiPlugin.FontMedium12,
+              color:	this.props.common.config.uiPlugin.Color12,
+              display: 'block',
+     		  paddingRight: '0.25em'
+          };
+
+          config.subMessageStyle = {
+              font:	this.props.common.config.uiPlugin.FontRegular12,
+              color: this.props.common.config.uiPlugin.Color12,
+              display: 'block'
+              };  
+          },
+
+          componentDidMount: function () {
+              if(Utils.isDefined(this.props.common.config.uiPlugin)){
+                  this.setStyles();
+              }    
+          },
+
+          render: function () {
+              var props = this.props;
+              return   <div>
+                  <table width="100%">
+                      <tbody>
+                          <tr>
+                              <td width='52px'>
+                                  <img style={config.infoIconStyle} src={props.infoIcon} /> 
+                              </td>
+                              <td width='100%'>
+                                  <span style={config.mainMessageStyle}>{props.maintext}</span>	
+         						  <span style={config.subMessageStyle}>{props.subtext}</span>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>;
+          }
+      })
+  
+   ]]></UIComponent>
+  <UIComponentStyling><![CDATA[
+
+    ]]></UIComponentStyling>
+</UIPlugin>

@@ -1,0 +1,15 @@
+<LookupObject name="LuUsrReminderRuleById" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuUsrReminderRuleById" />
+  <SimpleProperties>
+    <SimpleProperty name="conditionThreshold" type="DomInteger" storable="false" dataSourceProperty="conditionThreshold" />
+    <SimpleProperty name="conditionActivityType" type="DomUsrActivityType" storable="false" dataSourceProperty="conditionActivityType" />
+    <SimpleProperty name="conditionUserExitId" type="DomId" storable="false" dataSourceProperty="conditionUserExitId" />
+    <SimpleProperty name="messageTitle" type="DomText" storable="false" dataSourceProperty="messageTitle" />
+    <SimpleProperty name="messageContent" type="DomText" storable="false" dataSourceProperty="messageContent" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

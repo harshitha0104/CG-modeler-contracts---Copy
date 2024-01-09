@@ -1,0 +1,29 @@
+<ValidationMessages name="BoTourMessages" businessObject="BoTour" schemaVersion="">
+  <ValidationMessage name="CasBoRunningTourInContext" defaultMessage="Tour Release not possible. There's already a Tour with status Running." comment="validates Context Tour Running " />
+  <ValidationMessage name="CasBoOpenCalls" defaultMessage="Sorry, Tour cannot be completed. One or more Calls are still open and have to be executed first." comment="validates Context Tour Running " />
+  <ValidationMessage name="CasTmgOpenDocuments" defaultMessage="Tour Complete not possible. One or more Documents are still open and have to be released before completing the Tour." comment="validates Context Tour Running " />
+  <ValidationMessage name="CasTmgNoMandatoryCheckIn" defaultMessage="Tour Complete not possible. Cash Check in has to be executed first to complete the Tour." comment="validates Context Tour Running " />
+  <ValidationMessage name="CasTmgNoMandatoryPrdCheckIn" defaultMessage="Tour Complete not possible. Product Check in has to be executed first to complete the Tour." comment="validates Context Tour Running " />
+  <ValidationMessage name="CasTmgFillInTourDateTimeValues" defaultMessage="Please fill in Tour Start End Date Time values." comment="validate tour date." />
+  <ValidationMessage name="CasTmgFillTourStartDateTime" defaultMessage="Please fill in Tour Start Date Time values." comment="validate tour date." />
+  <ValidationMessage name="CasTmgFillTourEndDateTime" defaultMessage="Please fill in Tour End Date Time values." comment="validate tour date." />
+  <ValidationMessage name="CasTmgDateFromGreaterDateThru" defaultMessage="Visit Start Date must be earlier than End Date." comment="validate tour date." />
+  <ValidationMessage name="CasTmgTimeFromGreaterTimeThru" defaultMessage="Time Thru must be greater than or equal to Time From." comment="validate tour date." />
+  <ValidationMessage name="CasTmgMileageStart" defaultMessage="Mileage Start must be greater than Zero." comment="validates Mileage" />
+  <ValidationMessage name="CasTmgMileageEnd" defaultMessage="Mileage End must be greater than Zero." comment="validates Mileage" />
+  <ValidationMessage name="CasTmgTourDateWillBeSetToToday" defaultMessage="Date of the tour will be changed to current date now. As there might be open calls related to the tour, please use the Reschedule functionality in the tour list to move the related calls together with the tour. If you continue, the tour will be moved without rescheduling the calls." comment="Explains to the user that they should use the reschedule-feature if they want to move open calls together with the tour." />
+  <ValidationMessage name="CasBoTourMileage" defaultMessage="Mileage End must be greater than Mileage Start." comment="validates Mileage" />
+  <ValidationMessage name="CasTmgTruckId" defaultMessage="The Truck Id must be entered." comment="validates vehicle" />
+  <ValidationMessage name="CasTmgTrailerId" defaultMessage="The Trailor1 Id must be entered." comment="validates vehicle" />
+  <ValidationMessage name="CasTmgTrailerId2" defaultMessage="The Trailor2 Id must be entered." comment="validates vehicle" />
+  <ValidationMessage name="CasTmgVehicleOKStartYes" defaultMessage="The Vehicle OK Start must be Yes." comment="validates vehicle" />
+  <ValidationMessage name="CasTmgVehicleOKEndYes" defaultMessage="The Vehicle OK End must be Yes." comment="validates vehicle" />
+  <ValidationMessage name="CasTmgVehicleStatusStart" defaultMessage="The truck must be ok before starting the tour or Reason Code has to be entered if truck is not ok." comment="validates vehicle" />
+  <ValidationMessage name="CasTmgVehicleStatusEnd" defaultMessage="The truck must be ok before completing the tour or Reason Code has to be entered if truck is not ok." comment="validates vehicle" />
+  <ValidationMessage name="CasTmgTruckCheck" defaultMessage="Tour can be released only if all start of day relevant tour checks are answered." comment="validates vehicle" />
+  <ValidationMessage name="EndOfDayNotAllowedOpenCallsMessage" defaultMessage="End of Day is not possible as there are still open calls which have to be executed first." comment="End of day not allowed" />
+  <ValidationMessage name="EndOfDayNotAllowedOpenOrdersOrDeliveriesMessage" defaultMessage="End of Day is not possible as there are still open orders/deliveries/replenishment which have to be executed first." comment="End of day not allowed" />
+  <ValidationMessage name="EndOfDayNotAllowedOpenInventoryDocsMessage" defaultMessage="End of Day is not possible as there are still open inventory documents not relevant to end of day which have to be executed first." comment="End of day not allowed" />
+  <ValidationMessage name="EndOfDayNotAllowedOpenCashDocsMessage" defaultMessage="End of Day is not possible as there are still open cash documents not relevant to end of day which have to be executed first." comment="End of day not allowed" />
+  <ValidationMessage name="EndOfDayNotAllowedOpenInventoryAndCashDocsMessage" defaultMessage="End of Day is not possible as there are still open inventory and cash documents not relevant to end of day which have to be executed first." comment="End of day not allowed" />
+</ValidationMessages>

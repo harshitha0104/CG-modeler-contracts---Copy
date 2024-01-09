@@ -1,0 +1,4 @@
+<ListObject name="LoJobDefinitionMetas" generateLoadMethod="true">
+  <DataSource name="DsLoJobDefinitionMetas" />
+  <Item objectClass="LiJobDefinitionMeta" />
+</ListObject>

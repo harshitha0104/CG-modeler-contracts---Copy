@@ -1,0 +1,12 @@
+<LookupObject name="LuTripList" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuTripList" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

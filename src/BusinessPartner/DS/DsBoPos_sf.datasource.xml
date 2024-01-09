@@ -1,0 +1,20 @@
+<DataSource name="DsBoPos" backendSystem="sf" businessObjectClass="BoPos" external="false" editableEntity="POS__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="POS__c" column="Id" />
+    <Attribute name="name" table="POS__c" column="Description_#Language#__c" />
+    <Attribute name="id" table="POS__c" column="Name" />
+    <Attribute name="bpaPosMetaPKey" table="POS__c" column="POS_Template__c" />
+    <DerivedAttribute name="bpaMetaPKey" value="' '" />
+    <DerivedAttribute name="bpaPOSGeometryPKey" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="POS__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   POS__c.Id = #pKey#
+        ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

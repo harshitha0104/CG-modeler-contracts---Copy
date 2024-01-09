@@ -1,0 +1,7 @@
+<ListItem name="LiUserRelatedDocReminderRule">
+  <SimpleProperties>
+  <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+  <SimpleProperty name="reminderRuleType" type="DomUsrReminderRuleType" storable="false" dataSourceProperty="reminderRuleType" />
+  <SimpleProperty name="documentType" type="DomUsrRelatedDocumentType" storable="false" dataSourceProperty="documentType" />  
+  </SimpleProperties>
+</ListItem>

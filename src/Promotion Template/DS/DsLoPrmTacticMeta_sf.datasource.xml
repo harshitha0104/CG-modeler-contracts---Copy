@@ -1,0 +1,26 @@
+<DataSource name="DsLoPrmTacticMeta" backendSystem="sf" businessObjectClass="LoPrmTacticMeta" external="false" distinct="false" readOnly="true" editableEntity="Contract_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contract_Template__c" column="Id" />
+    <Attribute name="metaId" table="Contract_Template__c" column="Name" />
+    <Attribute name="text" table="Contract_Template__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contract_Template__c" idAttribute="Id" />
+    <Entity name="Contract_Template__c" alias="customerContractTemplate">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Contract_Template__c.Account_Contract_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="customerContractTemplate.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Contract_Template__c.Meta_Type__c = 'Tactic'
+  AND Contract_Template__c.Active__c = '1'
+  AND customerContractTemplate.Id = #parentPKey#	
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="parentPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

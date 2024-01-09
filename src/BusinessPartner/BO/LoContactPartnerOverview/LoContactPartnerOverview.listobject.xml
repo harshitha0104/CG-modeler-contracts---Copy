@@ -1,0 +1,26 @@
+<ListObject name="LoContactPartnerOverview" generateLoadMethod="true" filter="InDatabase" schemaVersion="1.1">
+  <DataSource name="DsLoContactPartnerOverview" />
+  <Item objectClass="LiContactPartnerOverview" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoContactPartnerOverview">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="ContactPartner_FirstName" property="firstName" type="Text" />
+        <AdvancedSearchAttribute label="ContactPartner_LastName" property="lastName" type="Text" />
+        <AdvancedSearchAttribute label="ContactPartner_Street" property="cpStreet" type="Text" />
+        <AdvancedSearchAttribute label="ContactPartner_ZIP" property="cpZIP" type="Text" />
+        <AdvancedSearchAttribute label="ContactPartner_City" property="cpCity" type="Text" />
+        <AdvancedSearchAttribute label="ContactPartner_State"  property="cpState" type="Selection" toggleId="CountryState" editable="true" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

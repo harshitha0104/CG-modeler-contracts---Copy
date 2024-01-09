@@ -1,0 +1,48 @@
+<DataSource name="DsLoScannedProduct" backendSystem="sf" businessObjectClass="LoScannedProduct" external="false" editableEntity="Product2" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Unit_of_Measure__c" column="Id" />
+    <Attribute name="productPKey" table="Product2" column="Id" />
+    <Attribute name="logisticPKey" table="Unit_of_Measure__c" column="Id" />
+    <DerivedAttribute name="prdStatePKey" value="' '" />
+    <Attribute name="productId" table="Product2" column="Consumer_Goods_Product_Code__c" />
+    <Attribute name="shortText" table="Product2" column="Short_Description_#Language#__c" />
+    <Attribute name="eAN" table="Product2" column="GTIN__c" />
+    <DerivedAttribute name="fieldStateValid" value="CASE  WHEN (Product2.Id IS NOT NULL ) THEN 1 ELSE 0 END" />
+    <Attribute name="foreignProduct" table="Product2" column="Competitive_Product__c" />
+    <Attribute name="unitType" table="Unit_of_Measure__c" column="Unit_Type__c" />
+    <DerivedAttribute name="grouping1" value="substr(Product2.Description_1_#Language#__c,1,1)" />
+  </Attributes>
+  <Entities>
+    <Entity name="Product2" alias="" />
+    <Entity name="Unit_of_Measure__c" alias="">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="Product2.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Unit_of_Measure__c.Product__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Product_Template__c" alias="" >
+    	<Join Type="inner">
+          <SimpleJoin>
+            <Condition leftSideValue="Product2.product_Template__c" comparator="EQ" rightSideType="Attribute" rightSideValue="Product_Template__c.Id" />
+          </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+   (Product2.GTIN__c = #eAN#
+   OR Unit_of_Measure__c.GTIN__c = #eAN#)
+   #additionalCondition#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <GroupBy>
+    <GroupByCriterion entity="Product2" attribute="Consumer_Goods_Product_Code__c" />
+    <GroupByCriterion entity="Unit_of_Measure__c" attribute="Unit_Type__c" />
+  </GroupBy>
+  <Parameters>
+    <Parameter name="eAN" type="TEXT" />
+    <Parameter name="additionalCondition" treatAs="sqlSnippet" />
+    <Parameter name="uoMScanDefaultUnit" type="TEXT" />
+    <Parameter name="isOrderUnit" type="TEXT" />
+  </Parameters>
+</DataSource>

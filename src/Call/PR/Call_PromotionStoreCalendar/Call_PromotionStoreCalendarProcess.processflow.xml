@@ -1,0 +1,40 @@
+<Process name="Call::PromotionStoreCalendarProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="promotionList" type="LoCallPromotions" />  
+        <Declaration name="promotionData" type="Object" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoCall" />
+        <Input name="CallDate" type="String" />
+        <Input name="CustomerPKey" type="String" />
+        <Input name="LeadTime" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadPromotions" actionType="LOAD" type="LoPromotionCalendar">
+        <Parameters>
+          <Input name="callDate" value="ProcessContext::CallDate" />
+          <Input name="customerPKey" value="ProcessContext::CustomerPKey" />
+          <Input name="leadTime" value="ProcessContext::LeadTime" />
+        </Parameters>
+        <Return name="ProcessContext::promotionList" />
+      </Action>
+      <Action name="PreparePromotionData" actionType="LOGIC" call="ProcessContext::promotionList.prepareData">
+        <Parameters>
+          <Input name="callDate" value="ProcessContext::CallDate" />
+        </Parameters>
+        <Return name="ProcessContext::promotionData" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Call::PromotionStoreCalendarUI</UIDescription>
+        <Events></Events>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

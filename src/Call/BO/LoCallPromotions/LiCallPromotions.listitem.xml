@@ -1,0 +1,21 @@
+<ListItem name="LiCallPromotions" >
+  <SimpleProperties>
+    <!-- PrmProduct -->
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="bpaMainPKey" type="DomPKey" dataSourceProperty="bpaMainPKey" />
+    <SimpleProperty name="dateFrom" type="DomDate" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" dataSourceProperty="dateThru" />
+    <SimpleProperty name="seperator" type="DomText" dataSourceProperty="seperator" />
+    <SimpleProperty name="orderDateFrom" type="DomDate" dataSourceProperty="orderDateFrom" />
+    <SimpleProperty name="orderDateThru" type="DomDate" dataSourceProperty="orderDateThru" />
+    <SimpleProperty name="placementDateFrom" type="DomDate" dataSourceProperty="placementDateFrom" />
+    <SimpleProperty name="placementDateThru" type="DomDate" dataSourceProperty="placementDateThru" />
+    <!-- PrmAnnotation -->
+    <SimpleProperty name="note" type="DomLongText" dataSourceProperty="note" />
+    <!-- PrmText  -->
+    <SimpleProperty name="anchor" type="DomText" dataSourceProperty="anchor" />
+    <SimpleProperty name="slogan" type="DomText" dataSourceProperty="slogan" />
+    <SimpleProperty name="type" type="DomText" dataSourceProperty="type" />
+    <SimpleProperty name="color" type="DomRgbColor" dataSourceProperty="color" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,11 @@
+<ListItem name="LiBpaCallSetting">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="customerPKey" type="DomPKey" dataSourceProperty="customerPKey" />
+    <SimpleProperty name="clbMetaPKey" type="DomPKey" dataSourceProperty="clbMetaPKey" />
+    <SimpleProperty name="lastCall" type="DomDate" dataSourceProperty="lastCall" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="validFrom" type="DomDate" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomValidThru" dataSourceProperty="validThru" />
+  </SimpleProperties>
+</ListItem>

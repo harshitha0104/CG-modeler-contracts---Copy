@@ -1,0 +1,39 @@
+<DataSource name="DsLoTripListBpaRel" backendSystem="sf" businessObjectClass="LoTripListBpaRel" external="false" editableEntity="Trip_List_Account__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Trip_List_Account__c" column="Id" />
+    <Attribute name="tplMainPKey" table="Trip_List_Account__c" column="Trip_List__c" />
+    <Attribute name="dayOfWeek" table="Trip_List_Account__c" column="Day__c" />
+    <Attribute name="bpaMainPKey" table="Trip_List_Account__c" column="Account__c" />
+    <Attribute name="validFrom" table="Trip_List_Account__c" column="Valid_From__c" />
+    <Attribute name="validThru" table="Trip_List_Account__c" column="Valid_Thru__c" />
+    <Attribute name="sort" table="Trip_List_Account__c" column="Sort__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Trip_List_Account__c" alias="" idAttribute="Id" />
+    <Entity name="Account" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Trip_List_Account__c.Account__c" comparator="eq" rightSideType="Attribute" rightSideValue="Account.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Account_Manager__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Account.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Account_Manager__c.Account__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+   Trip_List_Account__c.Trip_List__c = #tplMainPKey#
+   AND Account_Manager__c.User__c = #responsiblePKey#
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Trip_List_Account__c" attribute="Sort__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="tplMainPKey" type="TEXT" />
+    <Parameter name="responsiblePKey" type="TEXT" />
+  </Parameters>
+</DataSource>

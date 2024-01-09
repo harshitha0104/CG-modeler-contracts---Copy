@@ -1,0 +1,16 @@
+<ListItem name="LiTourChecks">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="tmgTourPKey" type="DomPKey" storable="true" dataSourceProperty="tmgTourPKey" />
+    <SimpleProperty name="tmgCheckPKey" type="DomPKey" storable="true" dataSourceProperty="tmgCheckPKey" />
+    <SimpleProperty name="value" type="DomBool" storable="true" dataSourceProperty="value" />
+    <SimpleProperty name="usage" type="DomTmgCheckUsage" storable="true" dataSourceProperty="usage" />
+    <SimpleProperty name="checkType" type="DomTmgCheckType" storable="true" dataSourceProperty="checkType" />
+    <SimpleProperty name="text" type="DomText" storable="true" dataSourceProperty="text" />
+    <SimpleProperty name="sort" type="DomInteger" storable="true" dataSourceProperty="sort" />
+    <SimpleProperty name="checkDefinitionText" type="DomText" storable="true" dataSourceProperty="checkDefinitionText" />
+    <SimpleProperty name="dataType" type="DomString" storable="true" />
+    <SimpleProperty name="toggleId" type="DomId" storable="true" />
+    <SimpleProperty name="sortTextUI" type="DomText" storable="false" dataSourceProperty="sortTextUI" />
+  </SimpleProperties>
+</ListItem>

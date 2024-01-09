@@ -1,0 +1,30 @@
+<DataSource name="DsLuLocation" backendSystem="sf" businessObjectClass="LuLocation" external="false" editableEntity="" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Location" column="Id" />
+    <Attribute name="name" table="Location" column="Name" />
+    <Attribute name="visitorAddressId" table="Location" column="VisitorAddressId" />
+    <Attribute name="city" table="Address" column="City" />
+    <Attribute name="postalCode" table="Address" column="PostalCode" />
+    <Attribute name="state" table="Address" column="State" />
+    <Attribute name="street" table="Address" column="Street" />
+    <Attribute name="longitude" table="Location" column="Longitude" />
+    <Attribute name="latitude" table="Location" column="Latitude" />
+  </Attributes>
+  <Entities>
+    <Entity name="Location" alias="" idAttribute="Id" />
+    <Entity name="Address" alias="">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="Location.VisitorAddressId" comparator="eq" rightSideType="Attribute" rightSideValue="Address.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+     Location.Id = #pKey#
+        ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,182 @@
+<UIDescription name="Cash::OverviewUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionPage" cachable="false">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="CashTitleId" defaultLabel="Cash" bindingMode="ONE_TIME" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem itemId="CreateNewCashCheckOutDocument" directlyVisible="true">
+          <Bindings>
+            <Resource target="Text" type="Label" id="CreateNewCashCheckOutId" defaultLabel="Check out" />
+            <Resource target="Icon" type="Image" id="PlusDarkGrey24" defaultImage="PlusDarkGrey24" />
+            <Binding type="Visible" target="Visible" call="ProcessContext::CashList.getCreateCashButtonVisibility">
+              <Parameters>
+                <Input name="mode" type="Literal" value="checkOut" />
+              </Parameters>
+            </Binding>
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="createNewCashCheckOut" />
+          </Events>
+        </MenuItem>
+        <MenuItem itemId="CreateNewCashCheckInDocument" directlyVisible="true">
+          <Bindings>
+            <Resource target="Text" type="Label" id="CreateNewCashCheckInId" defaultLabel="Check in" />
+            <Resource target="Icon" type="Image" id="PlusDarkGrey24" defaultImage="PlusDarkGrey24" />
+            <Binding type="Visible" target="Visible" call="ProcessContext::CashList.getCreateCashButtonVisibility">
+              <Parameters>
+                <Input name="mode" type="Literal" value="checkIn" />
+              </Parameters>
+            </Binding>
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="createNewCashCheckIn" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="true" itemId="createNew">
+          <Bindings>
+            <Binding type="Visible" target="Visible" call="ProcessContext::CashList.getCreateCashButtonVisibility">
+              <Parameters>
+                <Input name="mode" type="Literal" value="New" />
+              </Parameters>
+            </Binding>
+            <Resource target="Text" type="Label" id="CreateNew" defaultLabel="New Document" />
+            <Resource target="Icon" type="Image" id="PlusDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="createNewDocument" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="CashList" indexBar="false" searchable="true" dataSource="ProcessContext::CashList.Items[]">
+          <SearchAttributes>
+            <SearchAttribute name="documentType" />
+          </SearchAttributes>
+          <Items name="Items" itemPattern="CashItemPattern">
+            <Bindings>
+              <Binding target="CashNumber" type="Text" binding=".id" bindingMode="ONE_WAY" />
+              <Binding target="Phase" type="Image" binding=".phase.imageId" bindingMode="ONE_WAY" />
+              <Binding target="MetaText" type="Text" binding=".metaText" bindingMode="ONE_WAY" />
+              <Binding target="PhaseText" type="Text" binding=".phase.text" bindingMode="ONE_WAY" />
+              <Binding target="TotalValue" type="Decimal" formatV2="5.2" binding=".paidAmount" bindingMode="ONE_WAY" />
+              <Binding target="Currency" type="Text" binding=".currency.id" bindingMode="ONE_WAY" />
+              <Binding target="ReleaseTime" type="Text" binding=".releaseTime" bindingMode="ONE_WAY" />
+              <Binding target="RelTime" type="Text" binding=".relTime" bindingMode="ONE_WAY" />
+              <Resource target="Spacer" type="Label" id="Spacer" defaultLabel=" " />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="Phase" />
+                <Col layoutType="itemRight itemValueSmall" width="1em" bindingId="Spacer" />
+                <Col width="12em">
+                  <Row layoutType="itemValue" bindingId="MetaText" />
+                  <Row layoutType="itemIdentifierSmall" bindingId="CashNumber" />
+                </Col>
+                <Col width="12em">
+                  <Row layoutType="itemSecondary" bindingId="ReleaseTime" />
+                  <Row layoutType="itemSecondary" bindingId="RelTime" />
+                </Col>
+                <Col width="6em" layoutType="itemRight itemImportantValue" bindingId="TotalValue" />
+                <Col width="0.5em" layoutType="itemRight itemImportantValue" bindingId="Spacer" />
+                <Col width="2.5em" layoutType="itemRight itemImportantValue" bindingId="Currency" />
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="Phase" />
+                  <Col layoutType="itemRight itemValueSmall" width="1em" bindingId="Spacer" />
+                  <Col width="10em">
+                    <Row layoutType="itemValue" bindingId="MetaText" />
+                    <Row layoutType="itemIdentifierSmall" bindingId="CashNumber" />
+                  </Col>
+                  <Col width="10em">
+                    <Row layoutType="itemSecondary" bindingId="ReleaseTime" />
+                    <Row layoutType="itemSecondary" bindingId="RelTime" />
+                  </Col>
+                  <Col width="6em" layoutType="itemRight itemImportantValue" bindingId="TotalValue" />
+                  <Col width="0.5em" layoutType="itemRight itemImportantValue" bindingId="Spacer" />
+                  <Col width="2.5em" layoutType="itemRight itemImportantValue" bindingId="Currency" />
+                </Default>
+                <Android>
+                  <Col width="2.7em" height="1.8em" layoutType="Image" bindingId="Phase" />
+                  <Col layoutType="itemRight itemValueSmall" width="1em" bindingId="Spacer" />
+                  <Col width="10em">
+                    <Row layoutType="itemValue" bindingId="MetaText" />
+                    <Row layoutType="itemIdentifierSmall" bindingId="CashNumber" />
+                  </Col>
+                  <Col width="10em">
+                    <Row layoutType="itemSecondary" bindingId="ReleaseTime" />
+                    <Row layoutType="itemSecondary" bindingId="RelTime" />
+                  </Col>
+                  <Col width="6em" layoutType="itemRight itemImportantValue" bindingId="TotalValue" />
+                  <Col width="0.5em" layoutType="itemRight itemImportantValue" bindingId="Spacer" />
+                  <Col width="2.5em" layoutType="itemRight itemImportantValue" bindingId="Currency" />
+                </Android>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col>
+                    <Row>
+                      <Col width="1.7em" height="1.4em" layoutType="itemRight itemIdentifier" bindingId="Spacer" />
+                      <Col layoutType="itemValueSmall" bindingId="MetaText" />
+                    </Row>
+                    <Row>
+                      <Col width="1.5em" height="1.4em" layoutType="Image" bindingId="Phase" />
+                      <Col width="7em">
+                        <Row layoutType="itemIdentifierSmall" bindingId="CashNumber" />
+                        <Row width="4em">
+                          <Col width="5em" layoutType="itemSecondarySmall" bindingId="ReleaseTime" />
+                          <Col width="0.5em" layoutType="itemRight itemIdentifier" bindingId="Spacer" />
+                          <Col width="4em" layoutType="itemSecondarySmall" bindingId="RelTime" />
+                        </Row>
+                      </Col>
+                      <Col>
+                        <Row>
+                          <Col width="6em" layoutType="itemRight itemImportantValueSmall" bindingId="TotalValue" />
+                          <Col width="2.5em" layoutType="itemRight itemImportantValueSmall" bindingId="Currency" />
+                        </Row>
+                        <Row layoutType="itemValue" bindingId="Spacer" />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Default>
+              </Phone>
+            </ItemListLayout>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::ContextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected" resetMultiAreas="true">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+            <ContextOpeningEvent event="contextMenuOpening">
+              <Params>
+                <Param name="phase" value=".phase" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="contextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="sdoMetaPKey" value=".sdoMetaPKey" />
+              </Params>
+            </ContextSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

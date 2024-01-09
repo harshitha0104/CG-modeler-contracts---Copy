@@ -1,0 +1,14 @@
+<DataSource name="DsLuHasReferencedOrder" backendSystem="sf" businessObjectClass="LuHasReferencedOrder" external="false" editableEntity="Order__c" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="referencedOrderCount" value="Count(*)" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order__c" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   Order__c.Visit__c = #clbMainPKey#
+  ]]></QueryCondition>
+  <Parameters>
+    <Parameter name="clbMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

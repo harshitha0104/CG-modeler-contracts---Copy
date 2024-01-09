@@ -1,0 +1,9 @@
+<ListItem name="LiPrmKPI">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+    <SimpleProperty name="type" type="DomBplValueType" dataSourceProperty="type" />
+    <SimpleProperty name="total" type="DomBplClcDecimal" dataSourceProperty="total" />
+    <SimpleProperty name="prmPromotionPKey" type="DomPKey" dataSourceProperty="prmPromotionPKey" />
+  </SimpleProperties>
+</ListItem>

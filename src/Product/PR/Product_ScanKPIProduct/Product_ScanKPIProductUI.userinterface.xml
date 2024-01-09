@@ -1,0 +1,46 @@
+<UIDescription name="Product::ScanKPIProductUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="NonUniqueUPCId" defaultLabel="Non-unique Products" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="ScannedProductList" groupBy="grouping1" dataSource="ProcessContext::loScannedProduct.Items[]">
+          <Items name="Items" itemPattern="ScannedProductOverviewItem">
+            <Bindings>
+              <Binding target="ProductName" type="Text" binding=".productName" bindingMode="ONE_WAY" />
+              <Binding target="GTIN" type="Text" binding=".gtin" bindingMode="ONE_WAY" />
+              <Binding target="ProductCode" type="Text" binding=".productCode" bindingMode="ONE_WAY" />
+              <Binding target="PKey" type="Text" binding=".pKey" bindingMode="ONE_WAY" />
+              <Resource target="PrdGTINLabel" type="Label" id="PrdGTINLabel" defaultLabel="GTIN" />
+              <Resource target="PrdNoLabel" type="Label" id="PrdNoLabel" defaultLabel="Product Code" />
+            </Bindings>
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemIdentifier" bindingId="ProductName" />
+                <Row>
+                  <Col height="1.5em" width="8em" layoutType="itemLabel" bindingId="PrdNoLabel" />
+                  <Col layoutType="itemSecondary" width="8em" bindingId="ProductCode" />
+                </Row>
+                <Row>
+                  <Col height="1.5em" width="8em" layoutType="itemLabel" bindingId="PrdGTINLabel" />
+                  <Col layoutType="itemSecondary" width="8em" bindingId="GTIN" />
+                </Row>
+              </Col>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".productPKey" />
+                <Param name="id" value=".productId" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

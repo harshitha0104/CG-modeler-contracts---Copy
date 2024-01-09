@@ -1,0 +1,25 @@
+<DataSource name="DsBoCustomerRole" backendSystem="sf" businessObjectClass="BoCustomerRole" external="false" editableEntity="Account_Extension__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Extension__c" column="Id" />
+    <Attribute name="customerPKey" table="Account_Extension__c" column="Account__c" />
+    <DerivedAttribute name="bpaRolePKey" value="' '" />
+    <DerivedAttribute name="customerNumber" value="Account_Extension__c.Customer_Role_Number__c" />
+    <Attribute name="priceType" table="Account_Extension__c" column="Customer_Role_Price_Type__c" />
+    <Attribute name="priceListType" table="Account_Extension__c" column="Customer_Role_Price_List_Type__c" />
+    <DerivedAttribute name="currency" value="(SELECT Value__c FROM System_Setting__c WHERE Name = 'Default_Currency')" />
+    <DerivedAttribute name="customerLanguage" value="'en'" />
+    <DerivedAttribute name="salesOrg" value="'#SalesOrg#'" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Extension__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   Account_Extension__c.Account__c = #customerPKey#
+   AND #compareAsDate('Account_Extension__c.Customer_Role_Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')#
+   AND #compareAsDate('Account_Extension__c.Customer_Role_Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#
+        ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="customerPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

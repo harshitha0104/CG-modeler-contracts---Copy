@@ -1,0 +1,57 @@
+<BusinessObject name="BoUser"  schemaVersion="1.1" generateLoadMethod="false" OERReference="UsrUser" baseClass="FrameworkUser">
+  <DataSource name="DsBoUser" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="salutation" type="DomBpaSalutation" dataSourceProperty="salutation" />
+    <SimpleProperty name="name" type="DomText" dataSourceProperty="name" />
+    <SimpleProperty name="firstName" type="DomUsrName" dataSourceProperty="firstName" />
+    <SimpleProperty name="middleName" type="DomUsrName" dataSourceProperty="middleName" />
+    <SimpleProperty name="lastName" type="DomUsrName" dataSourceProperty="lastName" />
+    <SimpleProperty name="languageSpoken" type="DomLanguage" dataSourceProperty="languageSpoken" />
+    <SimpleProperty name="loginName" type="DomUsrLoginName" dataSourceProperty="loginName" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="distribChannel" type="DomDistribChannel" dataSourceProperty="distribChannel" />
+    <SimpleProperty name="division" type="DomSysIntDivision" dataSourceProperty="division" />
+    <SimpleProperty name="isSupervisor" type="DomBool" />
+    <SimpleProperty name="teamList" type="DomLongDescription" />
+    <SimpleProperty name="currency" type="DomCurrency" dataSourceProperty="currency" />
+    <SimpleProperty name="distanceUnit" type="DomRpsDistanceDimension" dataSourceProperty="distanceUnit" />
+    <SimpleProperty name="usrDocMetaPKey" type="DomPKey" dataSourceProperty="usrDocMetaPKey" />
+    <SimpleProperty name="showTimecardInfo" type="DomBool" dataSourceProperty="showTimecardInfo" />
+    <SimpleProperty name="employeeNumber" type="DomPKey" dataSourceProperty="employeeNumber" />
+    <SimpleProperty name="sfId" type="DomId" />
+    <SimpleProperty name="sfLanguagePostfix" type="DomString" />
+    <SimpleProperty name="profilePicture" type="DomBlob" />
+    <SimpleProperty name="showCockpitInDashboard" type="DomBool" />
+  </SimpleProperties>
+  <ObjectLookups>
+    <ObjectLookup name="luIsSupervisor" objectClass="LuIsSupervisor" dataSourceProperty="pKey" lookupProperty="pKey" />
+    <ObjectLookup name="luUserHasRoleById" objectClass="LuUserHasRoleById" dataSourceProperty="pKey" lookupProperty="pKey" />
+  </ObjectLookups>
+  <NestedObjects>
+    <NestedObject name="boUserSettings" objectClass="BoUserSettings" dataSourceProperty="pKey" nestingProperty="usrMainPKey" />
+    <NestedObject name="boUserSales" objectClass="BoUserSales" dataSourceProperty="pKey" nestingProperty="userPKey" />
+  </NestedObjects>
+  <ListObjects>
+    <ListObject name="loTeamOfSupervisor" objectClass="LoTeamOfSupervisor" dataSourceProperty="pKey" listProperty="usrPKey" />
+    <ListObject name="loUsrAttachments" objectClass="LoUsrAttachments" dataSourceProperty="pKey" listProperty="userPKey" />
+  </ListObjects>
+  <Methods>
+    <Method name="login" />
+    <Method name="beforeLoadAsync" />
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="loadTeamOfUser" />
+    <Method name="startEndlessReplication" />
+    <Method name="getCallCalendarSettings" />
+    <Method name="verifyUserLogin" />
+    <Method name="checkTimeCardCurrentSituation" />
+    <Method name="startReminderRuleTimers" />
+    <Method name="getReminderRuleTimerThreshold" />
+    <Method name="checkUserRelatedDocument" />
+    <Method name="isKAMVisible" />
+  </Methods>
+  <Validations>
+    <Validation name="validateSyncTimeInterval" />
+  </Validations>
+</BusinessObject>

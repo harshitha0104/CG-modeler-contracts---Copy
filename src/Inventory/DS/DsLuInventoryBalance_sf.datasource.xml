@@ -1,0 +1,46 @@
+<DataSource name="DsLuInventoryBalance" backendSystem="sf" businessObjectClass="LuInventoryBalance" external="false" readOnly="true" editableEntity="Inventory__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="ivcMainPKey" table="Inventory__c" column="Id" />
+    <DerivedAttribute name="balance" value="SUM(CASE WHEN Inventory_Transaction__c.Amount__c IS NULL THEN 0.0 ELSE Inventory_Transaction__c.Amount__c END)" />
+  </Attributes>
+  <Entities>
+    <Entity name="Inventory__c" alias="" idAttribute="Id" />
+    <Entity name="Inventory_Transaction__c" alias="">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="Inventory__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Inventory_Transaction__c.Inventory__c" />
+          <Condition leftSideValue="Inventory_Transaction__c.Accounted__c" comparator="eq" rightSideType="Parameter" rightSideValue="'0'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Inventory_Transaction_Template__c" alias="">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="Inventory_Transaction__c.Inventory_Transaction_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="Inventory_Transaction_Template__c.Id" />
+        </SimpleJoin>
+        <ComplexJoin><![CDATA[
+              (Inventory_Transaction_Template__c.Transaction_Control__c <> 'Neutral' OR Inventory_Transaction_Template__c.Transaction_Type__c = 'Balance')
+          ]]></ComplexJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Inventory__c.Phase__c = 'Active' 
+        AND Inventory__c.Invalid__c = '0'
+        AND #compareAsDate('Inventory__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# AND #compareAsDate('Inventory__c.Valid_Thru__c','>=',#TodayAsDate#, 'Date')#
+        AND Inventory__c.Inventory_Template__c = #ivcMetaPKey#
+        AND Inventory__c.User__c = #usrMainPKey#
+        AND Inventory__c.Account__c = #bpaMainPKey#
+        AND Inventory__c.Product__c = #prdMainPKey#
+    ]]></QueryCondition>
+  <OrderCriteria/>
+  <GroupBy>
+    <GroupByCriterion entity="Inventory__c" attribute="Id" />
+  </GroupBy>
+  <Parameters>
+    <Parameter name="ivcMetaPKey" type="TEXT" />
+    <Parameter name="usrMainPKey" type="TEXT" />
+    <Parameter name="bpaMainPKey" type="TEXT" />
+    <Parameter name="prdMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

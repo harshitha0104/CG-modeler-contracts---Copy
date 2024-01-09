@@ -1,0 +1,24 @@
+<DataSource name="DsLoTmgMetaObjectRel" backendSystem="sf" businessObjectClass="LoTmgMetaObjectRel" external="false" editableEntity="Tour_Template_Object_Reference__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Tour_Template_Object_Reference__c" column="Id" />
+    <Attribute name="businessModified" table="Tour_Template_Object_Reference__c" column="LastModifiedDate" />
+    <DerivedAttribute name="salesOrg" value="'#SalesOrg#'" />
+    <Attribute name="tmgMetaPKey" table="Tour_Template_Object_Reference__c" column="Tour_Template__c" />
+    <Attribute name="usage" table="Tour_Template_Object_Reference__c" column="Usage__c" />
+    <Attribute name="sysSignatureMetaPKey" table="Tour_Template_Object_Reference__c" column="Signature_Template__c" />
+    <!-- objectMetaPKey will also contain order Pkey and other reference pkey in future -->
+    <DerivedAttribute name="objectMetaPKey" value="CASE WHEN SUBSTR(Tour_Template_Object_Reference__c.Usage__c,1,7)='SdoMeta' THEN Tour_Template_Object_Reference__c.Order_Template__c WHEN SUBSTR(Tour_Template_Object_Reference__c.Usage__c,1,7)='ClbMeta' THEN Tour_Template_Object_Reference__c.Visit_Template__c ELSE ' ' END" />
+    <Attribute name="usedForStartOfDay" table="Tour_Template_Object_Reference__c" column="Start_Of_Day__c" />
+    <Attribute name="usedForEndOfDay" table="Tour_Template_Object_Reference__c" column="End_Of_Day__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tour_Template_Object_Reference__c" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+ Tour_Template_Object_Reference__c.Tour_Template__c = #tmgMetaPKey#
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="tmgMetaPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

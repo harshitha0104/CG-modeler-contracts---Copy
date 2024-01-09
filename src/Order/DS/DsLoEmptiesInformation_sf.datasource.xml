@@ -1,0 +1,16 @@
+<DataSource name="DsLoEmptiesInformation" backendSystem="sf" businessObjectClass="LoEmptiesInformation" external="true" distinct="false" readOnly="true" editableEntity="Unit_of_Measure__c" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+  // Empties not available in CGCloud
+  return undefined;]]></Load>
+    <Update><![CDATA[
+  // Empties not available in CGCloud
+  return undefined;]]></Update>
+    <Insert><![CDATA[   
+  // Empties not available in CGCloud    
+  return undefined;]]></Insert>
+    <Delete><![CDATA[
+  // Empties not available in CGCloud
+  return undefined; ]]></Delete>
+  </Database>
+</DataSource>

@@ -1,0 +1,111 @@
+<Process name="Call::CompleteCallProcess" defaultAction="CheckCallOrderInfoIsDefined" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="HasOpenOrders" type="String" />
+        <Declaration name="CallOrderInfo" type="LuCallOrderInfo" />
+        <Declaration name="OrderInfoNeedsToBeLoaded" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoCall" />
+        <Input name="OrderInfo" type="LuCallOrderInfo" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="SetCallOrderInfo" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="OrderInfo" />
+        </Parameters>
+        <Return name="ProcessContext::CallOrderInfo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="CheckCallOrderInfoIsDefined" actionType="LOGIC" call="Utils.isDefined">
+        <Parameters>
+          <Input name="value" value="ProcessContext::CallOrderInfo" type="#InputType#" />
+        </Parameters>
+        <Return name="ProcessContext::OrderInfoNeedsToBeLoaded" />
+        <TransitionTo action="CallOrderInfoNeedsToBeLoaded" />
+      </Action>
+      <Action name="CallOrderInfoNeedsToBeLoaded" actionType="DECISION" parameter="ProcessContext::OrderInfoNeedsToBeLoaded">
+        <Case value="false" action="CheckOpenOrders" />
+        <CaseElse action="LoadCallOrderInfo" />
+      </Action>
+      <Action actionType="LOAD" name="LoadCallOrderInfo" type="LuCallOrderInfo">
+        <Parameters>
+          <Input name="clbMainPKey" value="ProcessContext::MainBO.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::CallOrderInfo" />
+        <TransitionTo action="CheckOpenOrders" />
+      </Action>
+      <Action actionType="LOGIC" name="CheckOpenOrders" call="ProcessContext::MainBO.hasOpenOrders">
+        <Parameters>
+          <Input name="lookup" value="ProcessContext::CallOrderInfo" />
+        </Parameters>
+        <Return name="ProcessContext::HasOpenOrders" />
+        <TransitionTo action="openOrders_Decision" />
+      </Action>
+      <Action actionType="DECISION" name="openOrders_Decision" parameter="ProcessContext::HasOpenOrders">
+        <Case value="0" action="UpdateCssBLProcessingScheduleTable" />
+        <Case value="1" action="CallHasOpenDeliveriesConfirmation" />
+        <Case value="2" action="CallHasOpenOrdersConfirmation" />
+        <CaseElse action="EndNotComplete" />
+      </Action>
+      <Action actionType="CONFIRM" confirmType="Ok" name="CallHasOpenDeliveriesConfirmation">
+        <Message messageId="CasClbCompleteHasOpenOrders" />
+        <Cases>
+          <Case value="Ok" action="EndNotComplete" />
+        </Cases>
+      </Action>
+      <Action name="CallHasOpenOrdersConfirmation" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmCallNonSalesDocCompleteMsg" />
+        <Cases>
+          <Case value="Yes" action="UpdateCssBLProcessingScheduleTable" />
+          <Case value="No" action="EndNotComplete" />
+        </Cases>
+      </Action>
+      <Action name="UpdateCssBLProcessingScheduleTable" actionType="LOGIC" call="ProcessContext::MainBO.updateCssBLProcessingSchedule">
+        <Parameters>
+          <Input name="callPKey" value="ProcessContext::MainBO.pKey" />
+        </Parameters>
+        <TransitionTo action="ValidateBeforeComplete_SaveStatus" />
+      </Action>
+       <Action actionType="LOGIC" name="ValidateBeforeComplete_SaveStatus" call="ProcessContext::MainBO.getClbStatus">
+        <Return name="ProcessContext::SaveClbStatus" />
+        <TransitionTo action="SetClbStatusToComplete" />
+      </Action>
+      <Action actionType="Logic" name="SetClbStatusToComplete" call="ProcessContext::MainBO.setClbStatus">
+        <Parameters>
+          <Input name="clbStatus" value="Completed" type="Literal" />
+        </Parameters>
+        <TransitionTo action="ValidateBeforeComplete" />
+      </Action>    
+      <Action actionType="LOGIC" name="ValidateBeforeComplete" call="ProcessContext::MainBO.validateMandatoryQuestions">
+        <Return name="ProcessContext::ValidationResult" />
+        <TransitionTo action="ValidateBeforeComplete_Decision" />
+      </Action>
+      <Action name="ValidateBeforeComplete_Decision" actionType="DECISION" parameter="ProcessContext::ValidationResult">
+        <Case value="valid" action="EndComplete" />
+        <CaseElse action="ValidateBeforeComplete_ResetStatus" />
+      </Action>
+      <Action actionType="LOGIC" name="ValidateBeforeComplete_ResetStatus" call="ProcessContext::MainBO.setClbStatus">
+        <Parameters>
+          <Input name="targetClbStatus" value="ProcessContext::SaveClbStatus" />
+        </Parameters>
+        <TransitionTo action="EndNotComplete" />
+      </Action>
+      <Action actionType="END" name="EndComplete">
+        <ReturnValues>
+          <Return name="completed" type="Literal" value="1" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndNotComplete">
+        <ReturnValues>
+          <Return name="completed" type="Literal" value="0" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

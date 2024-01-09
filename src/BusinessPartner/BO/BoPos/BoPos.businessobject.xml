@@ -1,0 +1,31 @@
+<BusinessObject name="BoPos"  generateLoadMethod="false" generateCreateMethod="false" OERReference="BpaPOS">
+  <DataSource name="DsBoPos" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="name" type="DomBpaName" storable="true" dataSourceProperty="name" />
+    <SimpleProperty name="id" type="DomId" storable="true" dataSourceProperty="id" />
+    <SimpleProperty name="bpaPosMetaPKey" type="DomPKey" storable="true" dataSourceProperty="bpaPosMetaPKey" />
+    <SimpleProperty name="bpaPOSGeometryPKey" type="DomPKey" storable="true" dataSourceProperty="bpaPOSGeometryPKey" />
+    <SimpleProperty name="bpaMetaPKey" type="DomPKey" storable="true" dataSourceProperty="bpaMetaPKey" />
+    <SimpleProperty name="customerPKey" type="DomPKey" storable="false" />
+  </SimpleProperties>
+  <NestedObjects>
+    <!-- boPosMeta: load immediate -->
+    <NestedObject name="boPosMeta" objectClass="BoPosMeta" dataSourceProperty="bpaPosMetaPKey" nestingProperty="pKey" loadMode="LoadImmediate" />
+    <!-- boBpaSales: not loaded - only used during create at the moment -->
+    <NestedObject name="boBpaSales" objectClass="BoBpaSales" dataSourceProperty="pKey" nestingProperty="businessPartnerPKey" loadMode="LoadImmediate" />
+  </NestedObjects>
+  <ListObjects>
+    <!-- loPOSCustomerRelation: load immediate -->
+    <ListObject name="loPOSCustomerRelation" objectClass="LoCustomerPOSRelation" dataSourceProperty="pKey" listProperty="posPKey" loadMode="LoadImmediate" />
+    <ListObject name="loCustomerAddress" objectClass="LoBpaAddress" dataSourceProperty="pKey" listProperty="referencePKey" loadMode="OnDemand" />
+  </ListObjects>
+  <Methods>
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+  <Validations>
+    <Validation name="validatePos" />
+  </Validations>
+</BusinessObject>

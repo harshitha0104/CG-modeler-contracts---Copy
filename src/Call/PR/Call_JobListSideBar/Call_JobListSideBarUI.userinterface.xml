@@ -1,0 +1,44 @@
+<UIDescription name="Call::JobListSideBarUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="JobListSideBarTitle" defaultLabel="Job Lists" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="OpenJobListList" searchable="true" groupBy="jobDefinitionListText" hasBorder="true" dataSource="ProcessContext::OpenJobLists.Items[]">
+          <Items name="Items" itemPattern="CallOpenJobListsTemplate">
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemName" bindingId="customerName" />
+                <Row layoutType="itemNameSecondary" bindingId="customerAddress" />
+              </Col>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="customerName" type="Text" binding=".customerName" bindingMode="ONE_WAY" />
+              <Binding target="customerAddress" type="Text" binding=".customerAddress" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="JobListSelected">
+              <Params>
+                <Param name="jobListPKey" value=".pKey" />
+                <Param name="customerPKey" value=".customerPKey" />
+                <Param name="clbMetaPKey" value=".clbMetaPKey" />
+                <Param name="isManagedCustomer" value=".managed" />
+                <Param name="substitutedUsrPKey" value=".substitutedUsrPKey" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+          <SearchAttributes>
+            <SearchAttribute name="jobDefinitionListText" />
+            <SearchAttribute name="customerName" />
+            <SearchAttribute name="customerAddress" />
+            <SearchAttribute name="customerId" />
+          </SearchAttributes>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

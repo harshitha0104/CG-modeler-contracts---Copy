@@ -1,0 +1,30 @@
+<BusinessObject name="BoAssignNewPOSWizard" generateLoadMethod="true" generateCreateMethod="true" schemaVersion="1.1">
+  <DataSource name="DsBoAssignNewPOSWizard" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="name" type="DomBpaName" storable="false" dataSourceProperty="name" />
+    <SimpleProperty name="bpaPosMetaPKey" type="DomPKey" storable="false" />
+    <SimpleProperty name="loCustomerPOSRelation" type="Object" storable="false" />
+  </SimpleProperties>
+  <NestedObjects />
+  <ObjectLookups />
+  <ListObjects />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+  </Methods>
+  <Validations>
+    <Validation name="validateName" />
+  </Validations>
+</BusinessObject>

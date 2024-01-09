@@ -1,0 +1,56 @@
+<Process name="Reporting::PromotionStoreCalendarProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="promotionList" type="LoPromotionCalendar" />
+        <Declaration name="luCustomer" type="LuCustomer" />
+        <Declaration name="today" type="DomDate" />
+        <Declaration name="leadTime" type="DomInteger" />
+        <Declaration name="promotionData" type="Object" />
+      </Declarations>
+      <Parameters>
+        <Input name="customerPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadLuCustomer" actionType="LOAD" type="LuCustomer">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::customerPKey" />
+        </Parameters>
+        <Return name="ProcessContext::luCustomer" />
+      </Action>
+      <Action actionType="LOGIC" name="GetCurrentDate" call="Utils.createAnsiToday">
+        <Return name="ProcessContext::today" />
+      </Action>
+      <!-- Lead time in days -->
+      <Action actionType="LOGIC" name="SetLeadTime" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="180" />
+        </Parameters>
+        <Return name="ProcessContext::leadTime" />
+      </Action>
+      <Action name="LoadPromotions" actionType="LOAD" type="LoPromotionCalendar">
+        <Parameters>
+          <Input name="callDate" value="ProcessContext::today" />
+          <Input name="customerPKey" value="ProcessContext::customerPKey" />
+          <Input name="leadTime" value="ProcessContext::leadTime" />
+        </Parameters>
+        <Return name="ProcessContext::promotionList" />
+      </Action>
+      <Action name="PreparePromotionData" actionType="LOGIC" call="ProcessContext::promotionList.prepareData">
+        <Parameters>
+          <Input name="callDate" value="ProcessContext::today" />
+        </Parameters>
+        <Return name="ProcessContext::promotionData" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowView" actionType="VIEW">
+        <UIDescription>Reporting::PromotionStoreCalendarUI</UIDescription>
+        <Events></Events>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

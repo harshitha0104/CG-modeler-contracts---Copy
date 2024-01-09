@@ -1,0 +1,42 @@
+<UIDescription name="TourManagement::FlyoutSelectWarehouseUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="WarehouseLookupTitleId" defaultLabel="Warehouse" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="WarehouseList" dataSource="ProcessContext::WarehouseList.Items[]">
+          <Items name="Items" itemPattern="WarehouseListItem">
+            <Bindings>
+              <Binding target="Id" type="Text" binding=".id" bindingMode="ONE_WAY" />
+              <Binding target="SalesOrg" type="Text" binding=".salesOrg" bindingMode="ONE_WAY" />
+              <Binding target="Text" type="Text" binding=".text" bindingMode="ONE_WAY" />
+            </Bindings>
+            <MenuItems></MenuItems>
+            <ItemListLayout>
+              <Col width="25%">
+                <Row layoutType="itemValueSmall itemLeft" bindingId="Id" />
+              </Col>
+              <Col width="50%">
+                <Row layoutType="itemValueSmall itemLeft" bindingId="Text" />
+              </Col>
+              <Col width="25%">
+                <Row layoutType="itemValueSmall itemLeft" bindingId="SalesOrg" />
+              </Col>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="id" value=".id" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

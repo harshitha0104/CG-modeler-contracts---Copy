@@ -1,0 +1,25 @@
+<DataSource name="DsLuCustomerTradeOrgAdvSearch" backendSystem="sf" businessObjectClass="LuCustomerTradeOrgAdvSearch" external="false" distinct="true" editableEntity="Account_Trade_Org_Hierarchy__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Trade_Org_Hierarchy__c" column="Parent_Account__c" />
+    <Attribute name="name" table="Account" column="Name" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Trade_Org_Hierarchy__c" alias="" />
+    <Entity name="Account" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Account.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Account_Trade_Org_Hierarchy__c.Parent_Account__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+	  #compareAsDate('Account_Trade_Org_Hierarchy__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')# 
+      AND #compareAsDate('Account_Trade_Org_Hierarchy__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#
+      AND Account_Trade_Org_Hierarchy__c.Parent_Account__c = #pKey#
+     ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

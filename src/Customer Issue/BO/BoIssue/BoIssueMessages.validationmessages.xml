@@ -1,0 +1,4 @@
+<ValidationMessages name="BoIssueMessages" businessObject="BoIssue" schemaVersion="">
+  <ValidationMessage name="CasBoIssueDescriptionEmpty" defaultMessage="Please enter a description." comment="" />
+  <ValidationMessage name="CasBoIssueInitiationDateGTDueDate" defaultMessage="The Due Date must be greater than or equal to Initiation Date." comment="validates Due Date" />
+</ValidationMessages>

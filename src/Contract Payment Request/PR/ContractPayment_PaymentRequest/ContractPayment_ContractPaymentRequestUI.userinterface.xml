@@ -1,0 +1,376 @@
+<UIDescription  name="ContractPayment::ContractPaymentRequestUI" schemaVersion="1.1">
+  <Page pagePattern="MasterDetailSectionPage" masterSectionFlex="40" detailSectionFlex="60">
+    <ViewVariables>
+      <ViewVariable name="currentTabName" value="Main" />
+    </ViewVariables>
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TitleId" defaultLabel="Payment Request" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="PaymentRequestList" groupBy="customerName" searchable="true" master="true" dataSource="ProcessContext::PaymentRequestsList.Items[]">
+          <Items name="Items" itemPattern="PaymentRequestItem">
+            <Bindings>
+              <Resource target="UserImage" type="Image" id="UserDarkGrey16" defaultImage="UserDarkGrey16" bindingMode="ONE_TIME" />
+              <Resource target="PhaseImage" type="Image" id="InfoDarkGrey16" defaultImage="InfoDarkGrey16" bindingMode="ONE_TIME" />
+              <Resource target="RespImage" type="Image" id="UserArrowDarkGrey16" defaultImage="UserArrowDarkGrey16" bindingMode="ONE_TIME" />
+              <Binding target="PaymentText" type="Text" binding=".payText" bindingMode="ONE_WAY" />
+              <Binding target="CustomerName" type="Text" binding=".customerName" bindingMode="ONE_WAY" />
+              <Binding target="DateInitiation" type="Date" binding=".dateInitiation" bindingMode="ONE_WAY" />
+              <Binding target="InitiatorName" type="Text" binding=".reqinitiatorName" bindingMode="ONE_WAY" />
+              <Binding target="ResponsibleUserName" type="Text" binding=".responsibleUserName" bindingMode="ONE_WAY" />
+              <Binding target="PhaseText" type="Text" binding=".phase.text" bindingMode="ONE_WAY" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col>
+                  <Row layoutType="itemIdentifier" bindingId="PaymentText" />
+                  <Row>
+                    <Col height="1.5em" flex="0.95" layoutType="itemSecondary" bindingId="CustomerName" />
+                  </Row>
+                  <Row>
+                    <Col height="1.5em" flex="0.95" layoutType="itemSecondary" bindingId="DateInitiation" />
+                  </Row>
+                  <Row>
+                    <Col width="1em" layoutType="Image" bindingId="PhaseImage" />
+                    <Col width="0.1em" layoutType="itemSecondary" bindingId="Spacer" />
+                    <Col height="1.5em" layoutType="itemSecondary" bindingId="PhaseText" />
+                  </Row>
+                  <Row>
+                    <Col width="1em" height="1.2em" layoutType="Image" bindingId="RespImage" />
+                    <Col width="0.1em" layoutType="itemSecondary" bindingId="Spacer" />
+                    <Col layoutType="itemSecondary" bindingId="ResponsibleUserName" />
+                    <Col width="1em" layoutType="itemSecondary" bindingId="Spacer" />
+                    <Col width="1em" height="1.2em" layoutType="Image" bindingId="UserImage" />
+                    <Col width="0.1em" layoutType="itemSecondary" bindingId="Spacer" />
+                    <Col layoutType="itemSecondary" bindingId="InitiatorName" />
+                  </Row>
+                </Col>
+              </Default>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="listItemSelected" resetMultiAreas="true">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+          <SearchAttributes>
+            <SearchAttribute name="customerName" />
+            <SearchAttribute name="reqinitiatorName" />
+            <SearchAttribute name="phase" />
+            <SearchAttribute name="payText" />
+          </SearchAttributes>
+        </GroupedList>
+      </Area>
+    </Section>
+    <Section sectionName="detailSection" sectionPattern="TabbedViewAreaSection" currentTab="View::currentTabName">
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="Main">
+              <Bindings>
+                <Resource target="image" type="Image" id="MainGrey24" defaultImage="MainGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="MainId" defaultLabel="Main" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Tactic">
+              <Bindings>
+                <Resource target="image" type="Image" id="StarGrey24" defaultImage="StarGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="TacticId" defaultLabel="Tactic" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="tabSelected" storeTabNameIn="currentTabName" />
+          </Events>
+        </TabSelector>
+      </Area>
+      <Area areaName="Main" areaPattern="GroupedElementsArea">
+        <MenuItems>
+          <MenuItem directlyVisible="true" itemId="releasePayment">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::PaymentRequestDetail.isNextStateAvailable">
+                <Parameters>
+                  <Input name="stateType" type="Literal" value="ForApproval" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="releasePaymentId" defaultLabel="Release" />
+              <Resource target="Icon" type="Image" id="CheckCircleGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="releasePayment" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="approvePayment">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::PaymentRequestDetail.isNextStateAvailable">
+                <Parameters>
+                  <Input name="stateType" type="Literal" value="Committed" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="approvePaymentId" defaultLabel="Approve" />
+              <Resource target="Icon" type="Image" id="CheckCircleGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="approvePayment" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="rejectPayment">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::PaymentRequestDetail.isNextStateAvailable">
+                <Parameters>
+                  <Input name="stateType" type="Literal" value="Rejected" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="rejectPaymentId" defaultLabel="Reject" />
+              <Resource target="Icon" type="Image" id="CancelGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="rejectPayment" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <GroupElement name="PaymentRequestInfoGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="IdentificationId" defaultLabel="Identification" />
+          </Bindings>
+          <InputArea name="Id" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Id" id="PaymentRequestId" />
+              <Binding target="Value" binding="ProcessContext::PaymentRequestDetail.id" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="Beneficiary" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Beneficiary" id="BeneficiaryId" />
+              <Binding target="Value" binding="ProcessContext::PaymentRequestDetail.luBeneficiary.name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="PaymentType" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Payment Type" id="PaymentTypeId" />
+              <Binding target="Value" binding="ProcessContext::PaymentRequestDetail.paymentType" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <DatePickerField name="InitiationDate" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Initiation Date" id="InitiationDateId" />
+              <Binding target="Value" binding="ProcessContext::PaymentRequestDetail.dateInitiation" bindingMode="ONE_WAY" />
+            </Bindings>
+          </DatePickerField>
+          <DatePickerField name="ReferenceDate">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Reference Date" id="ReferenceDateId" />
+              <Binding target="Value" binding="ProcessContext::PaymentRequestDetail.dateReference" bindingMode="TWO_WAY" />
+            </Bindings>
+          </DatePickerField>
+        </GroupElement>
+        <GroupElement name="PaymentStatusGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="StatusTitle" defaultLabel="Status" />
+          </Bindings>
+          <SelectionBox name="Phase" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Phase" id="Phase" />
+              <Binding target="Value" binding="ProcessContext::PaymentRequestDetail.phase" bindingMode="ONE_WAY" />
+              <Binding target="DataSource" toggleId="PayPhase" bindingMode="ONE_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <InputArea name="OwnerName" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Owner" id="OwnerUserId" />
+              <Binding target="Value" binding="ProcessContext::PaymentRequestDetail.luOwner.name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="ResponsibleName" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Responsible" id="ResponsibleUserId" />
+              <Binding target="Value" binding="ProcessContext::PaymentRequestDetail.luResponsible.name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+        <GroupElement name="PaymentAmountGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="AmountTitle" defaultLabel="Amount" />
+          </Bindings>
+          <Merger name="Requested" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Requested" id="RequestedId" />
+            </Bindings>
+            <InputArea name="RequestedAmount" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Requested" id="RequestedAmountId" />
+                <Binding target="Value" binding="ProcessContext::PaymentRequestDetail.requestedAmount" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <SelectionBox name="Currency" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CurrencyId" defaultLabel="Currency" />
+                <Binding target="DataSource" toggleId="Currency" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::PaymentRequestDetail.receiptCurrency" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </Merger>
+          <Merger name="Paid" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Paid" id="PaidId" />
+            </Bindings>
+            <InputArea name="PaidAmount" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Paid" id="PaidAmountId" />
+                <Binding target="Value" binding="ProcessContext::PaymentRequestDetail.paidAmount" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <SelectionBox name="Currency" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CurrencyId" defaultLabel="Currency" />
+                <Binding target="DataSource" toggleId="Currency" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::PaymentRequestDetail.receiptCurrency" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </Merger>
+        </GroupElement>
+      </Area>
+      <Area areaName="Tactic" areaPattern="GroupedElementsArea">
+        <EmbeddedList name="TacticList" dataSource="ProcessContext::PaymentRequestDetail.loPayTactics.Items[]">
+          <Items name="Items" itemPattern="PayTacticListItem">
+            <Bindings>
+              <Binding target="ContractText" type="Text" binding=".prmText" bindingMode="ONE_WAY" />
+              <Binding target="DateFrom" type="Date" binding=".dateFrom" bindingMode="ONE_WAY" />
+              <Binding target="DateThru" type="Date" binding=".dateThru" bindingMode="ONE_WAY" />
+              <Binding target="TacticType" type="Text" binding=".tacticType" bindingMode="ONE_WAY" />
+              <Binding target="CostAmount" type="Text" binding=".actualCosts" bindingMode="ONE_WAY" />
+              <Binding target="Status" type="Combo" binding=".tacticStatus" toggleId="PayCttTacticStatus" bindingMode="TWO_WAY" />
+              <Resource target="SeparatorLabel" type="Label" id="separatorLabelId" defaultLabel=" - " />
+              <Resource target="TacticNameLabel" type="Label" id="ContractTextLabel" defaultLabel="Contract" />
+              <Resource target="TacticTypeLabel" type="Label" id="TacticTypeLabel" defaultLabel="Tactic Type" />
+              <Resource target="AmountLabel" type="Label" id="AmountLabel" defaultLabel="Amount" />
+              <Resource target="StatusLabel" type="Label" id="StatusLabel" defaultLabel="Status" />
+              <Resource target="TacticTypePhoneLabel" type="Label" id="TacticTypeLabel" defaultLabel="TacticType" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Header>
+                  <Col bindingId="TacticNameLabel" align="left" />
+                  <Col bindingId="TacticTypeLabel" align="left" />
+                  <Col width="0.25em" />
+                  <Col bindingId="AmountLabel" align="left" />
+                  <Col bindingId="StatusLabel" align="left" />
+                </Header>
+                <Col flex="1">
+                  <Row layoutType="itemSecondary" bindingId="ContractText" />
+                  <Row>
+                    <Col width="6em" layoutType="itemSecondary" bindingId="DateFrom" />
+                    <Col width="1em" layoutType="itemLabel" bindingId="SeparatorLabel" />
+                    <Col width="6em" layoutType="itemSecondary" bindingId="DateThru" />
+                  </Row>
+                </Col>
+                <Col width="6em" layoutType="itemSecondary" bindingId="TacticType" />
+                <Col width="0.25em" layoutType="itemSecondary" bindingId="Spacer" />
+                <Col width="4em" layoutType="itemSecondary" bindingId="CostAmount" />
+                <Col width="4em" layoutType="itemSecondary" bindingId="Status" />
+              </Default>
+              <Tablet>
+                <Default>
+                  <Header>
+                    <Col bindingId="TacticNameLabel" align="left" />
+                    <Col bindingId="TacticTypeLabel" align="left" />
+                    <Col width="0.25em" />
+                    <Col bindingId="AmountLabel" align="left" />
+                    <Col bindingId="StatusLabel" align="left" />
+                  </Header>
+                  <Col flex="1">
+                    <Row layoutType="itemSecondary" bindingId="ContractText" />
+                    <Row>
+                      <Col width="6em" layoutType="itemSecondary" bindingId="DateFrom" />
+                      <Col width="1em" layoutType="itemLabel" bindingId="SeparatorLabel" />
+                      <Col width="6em" layoutType="itemSecondary" bindingId="DateThru" />
+                    </Row>
+                  </Col>
+                  <Col width="6em" layoutType="itemSecondary" bindingId="TacticType" />
+                  <Col width="0.25em" layoutType="itemSecondary" bindingId="Spacer" />
+                  <Col width="4em" layoutType="itemSecondary" bindingId="CostAmount" />
+                  <Col width="4em" layoutType="itemSecondary" bindingId="Status" />
+                </Default>
+                <Apple>
+                  <Header>
+                    <Col bindingId="TacticNameLabel" align="left" />
+                    <Col bindingId="TacticTypeLabel" align="left" />
+                    <Col width="0.25em" />
+                    <Col bindingId="AmountLabel" align="left" />
+                    <Col bindingId="StatusLabel" align="left" />
+                  </Header>
+                  <Col flex="1">
+                    <Row layoutType="itemSecondary" bindingId="ContractText" />
+                    <Row>
+                      <Col width="6em" layoutType="itemSecondary" bindingId="DateFrom" />
+                      <Col width="1em" layoutType="itemLabel" bindingId="SeparatorLabel" />
+                      <Col width="6em" layoutType="itemSecondary" bindingId="DateThru" />
+                    </Row>
+                  </Col>
+                  <Col width="6em" layoutType="itemSecondary" bindingId="TacticType" />
+                  <Col width="0.25em" layoutType="itemSecondary" bindingId="Spacer" />
+                  <Col width="4em" layoutType="itemSecondary" bindingId="CostAmount" />
+                  <Col width="4em" layoutType="itemSecondary" bindingId="Status" />
+                </Apple>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Header>
+                    <Col bindingId="TacticNameLabel" align="left" />
+                    <Col bindingId="TacticTypePhoneLabel" align="left" />
+                    <Col bindingId="AmountLabel" align="left" />
+                    <Col bindingId="StatusLabel" align="left" />
+                  </Header>
+                  <Col flex="1">
+                    <Row layoutType="itemSecondary" bindingId="ContractText" />
+                    <Row layoutType="itemSecondary" bindingId="DateFrom" />
+                    <Row layoutType="itemSecondary" bindingId="DateThru" />
+                  </Col>
+                  <Col flex="1">
+                    <Row layoutType="itemSecondary" bindingId="TacticType" />
+                  </Col>
+                  <Col width="3.5em" layoutType="itemSecondary" bindingId="CostAmount" />
+                  <Col width="4em" layoutType="itemSecondary" bindingId="Status" />
+                </Default>
+              </Phone>
+            </ItemListLayout>
+          </Items>
+          <Events></Events>
+        </EmbeddedList>
+        <GroupElement name="PaymentText">
+          <Bindings>
+            <Resource target="Title" type="Label" id="TextId" defaultLabel="Text" />
+          </Bindings>
+          <InputAreaMultiLine name="Text">
+            <Bindings>
+              <Binding target="Value" binding="ProcessContext::PaymentRequestDetail.boPayCttMemoData.paytext" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

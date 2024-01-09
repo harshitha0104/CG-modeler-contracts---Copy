@@ -1,0 +1,61 @@
+<Process name="TourManagement::TourLoadProcess" defaultAction="CheckMode" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="TourBo" type="BoTour" />
+        <Declaration name="NavigationProcessId" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainPKey" type="DomPKey" />
+        <Input name="NavigationMode" type="DomString" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadBo" actionType="LOAD" type="BoTour">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::TourBo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="CheckMode" actionType="DECISION" parameter="ProcessContext::NavigationMode">
+        <Case value="EndOfDay" action="EndNavigation" />
+        <Case value="StartOfDay" action="StartNavigation" />
+        <CaseElse action="StartDetail" />
+        <CaseEmpty action="StartDetail" />
+      </Action>
+      <!-- ToDo Change if process navigation attribute is available -->
+      <Action name="StartNavigation" actionType="DECISION" parameter="ProcessContext::TourBo.BoTourMeta.mobilityStartUserGuidance">
+        <Case value="None" action="StartDetail" />
+        <Case value="Delivery" action="StartNavigation_Tour" />
+        <CaseElse action="StartDetail" />
+        <CaseEmpty action="StartDetail" />
+      </Action>
+      <Action name="EndNavigation" actionType="DECISION" parameter="ProcessContext::TourBo.BoTourMeta.mobilityEndUserGuidance">
+        <Case value="None" action="StartDetail" />
+        <Case value="Delivery" action="EndNavigation_Tour" />
+        <CaseElse action="StartDetail" />
+        <CaseEmpty action="StartDetail" />
+      </Action>
+      <Action name="StartDetail" actionType="PROCESS" process="TourManagement::DetailProcess">
+        <Parameters>
+          <Input name="TourDetail" value="ProcessContext::TourBo" />
+          <Input name="NavigationMode" value="ProcessContext::NavigationMode" />
+        </Parameters>
+      </Action>
+      <Action name="StartNavigation_Tour" actionType="PROCESS" process="TourManagement::PreTourNavigationProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::TourBo" />
+        </Parameters>
+      </Action>
+      <Action name="EndNavigation_Tour" actionType="PROCESS" process="TourManagement::PreEndOfDayNavigationProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::TourBo" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

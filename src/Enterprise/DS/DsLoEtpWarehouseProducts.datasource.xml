@@ -1,0 +1,88 @@
+<DataSource name="DsLoEtpWarehouseProducts" businessObjectClass="LoEtpWarehouseProducts" external="false" editableEntity="EtpWarehousePrdRel" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="EtpWarehousePrdRel" column="PKey" />
+    <Attribute name="prdProductPKey" table="EtpWarehousePrdRel" column="PrdProductPKey" />
+    <Attribute name="prdId" table="PrdProduct" column="Id" />
+    <Attribute name="shortId" table="PrdProduct" column="ShortId" />
+    <Attribute name="prdType" table="PrdProduct" column="PrdType" />
+    <Attribute name="text1" table="PrdDescription" column="Text1" />
+    <Attribute name="eAN" table="PrdProduct" column="EAN" />
+    <Attribute name="category" table="PrdSales" column="Category" />
+    <DerivedAttribute name="groupingAttribute" value="SUBSTR(PrdDescription.Text1,1,1)" />
+  </Attributes>
+  <Entities>
+    <Entity name="EtpWarehousePrdRel" alias="" idAttribute="PKey" />
+    <Entity name="PrdProduct" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="EtpWarehousePrdRel.PrdProductPKey" comparator="eq" rightSideType="Attribute" rightSideValue="PrdProduct.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="PrdDescription" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="EtpWarehousePrdRel.PrdProductPKey" comparator="eq" rightSideType="Attribute" rightSideValue="PrdDescription.ProductPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="PrdSales" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="EtpWarehousePrdRel.PrdProductPKey" comparator="eq" rightSideType="Attribute" rightSideValue="PrdSales.ProductPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        EtpWarehousePrdRel.EtpWarehousePKey = #etpWarehousePKey# AND EtpWarehousePrdRel.Active = '1'
+    ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="PrdDescription" attribute="Text1" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="etpWarehousePKey" type="TEXT" />
+    <Parameter name="idComp" type="TEXT" />
+    <Parameter name="id" type="TEXT" />
+    <Parameter name="text1Comp" type="TEXT" />
+    <Parameter name="text1" type="TEXT" />
+    <Parameter name="categoryComp" type="TEXT" />
+    <Parameter name="category" type="TEXT" />
+    <Parameter name="eANComp" type="TEXT" />
+    <Parameter name="eAN" type="TEXT" />
+    <Parameter name="prdTypeComp" type="TEXT" />
+    <Parameter name="prdType" type="TEXT" />
+  </Parameters>
+  <QuickSearchParameters>
+    <QuickSearchParameter name="PrdProduct.Id" />
+    <QuickSearchParameter name="PrdDescription.Text1" />
+    <QuickSearchParameter name="PrdProduct.EAN" />
+  </QuickSearchParameters>
+  <ConditionalParameters>
+    <ConditionalParameter name="id">
+      <SimpleConditions>
+        <Condition leftSideValue="PrdProduct.Id" comparator="#idComp#" rightSideType="Attribute" rightSideValue="'#id#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="text1">
+      <SimpleConditions>
+        <Condition leftSideValue="PrdDescription.Text1" comparator="#text1Comp#" rightSideType="Attribute" rightSideValue="'#text1#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="category">
+      <SimpleConditions>
+        <Condition leftSideValue="PrdSales.Category" comparator="#categoryComp#" rightSideType="Attribute" rightSideValue="'#category#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="eAN">
+      <SimpleConditions>
+        <Condition leftSideValue="PrdProduct.EAN" comparator="#eANComp#" rightSideType="Attribute" rightSideValue="'#eAN#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="prdType">
+      <SimpleConditions>
+        <Condition leftSideValue="PrdProduct.PrdType" comparator="#prdTypeComp#" rightSideType="Attribute" rightSideValue="'#prdType#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+  </ConditionalParameters>
+</DataSource>

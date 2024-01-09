@@ -1,0 +1,8 @@
+<ListObject name="LoJobDefinitions" generateLoadMethod="true" lightWeight="only">
+  <DataSource name="DsLoJobDefinitions" />
+  <Item objectClass="LiJobDefinition" />
+  <Methods>
+    <Method name="isMandatory" />
+    <Method name="synchronizeSurveyInfo" />
+  </Methods>
+</ListObject>

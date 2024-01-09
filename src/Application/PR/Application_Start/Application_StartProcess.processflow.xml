@@ -1,0 +1,138 @@
+<Process name="Application::StartProcess" defaultAction="Backend_Decision" schemaVersion="0.0.0.5" >
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="passwordValid" type="DomBool" />
+        <Declaration name="loginNameValid" type="DomBool" />
+        <Declaration name="isDemoApp" type="DomBool" />
+        <Declaration name="loginName" type="String" />
+        <Declaration name="luSysInitialValues" type="LuSysInitialValues" />
+        <Declaration name="loRolesOfUser" type="LoRolesOfCurrentUser" />
+        <Declaration name="boTimeCard" type="BoUserDailyReport" />
+        <Declaration name="breakRunning" type="Object" />
+        <Declaration name="boUserCheck" type="BoUserCheck" />
+        <Declaration name="isSfBackend" type="DomBool" />
+        <Declaration name="sfUserId" type="String" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="SetIsSfBackend" call="Utils.isSfBackend">
+        <Return name="ProcessContext::isSfBackend" />
+      </Action>
+      <Action actionType="LOGIC" name="ClearCurrentTourPKeyInApplicationContext" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="" type="Literal" />
+        </Parameters>
+        <Return name="ApplicationContext::currentTourPKey" />
+      </Action>
+      <Action actionType="LOGIC" name="ClearCurrentTourStatusInApplicationContext" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="" type="Literal" />
+        </Parameters>
+        <Return name="ApplicationContext::currentTourStatus" />
+      </Action>
+      <Action name="GetInitSystemValues" actionType="LOAD" type="LuSysInitialValues">
+        <Return name="ProcessContext::luSysInitialValues" />
+      </Action>
+      <Action name="CreateChartHelperBo" actionType="CREATE" type="BoChartHelper">
+        <Return name="ApplicationContext::chartHelper" />
+      </Action>
+      <Action name="CreateDateTimeHelperBo" actionType="CREATE" type="BoDateTimeHelper">
+        <Return name="ApplicationContext::dateTimeHelper" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="DECISION" name="Backend_Decision" parameter="ProcessContext::isSfBackend">
+        <Case value="true" action="GetSFUserId" />
+      </Action>
+      <Action actionType="PROCESS" name="ShowDashboard" process="Application::DashboardDecisionProcess"></Action>
+      <Action name="LoadLuSalesOrg" actionType="LOAD" type="LuSalesOrg">
+        <Return name="ApplicationContext::SalesOrg" />
+        <TransitionTo action="LoadLoRolesOfUser" />
+      </Action>
+      <Action name="LoadLoRolesOfUser" actionType="LOAD" type="LoRolesOfCurrentUser">
+        <Return name="ProcessContext::loRolesOfUser" />
+        <TransitionTo action="SetUserRoles" />
+      </Action>
+      <Action name="SetUserRoles" actionType="LOGIC" call="ApplicationContext::User.setRolesFromListObject">
+        <Parameters>
+          <Input name="listObject" value="ProcessContext::loRolesOfUser" />
+          <Input name="roleProperty" type="Literal" value="usrRoleId" />
+        </Parameters>
+        <TransitionTo action="StartReplication_Decision" />
+      </Action>
+      <Action actionType="DECISION" name="StartReplication_Decision" parameter="ProcessContext::isSfBackend">
+        <Case value="true" action="ShowDashboard" />
+        <CaseElse action="StartEndlessReplication" />
+      </Action>
+      <Action name="StartEndlessReplication" actionType="LOGIC" call="ApplicationContext::User.startEndlessReplication">
+        <TransitionTo action="UserRelatedDocumentSituation" />
+      </Action>
+      <Action name="UserRelatedDocumentSituation" actionType="LOGIC" call="ApplicationContext::User.checkUserRelatedDocument">
+        <TransitionTo action="OpenTimeCardDecision" />
+      </Action>
+      <Action name="OpenTimeCardDecision" actionType="DECISION" parameter="ApplicationContext::OpenTimeCardPKey">
+        <CaseEmpty action="TimeCardCurrentSituationNoTimecard" />
+        <CaseElse action="LoadTimeCardBo" />
+      </Action>
+      <Action name="LoadTimeCardBo" actionType="LOAD" type="BoUserDailyReport">
+        <Parameters>
+          <Input name="pKey" value="ApplicationContext::OpenTimeCardPKey" />
+        </Parameters>
+        <Return name="ProcessContext::boTimeCard" />
+        <TransitionTo action="TimeCardCurrentSituation" />
+      </Action>
+      <Action name="TimeCardCurrentSituationNoTimecard" actionType="LOGIC" call="ApplicationContext::User.checkTimeCardCurrentSituation">
+        <Parameters>
+          <Input name="timeCard" value="ProcessContext::boTimeCard" />
+        </Parameters>
+        <TransitionTo action="ShowDashboard" />
+      </Action>
+      <Action name="TimeCardCurrentSituation" actionType="LOGIC" call="ApplicationContext::User.checkTimeCardCurrentSituation">
+        <Parameters>
+          <Input name="timeCard" value="ProcessContext::boTimeCard" />
+        </Parameters>
+        <Return name="ProcessContext::breakRunning" />
+        <TransitionTo action="BreakRunningDecision" />
+      </Action>
+      <Action name="BreakRunningDecision" actionType="DECISION" parameter="ProcessContext::breakRunning.running">
+        <Case value="1" action="ResumeBreak" />
+        <CaseEmpty action="SaveTimeCard" />
+        <CaseElse action="SaveTimeCard" />
+      </Action>
+      <Action name="ResumeBreak" actionType="PROCESS" process="DailyReport::ExecuteBreakProcess">
+        <Parameters>
+          <Input name="TimeCardLoaded" type="Literal" value="0" />
+          <Input name="TimeEntryPKey" value="ProcessContext::breakRunning.TimeEntryPKey" />
+          <Input name="EffectiveUTCTimeFrom" value="ProcessContext::breakRunning.EffectiveUTCTimeFrom" />
+        </Parameters>
+        <TransitionTo action="ShowDashboard" />
+      </Action>
+      <Action name="SaveTimeCard" actionType="SAVE">
+        <Parameters>
+          <Input name="boUserDailyReport" value="ProcessContext::boTimeCard" />
+        </Parameters>
+        <TransitionTo action="ShowDashboard" />
+      </Action>
+      <Action actionType="LOGIC" name="GetSFUserId" call="Facade.getSfUserId">
+        <Return name="ProcessContext::sfUserId" />
+        <TransitionTo action="SfLoadBoUser" />
+      </Action>
+      <Action name="SfLoadBoUser" actionType="LOAD" type="BoUser">
+        <Parameters>
+          <Input name="sfUserId" value="ProcessContext::sfUserId" />
+        </Parameters>
+        <Return name="ApplicationContext::User" />
+        <TransitionTo action="PostSfLogin" />
+      </Action>
+      <Action name="PostSfLogin" actionType="LOGIC" call="ApplicationContext::User.login">
+        <TransitionTo action="LoadSfUserFavorites" />
+      </Action>
+      <Action name="LoadSfUserFavorites" actionType="LOGIC" call="Facade.loadAdvancedSearchFavoritesAsync">
+        <TransitionTo action="LoadLuSalesOrg" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

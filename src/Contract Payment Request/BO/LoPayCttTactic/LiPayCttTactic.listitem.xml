@@ -1,0 +1,12 @@
+<ListItem name="LiPayCttTactic" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="prmText" type="DomText" dataSourceProperty="prmText" />
+    <SimpleProperty name="actualCosts" type="DomMoney" storable="true" dataSourceProperty="actualCosts" />
+    <SimpleProperty name="rejectedAmount" type="DomMoney" storable="true" dataSourceProperty="rejectedAmount" />
+    <SimpleProperty name="tacticType" type="DomString" storable="true" dataSourceProperty="tacticType" />
+    <SimpleProperty name="tacticStatus" type="DomPayCttTacticStatus" storable="false" dataSourceProperty="tacticStatus" />
+    <SimpleProperty name="dateFrom" type="DomDate" storable="false" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" storable="false" dataSourceProperty="dateThru" />
+  </SimpleProperties>
+</ListItem>

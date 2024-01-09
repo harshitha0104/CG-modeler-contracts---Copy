@@ -1,0 +1,27 @@
+<BusinessObject name="BoWizardCreateCheckOut" schemaVersion="1.1">
+  <DataSource name="DsBoWizardCreateCheckOut" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups>
+    <ObjectLookup name="luEtpWarehouse" objectClass="LuEtpWarehouse" dataSourceProperty="pKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+    <Method name="setEARights" />
+  </Methods>
+</BusinessObject>

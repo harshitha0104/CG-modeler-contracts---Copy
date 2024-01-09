@@ -1,0 +1,32 @@
+<Process name="Visit::LoadVisitProcess" defaultAction="StartNavigationStoreCockpit" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="VisitBO" type="BoVisit" />
+      </Declarations>
+      <Parameters>
+        <Input name="VisitPKey" type="String" />
+
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadVisitBO" actionType="LOAD" type="BoVisit">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::VisitPKey" />
+
+        </Parameters>
+        <Return name="ProcessContext::VisitBO" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="PROCESS" name="StartNavigationStoreCockpit" process="Visit::RetailStoreCockpitProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::VisitBO" />
+          <Input name="StoreId" value="ProcessContext::VisitBO.StoreId" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

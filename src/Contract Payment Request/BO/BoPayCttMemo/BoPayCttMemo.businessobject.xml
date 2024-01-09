@@ -1,0 +1,23 @@
+<BusinessObject name="BoPayCttMemo"  generateLoadMethod="true" generateCreateMethod="true" OERReference="PayCttPayment" schemaVersion="1.1">
+  <DataSource name="DsBoPayCttMemo" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="paytext" type="DomString" dataSourceProperty="paytext" />
+    <SimpleProperty name="payCttPaymentPKey" type="DomPKey" dataSourceProperty="payCttPaymentPKey" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+  </Methods>
+</BusinessObject>

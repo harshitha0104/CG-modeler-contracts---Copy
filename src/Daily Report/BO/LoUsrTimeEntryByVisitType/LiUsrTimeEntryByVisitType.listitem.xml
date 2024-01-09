@@ -1,0 +1,7 @@
+<ListItem name="LiUsrTimeEntryByVisitType" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pkey" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+    <SimpleProperty name="duration" type="DomText" dataSourceProperty="duration" />
+  </SimpleProperties>
+</ListItem>

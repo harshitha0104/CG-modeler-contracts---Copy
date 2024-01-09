@@ -1,0 +1,58 @@
+<BusinessObject name="BoPayCttPayment"  generateLoadMethod="true" generateCreateMethod="true" OERReference="PayCttPayment" schemaVersion="1.1">
+  <DataSource name="DsBoPayCttPayment" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="businessModified" type="DomDate" storable="true" dataSourceProperty="businessModified" />
+    <SimpleProperty name="id" type="DomId" storable="true" dataSourceProperty="id" />
+    <SimpleProperty name="beneficiaryPKey" type="DomPKey" storable="true" dataSourceProperty="beneficiaryPKey" />
+    <SimpleProperty name="paymentType" type="DomString" storable="true" dataSourceProperty="paymentType" />
+    <SimpleProperty name="dateInitiation" type="DomDate" storable="true" dataSourceProperty="dateInitiation" />
+    <SimpleProperty name="dateReference" type="DomDate" storable="true" dataSourceProperty="dateReference" />
+    <SimpleProperty name="phase" type="DomPayPhase" storable="true" dataSourceProperty="phase" />
+    <SimpleProperty name="requestedAmount" type="DomMoney" storable="true" dataSourceProperty="requestedAmount" />
+    <SimpleProperty name="paidAmount" type="DomMoney" storable="true" dataSourceProperty="paidAmount" />
+    <SimpleProperty name="actualStatePKey" type="DomPKey" dataSourceProperty="actualStatePKey" />
+    <SimpleProperty name="nextStatePKey" type="DomPKey" dataSourceProperty="nextStatePKey" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="receiptCurrency" type="DomCurrency" dataSourceProperty="receiptCurrency" />
+    <SimpleProperty name="ownerPKey" type="DomPKey" dataSourceProperty="ownerPKey" />
+    <SimpleProperty name="phaseText" type="DomString" storable="true" dataSourceProperty="phase" />
+  </SimpleProperties>
+  <ListObjects>
+    <ListObject name="loPayTactics" objectClass="LoPayCttTactic" dataSourceProperty="pKey" listProperty="payCttPaymentPKey" loadMode="LoadImmediate">
+      <Events>
+        <Event name="listItemChanged" eventHandler="onTacticStatusChanged" />
+      </Events>
+    </ListObject>
+    <ListObject name="loRecentState" objectClass="LoPayCttRecentState" dataSourceProperty="pKey" listProperty="payCttPaymentPKey" loadMode="OnDemand" />
+  </ListObjects>
+  <ObjectLookups>
+    <ObjectLookup name="luOwner" objectClass="LuUser" dataSourceProperty="ownerPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luResponsible" objectClass="LuUser" dataSourceProperty="responsiblePKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luBeneficiary" objectClass="LuCustomer" dataSourceProperty="beneficiaryPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luCustomerManagementInfo" objectClass="LuCustomerManagementInfo" dataSourceProperty="pKey" lookupProperty="beneficiaryPKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <NestedObjects>
+    <NestedObject name="boPayCttMemoData" objectClass="BoPayCttMemo" dataSourceProperty="pKey" nestingProperty="payCttPaymentPKey" loadMode="LoadImmediate" />
+    <NestedObject name="boWorkflow" objectClass="BoWorkflow" dataSourceProperty="wfeWorkflowPKey" nestingProperty="pKey" loadMode="LoadImmediate" />
+  </NestedObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <!--Manual methods -->
+    <Method name="setEARights" />
+    <Method name="stateTransition" />
+    <Method name="updateAmount" />
+    <Method name="onTacticStatusChanged" />
+    <Method name="isNextStateAvailable" />
+  </Methods>
+</BusinessObject>

@@ -1,0 +1,103 @@
+<DataSource name="DsBoOrder" backendSystem="sf" businessObjectClass="BoOrder" external="false" editableEntity="Order__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Order__c" column="Id" />
+    <Attribute name="orderId" table="Order__c" column="Order_Id__c" />
+    <Attribute name="customerOrderId" table="Order__c" column="Customer_Order_Id__c" />
+    <Attribute name="commitDate" table="Order__c" column="Order_Date__c" />
+    <Attribute name="deliveryDate" table="Order__c" column="Delivery_Date__c" />
+    <Attribute name="phase" table="Order__c" column="Phase__c" />
+    <Attribute name="totalValue" table="Order__c" column="Total_Value__c" />
+    <Attribute name="totalValueReceipt" table="Order__c" column="Value__c" />
+    <Attribute name="grossTotalValue" table="Order__c" column="Gross_Total_Value__c" />
+    <Attribute name="grossTotalValueReceipt" table="Order__c" column="Gross_Total_Value_Receipt__c" />
+    <Attribute name="merchandiseValueReceipt" table="Order__c" column="Merchandise_Value_Receipt__c" />
+    <DerivedAttribute name="merchandiseValue" value="0" />
+    <Attribute name="deliveryRecipientPKey" table="Order__c" column="Delivery_Recipient__c" />
+    <Attribute name="ordererPKey" table="Order__c" column="Order_Account__c" />
+    <Attribute name="cancelReason" table="Order__c" column="Cancel_Reason__c" />
+    <Attribute name="sdoMetaPKey" table="Order__c" column="Order_Template__c" />
+    <Attribute name="responsiblePKey" table="Order__c" column="Responsible__c" />
+    <Attribute name="initiatorPKey" table="Order__c" column="CreatedById" />
+    <Attribute name="ownerPKey" table="Order__c" column="Accountable__c" />
+    <Attribute name="clbMainPKey" table="Order__c" column="Visit__c" />
+    <DerivedAttribute name="ResponsiblePKey" value="' '" />
+    <Attribute name="currency" table="Order__c" column="Currency__c" />
+    <Attribute name="billToCustomerPKey" table="Order__c" column="Bill_Recipient_Account__c" />
+    <Attribute name="payerCustomerPKey" table="Order__c" column="Payer__c" />
+    <Attribute name="releaseTime" table="Order__c" column="Release_Time__c" />
+    <Attribute name="brokerCustomerPKey" table="Order__c" column="Wholesaler__c" />
+    <Attribute name="initiationDate" table="Order__c" column="Initiation_Date__c" />
+    <Attribute name="ivcRef1PKey" table="Order__c" column="Inventory_Reference_1__c" />
+    <Attribute name="ivcRef2PKey" table="Order__c" column="Inventory_Reference_2__c" />
+    <Attribute name="ivcRef3PKey" table="Order__c" column="Inventory_Reference_3__c" />
+    <Attribute name="ivcRef4PKey" table="Order__c" column="Inventory_Reference_4__c" />
+    <Attribute name="ivcRef5PKey" table="Order__c" column="Inventory_Reference_5__c" />
+    <DerivedAttribute name="salesOrg" value="'#SalesOrg#'" />
+    <DerivedAttribute name="actualStatePKey" value="Order__c.Phase__c" />
+    <DerivedAttribute name="nextStatePKey" value="' '" />
+    <DerivedAttribute name="wfeWorkflowPKey" value="Order_Template__c.Workflow__c" />
+    <Attribute name="sf_mobilityRelease" table="Order__c" column="Mobility_Release__c" />
+    <Attribute name="cndCpCalculationSchemaPKey" table="Order__c" column="Calculation_Schema__c" />
+    <Attribute name="calculationStatus" table="Order__c" column="Calculation_Status__c" />
+    <Attribute name="calculationTime" table="Order__c" column="Calculation_Time__c" />
+    <Attribute name="pricingDate" table="Order__c" column="Pricing_Date__c" />
+    <DerivedAttribute name="distribChannel" value="' '" />
+    <DerivedAttribute name="division" value="' '" />
+    <Attribute name="headerDiscount" table="Order__c" column="Header_Discount_Percentage__c" />
+    <Attribute name="docTaType" table="Order__c" column="Document_Transaction_Type__c" />
+    <Attribute name="paymentReason" table="Order__c" column="Payment_Reason__c" />
+    <DerivedAttribute name="isRoundingOn" value="' '" />
+    <DerivedAttribute name="isRoundingToggleChanged" value="'0'" />
+    <Attribute name="asn" table="Order__c" column="ASN__c" />
+    <Attribute name="tmgMainPKey" table="Order__c" column="Tour__c" />
+    <Attribute name="etpWarehousePKey" table="Order__c" column="Warehouse__c" />
+    <DerivedAttribute name="invoiceId" value="''" />
+    <DerivedAttribute name="message" value="''" />
+    <Attribute name="documentType" table="Order__c" column="Document_Type__c" />
+    <Attribute name="totalShippedQuantity" table="Order__c" column="Total_Shipped_Quantity__c" />
+    <Attribute name="totalReturnedQuantity" table="Order__c" column="Total_Returned_Quantity__c" />
+    <Attribute name="paidAmount" table="Order__c" column="Paid_Amount__c" />
+    <Attribute name="paidAmountReceipt" table="Order__c" column="Paid_Amount_Receipt__c" />
+    <DerivedAttribute name="paidAmountCurrency" value="Order__c.Currency__c" />
+    <DerivedAttribute name="absolutePaidAmount" value="'0'" />
+    <Attribute name="paymentMethod" table="Order__c" column="Payment_Method__c" />
+    <Attribute name="debitCredit" table="Order__c" column="Payment__c" />
+    <DerivedAttribute name="splittingOption" value="'0'" />
+    <DerivedAttribute name="splittingRule" value="''" />
+    <DerivedAttribute name="splittingParentSdoMainPKey" value="''" />
+    <Attribute name="releaseGeolocationLatitude" table="Order__c" column="Release_Geolocation__Latitude__s" />
+    <Attribute name="releaseGeolocationLongitude" table="Order__c" column="Release_Geolocation__Longitude__s" />
+    <Attribute name="pricingInformation" table="Order__c" column="Pricing_Information__c" />
+    <Attribute name="selectedRewards" table="Order__c" column="Selected_Rewards__c" />
+    <Attribute name="pricingInfo1" table="Order__c" column="Pricing_Info_1__c" />
+    <Attribute name="pricingInfo2" table="Order__c" column="Pricing_Info_2__c" />
+    <Attribute name="pricingInfo3" table="Order__c" column="Pricing_Info_3__c" />
+    <Attribute name="pricingInfo4" table="Order__c" column="Pricing_Info_4__c" />
+    <Attribute name="pricingInfo5" table="Order__c" column="Pricing_Info_5__c" />
+    <Attribute name="pricingInfo6" table="Order__c" column="Pricing_Info_6__c" />
+    <Attribute name="pricingInfo7" table="Order__c" column="Pricing_Info_7__c" />
+    <Attribute name="pricingInfo8" table="Order__c" column="Pricing_Info_8__c" />
+    <Attribute name="pricingInfo9" table="Order__c" column="Pricing_Info_9__c" />
+    <Attribute name="pricingInfo10" table="Order__c" column="Pricing_Info_10__c" />
+    <Attribute name="syncStatus" table="Order__c" column="_syncStatus" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order__c" alias="" idAttribute="Id" />
+    <Entity name="Order_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Order_Template__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Order__c.Order_Template__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Order__c.Id = #pKey#
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Order__c" attribute="Order_Id__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

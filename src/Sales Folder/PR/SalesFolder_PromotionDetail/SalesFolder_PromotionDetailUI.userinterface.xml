@@ -1,0 +1,162 @@
+<UIDescription name="SalesFolder::PromotionDetailUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionPage" cachable="false">
+    <PageHeader titleBinding="ProcessContext::PageTitle" />
+    <ViewVariables>
+      <ViewVariable name="currentTabName" value="Attachments" />
+    </ViewVariables>
+    <Section sectionName="masterSection" sectionPattern="TabbedViewAreaSection" currentTab="ProcessContext::currentTabName">
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="Attachments" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="ClipGrey24" defaultImage="ClipGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="AttachmentsId" defaultLabel="Attachments" bindingMode="ONE_TIME" />
+                <Binding target="Info" binding="ProcessContext::SalesFolderPromotionDetail.LuAttachmentcount.salesFolderAttachmentCount" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="tabSelected" storeTabNameIn="currentTabName" />
+          </Events>
+        </TabSelector>
+      </Area>
+      <!--<Area areaName="Main" areaPattern="SingleElementArea">
+        <UIPlugin name="CardUiPlugin">
+          <Bindings>
+            <Binding target="key" type="Text" binding="ProcessContext::MainPKey" />
+            <Binding target="prmPKey" type="Text" binding="ProcessContext::MainPKey" />
+            <Resource id="MarkerGrey24" target="markerIcon" type="Image" />
+            <Resource id="Location24" target="infoIcon" type="Image" />
+            <Resource id="Timeframe24" target="monthIcon" type="Image" />
+            <Resource id="EventsGrey24" target="eventsIcon" type="Image" />
+            <Binding target="title" type="Text" binding="ProcessContext::SloganText" />
+            <Binding target="sloganText" type="Text" binding="ProcessContext::SloganText" />
+            <Binding target="dateFrom" type="Text" binding="ProcessContext::DateFrom" />
+            <Binding target="dateThru" type="Text" binding="ProcessContext::DateThru" />
+            <Binding target="groupText" type="Text" binding="ProcessContext::GroupText" />
+            <Binding target="annotationText" type="Text" binding="ProcessContext::AnnotationText" />
+            <List target="images" dataSource="ProcessContext::Images">
+              <Binding target="cardPKey" type="Text" binding=".prmPKey" />
+              <Binding target="type" type="Text" binding=".type" />
+              <Binding target="blobMeta" type="Blob" binding=".mediaPath" />
+            </List>
+          </Bindings>
+          <Events />
+        </UIPlugin>
+      </Area>-->
+      <Area areaName="Attachments" areaPattern="SingleElementArea" lazyLoading="true">
+        <MediaListControl name="PromotionAttachment" dataSource="ProcessContext::SalesFolderPromotionDetail.loAttachment.Items[]">
+          <Bindings>
+            <Binding target="MediaPath" type="Text" binding=".mediaPath" bindingMode="ONE_WAY" />
+            <Binding target="IsTagged" type="Text" bindingMode="ONE_WAY" />
+            <Binding target="Description" type="Text" binding=".description" bindingMode="ONE_WAY" />
+            <Binding target="Type" type="Text" binding=".type" bindingMode="ONE_WAY" />
+          </Bindings>
+        </MediaListControl>
+      </Area>
+      <Area areaName="Events" areaPattern="GroupedElementsArea">
+        <EmbeddedList name="TacticList" dataSource="ProcessContext::SalesFolderPromotionDetail.loTactics.Items[]">
+          <Bindings>
+            <Resource target="Title" type="Label" defaultLabel="Events" id="TacticsId" />
+          </Bindings>
+          <Items name="Items" itemPattern="TacticListpattern">
+            <ItemListLayout>
+              <Default>
+                <Header>
+                  <Col layoutType="itemPrimary" bindingId="TacticMetaNameLabel" align="left" />
+                  <Col layoutType="itemPrimary" bindingId="DateFromLabel" align="left" />
+                  <Col layoutType="itemPrimary" bindingId="CostAmountLabel" align="right" />
+                  <Col layoutType="itemPrimary" bindingId="CompensationMetaTextLabel" align="left" />
+                </Header>
+                <Col width="12em" layoutType="itemPrimary" bindingId="TacticMetaName" />
+                <Col width="7em" layoutType="itemPrimary">
+                  <Row bindingId="DateFrom" />
+                  <Row bindingId="DateThru" />
+                </Col>
+                <Col width="5em" layoutType="itemPrimary" bindingId="CostAmount" />
+                <Col width="6em" layoutType="itemPrimary" bindingId="CompensationMetaText" />
+              </Default>
+              <Tablet>
+                <Default>
+                  <Header>
+                    <Col bindingId="TacticMetaNameLabel" align="left" />
+                    <Col bindingId="DateFromLabel" align="left" />
+                    <Col bindingId="CostAmountLabel" align="left" />
+                    <Col bindingId="CompensationMetaTextLabel" align="left" />
+                  </Header>
+                  <Col width="12em" layoutType="itemPrimary" bindingId="TacticMetaName" />
+                  <Col width="7em" layoutType="itemPrimary">
+                    <Row bindingId="DateFrom" />
+                    <Row bindingId="DateThru" />
+                  </Col>
+                  <Col width="5em" layoutType="itemPrimary" bindingId="CostAmount" />
+                  <Col width="6em" layoutType="itemPrimary" bindingId="CompensationMetaText" />
+                </Default>
+                <Apple>
+                  <Header>
+                    <Col bindingId="TacticMetaNameLabel" align="left" />
+                    <Col bindingId="DateFromLabel" align="left" />
+                    <Col bindingId="CostAmountLabel" align="left" />
+                    <Col bindingId="CompensationMetaTextLabel" align="left" />
+                  </Header>
+                  <Col width="12em" layoutType="itemPrimary" bindingId="TacticMetaName" />
+                  <Col width="7em" layoutType="itemPrimary">
+                    <Row bindingId="DateFrom" />
+                    <Row bindingId="DateThru" />
+                  </Col>
+                  <Col width="5em" layoutType="itemPrimary" bindingId="CostAmount" />
+                  <Col width="6em" layoutType="itemPrimary" bindingId="CompensationMetaText" />
+                </Apple>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Header>
+                    <Col bindingId="TacticMetaNameLabel" align="left" />
+                    <Col bindingId="DateFromLabel" align="left" />
+                    <Col bindingId="CostAmountLabel" align="left" />
+                    <Col bindingId="CompensationMetaTextLabel" align="left" />
+                  </Header>
+                  <Col flex="1" layoutType="itemSecondary" bindingId="TacticMetaName" />
+                  <Col width="5.2em" layoutType="itemSecondary">
+                    <Row bindingId="DateFrom" />
+                    <Row bindingId="DateThru" />
+                  </Col>
+                  <Col width="3.3em" layoutType="itemSecondary" bindingId="CostAmount" />
+                  <Col width="5em" layoutType="itemSecondary" bindingId="CompensationMetaText" />
+                </Default>
+                <Apple>
+                  <Header>
+                    <Col bindingId="TacticMetaNameLabel" align="left" />
+                    <Col bindingId="DateFromLabel" align="left" />
+                    <Col bindingId="CostAmountLabel" align="left" />
+                    <Col bindingId="CompensationMetaTextLabel" align="left" />
+                  </Header>
+                  <Col flex="1" layoutType="itemSecondary" bindingId="TacticMetaName" />
+                  <Col width="5.2em" layoutType="itemSecondary">
+                    <Row bindingId="DateFrom" />
+                    <Row bindingId="DateThru" />
+                  </Col>
+                  <Col width="3.3em" layoutType="itemSecondary" bindingId="CostAmount" />
+                  <Col width="5em" layoutType="itemSecondary" bindingId="CompensationMetaText" />
+                </Apple>
+              </Phone>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="TacticMetaName" type="Text" binding=".tacticMetaName" bindingMode="ONE_WAY" />
+              <Binding target="CompensationMetaText" type="Text" binding=".compensationMetaText" bindingMode="ONE_WAY" />
+              <Binding target="CostAmount" type="Decimal" binding=".costAmount" bindingMode="ONE_WAY" formatV2="2.0" />
+              <Binding target="DateFrom" type="Date" binding=".dateFrom" bindingMode="ONE_WAY" />
+              <Binding target="DateThru" type="Date" binding=".dateThru" bindingMode="ONE_WAY" />
+              <Resource target="TacticMetaNameLabel" type="Label" defaultLabel="Tactic Type" id="TacticMetaNameLabel" />
+              <Resource target="CompensationMetaTextLabel" type="Label" defaultLabel="Compensation" id="CompensationMetaTextLabel" />
+              <Resource target="CostAmountLabel" type="Label" defaultLabel="Amount" id="CostAmountLabel" />
+              <Resource target="DateFromLabel" type="Label" defaultLabel="Date" id="DateFromLabel" />
+              <Resource target="DateThruLabel" type="Label" defaultLabel="Date thru" id="DateThruLabel" />
+            </Bindings>
+          </Items>
+        </EmbeddedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

@@ -1,0 +1,72 @@
+<DataSource name="DsLoReplenishmentOverview" businessObjectClass="LoReplenishmentOverview" external="true" readOnly="true" editableEntity="SdoMain" schemaVersion="2.0">
+
+  <Attributes>
+    <Attribute name="pKey" table="SdoMain" column="PKey" />
+    <Attribute name="phase" table="SdoMain" column="Phase" />
+    <Attribute name="id" table="SdoMain" column="Id" />
+    <Attribute name="text" table="SdoText" column="Text" />
+    <Attribute name="currency" table="SdoMain" column="Currency" />
+    <Attribute name="grossTotalValue" table="SdoMain" column="GrossTotalValue" />
+    <Attribute name="responsiblePKey" table="SdoMain" column="ResponsiblePKey" />
+    <Attribute name="initiatorPKey" table="SdoMain" column="InitiatorPKey" />
+    <Attribute name="deletionAllowed" table="SdoMeta" column="DeletionAllowed" />
+    <Attribute name="mobilityRelevant" table="SdoMeta" column="MobilityRelevant" />
+    <DerivedAttribute name="sortOrder" value="'0'" /> 
+    <DerivedAttribute name="releaseTime" value="CASE SdoMain.Phase WHEN 'Released' THEN SdoMain.ReleaseTime ELSE ' ' END" /> 
+    <DerivedAttribute name="sortReleaseTime" value="CASE SdoMain.Phase WHEN 'Released' THEN SdoMain.ReleaseTime ELSE ' ' END" /> 
+  </Attributes>
+
+  <Database platform="SQLite">
+    <Load><![CDATA[     
+
+			var tmgMainPKey = "";
+
+			if(Utils.isDefined(ApplicationContext.get('currentTourPKey')) && ApplicationContext.get('currentTourStatus') === "Running"){
+				tmgMainPKey = Utils.convertForDBParam(ApplicationContext.get('currentTourPKey'), 'DomPKey');
+			}
+			if(ApplicationContext.get('user').hasRole('TourUser') && Utils.isEmptyString(tmgMainPKey)){ 
+				tmgMainPKey="'NoTourSelected'";
+			}
+
+			var sqlParams = {tmgMainPKey};
+
+			var sqlStmt = "SELECT SdoMain.PKey AS pKey, ";
+			sqlStmt += "SdoMain.Phase As phase, ";
+			sqlStmt += "SdoMain.Id As id,  ";
+			sqlStmt += "SdoText.Text As text, ";
+			sqlStmt += "SdoMain.Currency As currency, SdoMain.GrossTotalValue As grossTotalValue, ";
+			sqlStmt += "SdoMain.ResponsiblePKey As responsiblePKey, SdoMain.InitiatorPKey As initiatorPKey,  ";
+			sqlStmt += "SdoMeta.DeletionAllowed AS deletionAllowed, SdoMeta.MobilityRelevant AS mobilityRelevant, ";
+			sqlStmt += "CASE SdoMain.Phase WHEN 'Initial' THEN '0' WHEN 'Released' THEN '1' WHEN 'Canceled' THEN '2' ELSE '3' END As sortOrder, ";
+			sqlStmt += "CASE SdoMain.Phase WHEN 'Released' THEN SdoMain.ReleaseTime ELSE ' ' END As releaseTime, ";
+			sqlStmt += "CASE SdoMain.Phase WHEN 'Released' THEN SdoMain.ReleaseTime ELSE ' ' END As sortReleaseTime ";
+			sqlStmt += "FROM SdoMain ";
+			sqlStmt += "INNER JOIN SdoMeta ON ";
+			sqlStmt += "SdoMain.SdoMetaPKey = SdoMeta.PKey ";
+			sqlStmt += "INNER JOIN SdoText ON ";
+			sqlStmt += "SdoMeta.PKey = SdoText.AppPKey ";
+			sqlStmt += "INNER JOIN TmgTourObjectRel ON ";
+			sqlStmt += "SdoMain.SdoMetaPKey = TmgTourObjectRel.ObjectMetaPKey ";
+			sqlStmt += "WHERE (1=1) AND TmgTourObjectRel.TmgTourPKey = #tmgMainPKey# ";
+			sqlStmt += "AND SdoMain.ResponsiblePKey = '#UserPKey#' ";
+			sqlStmt += "AND SdoMeta.MetaType = 'OrderEntry' ";
+			sqlStmt += "AND SdoMeta.SdoSubType = 'Replenishment' ";
+			sqlStmt += "AND SdoText.Language = '#Language#' ";
+			sqlStmt += "ORDER BY sortOrder, sortReleaseTime DESC, id DESC ";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+    <Update><![CDATA[ 
+			// Intended to be empty     
+			return undefined;     
+		]]></Update>
+    <Insert><![CDATA[     
+			// Intended to be empty     
+			return undefined;     
+		]]></Insert>
+    <Delete><![CDATA[      
+			// Intended to be empty     
+			return undefined;     
+		]]></Delete>
+  </Database>
+</DataSource>

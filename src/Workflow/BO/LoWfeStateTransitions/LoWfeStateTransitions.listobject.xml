@@ -1,0 +1,5 @@
+<ListObject name="LoWfeStateTransitions" generateLoadMethod="true" >
+  <DataSource name="DsLoWfeStateTransitions" />
+  <Item objectClass="LiWfeStateTransitions" />
+  <Methods></Methods>
+</ListObject>

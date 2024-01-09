@@ -1,0 +1,91 @@
+<Process name="Call::CapturePictureProcess" defaultAction="ValidateMaxPictures" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="ImageURI" type="String" />
+        <Declaration name="CameraSettings" type="Object" />
+        <Declaration name="AttachmentData" type="Object" />
+        <Declaration name="PicsCountExceeded" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoCall" />
+        <Input name="jDTPKey" type="DomPKey" />
+        <Input name="openGallery" type="DomBool" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ValidateMaxPictures" actionType="LOGIC" call="ProcessContext::MainBO.validateMaxPictures">
+        <Return name="ProcessContext::PicsCountExceeded" />
+        <TransitionTo action="ValidateMaxPictures_Decision" />
+      </Action>
+      <Action name="ValidateMaxPictures_Decision" actionType="DECISION" parameter="ProcessContext::PicsCountExceeded">
+        <Case value="false" action="GetCameraSettings" />
+        <Case value="true" action="CancelCapturePicture" />
+        <CaseElse action="CancelCapturePicture" />
+      </Action>
+      <Action name="GetCameraSettings" actionType="LOGIC" call="ProcessContext::MainBO.loCallAttachments.getCameraSettings">
+        <Return name="ProcessContext::CameraSettings" />
+        <TransitionTo action="CapturePicture" />
+        <Parameters>
+          <Input name="settingsType" value="picture" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="CapturePicture" actionType="LOGIC" call="ProcessContext::MainBO.loCallAttachments.capturePicture">
+        <Return name="ProcessContext::ImageURI" />
+        <TransitionTo action="CapturePicture_Decision" />
+        <Parameters>
+          <Input name="cameraSettings" value="ProcessContext::CameraSettings" />
+          <Input name="openGallery" value="ProcessContext::openGallery" />
+        </Parameters>
+      </Action>
+      <Action name="CapturePicture_Decision" actionType="DECISION" parameter="ProcessContext::ImageURI">
+        <CaseElse action="CreateNewAttachmentByMediaPath" />
+        <CaseEmpty action="ShowMessageBox" />
+      </Action>
+      <Action name="ShowMessageBox" actionType="LOGIC" call="ProcessContext::MainBO.loCallAttachments.showMessageBox">
+        <TransitionTo action="ClearImageURI" />
+      </Action>
+      <Action name="CreateNewAttachmentByMediaPath" actionType="LOGIC" call="ProcessContext::MainBO.loCallAttachments.addItem">
+        <Return name="ProcessContext::AttachmentData" />
+        <TransitionTo action="CreateNewAtmAttachment" />
+        <Parameters>
+          <Input name="mediaPath" value="ProcessContext::ImageURI" />
+          <Input name="boCall" value="ProcessContext::MainBO" />
+          <Input name="jDTPKey" value="ProcessContext::jDTPKey" />
+        </Parameters>
+      </Action>
+      <Action name="CreateNewAtmAttachment" actionType="LOGIC" call="ProcessContext::MainBO.loAtmAttachment.addItem">
+        <TransitionTo action="LeaveCapturePicture" />
+        <Parameters>
+          <Input name="attachmentPKey" value="ProcessContext::AttachmentData.pKey" />
+          <Input name="referencePKey" value="ProcessContext::AttachmentData.clbMainPKey" />
+          <Input name="objectType" value="ClbMain" type="Literal" />
+          <Input name="fileName" value="ProcessContext::AttachmentData.fileName" />
+          <Input name="fileType" value="ProcessContext::AttachmentData.fileType" />
+          <Input name="attachmentText" value="ProcessContext::AttachmentData.attachmentText" />
+        </Parameters>
+      </Action>
+      <Action name="ClearImageURI" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::ImageURI" />
+        <Parameters>
+          <Input name="value" value=" " type="Literal" />
+        </Parameters>
+        <TransitionTo action="CancelCapturePicture" />
+      </Action>
+      <Action name="LeaveCapturePicture" actionType="END">
+        <ReturnValues>
+          <Return name="success" value="1" type="Literal" />
+          <Return name="jDTPKey" value="ProcessContext::jDTPKey" />
+        </ReturnValues>
+      </Action>
+      <Action name="CancelCapturePicture" actionType="END">
+        <ReturnValues>
+          <Return name="success" value="0" type="Literal" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

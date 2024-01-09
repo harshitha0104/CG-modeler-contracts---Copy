@@ -1,0 +1,46 @@
+<Process name="Order::OrderMetaLookupProcess" defaultAction="LoadList_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OrderMetaList" type="LoOrderMeta" />
+      </Declarations>
+      <Parameters>
+        <Input name="customerPKey" type="DomPKey" />
+        <Input name="orderMetaPKey" type="DomPKey" />
+        <Input name="OrderMetaList" type="LoOrderMeta" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="LoadList_Decision" actionType="DECISION" parameter="ProcessContext::OrderMetaList">
+        <CaseEmpty action="GetTemplateList" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action name="GetTemplateList" actionType="LOAD" type="LoOrderMeta">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::customerPKey" />
+        </Parameters>
+        <Return name="ProcessContext::OrderMetaList" />
+        <TransitionTo action="ShowView" />
+      </Action>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Order::OrderMetaLookup</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="EndWithNewValue" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="EndWithNewValue">
+        <ReturnValues>
+          <Return name="orderMetaPKey" value="Event.pKey" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="orderMetaPKey" value="ProcessContext::orderMetaPKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

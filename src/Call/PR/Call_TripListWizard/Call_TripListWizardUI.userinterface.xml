@@ -1,0 +1,122 @@
+<UIDescription name="Call::TripListWizardUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" binding="ProcessContext::Title" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="CreateTripList">
+          <Bindings>
+            <Resource target="Text" type="Label" id="DoneId" defaultLabel="Create" />
+            <Resource target="Icon" type="Image" id="CheckGrey24" defaultImage="light/done_24.png" />
+            <Binding type="Visible" target="Visible" call="ProcessContext::WizardBO.getButtonVisibility">
+              <Parameters>
+                <Input name="token" type="Literal" value="create" />
+              </Parameters>
+            </Binding>
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="FinishWizard" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="true" itemId="UpdateTripList">
+          <Bindings>
+            <Resource target="Text" type="Label" id="UpdateId" defaultLabel="Done" />
+            <Resource target="Icon" type="Image" id="CheckGrey24" defaultImage="light/done_24.png" />
+            <Binding type="Editable" target="Editable" call="ProcessContext::WizardBO.getButtonEditability" />
+            <Binding type="Visible" target="Visible" call="ProcessContext::WizardBO.getButtonVisibility">
+              <Parameters>
+                <Input name="token" type="Literal" value="update" />
+              </Parameters>
+            </Binding>
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="FinishWizard" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="true" itemId="DeleteTripList">
+          <Bindings>
+            <Resource target="Text" type="Label" id="DeleteId" defaultLabel="Delete" />
+            <Resource target="Icon" type="Image" id="CheckGrey24" defaultImage="light/done_24.png" />
+            <Binding type="Editable" target="Editable" call="ProcessContext::WizardBO.getButtonEditability" />
+            <Binding type="Visible" target="Visible" call="ProcessContext::WizardBO.getButtonVisibility">
+              <Parameters>
+                <Input name="token" type="Literal" value="delete" />
+              </Parameters>
+            </Binding>
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="FinishDeleteWizard" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="TripList">
+          <Lookup name="TripListLookup">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Trip List" id="tripListId" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.tripListLookup.text" bindingMode="ONE_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="OpenTripListLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+        <GroupElement name="CreateTripList">
+          <InputArea name="Description">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Description" id="TripListDescription" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.description" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <SelectionBox name="Type">
+            <Bindings>
+              <Resource target="Label" type="Label" id="TripListTypeId" defaultLabel="Type" />
+              <Binding target="DataSource" toggleId="TplMetaType" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.type" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <DatePickerField name="ValidFrom">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Valid From" id="TripListValidFromId" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.validFrom" bindingMode="TWO_WAY" />
+            </Bindings>
+          </DatePickerField>
+          <DatePickerField name="ValidThru">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Valid Thru" id="TripListValidThruId" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.validThru" bindingMode="TWO_WAY" />
+            </Bindings>
+          </DatePickerField>
+          <SelectionBox name="DayOfWeek">
+            <Bindings>
+              <Resource target="Label" type="Label" id="DayOfWeekId" defaultLabel="Day" />
+              <Binding target="DataSource" toggleId="TplDayOfWeek" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.dayOfWeek" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <InputArea name="ResponsibleUser" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="ResponsibleUserId" defaultLabel="Responsible" />
+              <Binding target="Value" binding="ProcessContext::WizardBO.responsibleUser" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

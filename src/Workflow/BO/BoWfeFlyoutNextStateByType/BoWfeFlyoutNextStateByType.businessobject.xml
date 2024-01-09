@@ -1,0 +1,32 @@
+<BusinessObject name="BoWfeFlyoutNextStateByType" generateLoadMethod="true" generateCreateMethod="true" schemaVersion="1.1">
+  <DataSource name="DsBoWfeFlyoutNextStateByType" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="actualStatePKey" type="DomPKey" />
+    <SimpleProperty name="nextStateCount" type="DomInteger" />
+  </SimpleProperties>
+  <NestedObjects>
+    <NestedObject name="boWorkflow" objectClass="BoWorkflow" dataSourceProperty="pKey" nestingProperty="pKey" loadMode="LoadImmediate" />
+  </NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects>
+    <ListObject name="nextStateList" objectClass="LoWfeState" dataSourceProperty="pKey" listProperty="wfeWorkflowPKey" loadMode="LoadImmediate" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterInitialize" />
+    <Method name="beforeInitialize" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="createAsync" />
+    <Method name="getStateTypeByState" />
+    <Method name="getFirstNextStatePKey" />
+  </Methods>
+  <Validations></Validations>
+</BusinessObject>

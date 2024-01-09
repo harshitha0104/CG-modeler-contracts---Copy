@@ -1,0 +1,100 @@
+<Process name="User::UsrSettingsProcess" defaultAction="LoadUserSettings_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="callMetaLookup" type="LuCallMeta" />
+        <Declaration name="callMetaPKey" type="DomPKey" />
+        <Declaration name="currentTabPage" type="String" />
+        <Declaration name="IsSfBackend" type="String" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="initLoadUserCallMetaLookup" type="LuCallMeta">
+        <Parameters>
+          <Input name="pKey" value="ApplicationContext::User.boUserSales.clbMetaPKey" />
+        </Parameters>
+        <Return name="ProcessContext::callMetaLookup" />
+      </Action>
+      <Action name="SetSfBackend_Logic" actionType="LOGIC" call="Utils.isSfBackend">
+        <Return name="ProcessContext::IsSfBackend" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="LoadUserSettings_Decision" actionType="DECISION" parameter="ProcessContext::IsSfBackend">
+        <Case value="true" action="LoadUserSettingsOnDemand" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action actionType="LOGIC" name="LoadUserSettingsOnDemand" call="ApplicationContext::User.boUserSettings.loadOnDemand">
+        <Parameters>
+          <Input name="pKey" value="ApplicationContext::User" />
+        </Parameters>
+        <TransitionTo action="ShowView" />
+      </Action>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>User::UsrSettingsUI</UIDescription>
+        <Events>
+          <Event name="OpenCallMetaLookup" action="OpenCallMetaLookup" />
+          <Event name="tabSelected" action="setCurrentTabName_Decision" />
+        </Events>
+      </Action>
+      <!-- Decision Point for selected Tab Pages -->
+      <Action name="setCurrentTabName_Decision" actionType="DECISION" parameter="Event.tabName">
+        <Case value="Calendar" action="setCurrentTabName_Calendar" />
+        <Case value="Weekdays" action="setCurrentTabName_Weekdays" />
+        <Case value="Sync" action="setCurrentTabName_Sync" />
+        <CaseElse action="setCurrentTabName_Calendar" />
+      </Action>
+      <Action actionType="END" name="EndCancel" />
+      <Action actionType="PROCESS" name="OpenCallMetaLookup" process="Call::MetaLookupProcess">
+        <Parameters>
+          <Input name="CompanyRequired" type="Literal" value="1" />
+          <Input name="CallMetaPKey" value="ApplicationContext::User.boUserSales.clbMetaPKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::callMetaPKey" value="callMetaPKey" />
+        </ReturnValues>
+        <TransitionTo action="AssignCallMetaPKey" />
+      </Action>
+      <Action actionType="LOGIC" name="AssignCallMetaPKey" call="Utils.identity">
+        <Parameters>
+          <Input name="view" value="ProcessContext::callMetaPKey" />
+        </Parameters>
+        <Return name="ApplicationContext::User.boUserSales.clbMetaPKey" />
+        <TransitionTo action="loadUserCallMetaLookup" />
+      </Action>
+      <Action actionType="LOAD" name="loadUserCallMetaLookup" type="LuCallMeta">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::callMetaPKey" />
+        </Parameters>
+        <Return name="ProcessContext::callMetaLookup" />
+      </Action>
+      <!-- BEGIN: Handling TabDecision -->
+      <Action actionType="LOGIC" name="setCurrentTabName_Calendar" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Calendar" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+      </Action>
+      <!-- Weekdays Tab -->
+      <Action actionType="LOGIC" name="setCurrentTabName_Weekdays" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Weekdays" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+      </Action>
+      <!-- Sync Tab -->
+      <Action actionType="LOGIC" name="setCurrentTabName_Sync" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Sync" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+      </Action>
+      <!-- END: Handling TabDecision -->
+    </Actions>
+  </Body>
+  <ExitHandlers>
+    <ExitHandler handlerName="saveUserBo" type="ValidateAndSave" name="ApplicationContext::User" />
+  </ExitHandlers>
+</Process>

@@ -1,0 +1,34 @@
+<DataSource name="DsBoUserSales" backendSystem="sf" businessObjectClass="BoUserSales" external="false" editableEntity="Sales_Organization_User__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Sales_Organization_User__c" column="Id" />
+    <Attribute name="businessModified" table="Sales_Organization_User__c" column="LastModifiedDate" />
+    <DerivedAttribute name="salesOrg" value="'#SalesOrg#'" />
+    <Attribute name="userPKey" table="Sales_Organization_User__c" column="User__c" />
+    <DerivedAttribute name="clbMetaPKey" value="IFNULL(NULLIF(Sales_Organization_User__c.Default_Visit_Template__c, ' '), (SELECT C.Id FROM System_Setting__c S JOIN Visit_Template__c C ON S.Value__c = C.Name AND C.Sales_Org__c = '#SALESORG#' WHERE S.Name = 'Default_Visit_Template' LIMIT 1))" />
+    <Attribute name="bpaCustomerPKey" table="Sales_Organization_User__c" column="Default_Account__c" />
+    <!-- Avoid automatic date transformation as the fields are designed as 'Text' in SF -->
+    <DerivedAttribute name="workBegins" value="CASE WHEN NOT Sales_Organization_User__c.Work_Begins__c = ' ' THEN Sales_Organization_User__c.Work_Begins__c ELSE (SELECT CASE WHEN IFNULL(settingValue, ' ') != ' ' THEN settingValue ELSE fallbackValue END FROM (SELECT '9:00' as fallbackValue) LEFT JOIN (SELECT Value__c as settingValue FROM System_Setting__c WHERE Name = 'Visit_Start_Time')) END" />    
+    <!-- Avoid automatic date transformation as the fields are designed as 'Text' in SF -->
+    <DerivedAttribute name="workEnds" value="Sales_Organization_User__c.Work_Ends__c" />
+    <DerivedAttribute name="supervisorPKey" value="' '" />
+    <DerivedAttribute name="defaultManagementType" value="' '" />
+    <DerivedAttribute name="usrDocMetaPKey" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="Sales_Organization_User__c" alias="" idAttribute="Id" />
+    <Entity name="Sales_Organization__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Sales_Organization__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Sales_Organization_User__c.Sales_Organization__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+       Sales_Organization_User__c.User__c = #usrMainPKey#
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="usrMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

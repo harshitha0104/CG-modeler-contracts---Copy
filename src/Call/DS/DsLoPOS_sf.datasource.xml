@@ -1,0 +1,84 @@
+<Datasource objectClass="LoPOS" backendSystem="sf" businessObjectClass="LoPOS" external="true" distinct="false" editableEntity="POS__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="clbMainPKey" value="''" />
+    <DerivedAttribute name="count" value="0" />
+    <DerivedAttribute name="surveyCount" value="0" />
+    <DerivedAttribute name="questionCount" value="0" />
+    <DerivedAttribute name="isPOS" value="'1'" />
+    <DerivedAttribute name="questionsInitialized" value="'0'" />
+    <DerivedAttribute name="surveysInitialized" value="'0'" />
+    <DerivedAttribute name="isPOSCheck" value="'0'" />
+    <DerivedAttribute name="posContentPKey" value="' '" />
+    <DerivedAttribute name="posContentProductCount" value="'0'" />
+    <DerivedAttribute name="isKubsch" value="'0'" />
+    <Attribute name="posId" table="POS__c" column="Id" />
+    <Attribute name="pKey" table="POS__c" column="Id" />
+    <Attribute name="bpaMainPKey" table="POS__c" column="Id" />
+    <Attribute name="metaType" table="POS_Template__c" column="POS_Type__c" />
+    <Attribute name="name" table="POS__c" column="Description_#Language#__c" />
+    <Attribute name="imageId" table="Sync_Mobile_App_PL_Repo__c" column="ImageId__c" />
+    <Attribute name="posMetaPKey" table="POS_Template__c" column="Id" />
+  </Attributes>
+  <Entities>
+    <Entity name="POS__c" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+                       
+        jsonQuery = Utils.convertDsParamsOldToNew(jsonQuery);
+
+		var validFrom = "";   
+    	var validThru = "";  
+		var clbMainPKey = "";
+	    var bpaMainPKey = "";
+
+  		if(Utils.isDefined(jsonQuery.clbMainPKey)) {      		
+        	clbMainPKey= Utils.convertForDBParam(jsonQuery.clbMainPKey, "DomPKey");
+        }
+		if(Utils.isDefined(jsonQuery.bpaMainPKey)) {      		
+        	bpaMainPKey= Utils.convertForDBParam(jsonQuery.bpaMainPKey, "DomPKey");
+        }
+
+        if(Utils.isDefined(jsonQuery.validFrom)) {      		
+        	validFrom= Utils.convertForDBParam(jsonQuery.validFrom, "DomDate");
+        }
+        if(Utils.isDefined(jsonQuery.validThru)) {      		
+        	validThru= Utils.convertForDBParam(jsonQuery.validThru, "DomDate");
+        }
+
+        var sqlParams = {clbMainPKey, bpaMainPKey,validFrom, validThru};
+		
+        //SF/CASDIF: POSCHECK does not exists in Salesforce thats why we save the visit_job__c with a posid
+        var sqlStmt = "";
+		sqlStmt+= "SELECT DISTINCT POS__c.Id AS pKey, ";
+		sqlStmt+= "#clbMainPKey# AS clbMainPKey, ";
+		sqlStmt+= "POS__c.Id AS posId, ";
+		sqlStmt+= "POS__c.Description_#Language#__c AS name, ";
+		sqlStmt+= "POS__c.Id AS bpaMainPKey, ";
+		sqlStmt+= "POS_Template__c.POS_Type__c AS metaType, ";
+		sqlStmt+= "Sync_Mobile_App_PL_Repo__c.ImageId__c AS imageId, ";		
+		sqlStmt+= "0 AS count, ";
+		sqlStmt+= "'1' AS isPOS, ";
+		sqlStmt+= "'0' AS questionsInitialized, ";
+		sqlStmt+= "'0' AS surveysInitialized, ";
+		sqlStmt+= "'0' AS isPOSCheck, ";	
+		sqlStmt+= "' ' AS posContentPKey, ";
+		sqlStmt+= "'0' AS posContentProductCount, ";    
+		sqlStmt+= "'0' AS isKubsch, ";   
+        sqlStmt+= "POS_Template__c.Id AS posMetaPKey ";
+		sqlStmt+= "FROM POS__c, Visit, POS_Template__c, Sync_Mobile_App_PL_Repo__c ";
+		sqlStmt+= "WHERE (1 = 1) ";
+		sqlStmt+= "AND POS__c.Account__c = Visit.AccountId ";	
+		sqlStmt+= "AND POS_Template__c.Id = POS__c.POS_Template__c ";	
+		sqlStmt+= "AND Visit.AccountId  = #bpaMainPKey# ";
+		sqlStmt+= "AND #compareAsDate('POS__c.Valid_From__c', 'Date','<=' , #validFrom# , 'Date')# ";
+ 		sqlStmt+= "AND #compareAsDate('POS__c.Valid_Thru__c', 'Date','>=' , #validThru# , 'Date')# ";
+		sqlStmt+= "AND Sync_Mobile_App_PL_Repo__c.Mobile_App_Domain__c = 'DomBpaPOSMetaType' ";
+		sqlStmt+= "AND Sync_Mobile_App_PL_Repo__c.Picklist_Value__C = POS_Template__c.POS_Type__c ";
+		sqlStmt+= " ";
+		sqlStmt+= "ORDER BY POS__c.Description_#Language#__c ";
+
+		return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+  </Database>
+</Datasource>

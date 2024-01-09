@@ -1,0 +1,7 @@
+<ListItem name="LiBpaPOSGeometry" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="bpaPOSMetaPKey" type="DomPKey" dataSourceProperty="bpaPOSMetaPKey" />
+    <SimpleProperty name="text" type="DomString" dataSourceProperty="text" />
+  </SimpleProperties>
+</ListItem>

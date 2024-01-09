@@ -1,0 +1,120 @@
+<Process name="Todo::CreateNewWizardProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="ValidationBo" type="BoWizardCreateNewTodo" />
+        <Declaration name="SvcRequestMetaPKey" type="DomPKey" />
+        <Declaration name="SvcRequestMetaList" type="LoSvcRequestMeta" />
+        <Declaration name="UserAccountable" type="DomPKey" />
+      </Declarations>
+      <Parameters>
+        <Input name="cardDate" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="GetSvcRequestMetaList" type="LoSvcRequestMeta">
+        <Parameters>
+          <Input name="metaType" value="Issue" type="Literal" />
+          <Input name="issueType" value="ToDo" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::SvcRequestMetaList" />
+      </Action>
+      <Action name="SetSvcRequestMetaPKey_DefaultTemplate" actionType="LOGIC" call="ProcessContext::SvcRequestMetaList.getFirstEntry">
+        <Return name="ProcessContext::SvcRequestMetaPKey" />
+      </Action>
+      <Action name="CreateWizardBo" actionType="CREATE" type="BoWizardCreateNewTodo">
+        <Parameters>
+          <Input name="userPKey" value="ApplicationContext::User.pKey" />
+          <Input name="svcRequestMetaPKey" value="ProcessContext::SvcRequestMetaPKey" />
+          <Input name="cardDate" value="ProcessContext::cardDate" />
+        </Parameters>
+        <Return name="ProcessContext::ValidationBo" />
+      </Action>
+      <Action name="initializeUserAccountableForProcess" actionType="LOGIC" call="ProcessContext::ValidationBo.initializeUserAccountableForProcess">
+        <Return name="ProcessContext::UserAccountable" />
+      </Action>
+      <Action actionType="LOGIC" name="setInitialEARights" call="ProcessContext::ValidationBo.setEARights" />
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Todo::CreateNewWizardUI</UIDescription>
+        <Events>
+          <Event name="createNewTodo" action="setDirty" />
+          <Event name="userLookup" action="OpenTeamLookup" />
+          <Event name="svcMetaLookup" action="OpenSvcRequestMetaLookup" />
+        </Events>
+      </Action>
+      <Action actionType="PROCESS" name="OpenTeamLookup" process="User::TeamLookupProcess">
+        <Parameters>
+          <Input name="Mode" value="AccountableMandatory" type="Literal" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::ValidationBo.luUser.pKey" value="userPKey" />
+          <Return name="ProcessContext::ValidationBo.luUser.name" value="name" />
+          <Return name="ProcessContext::UserAccountable" value="userAccountableId" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="PROCESS" name="OpenSvcRequestMetaLookup" process="ServiceRequest::MetaLookupProcess">
+        <Parameters>
+          <Input name="MetaType" value="Issue" type="Literal" />
+          <Input name="IssueType" value="ToDo" type="Literal" />
+          <Input name="SvcRequestMetaPKey" value="ProcessContext::SvcRequestMetaPKey" />
+          <Input name="SvcRequestMetaList" value="ProcessContext::SvcRequestMetaList" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::SvcRequestMetaPKey" value="svcRequestMetaPKey" />
+        </ReturnValues>
+        <TransitionTo action="LoadSvcRequestMetaLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadSvcRequestMetaLookup" type="LuSvcRequestMeta">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::SvcRequestMetaPKey" />
+        </Parameters>
+        <Return name="ProcessContext::ValidationBo.luSvcRequestMeta" />
+        <TransitionTo action="setEARights" />
+      </Action>
+      <Action actionType="LOGIC" name="setEARights" call="ProcessContext::ValidationBo.setEARights">
+        <TransitionTo action="setNew" />
+      </Action>
+      <!-- Validation actions -->
+      <Action actionType="VALIDATION" name="WizardValidations">
+        <Validations>
+          <Validation name="ProcessContext::ValidationBo.validateNotEmpty" />
+          <Validation name="ProcessContext::ValidationBo.validateDueDate" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="EndCreateNewTodo" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <!-- Set validation business object dirty on clicking done button-->
+      <Action actionType="LOGIC" name="setDirty" call="ProcessContext::ValidationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="5" />
+        </Parameters>
+        <TransitionTo action="WizardValidations" />
+      </Action>
+      <!-- Set validation business object to new if not the done button has been clicked-->
+      <Action actionType="LOGIC" name="setNew" call="ProcessContext::ValidationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="2" />
+        </Parameters>
+      </Action>
+      <Action actionType="END" name="EndCreateNewTodo">
+        <ReturnValues>
+          <Return name="svcRequestMetaPKey" value="ProcessContext::ValidationBo.luSvcRequestMeta.PKey" />
+          <Return name="userPKey" value="ProcessContext::ValidationBo.luUser.PKey" />
+          <Return name="description" value="ProcessContext::ValidationBo.text" />
+          <Return name="dueDate" value="ProcessContext::ValidationBo.dueDate" />
+          <Return name="userAccountable" value="ProcessContext::UserAccountable" />
+          <Return name="buttonPressed" type="Literal" value="create" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndCancel" />
+    </Actions>
+  </Body>
+</Process>

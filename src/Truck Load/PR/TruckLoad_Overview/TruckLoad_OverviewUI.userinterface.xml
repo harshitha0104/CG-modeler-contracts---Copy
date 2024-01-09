@@ -1,0 +1,223 @@
+<UIDescription name="TruckLoad::OverviewUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionPage" cachable="false">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TruckLoadOverviewId" defaultLabel="Inventory" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="checkOut">
+          <Bindings>
+            <Binding type="Visible" target="Visible" call="ProcessContext::OverviewList.getButtonVisibility">
+              <Parameters>
+                <Input name="mode" type="Literal" value="ProductCheckOut" />
+              </Parameters>
+            </Binding>
+            <Resource target="Text" type="Label" id="checkOutId" defaultLabel="Check out" />
+            <Resource target="Icon" type="Image" id="PlusDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="checkOut" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="true" itemId="checkIn">
+          <Bindings>
+            <Binding type="Visible" target="Visible" call="ProcessContext::OverviewList.getButtonVisibility">
+              <Parameters>
+                <Input name="mode" type="Literal" value="ProductCheckIn" />
+              </Parameters>
+            </Binding>
+            <Resource target="Text" type="Label" id="checkInButtonId" defaultLabel="Check in" />
+            <Resource target="Icon" type="Image" id="PlusDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="checkIn" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="true" itemId="createNew">
+          <Bindings>
+            <Binding type="Visible" target="Visible" call="ProcessContext::OverviewList.getButtonVisibility">
+              <Parameters>
+                <Input name="mode" type="Literal" value="New" />
+              </Parameters>
+            </Binding>
+            <Resource target="Text" type="Label" id="CreateNew" defaultLabel="New Document" />
+            <Resource target="Icon" type="Image" id="PlusDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="createNew" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="true" itemId="ReviewCurrentStock">
+          <Bindings>
+            <Binding type="Visible" target="Visible" call="ProcessContext::OverviewList.getButtonVisibility">
+              <Parameters>
+                <Input name="mode" type="Literal" value="ReviewStock" />
+              </Parameters>
+            </Binding>
+            <Resource target="Text" type="Label" id="CreateNewStock" defaultLabel="Current Stock" />
+            <Resource target="Icon" type="Image" id="Boxes" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="reviewCurrentStock" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <!-- [.. MASTER SECTION ..] -->
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="TruckLoadList" searchable="true" dataSource="ProcessContext::OverviewList.Items[]">
+          <SearchAttributes>
+            <SearchAttribute name="MetaText" />
+            <SearchAttribute name="Phase" />
+            <SearchAttribute name="DocumentId" />
+          </SearchAttributes>
+          <Items name="Items" itemPattern="TruckLoadOverviewItem">
+            <Bindings>
+              <Binding target="Phase" type="Image" binding=".phase.imageId" bindingMode="ONE_WAY" />
+              <Binding target="PhaseText" type="Text" binding=".phase.text" bindingMode="ONE_WAY" />
+              <Binding target="CommitDate" type="DateTime" binding=".commitDate" bindingMode="ONE_WAY" />
+              <Binding target="MetaText" type="Text" binding=".metaText" bindingMode="ONE_WAY" />
+              <Binding target="Id" type="Text" binding=".documentId" bindingMode="ONE_WAY" />
+              <Resource target="TemplateLabel" type="Label" id="TemplateLabel" defaultLabel="Template" />
+              <Resource target="PhaseLabel" type="Label" id="phaseLabelId" defaultLabel="Phase" />
+              <Resource target="CommitDateLabel" type="Label" id="commitDateId" defaultLabel="Date" />
+              <Resource target="DatePhaseLabel" type="Label" id="datePhaseId" defaultLabel="Date / Phase" />
+              <Resource target="EmptyLabel" type="Label" id="emptyLabelId" defaultLabel=" " />
+              <Resource target="IdHeaderLabel" type="Label" id="headerId" defaultLabel="Id" />
+              <Binding target="ReleaseTime1" type="Text" binding=".releaseTime1" bindingMode="ONE_WAY" />
+              <Binding target="ReleaseTime" type="Text" binding=".releaseTime" bindingMode="ONE_WAY" />
+              <Binding target="ActualValue" type="Decimal" formatV2="10.2" binding=".grossTotalValueReceipt" bindingMode="ONE_WAY" />
+              <Resource target="Spacer" type="Label" id="Spacer" defaultLabel="    " />
+              <Binding target="Currency" type="Text" binding=".currency.id" bindingMode="ONE_WAY" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Header>
+                  <Col bindingId="EmptyLabel" align="left" />
+                  <Col bindingId="IdHeaderLabel" align="left" />
+                  <Col bindingId="TemplateLabel" align="left" />
+                  <Col bindingId="CommitDateLabel" align="left" />
+                  <Col bindingId="PhaseLabel" align="left" />
+                </Header>
+                <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="Phase" />
+                <Col width="12em">
+                  <Row layoutType="itemValue" bindingId="Id" />
+                </Col>
+                <Col width="10em">
+                  <Row layoutType="itemValue" bindingId="MetaText" />
+                </Col>
+                <Col width="10em">
+                  <Row layoutType="itemSecondary" bindingId="ReleaseTime" />
+                  <Row layoutType="itemSecondary" bindingId="ReleaseTime1" />
+                </Col>
+                <Col width="5em">
+                  <Row layoutType="itemValue" bindingId="ActualValue" />
+                </Col>
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="Phase" />
+                  <Col layoutType="itemRight itemValueSmall" width="1em" bindingId="Spacer" />
+                  <Col width="10em">
+                    <Row layoutType="itemValue" bindingId="MetaText" />
+                    <Row layoutType="itemIdentifierSmall" bindingId="Id" />
+                  </Col>
+                  <Col width="10em">
+                    <Row layoutType="itemSecondary" bindingId="ReleaseTime" />
+                    <Row layoutType="itemSecondary" bindingId="ReleaseTime1" />
+                  </Col>
+                  <Col width="6em" layoutType="itemRight itemIdentifier" bindingId="ActualValue" />
+                  <Col width="0.5em" layoutType="itemRight itemIdentifier" bindingId="Spacer" />
+                  <Col width="2.5em" layoutType="itemRight itemIdentifier" bindingId="Currency" />
+                </Default>
+                <Android>
+                  <Col width="2.7em" height="1.8em" layoutType="Image" bindingId="Phase" />
+                  <Col layoutType="itemRight itemValueSmall" width="1em" bindingId="Spacer" />
+                  <Col width="10em">
+                    <Row layoutType="itemValue" bindingId="MetaText" />
+                    <Row layoutType="itemIdentifierSmall" bindingId="Id" />
+                  </Col>
+                  <Col width="10em">
+                    <Row layoutType="itemSecondary" bindingId="ReleaseTime" />
+                    <Row layoutType="itemSecondary" bindingId="ReleaseTime1" />
+                  </Col>
+                  <Col width="6em" layoutType="itemRight itemIdentifier" bindingId="ActualValue" />
+                  <Col width="0.5em" layoutType="itemRight itemIdentifier" bindingId="Spacer" />
+                  <Col width="2.5em" layoutType="itemRight itemIdentifier" bindingId="Currency" />
+                </Android>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col>
+                    <Row>
+                      <Col width="1.7em" height="1.4em" layoutType="itemRight itemIdentifier" bindingId="Spacer" />
+                      <Col layoutType="itemValueSmall" bindingId="MetaText" />
+                    </Row>
+                    <Row>
+                      <Col width="1.5em" height="1.4em" layoutType="Image" bindingId="Phase" />
+                      <Col width="7em">
+                        <Row layoutType="itemIdentifierSmall" bindingId="Id" />
+                        <Row width="4em">
+                          <Col width="5em" layoutType="itemSecondarySmall" bindingId="ReleaseTime" />
+                          <Col width="0.5em" layoutType="itemRight itemIdentifier" bindingId="Spacer" />
+                          <Col width="4em" layoutType="itemSecondarySmall" bindingId="ReleaseTime1" />
+                        </Row>
+                      </Col>
+                      <Col>
+                        <Row>
+                          <Col width="6em" layoutType="itemRight itemImportantValueSmall" bindingId="ActualValue" />
+                          <Col width="2.5em" layoutType="itemRight itemImportantValueSmall" bindingId="Currency" />
+                        </Row>
+                        <Row layoutType="itemValue" bindingId="Spacer" />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Default>
+              </Phone>
+            </ItemListLayout>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::ContextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                  <Binding type="Visible" target="Visible" binding=".actionVisible" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+            <ContextOpeningEvent event="contextMenuOpening">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="phase" value=".phase" />
+                <Param name="responsiblePKey" value=".responsiblePKey" />
+                <Param name="initiatorPKey" value=".initiatorPKey" />
+                <Param name="wfeWorkflowPKey" value=".wfeWorkflowPKey" />
+                <Param name="actualStatePKey" value=".actualStatePKey" />
+                <Param name="recipientPKey" value=".recipientPKey" />
+                <Param name="documentType" value=".documentType" />
+                <Param name="tmgMainPKey" value=".tmgMainPKey" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="contextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="phase" value=".phase" />
+              </Params>
+            </ContextSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

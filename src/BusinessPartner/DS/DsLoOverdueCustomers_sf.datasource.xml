@@ -1,0 +1,228 @@
+<DataSource name="DsLoOverdueCustomers" backendSystem="sf" businessObjectClass="LoOverdueCustomers" external="true" editableEntity="Account" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account" column="Id" />
+    <Attribute name="customerName" table="Account" column="Name" />
+    <DerivedAttribute name="customerAddress" value="''" />
+    <DerivedAttribute name="jdlCount" value="0" />
+    <DerivedAttribute name="promotionCount" value="0" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var newParams = jsonQuery;
+
+			var userPKeys = ApplicationContext.get('user').getTeamList();       
+
+			var addCond_LeadTimeFollowUpTime = "";
+			var cardDate = "";
+			var limitDueToFormFactor = "";
+
+			if(Utils.isDefined(newParams.addCond_LeadTimeFollowUpTime)){
+				addCond_LeadTimeFollowUpTime = newParams.addCond_LeadTimeFollowUpTime;
+			}
+			if(Utils.isDefined(newParams.cardDate)){
+				cardDate = Utils.convertForDBParam(newParams.cardDate, "DomDate");
+			}
+            if (Utils.isDefined(newParams.limitDueToFormFactor)){
+                limitDueToFormFactor = newParams.limitDueToFormFactor;
+            }
+
+			var sqlParams1 = {cardDate};
+			var sqlParams2 = {cardDate, limitDueToFormFactor};
+
+			var sqlStmt1 = "SELECT ";		
+			sqlStmt1 +=      "customers.pKey AS pKey, ";
+			sqlStmt1 +=      "customers.name  as customerName, ";
+			sqlStmt1 +=      "customers.mainaddress as customerAddress, "; 
+						
+ 			// JDL Determination
+			sqlStmt1 += "(SELECT count(*) FROM ( ";
+			sqlStmt1 += "SELECT distinct Job_Definition_List__c.Id from Job_Definition_List__c ";
+            sqlStmt1 += "INNER JOIN Job_List__c ON Job_List__c.Job_Definition_List__c = Job_Definition_List__c.Id ";
+            sqlStmt1 += "AND Job_Definition_List__c.IsDeleted <> '1' ";
+            sqlStmt1 += "AND Job_List__c.IsDeleted <> '1' ";
+            sqlStmt1 += "INNER JOIN Visit_Template__c ON Job_Definition_List__c.Visit_Template__c = Visit_Template__c.Id ";
+            sqlStmt1 += "AND Visit_Template__c.IsDeleted <> '1' ";
+            sqlStmt1 += "INNER JOIN Job_Definition_List_Template__c ON Job_Definition_List__c.Job_Definition_List_Template__c = Job_Definition_List_Template__c.Id ";
+            sqlStmt1 += "AND Job_Definition_List_Template__c.IsDeleted <> '1' ";
+			sqlStmt1 += "INNER JOIN Job_Definition_List_Account__c ON Job_Definition_List_Account__c.Job_Definition_List__c = Job_Definition_List__c.Id AND Job_Definition_List_Account__c.Account__c = customers.pKey ";
+            sqlStmt1 += "WHERE ";
+            sqlStmt1 += "Job_Definition_List__c.Valid_Thru__c >=  #cardDate# ";
+            sqlStmt1 += "AND Job_Definition_List__c.Approval_State__c <> 'Canceled' ";
+            sqlStmt1 += "AND Job_List__c.Valid_Thru__c >=  #cardDate# ";
+            sqlStmt1 += "AND Job_List__c.Done__c = '0' ";
+            sqlStmt1 += "AND Job_List__c.Manager__c = '#UserPKey#' ";
+ 			sqlStmt1 += "AND Job_Definition_List_Template__c.Display_In_Cockpit__c = '1' ";
+
+    		sqlStmt1 += "UNION ";
+
+            sqlStmt1 += "SELECT distinct Job_Definition_List__c.Id FROM Job_Definition_List__c ";
+            sqlStmt1 += "INNER JOIN Visit_Template__c ON Job_Definition_List__c.Visit_Template__c = Visit_Template__c.Id ";
+            sqlStmt1 += "AND Visit_Template__c.IsDeleted <> '1' ";
+            sqlStmt1 += "AND Job_Definition_List__c.IsDeleted <> '1' ";
+            sqlStmt1 += "INNER JOIN Job_Definition_List_Template__c ON Job_Definition_List__c.Job_Definition_List_Template__c = Job_Definition_List_Template__c.Id ";
+            sqlStmt1 += "AND Job_Definition_List_Template__c.IsDeleted <> '1' ";
+            sqlStmt1 += "LEFT JOIN Job_Definition_List_Account__c ON Job_Definition_List_Account__c.Job_Definition_List__c = Job_Definition_List__c.Id ";
+            sqlStmt1 += "LEFT OUTER JOIN  ";
+            sqlStmt1 += "   ( ";
+            sqlStmt1 += "      Job_Definition_List_Account_Set__c  ";
+            sqlStmt1 += "      JOIN ";
+            sqlStmt1 += "      Account_Set_Account__c ON Job_Definition_List_Account_Set__c.Account_Set__c = Account_Set_Account__c.Account_Set__c AND  ";
+            sqlStmt1 += "      Account_Set_Account__c.IsDeleted <> '1' AND ";
+            sqlStmt1 += "      Job_Definition_List_Account_Set__c.IsDeleted <> '1' ";
+            sqlStmt1 += "   )  ON Job_Definition_List__c.Id = Job_Definition_List_Account_Set__c.Job_Definition_List__c AND Job_Definition_List_Account_Set__c.IsDeleted <> '1'    ";                                       	
+            sqlStmt1 += "LEFT JOIN Account_Manager__c ON Job_Definition_List_Account__c.Account__c = Account_Manager__c.Account__c OR Account_Set_Account__c.Account_Set_Account__c = Account_Manager__c.Account__c ";
+            sqlStmt1 += "WHERE Job_Definition_List__c.Standard_Jobs__c = '1' ";
+            sqlStmt1 += "AND Job_Definition_List__c.Active__c = '1' ";
+            sqlStmt1 += "AND Job_Definition_List__c.Approval_State__c <> 'Canceled' ";
+            sqlStmt1 += "AND Job_Definition_List__c.Valid_Thru__c >= #cardDate# ";
+            sqlStmt1 += "AND (Job_Definition_List__c.Default_Management_Type__c = ' ' ";
+            sqlStmt1 += "OR (Job_Definition_List__c.Consider_Account__c = '0' ";
+            sqlStmt1 += "AND EXISTS ( ";
+            sqlStmt1 += "             SELECT NULL FROM Account_Manager__c AS AM WHERE ";
+            sqlStmt1 += "             AM.Valid_Thru__c >= #cardDate# ";
+            sqlStmt1 += "             AND AM.IsDeleted <> '1' ";
+            sqlStmt1 += "             AND Job_Definition_List__c.Default_Management_Type__c = AM.Management_Type__c ";
+            sqlStmt1 += "             AND AM.User__c = '#UserPKey#') ";
+            sqlStmt1 += ") ";
+            sqlStmt1 += "OR ( ";
+            sqlStmt1 += "Account_Manager__c.Valid_Thru__c >= #cardDate# ";
+            sqlStmt1 += "AND Account_Manager__c.User__c = '#UserPKey#' ";
+            sqlStmt1 += "AND Account_Manager__c.IsDeleted <> '1' ";
+            sqlStmt1 += "AND ( ";
+            sqlStmt1 += "( ";
+            sqlStmt1 += "Job_Definition_List__c.Consider_Account__c = '1' ";
+            sqlStmt1 += "AND Account_Manager__c.Management_Type__c = Job_Definition_List__c.Default_Management_Type__c ";
+            sqlStmt1 += "AND (Job_Definition_List_Account__c.IsDeleted <> '1' ";
+            sqlStmt1 += "AND Job_Definition_List_Account__c.Excluded__c <> '1' ) ";
+            sqlStmt1 += "OR (Job_Definition_List_Account_Set__c.Account_Set__c IS NOT NULL AND Job_Definition_List_Account__c.Account__c Is NULL) ";
+            sqlStmt1 += ") ";
+            sqlStmt1 += ") ) ";
+            sqlStmt1 += ") ";
+            sqlStmt1 += "AND Job_Definition_List_Template__c.Display_In_Cockpit__c = '1' ";
+		    sqlStmt1 += "AND ( Job_Definition_List_Account__c.Account__c = customers.pKey ";
+			sqlStmt1 += "OR Account_Set_Account__c.Account_Set_Account__c = customers.pKey ) ";
+            sqlStmt1 +=      " )) as jdlCount, ";
+            // JDL Determination End
+
+ 			// Promotion Determination
+			sqlStmt1 += "(SELECT count(*) from Promotion__c ";
+            sqlStmt1 += " JOIN Promotion_Template__c AS PromotionMeta ON Promotion__c.Promotion_Template__c = PromotionMeta.Id ";
+            sqlStmt1 += " AND PromotionMeta.Display_In_Visit__c = '1' ";
+            sqlStmt1 += "LEFT JOIN ( ";
+            sqlStmt1 += "Promotion_Store__c ";
+            sqlStmt1 += "JOIN Account ON Account.Id = Promotion_Store__c.Store__c ";
+            sqlStmt1 += ") ON Promotion_Store__c.Promotion__c = Promotion__c.Id ";
+            sqlStmt1 += "LEFT JOIN ( ";
+            sqlStmt1 += "Account_Set_Account__c ";
+            sqlStmt1 += "JOIN Account_Set__c ON Account_Set_Account__c.Account_Set__c = Account_Set__c.Id ";
+            sqlStmt1 += ") ON Promotion__c.Anchor_Account_Set__c = Account_Set_Account__c.Account_Set__c ";
+            sqlStmt1 += "LEFT JOIN Account AS Anchor ON Promotion__c.Anchor_Account__c = Anchor.Id ";
+            sqlStmt1 += "WHERE 1=1 ";
+            sqlStmt1 += "AND ( Promotion_Store__c.Store__c = customers.pKey ";
+            sqlStmt1 += "OR Account_Set_Account__c.Account_Set_Account__c = customers.pKey ) ";
+            sqlStmt1 += "AND EXISTS ( ";
+            sqlStmt1 += "SELECT NULL FROM Tactic__c ";
+            sqlStmt1 += "JOIN Tactic_Template__c ON Tactic__c.Tactic_Template__c = Tactic_Template__c.Id ";
+            sqlStmt1 += "WHERE Promotion__c.Id = Tactic__c.Promotion__c ";
+            sqlStmt1 += "AND Promotion__c.Id = Tactic__c.Promotion__c ";
+            sqlStmt1 += "AND Tactic_Template__c.Active__c = '1' ";
+            sqlStmt1 += "AND #compareAsDate('Tactic__c.Date_From__c', 'Date','<=' , #cardDate# , 'Date')# ";  
+            sqlStmt1 += "AND #compareAsDate('Tactic__c.Date_Thru__c', 'Date','>=' , #cardDate# , 'Date')# "; 
+            sqlStmt1 += "AND Tactic__c.Included__c  = '1' ";
+            sqlStmt1 += "AND Tactic_Template__c.Tactic_Type__c<>'Talon') ";
+            sqlStmt1 += "AND Promotion__c.Active__c='1' ";
+            sqlStmt1 += "AND Promotion__c.Phase__c='Committed' ";
+            sqlStmt1 += "AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #cardDate# , 'Date')# ";  
+            sqlStmt1 += "AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #cardDate# , 'Date')# "; 
+            sqlStmt1 +=      ") as promotionCount ";
+            // Promotion Determination End
+
+			sqlStmt1 +=      "FROM ( ";
+			sqlStmt1 +=      " SELECT  ";
+			sqlStmt1 +=          "Account.Id AS pKey, ";
+			sqlStmt1 +=          "Account.Name as name, ";
+			sqlStmt1 +=          "Account.ShippingStreet || ', ' || Account.ShippingPostalCode || ' ' || Account.ShippingCity || ', ' || Account.ShippingState as mainAddress ";
+			sqlStmt1 +=      " FROM  ";
+			sqlStmt1 +=          "Account";
+			sqlStmt1 +=      " JOIN ";
+			sqlStmt1 +=          "Account_Extension__c ";
+			sqlStmt1 +=              "ON Account.Id = Account_Extension__c.Account__c "; 
+			sqlStmt1 +=      " LEFT OUTER JOIN ";
+			sqlStmt1 +=          " Account_Trade_Org_Hierarchy__c";
+			sqlStmt1 +=              " ON Account.Id = Account_Trade_Org_Hierarchy__c.Child_Account__c ";                    
+			sqlStmt1 +=              "AND #compareAsDate('Account_Trade_Org_Hierarchy__c.Valid_From__c', 'Date','<=',#cardDate#, 'Date')# ";
+			sqlStmt1 +=              "AND #compareAsDate('Account_Trade_Org_Hierarchy__c.Valid_Thru__c', 'Date','>=',#cardDate#, 'Date')# ";  
+			sqlStmt1 +=      " LEFT OUTER JOIN ";
+			sqlStmt1 +=          " Account TradeOrg ";
+			sqlStmt1 +=              "ON TradeOrg.Id = Account_Trade_Org_Hierarchy__c.Parent_Account__c ";       
+			sqlStmt1 +=      " JOIN ";
+			sqlStmt1 +=          " User ";     
+			sqlStmt1 +=              " ON (User.Id IN (";
+  
+			//userPKeys
+			var userPKeyObj = Utils.getListParams(userPKeys);
+
+			var sqlStmt2 =                             " )"; 
+			sqlStmt2 +=                 ")"; 
+			sqlStmt2 +=      " LEFT OUTER JOIN ";
+			sqlStmt2 +=          "Account_Manager__c ";
+			sqlStmt2 +=              "ON Account_Manager__c.User__c = User.Id ";
+			sqlStmt2 +=              "AND Account_Manager__c.Account__c = Account.Id ";  
+			sqlStmt2 += 		" AND #compareAsDate('Account_Manager__c.Valid_From__c', 'Date','<=',#cardDate#, 'Date')# ";
+			sqlStmt2 += 		" AND #compareAsDate('Account_Manager__c.Valid_Thru__c', 'Date','>=',#cardDate#, 'Date')# ";
+			sqlStmt2 += 		" AND Account_Manager__c.Management_Type__c <> 'Substitution' ";
+			sqlStmt2 +=      "LEFT OUTER JOIN ( ";
+			sqlStmt2 +=              "SELECT SubBpaRel.Account__c as BpaMainPKey, ";
+			sqlStmt2 +=              "SubBpaRel.Valid_From__c as SubBpaRelValidFrom, ";
+			sqlStmt2 +=              "SubBpaRel.Valid_Thru__c as SubBpaRelValidThru, ";
+			sqlStmt2 +=              "SubBpaRel.Substitute__c as SubBpaRelUsrMainPKey, ";
+			sqlStmt2 +=              "SubMain.Substituted__c as SubMainUsrMainPKey ";
+			sqlStmt2 +=              "FROM Substitution__c AS SubBpaRel ";
+			sqlStmt2 +=              "INNER JOIN Substitution__c AS SubMain ON SubMain.Id = SubBpaRel.Substitution__c AND SubMain.Sales_Org__c = '#SALESORG#' ";
+			sqlStmt2 +=          "AND (SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400) <= #cardDate# ";
+			sqlStmt2 +=          "AND (SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400) >= #cardDate# ";
+			sqlStmt2 +=          "AND (SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400) <= #cardDate# ";
+			sqlStmt2 +=          "AND (SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400) >= #cardDate# ";
+			sqlStmt2 +=              "AND SubMain.Active__c = '1' ";
+			sqlStmt2 +=              "AND SubBpaRel.Active__c = '1' ";
+			sqlStmt2 +=              " ) Substitution ";
+			sqlStmt2 +=              "ON Substitution.BpaMainPKey = Account.Id AND Substitution.SubBpaRelUsrMainPKey = '#UserPKey#' "; 
+			sqlStmt2 +=              "INNER JOIN Account_Visit_Setting__c AccountCallSetting on AccountCallSetting.account__c = Account.id ";
+			sqlStmt2 +=              "and AccountCallSetting.Overdue_Check__c = '1' AND AccountCallSetting.Active__c = '1' AND AccountCallSetting.Planning_Mode__c <> ' ' ";
+ 			sqlStmt2 += 		" AND Account_Manager__c.Management_Type__c = AccountCallSetting.Management_Type__c ";
+			sqlStmt2 += 		" AND #compareAsDate('AccountCallSetting.Overdue_Date__c', 'Date','<>',#MinDate#, 'Date')# ";
+			sqlStmt2 += 		" AND #compareAsDate('AccountCallSetting.Valid_From__c', 'Date','<=',#cardDate#, 'Date')# ";
+			sqlStmt2 += 		" AND #compareAsDate('AccountCallSetting.Valid_Thru__c', 'Date','>=',#cardDate#, 'Date')# ";
+			sqlStmt2 += 		" AND #compareAsDate('AccountCallSetting.Overdue_Date__c', 'Date','<',#cardDate#, 'Date')# ";
+			sqlStmt2 +=    " WHERE ";
+			sqlStmt2 +=      "( ";          
+			sqlStmt2 +=       addCond_LeadTimeFollowUpTime;
+			sqlStmt2 +=          "((NOT Account_Manager__c.Id IS NULL)  ";   
+			sqlStmt2 +=          "OR (NOT Substitution.SubMainUsrMainPKey is NULL) "; 
+			sqlStmt2 +=          "OR EXISTS ";
+			sqlStmt2 +=          "( ";
+			sqlStmt2 +=              "SELECT NULL FROM Visit WHERE Account.Id = Visit.AccountId AND Visit.Accountable__c = '#UserPKey#') ";
+			sqlStmt2 +=          "))";
+			sqlStmt2 +=      ") customers ";
+			sqlStmt2 +=    "WHERE 1=1 ";
+			sqlStmt2 +=    "GROUP BY ";
+			sqlStmt2 +=      "pKey ";
+			sqlStmt2 +=    "ORDER BY ";
+			sqlStmt2 +=      "upper(name) ";
+			sqlStmt2 +=      "LIMIT  #limitDueToFormFactor#  ";
+
+			var sqlStmt1Result = Utils.replaceMacrosParam(sqlStmt1, sqlParams1);
+			var sqlStmt2Result = Utils.replaceMacrosParam(sqlStmt2, sqlParams2);
+
+		
+			var finalSql = sqlStmt1Result.sql + userPKeyObj.sql + sqlStmt2Result.sql;
+            var finalParams = sqlStmt1Result.params.concat(userPKeyObj.params).concat(sqlStmt2Result.params);
+
+			return {sql: finalSql, params: finalParams};
+		]]></Load>
+  </Database>
+</DataSource>

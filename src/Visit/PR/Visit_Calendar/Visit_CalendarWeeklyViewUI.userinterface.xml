@@ -1,0 +1,119 @@
+<UIDescription name="Visit::CalendarWeeklyViewUI" schemaVersion="0.0.0.5" simpleEditorOnly="true">
+  <Page pagePattern="MultiSectionPage" masterSectionFlex="10" multiSectionFlex="3">
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::weeklyHeader" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="false" itemId="dailyView">
+          <Bindings>
+            <Resource target="Text" type="Label" id="CallCalendarDailyView" defaultLabel="Daily view" />
+            <Resource target="Icon" type="Image" id="DayDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="SwitchCalendarView">
+              <Params>
+                <Param name="view" value="DayWithMap" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="allCalls">
+          <Bindings>
+            <Resource target="Text" type="Label" id="AgendaSetFilterAllId" defaultLabel="All visits" />
+            <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="SetVisitFilter">
+              <Params>
+                <Param name="filterValue" value="All" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="planCalls">
+          <Bindings>
+            <Resource target="Text" type="Label" id="OnlyAgendaSetFilterPlannedId" defaultLabel="Only open visits" />
+            <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="SetVisitFilter">
+              <Params>
+                <Param name="filterValue" value="Open" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" Flex="3" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <CalendarControl name="AgendaCalendar" dataSource="ProcessContext::visitList.items[]" firstLine="visitName" secondLine="plannedStartTime" dateFromAttribute="plannedStartDate" dateThruAttribute="plannedEndDate" timeFromAttribute="plannedStartTime" timeThruAttribute="plannedEndTime" allDayAttribute="allDay" backgroundColorAttribute="Color">
+          <Bindings>
+            <Binding target="DateRangeStartDate" binding="ProcessContext::CurrentDate" bindingMode="ONE_WAY" />
+          </Bindings>
+          <Settings dataSource="ProcessContext::userSettings" keyAttribute="name" valueAttribute="value" />
+          <Items name="Items" itemPattern="CalendarItems">
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::ContextMenuList.items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+          </Items>
+          <Events>
+            <CalendarDateRangeChangedEvent event="DateRangeChanged" />
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="id" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+            <ContextOpeningEvent event="contextMenuOpening">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="visitStatus" value=".visitStatus" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="contextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextSelectedEvent>
+            <!--  
+            <CalendarItemResizeEvent event="itemResize">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </CalendarItemResizeEvent>
+			-->
+            <CalendarItemMoveEvent event="itemMove">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </CalendarItemMoveEvent>
+          </Events>
+        </CalendarControl>
+        <MenuItems>
+          <MenuItem directlyVisible="true" itemId="SetDateId">
+            <Bindings>
+              <Resource target="Text" type="Label" id="AgendaSetDateId" defaultLabel="Set Date" />
+              <Resource target="Icon" type="Image" id="CalendarGrey24" defaultImage="CalendarGrey24.png" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="setDate" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+      </Area>
+    </Section>
+    <Section sectionName="PlanningSection" sectionPattern="SingleAreaSection" directlyVisible="false">
+      <Area areaPattern="MultiArea" areaName="mainArea"></Area>
+    </Section>
+  </Page>
+</UIDescription>

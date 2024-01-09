@@ -1,0 +1,11 @@
+<ListItem name="LiUnitFactorsForProductList" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="productPKey" type="DomPKey" dataSourceProperty="productPKey" />
+    <SimpleProperty name="piecesPerSmallestUnit" type="DomDecimal" dataSourceProperty="piecesPerSmallestUnit" />
+    <SimpleProperty name="isOrderUnit" type="DomBool" dataSourceProperty="isOrderUnit" />
+    <SimpleProperty name="isConsumerUnit" type="DomBool" dataSourceProperty="isConsumerUnit" />
+    <SimpleProperty name="isStocktakingUnit" type="DomBool" dataSourceProperty="isConsumerUnit" />
+    <SimpleProperty name="unitType" type="DomPrdLogisticUnit" dataSourceProperty="unitType" />
+  </SimpleProperties>
+</ListItem>

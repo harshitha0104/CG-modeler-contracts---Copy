@@ -1,0 +1,82 @@
+<Datasource name="DsLoPrmProducts" objectClass="LoPrmProducts" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[	  
+
+var jsonParamDictionary = jsonQuery;
+var promotionPKey = Utils.convertForDBParam(jsonParamDictionary.prmPromotionPKey, "DomPKey");  
+
+var sqlParams = {promotionPKey};
+var sqlStmt = "";
+
+ /* Products and Product Groups */
+sqlStmt+= "	  SELECT  ";
+sqlStmt+= "   PrmPromotionProduct.PKey AS pKey, ";
+sqlStmt+= "   ' ' AS groupFlag, ";
+sqlStmt+= "		PrdDescription.Text1 AS text, ";
+sqlStmt+= "		CASE WHEN PrmPromotionProduct.PrdMetaType='PrdGroup' THEN PrdDescription.Text1 WHEN PrmPromotionProduct.PrdMetaType='Product' AND GroupDescription.Text1 is null THEN ClusterDescription.Text ELSE GroupDescription.Text1 END AS prdProductGroupName, ";
+sqlStmt+= "		CASE WHEN PrmPromotionProduct.PrdMetaType='PrdGroup' then PrdGroup.Id else PrdProduct.Id END as productId, ";
+sqlStmt+= "		PrmPromotionProduct.Amount as discount, ";
+sqlStmt+= "		PrmPromotionProduct.ConsumerPrice as specialPrice, ";
+sqlStmt+= "		PrmPromotionProduct.PlannedQuantity as quantity , ";
+sqlStmt+= "		PrmPromotionProduct.PrmPromotionPKey AS prmPromotionPKey, ";
+sqlStmt+= "		PrmPromotionProduct.ReferencePKey AS referencePKey, ";
+sqlStmt+= "		PrmPromotionProduct.PrdMetaType AS prdMetaType, ";
+sqlStmt+= "		PrmPromotionProduct.Manual AS manual, ";
+sqlStmt+= "		PrmPromotionProduct.Included AS included, ";
+sqlStmt+= "   PrmPromotionProduct.ClusterGroupReferencePKey AS clusterGroupReferencePKey ";
+sqlStmt+= "	FROM PrmPromotionProduct ";
+sqlStmt+= "		LEFT OUTER JOIN PrdProduct ON PrmPromotionProduct.ReferencePKey = PrdProduct.PKey ";
+sqlStmt+= "		LEFT OUTER JOIN PrdGroup ON PrmPromotionProduct.ReferencePKey = PrdGroup.PKey ";
+sqlStmt+= "		LEFT OUTER JOIN PrdGroup AS GroupReference ON GroupReference.PKey = PrmPromotionProduct.ClusterGroupReferencePKey ";
+sqlStmt+= "		LEFT OUTER JOIN PrdDescription AS GroupDescription ON GroupReference.PKey = GroupDescription.ProductPKey AND GroupDescription.Language='#Language#' ";
+sqlStmt+= "   LEFT OUTER JOIN PrdAssortmentText AS ClusterDescription ON PrmPromotionProduct.ClusterGroupReferencePKey = ClusterDescription.PrdAssortmentPKey AND ClusterDescription.Language = '#Language#' ";
+sqlStmt+= "		JOIN PrdDescription ON PrdDescription.ProductPKey = PrmPromotionProduct.ReferencePKey AND PrdDescription.Language='#Language#' ";
+sqlStmt+= "   LEFT OUTER JOIN PrmPromotionAssortment AS PromotedClusterReference ON PrmPromotionProduct.ClusterGroupReferencePKey = PromotedClusterReference.PrdAssortmentPKey AND PromotedClusterReference.PrmPromotionPKey = #promotionPKey# ";
+sqlStmt+= "   LEFT OUTER JOIN PrmPromotionProduct AS PromotedGroupReference ON PrmPromotionProduct.ClusterGroupReferencePKey = PromotedGroupReference.ReferencePKey AND PromotedGroupReference.PrmPromotionPKey= #promotionPKey# ";
+sqlStmt+= "	WHERE ";
+sqlStmt+= "		PrmPromotionProduct.PrmPromotionPKey = #promotionPKey# ";
+// Filter excluded Product Groups
+sqlStmt+= "   AND ((PrmPromotionProduct.PrdMetaType = 'PrdGroup' AND PrmPromotionProduct.Included = '1') OR (PrmPromotionProduct.PrdMetaType = 'Product')) ";
+// Filter excluded products with no group reference or with reference to excluded group
+sqlStmt+= "   AND ((PrmPromotionProduct.Included = '1') OR (PromotedGroupReference.PKey NOT NULL AND PromotedGroupReference.Included = '1') OR (PromotedClusterReference.PKey NOT NULL AND PromotedClusterReference.Included = '1')) ";
+
+sqlStmt+= " UNION ";
+
+/* Promoted Cluster */
+sqlStmt+= " SELECT  ";
+sqlStmt+= "  PrmPromotionAssortment.PKey AS pKey, ";
+sqlStmt+= "  ' ' AS groupFlag, ";
+sqlStmt+= "		PrdAssortmentText.Text AS text, ";
+sqlStmt+= "		PrdAssortmentText.Text AS prdProductGroupName, ";
+sqlStmt+= "		PrdAssortment.PKey as productId, ";
+sqlStmt+= "		0 as discount, ";
+sqlStmt+= "		PrmPromotionAssortment.PromotedPrice as specialPrice, ";
+sqlStmt+= "		PrmPromotionAssortment.PlannedQuantity as quantity , ";
+sqlStmt+= "		PrmPromotionAssortment.PrmPromotionPKey AS prmPromotionPKey, ";
+sqlStmt+= "		PrmPromotionAssortment.PrdAssortmentPKey AS referencePKey, ";
+sqlStmt+= "		'PrdGroup' AS prdMetaType, ";
+sqlStmt+= "		'0' AS manual, ";
+sqlStmt+= "		PrmPromotionAssortment.Included AS included, ";
+sqlStmt+= "    ' ' AS clusterGroupReferencePKey ";
+sqlStmt+= "   ";
+sqlStmt+= "  FROM PrmPromotionAssortment  ";
+sqlStmt+= "  INNER JOIN PrdAssortment ON PrmPromotionAssortment.PrdAssortmentPKey = PrdAssortment.PKey ";
+sqlStmt+= "  INNER JOIN PrdAssortmentText ON PrdAssortment.PKey = PrdAssortmentText.PrdAssortmentPKey AND PrdAssortmentText.Language = '#Language#' ";
+sqlStmt+= "  WHERE ";
+sqlStmt+= "  PrmPromotionAssortment.PrmPromotionPKey = #promotionPKey# ";
+sqlStmt+= "  AND PrmPromotionAssortment.Included = '1' ";
+
+return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+]]></Load>
+    <Update><![CDATA[ 
+return undefined;
+]]></Update>
+    <Insert><![CDATA[     
+return undefined;
+]]></Insert>
+    <Delete><![CDATA[   
+return undefined;
+]]></Delete>
+  </Database>
+</Datasource>

@@ -1,0 +1,62 @@
+<Process name="TourManagement::CancelWizardProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="TourBo" type="BoTour" />
+      </Declarations>
+      <Parameters></Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadBo" actionType="LOAD" type="BoTour">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::TourPKey" />
+        </Parameters>
+        <Return name="ProcessContext::TourBo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>TourManagement::CancelWizardUI</UIDescription>
+        <Events>
+          <Event name="cancelTour" action="setValidateForCancelTour" />
+        </Events>
+      </Action>
+      <Action actionType="LOGIC" name="setValidateForCancelTour" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::TourBo.validateForCancelTour" />
+        <TransitionTo action="ValidateCancel" />
+      </Action>
+      <!-- Validation actions -->
+      <Action actionType="VALIDATION" name="ValidateCancel">
+        <Validations>
+          <Validation name="ProcessContext::TourBo.validateReasonCode" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="EndCancelTour" />
+        <Case value="validateDiscard" action="resetValidateForCancelTour" />
+      </Action>
+      <Action actionType="LOGIC" name="resetValidateForCancelTour" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="0" />
+        </Parameters>
+        <Return name="ProcessContext::TourBo.validateForCancelTour" />
+        <TransitionTo action="EndCancel" />
+      </Action>
+      <!-- End actions -->
+      <Action actionType="LOGIC" name="EndCancelTour" call="ProcessContext::TourBo.cancelTour">
+        <Parameters>
+          <Input name="reasonCode" value="ProcessContext::TourBo.cancelReason" />
+          <Input name="cancelNote" value="ProcessContext::TourBo.cancelNote" />
+        </Parameters>
+        <TransitionTo action="resetValidateForCancelTour" />
+      </Action>
+      <Action actionType="END" name="EndCancel"></Action>
+    </Actions>
+  </Body>
+</Process>

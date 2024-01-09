@@ -1,0 +1,67 @@
+<Process name="Call::ManagedCustomersSideBar" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="ManagedCustomers" type="LoCustomerOverview" />
+        <Declaration name="CustomerPKey" type="String" />
+        <Declaration name="CallMetaPKey" type="String" />
+        <Declaration name="ButtonPressed" type="String" />
+        <Declaration name="DateFromAnsi" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="DateFrom" type="String" />
+        <Input name="ResponsiblePKey" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="ConvertToAnsi" call="Utils.convertDate2Ansi">
+        <Parameters>
+          <Input name="date" value="ProcessContext::DateFrom" />
+        </Parameters>
+        <Return name="ProcessContext::DateFromAnsi" />
+      </Action>
+      <Action actionType="LOGIC" name="LoadTeamOfUser" call="ApplicationContext::User.loadTeamOfUser">
+        <Parameters>
+          <Input name="includeCurrentUser" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+      <Action name="LoadManagedCustomers" actionType="LOAD" type="LoCustomerOverview">
+        <Parameters>
+          <Input name="referenceDate" value="ProcessContext::DateFromAnsi" />
+          <Input name="responsiblePKey" value="ProcessContext::ResponsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::ManagedCustomers" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Call::ManagedCustomersSideBarUI</UIDescription>
+        <Events>
+          <Event name="ManagedCustomerSelected" action="AssignCustomerPKey" />
+        </Events>
+      </Action>
+      <Action actionType="LOGIC" name="AssignCustomerPKey" call="Utils.identity">
+        <Parameters>
+          <Input name="param1" value="Event.customerPKey" />
+        </Parameters>
+        <Return name="ProcessContext::CustomerPKey" />
+        <TransitionTo action="AssignButtonPressed" />
+      </Action>
+      <Action actionType="LOGIC" name="AssignButtonPressed" call="Utils.identity">
+        <Parameters>
+          <Input name="param1" type="Literal" value="createCall" />
+        </Parameters>
+        <Return name="ProcessContext::ButtonPressed" />
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="customerPKey" value="ProcessContext::CustomerPKey" />
+          <Return name="buttonPressed" value="ProcessContext::ButtonPressed" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

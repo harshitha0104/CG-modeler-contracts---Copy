@@ -1,0 +1,305 @@
+<DataSource name="DsLoSurveys" backendSystem="sf" businessObjectClass="LoSurveys" external="true" readOnly="false" editableEntity="Visit_Job__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Visit_Job__c" column="Id" />
+    <Attribute name="prdMainPKey" table="Visit_Job__c" column="Product__c" />
+    <Attribute name="surveyText" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="jobDefinitionListText" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="value" table="Visit_Job__c" column="Value__c" />
+    <Attribute name="defaultValue" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="targetValueColumn" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="dataType" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="dataLength" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="toggleId" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="useStepper" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="stepSize" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="considerMinValue" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="minValue" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="minDatePolicy" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="considerMaxValue" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="maxValue" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="decimalPlaces" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="maxDatePolicy" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="bpaMainPKey" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="clbMainPKey" table="Visit_Job__c" column="Visit__c" />
+    <Attribute name="done" table="Visit_Job__c" column="Done__c" />
+    <Attribute name="jobActionSuccess" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="jobDefinitionMetaPKey" table="Visit_Job__c" column="Job_Definition_Template__c" />
+    <Attribute name="jobDefinitionPKey" table="Visit_Job__c" column="Job_Definition__c" />
+    <DerivedAttribute name="jobMetaPKey" value="' '" />
+    <Attribute name="jobListPKey" table="Visit_Job__c" column="Job_List__c" />
+    <Attribute name="lastValue" table="Visit_Job__c" column="Last_Value__c" />
+    <Attribute name="mandatory" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="mandatoryImageId" table="Visit_Job__c" column="Account__c" />
+    <Attribute name="manual" table="Visit_Job__c" column="Manually__c" />
+    <DerivedAttribute name="sort" value="' '" />
+    <Attribute name="visitDate" table="Visit_Job__c" column="Visit_Date__c" />
+    <DerivedAttribute name="visitTime" value="' '" />
+    <DerivedAttribute name="clbPOSCheckPKey" value="' '" />
+    <DerivedAttribute name="pOS" value="' '" />
+    <DerivedAttribute name="listed" value="' '" />
+    <DerivedAttribute name="planned" value="' '" />
+    <DerivedAttribute name="history" value="' '" />
+    <DerivedAttribute name="prdPOSContentPKey" value="' '" />
+    <Attribute name="targetValue" table="Visit_Job__c" column="Target_Value__c" />
+    <DerivedAttribute name="thresholdViolation" value="' '" />
+    <Attribute name="dataWareHouseKey" table="Visit_Job__c" column="Account__c" />
+    <DerivedAttribute name="groupSort" table="Visit_Job__c" column="Job_List__c" />
+    <DerivedAttribute name="hide" value="' '" />
+    <Attribute name="jobDefListPKey" table="Job_DL_Job_Definition_Template__c" column="Job_Definition_List__c" />
+    <Attribute name="isJobDefActive" table="Job_Definition_Template__c" column="Active__c" />
+    <Attribute name="isQuestionExcluded" table="Job_DL_Job_Definition_Template__c" column="Excluded__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Visit_Job__c" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+var jsonQuery = Utils.convertDsParamsOldToNew(jsonQuery);
+var bpaMainPKey = "";
+var clbMetaPKey = "";
+var clbMainPKey = "";
+var validFrom = "";
+var timeFrom = "";
+
+if(Utils.isDefined(jsonQuery.bpaMainPKey)) {      		
+  bpaMainPKey= Utils.convertForDBParam(jsonQuery.bpaMainPKey, "DomPKey");
+}
+if(Utils.isDefined(jsonQuery.clbMetaPKey)) {
+  clbMetaPKey = Utils.convertForDBParam(jsonQuery.clbMetaPKey, "DomPKey");
+}
+if(Utils.isDefined(jsonQuery.clbMainPKey)) {
+  clbMainPKey = Utils.convertForDBParam(jsonQuery.clbMainPKey, "DomPKey");
+}
+if(Utils.isDefined(jsonQuery.validFrom)) {
+  validFrom = Utils.convertForDBParam(jsonQuery.validFrom, "DomDate");
+}
+if(Utils.isDefined(jsonQuery.timeFrom)) {
+  timeFrom = Utils.convertForDBParam(jsonQuery.timeFrom, "DomTime");
+}
+
+var sqlParams = {bpaMainPKey, clbMetaPKey, clbMainPKey, validFrom, timeFrom};
+
+var sqlStmt = "";
+sqlStmt+= "SELECT Visit_Job__c.Id AS pKey ";
+sqlStmt+= " ,CASE WHEN Job_Definition_Template__c.Survey_Identification__c IN ('Price', 'POS Price') AND Visit_Job__c.Manually__c = 1 AND Visit_Job__c.Done__c = 0 AND Visit_Job__c.Value__c = ' ' THEN '0' ELSE Visit_Job__c.Value__c END AS value ";
+sqlStmt+= "	,Visit.AccountId AS bpaMainPKey ";
+sqlStmt+= "	,Visit_Job__c.Visit__c AS clbMainPKey ";
+sqlStmt+= "	,Visit_Job__c.Done__c AS done ";
+sqlStmt+= "	,' ' AS posId ";
+sqlStmt+= "	,CASE WHEN Job_DL_Job_Definition_Template__c_JOIN.Job_Action_Success__c = '1' THEN '1' ELSE '0' END AS jobActionSuccess ";
+sqlStmt+= "	,Visit_Job__c.Job_Definition_Template__c AS jobDefinitionMetaPKey ";
+sqlStmt+= "	,Visit_Job__c.Job_Definition__c AS jobDefinitionPKey ";
+sqlStmt+= "	,/*Visit_Job__c.JobMetaPKey*/ ' ' AS jobMetaPKey ";
+sqlStmt+= "	,Visit_Job__c.Job_List__c AS jobListPKey ";
+sqlStmt+= "	,Visit_Job__c.Last_Value__c AS lastValue ";
+sqlStmt+= "	,CASE WHEN Job_DL_Job_Definition_Template__c_JOIN.Mandatory__c = '1' THEN '1' ELSE '0' END AS mandatory ";
+sqlStmt+= "	,CASE WHEN Job_DL_Job_Definition_Template__c_JOIN.Mandatory__c = '1' THEN 'Mandatory' ELSE 'EmptyImage' END AS mandatoryImageId ";
+sqlStmt+= "	,Visit_Job__c.Manually__c AS manual ";
+sqlStmt+= "	,Visit_Job__c.Product__c AS prdMainPKey ";
+sqlStmt+= "	,/*Visit_Job__c.Sort*/ Job_DL_Job_Definition_Template__c_JOIN.Sort__c AS sort ";
+sqlStmt+= "	,Visit_Job__c.Visit_Date__c AS visitDate ";
+sqlStmt+= "	,/*Visit_Job__c.VisitTime*/ ' ' AS visitTime ";
+sqlStmt+= "	,/*Visit_Job__c.ClbPOSCheckPKey*/ ' ' AS clbPOSCheckPKey ";
+sqlStmt+= "	,/*Visit_Job__c.POS */ ' ' AS pOS";
+sqlStmt+= "	,/*Visit_Job__c.Listed */ ' ' AS listed ";
+sqlStmt+= "	,/*Visit_Job__c.Planned*/ ' ' AS planned ";
+sqlStmt+= "	,/*Visit_Job__c.History*/ ' ' AS history ";
+sqlStmt+= "	,/*Visit_Job__c.PrdPOSContentPKey*/ ' ' AS prdPOSContentPKey ";
+sqlStmt+= "	,Visit_Job__c.Target_Value__c AS targetValue ";
+sqlStmt+= "	,/*Visit_Job__c.ThresholdViolation*/ ' ' AS thresholdViolation ";
+sqlStmt+= "	,Data_Type__c.Data_Type__c AS dataType ";
+sqlStmt+= "	,Data_Type__c.Data_Length__c || ',' || Data_Type__c.Data_Length_Decimal_Places__c AS dataLength ";
+sqlStmt+= "	,case when (data_type__c.data_type__c = 'Toggle' AND Data_Type__c.Name like 'Dom%')  then substr(data_type__c.name, 4) else ' ' end AS toggleId ";
+sqlStmt+= "	,Job_Definition_Template__c.Primary_Survey_Policy__c AS dataWareHouseKey ";
+sqlStmt+= "  ,Job_Definition_Template__c.Use_Stepper__c AS useStepper ";
+sqlStmt+= "  ,Job_Definition_Template__c.Step_Size__c AS stepSize ";
+sqlStmt+= "  ,Job_Definition_Template__c.Consider_Min_Value__c AS considerMinValue ";
+sqlStmt+= "  ,CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN  ";
+sqlStmt+= "   CASE WHEN Job_Definition_Template__c.Consider_Min_Value__c = '1' THEN Job_Definition_Template__c.Min_Value__c ";
+sqlStmt+= "   ELSE '0.0' ";
+sqlStmt+= "   END ";
+sqlStmt+= "   ELSE ";
+sqlStmt+= "   CASE WHEN Data_Type__c.Data_Type__c = 'Date' THEN ";
+sqlStmt+= "   CASE WHEN  Job_Definition_Template__c.Min_Date_Policy__c = 'Today' THEN  #dateAsStringLocaltime(#TodayAsDate#)# ";
+sqlStmt+= "   WHEN  Job_Definition_Template__c.Min_Date_Policy__c = 'MinDate'  THEN #dateAsStringLocaltime('#MinDate#')# ";
+sqlStmt+= "   ELSE #dateAsStringLocaltime('#MinDate#')# ";
+sqlStmt+= "   END ";
+sqlStmt+= "   END ";
+sqlStmt+= "   END AS minValue , ";
+sqlStmt+= "    CASE  ";
+sqlStmt+= "   WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN ";
+sqlStmt+= "   CASE WHEN Job_Definition_Template__c.Consider_Max_Value__c = '1' THEN Job_Definition_Template__c.Max_Value__c ";
+sqlStmt+= "   ELSE '9999999' ";
+sqlStmt+= "  END ";
+sqlStmt+= "  ELSE ";
+sqlStmt+= "   CASE WHEN Data_Type__c.Data_Type__c = 'Date' THEN ";
+sqlStmt+= "   CASE WHEN Job_Definition_Template__c.Max_Date_Policy__c = 'Today' THEN  #dateAsStringLocaltime(#TodayAsDate#)# ";
+sqlStmt+= "   WHEN Job_Definition_Template__c.Max_Date_Policy__c = 'MaxDate' THEN #dateAsStringLocaltime('#MaxDate#')# ";
+sqlStmt+= "   WHEN Job_Definition_Template__c.Max_Date_Policy__c = 'NextYear' THEN date(#TodayAsDate#, 'unixepoch', 'localtime', '1 year')";
+sqlStmt+= "   ELSE #dateAsStringLocaltime('#MaxDate#')# ";
+sqlStmt+= "   END ";
+sqlStmt+= "   END ";
+sqlStmt+= "   END AS maxValue ";
+sqlStmt+= "  ,Job_Definition_Template__c.Min_Date_Policy__c AS minDatePolicy ";
+sqlStmt+= "  ,Job_Definition_Template__c.Consider_Max_Value__c AS considerMaxValue ";          
+sqlStmt+= "  ,Data_Type__c.Data_Length_Decimal_Places__c AS decimalPlaces ";
+sqlStmt+= "  ,Job_Definition_Template__c.Max_Date_Policy__c AS maxDatePolicy ";       
+sqlStmt+= "	,Job_Definition_Template__c.Description_#Language#__c AS surveyText ";
+sqlStmt+= "	,CASE WHEN Visit_Job__c.Job_Definition__c = ' ' OR Job_DL_Job_Definition_Template__c_JOIN.Description_#Language#__c = ' ' THEN Product2.Short_Description_#Language#__c  ELSE Job_DL_Job_Definition_Template__c_JOIN.Description_#Language#__c END AS jobDefinitionListText ";
+sqlStmt+= "	,Job_DL_Job_Definition_Template__c_JOIN.Job_Definition_List__c AS jobDefListPKey ";
+sqlStmt+= "	,CASE WHEN Visit_Job__c.Job_List__c || Job_DL_Job_Definition_Template__c_JOIN.Job_Definition_List__c IS NULL THEN ' ' ELSE Visit_Job__c.Job_List__c || Job_DL_Job_Definition_Template__c_JOIN.Job_Definition_List__c END AS groupSort ";
+sqlStmt+= "	,Job_Definition_Template__c.Active__c AS isJobDefActive "; 
+sqlStmt+= "	,Job_DL_Job_Definition_Template__c_JOIN.Excluded__c AS isQuestionExcluded "; 
+sqlStmt+= "FROM Visit_Job__c ";
+sqlStmt+= "	,Job_Definition_Template__c, Data_Type__c ";
+sqlStmt+= "	,	Product2 ";
+sqlStmt+= "LEFT OUTER JOIN ( ";
+	sqlStmt+= "SELECT Job_DL_Job_Definition_Template__c.Id, ";
+	sqlStmt+= "Job_DL_Job_Definition_Template__c.Job_Action_Success__c, ";
+	sqlStmt+= "Job_DL_Job_Definition_Template__c.Mandatory__c, ";
+	sqlStmt+= "Job_DL_Job_Definition_Template__c.Sort__c, ";
+	sqlStmt+= "Job_DL_Job_Definition_Template__c.Job_Definition_List__c, ";
+	sqlStmt+= "Job_DL_Job_Definition_Template__c.Excluded__c, ";
+	sqlStmt+= "Job_Definition_List__c.Description_#Language#__c ";
+	sqlStmt+= "FROM Job_DL_Job_Definition_Template__c ";
+	sqlStmt+= "INNER JOIN Job_Definition_List__c ";
+	sqlStmt+= "ON Job_Definition_List__c.Id = Job_DL_Job_Definition_Template__c.Job_Definition_List__c) ";
+sqlStmt+= "AS Job_DL_Job_Definition_Template__c_JOIN ";
+sqlStmt+= "ON Job_DL_Job_Definition_Template__c_JOIN.Id = Visit_Job__c.Job_Definition__c "; 
+sqlStmt+= "LEFT OUTER JOIN Visit on Visit_Job__c.Visit__c = Visit.Id ";
+sqlStmt+= "WHERE (1 = 1) ";
+sqlStmt+= "	AND Visit_Job__c.Job_Definition_Template__c = Job_Definition_Template__c.id ";
+sqlStmt+= "	AND Visit_Job__c.Product__c = Product2.Id ";
+sqlStmt+= "	AND PrdMainPKey <> ' ' ";
+sqlStmt+= "	AND Visit_Job__c.Visit__c= #clbMainPKey# ";
+sqlStmt+= "	AND Job_Definition_Template__c.Data_Type__c = Data_Type__c.Id ";
+sqlStmt+= "	AND Product2.Sales_Org__c = '#SalesOrg#' ";
+
+
+
+//Only if relevant JobDefinitions for LastValue exist
+if (!Utils.isEmptyString(jsonQuery.jobDefPKeys)) {
+	sqlStmt+= "UNION  ";
+	sqlStmt+= " ";
+	sqlStmt+= "SELECT 'Local___xxx' || Visit_Job__c.Id AS pKey ";
+	sqlStmt+= " ,CASE WHEN Job_Definition_Template__c.Survey_Identification__c IN ('Price', 'POS Price') AND Visit_Job__c.Manually__c = 1 AND Visit_Job__c.Done__c = 0 AND Visit_Job__c.Value__c = ' ' THEN '0' ELSE Visit_Job__c.Value__c END AS value ";
+	sqlStmt+= "	, #bpaMainPKey# AS bpaMainPKey ";
+	sqlStmt+= "	,Visit_Job__c.Visit__c AS clbMainPKey ";
+	sqlStmt+= "	,'0' AS done ";
+	sqlStmt+= "	,' ' AS posId ";
+	sqlStmt+= "	,Job_DL_Job_Definition_Template__c.Job_Action_Success__c AS jobActionSuccess ";
+	sqlStmt+= "	,Visit_Job__c.Job_Definition_Template__c AS jobDefinitionMetaPKey ";
+	sqlStmt+= "	,Visit_Job__c.Job_Definition__c AS jobDefinitionPKey ";
+	sqlStmt+= "	,/*Visit_Job__c.JobMetaPKey*/ ' ' AS jobMetaPKey ";
+	sqlStmt+= "	,Visit_Job__c.Job_List__c AS jobListPKey ";
+	sqlStmt+= "	,Visit_Job__c.Value__c AS lastValue ";
+	sqlStmt+= "	,Job_DL_Job_Definition_Template__c.Mandatory__c AS mandatory ";
+	sqlStmt+= "	,CASE  ";
+	sqlStmt+= "		WHEN Job_DL_Job_Definition_Template__c.Mandatory__c = '1' ";
+	sqlStmt+= "			THEN 'Mandatory' ";
+	sqlStmt+= "		ELSE 'EmptyImage' ";
+	sqlStmt+= "		END AS mandatoryImageId ";
+	sqlStmt+= "	,Visit_Job__c.Manually__c AS manual ";
+	sqlStmt+= "	,Visit_Job__c.Product__c AS prdMainPKey ";
+	sqlStmt+= "	,/*Visit_Job__c.Sort*/ Job_DL_Job_Definition_Template__c.Sort__c AS sort ";
+	sqlStmt+= "	, #validFrom# AS visitDate ";
+	sqlStmt+= "	, #timeFrom# AS visitTime ";
+	sqlStmt+= "	,' '  AS clbPOSCheckPKey ";
+	sqlStmt+= "	,/*Visit_Job__c.POS*/ ' ' AS pOS";
+	sqlStmt+= "	,/*Visit_Job__c.Listed*/ ' ' AS listed ";
+	sqlStmt+= "	,/*Visit_Job__c.Planned*/ ' ' AS planned ";
+	sqlStmt+= "	,/*Visit_Job__c.History*/ ' ' AS history ";
+	sqlStmt+= "	,/*Visit_Job__c.PrdPOSContentPKey*/ ' ' AS prdPOSContentPKey ";
+	sqlStmt+= "	,Visit_Job__c.Target_Value__c AS targetValue ";
+	sqlStmt+= "	,/*Visit_Job__c.ThresholdViolation*/ ' ' AS thresholdViolation ";
+	sqlStmt+= "	,Data_Type__c.Data_Type__c AS dataType ";
+	sqlStmt+= "	,Data_Type__c.Data_Length__c || ',' || Data_Type__c.Data_Length_Decimal_Places__c AS dataLength ";
+	sqlStmt+= "	,case when (data_type__c.data_type__c = 'Toggle' AND Data_Type__c.Name like 'Dom%') then substr(data_type__c.name, 4) else ' ' end AS toggleId ";
+	sqlStmt+= "	,Job_Definition_Template__c.Primary_Survey_Policy__c AS dataWareHouseKey ";
+	sqlStmt+= "  ,Job_Definition_Template__c.Use_Stepper__c AS useStepper ";
+	sqlStmt+= "  ,Job_Definition_Template__c.Step_Size__c AS stepSize ";
+	sqlStmt+= "  ,Job_Definition_Template__c.Consider_Min_Value__c AS considerMinValue ";
+	sqlStmt+= "  ,CASE WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN  ";
+	sqlStmt+= "   CASE WHEN Job_Definition_Template__c.Consider_Min_Value__c = '1' THEN Job_Definition_Template__c.Min_Value__c ";
+	sqlStmt+= "   ELSE '0.0' ";
+	sqlStmt+= "   END ";
+	sqlStmt+= "   ELSE ";
+	sqlStmt+= "   CASE WHEN Data_Type__c.Data_Type__c = 'Date' THEN ";
+	sqlStmt+= "   CASE WHEN  Job_Definition_Template__c.Min_Date_Policy__c = 'Today' THEN  #dateAsStringLocaltime(#TodayAsDate#)# ";
+	sqlStmt+= "   WHEN  Job_Definition_Template__c.Min_Date_Policy__c = 'MinDate'  THEN #dateAsStringLocaltime('#MinDate#')# ";
+	sqlStmt+= "   ELSE #dateAsStringLocaltime('#MinDate#')# ";
+	sqlStmt+= "   END ";
+	sqlStmt+= "   END ";
+	sqlStmt+= "   END AS minValue , ";
+	sqlStmt+= "    CASE  ";
+	sqlStmt+= "   WHEN Data_Type__c.Data_Type__c = 'Decimal' THEN ";
+	sqlStmt+= "   CASE WHEN Job_Definition_Template__c.Consider_Max_Value__c = '1' THEN Job_Definition_Template__c.Max_Value__c ";
+	sqlStmt+= "   ELSE '9999999' ";
+	sqlStmt+= "  END ";
+	sqlStmt+= "  ELSE ";
+	sqlStmt+= "   CASE WHEN Data_Type__c.Data_Type__c = 'Date' THEN ";
+	sqlStmt+= "   CASE WHEN Job_Definition_Template__c.Max_Date_Policy__c = 'Today' THEN  #dateAsStringLocaltime(#TodayAsDate#)# ";
+	sqlStmt+= "   WHEN Job_Definition_Template__c.Max_Date_Policy__c = 'MaxDate' THEN #dateAsStringLocaltime('#MaxDate#')# ";
+	sqlStmt+= "   WHEN Job_Definition_Template__c.Max_Date_Policy__c = 'NextYear' THEN date(#TodayAsDate#, 'unixepoch', 'localtime', '1 year') ";
+	sqlStmt+= "   ELSE #dateAsStringLocaltime('#MaxDate#')#  ";
+	sqlStmt+= "   END ";
+	sqlStmt+= "   END ";
+	sqlStmt+= "   END AS maxValue ";
+	sqlStmt+= "  ,Job_Definition_Template__c.Min_Date_Policy__c AS minDatePolicy ";
+	sqlStmt+= "  ,Job_Definition_Template__c.Consider_Max_Value__c AS considerMaxValue ";          
+	sqlStmt+= "  ,Data_Type__c.Data_Length_Decimal_Places__c AS decimalPlaces ";
+	sqlStmt+= "  ,Job_Definition_Template__c.Max_Date_Policy__c AS maxDatePolicy ";    
+	sqlStmt+= "	,Job_Definition_Template__c.Description_#Language#__c AS surveyText ";
+	sqlStmt+= "	,CASE  ";
+	sqlStmt+= "		WHEN Job_Definition_List__C.Description_#Language#__c = ' ' ";
+	sqlStmt+= "			THEN Product2.Short_Description_#Language#__c ";
+	sqlStmt+= "		ELSE Job_Definition_List__c.Description_#Language#__c ";
+	sqlStmt+= "		END AS jobDefinitionListText ";			  
+	sqlStmt+= "	,Job_DL_Job_Definition_Template__c.Job_Definition_List__c AS jobDefListPKey ";
+	sqlStmt+= "	,Visit_Job__c.Job_List__c || Job_DL_Job_Definition_Template__c.Job_Definition_List__c AS groupSort ";   
+	sqlStmt+= "	,Job_Definition_Template__c.Active__c AS isJobDefActive ";
+	sqlStmt+= "	,Job_DL_Job_Definition_Template__c.Excluded__c AS isQuestionExcluded "; 
+	sqlStmt+= "FROM Visit_Job__c ";
+	sqlStmt+= "	,Job_Definition_Template__c,Data_Type__c  ";
+	sqlStmt+= "	,Product2 ";
+	sqlStmt+= "JOIN Job_Definition_List__c ON Job_Definition_List__c.Id = Job_DL_Job_Definition_Template__c.Job_Definition_List__c ";
+	sqlStmt+= "LEFT OUTER JOIN Job_DL_Job_Definition_Template__c ON Job_DL_Job_Definition_Template__c.Id = Visit_Job__c.Job_Definition__c ";
+	sqlStmt+= "AND Job_DL_Job_Definition_Template__c.Presetting__c = 'LastValue' ";
+	sqlStmt+= "WHERE (1 = 1) ";
+	sqlStmt+= "	AND Product2.Sales_Org__c = '#SalesOrg#' ";
+	sqlStmt+= "	AND Job_Definition_Template__c.Data_Type__c = Data_Type__c.Id ";
+	sqlStmt+= " AND Job_Definition_Template__c.Active__c = '1' ";	
+	sqlStmt+= "	AND Visit_Job__c.Job_Definition_Template__c = Job_Definition_Template__c.Id ";
+	sqlStmt+= "	AND Visit_Job__c.Product__c = 	Product2.Id ";
+	sqlStmt+= "	AND Visit_Job__c.Visit__c = (SELECT Visit.Id FROM Visit ";
+	sqlStmt+= "WHERE (#compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','<' , #validFrom# , 'Date')# OR (#compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','=' , #validFrom# , 'Date')# AND #timeAsStringLocaltime('Visit.PlannedVisitStartTime')# < #timeFrom#)) ";
+	sqlStmt+= "AND Visit.AccountId= #bpaMainPKey# ";
+	sqlStmt+= "AND Visit.Status = 'Completed' ";
+	sqlStmt+= "AND Visit.Visit_Template__c= #clbMetaPKey# ";
+	sqlStmt+= "ORDER BY Visit.PlannedVisitStartTime DESC ";
+	sqlStmt+= "LIMIT 1) ";
+ 	sqlStmt+= "AND NOT EXISTS ( ";
+ 	sqlStmt+= "		SELECT NULL ";
+ 	sqlStmt+= "		FROM Visit_Job__c Visit_Job__c2 ";
+ 	sqlStmt+= "		WHERE (1 = 1) ";
+ 	sqlStmt+= "			AND Visit_Job__c2.Job_Definition__c = Visit_Job__c.Job_Definition__c ";
+ 	sqlStmt+= "			AND Visit_Job__c.Product__c = Visit_Job__c2.Product__c ";
+ 	sqlStmt+= "			AND Visit_Job__c2.Visit__c = #clbMainPKey# ";
+ 	sqlStmt+= "		) ";
+}
+
+return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+  ]]></Load>
+    <Update><![CDATA[
+return undefined;
+  ]]></Update>
+    <Insert><![CDATA[
+return undefined;
+  ]]></Insert>
+    <Delete><![CDATA[
+      return undefined;
+   ]]></Delete>
+  </Database>
+</DataSource>

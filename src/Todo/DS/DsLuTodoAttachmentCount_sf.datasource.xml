@@ -1,0 +1,13 @@
+<DataSource name="DsLuTodoAttachmentCount" backendSystem="sf" businessObjectClass="LuTodoAttachmentCount" external="false" readOnly="true" editableEntity="Task" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="todoAttachmentCount" value="0" />
+  </Attributes>
+  <Entities>
+    <Entity name="Task" alias="" />
+  </Entities>
+  <QueryCondition><![CDATA[
+      1=1
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters />
+</DataSource>

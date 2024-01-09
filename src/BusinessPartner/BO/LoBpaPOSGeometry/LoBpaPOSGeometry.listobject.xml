@@ -1,0 +1,8 @@
+<ListObject name="LoBpaPOSGeometry" generateLoadMethod="true" >
+  <DataSource name="DsLoBpaPOSGeometry" />
+  <Item objectClass="LiBpaPOSGeometry" />
+  <Methods>
+    <Method name="saveAsync" />
+    <Method name="getFirst" />
+  </Methods>
+</ListObject>

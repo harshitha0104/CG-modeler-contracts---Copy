@@ -1,0 +1,40 @@
+<DataSource name="DsLoPrdStateForMasterData" backendSystem="sf" businessObjectClass="LoPrdStateForMasterData" external="false" editableEntity="Product2" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Product2" column="Id" />
+    <DerivedAttribute name="validFrom" value="''" />
+    <DerivedAttribute name="validThru" value="''" />
+    <DerivedAttribute name="prdStateType" value="''" />
+    <DerivedAttribute name="state" value="''" />
+    <PivotItems>
+      <PivotItem id="Delivery">
+        <Attribute name="validFrom" table="Product2" column="Delivery_Valid_From__c" />
+        <Attribute name="validThru" table="Product2" column="Delivery_Valid_Thru__c" />
+        <PivotConstant name="prdStateType" value="DLV" />
+        <PivotDerivedAttribute name="state" pivotName="Delivery_State" value="CASE WHEN #compareAsDate('Delivery_Valid_From__c', 'Date', 'le', #TodayAsDate#, 'Date')# AND #compareAsDate('Delivery_Valid_Thru__c', 'Date', 'ge', #TodayAsDate#, 'Date')# THEN 'Available' ELSE 'NotAvailable' END" />
+      </PivotItem>
+      <PivotItem id="Field">
+        <Attribute name="validFrom" table="Product2" column="Field_Valid_From__c" />
+        <Attribute name="validThru" table="Product2" column="Field_Valid_Thru__c" />
+        <PivotConstant name="prdStateType" value="FLD" />
+        <PivotDerivedAttribute name="state" pivotName="Field_State" value="CASE WHEN #compareAsDate('Field_Valid_From__c', 'Date', 'le', #TodayAsDate#, 'Date')# AND #compareAsDate('Field_Valid_Thru__c', 'Date', 'ge', #TodayAsDate#, 'Date')# THEN 'Available' ELSE 'NotAvailable' END" />
+      </PivotItem>
+      <PivotItem id="KAM">
+        <Attribute name="validFrom" table="Product2" column="KAM_Valid_From__c" />
+        <Attribute name="validThru" table="Product2" column="KAM_Valid_Thru__c" />
+        <PivotConstant name="prdStateType" value="KAM" />
+        <PivotDerivedAttribute name="state" pivotName="KAM_State" value="CASE WHEN #compareAsDate('KAM_Valid_From__c', 'Date', 'le', #TodayAsDate#, 'Date')# AND #compareAsDate('KAM_Valid_Thru__c', 'Date', 'ge', #TodayAsDate#, 'Date')# THEN 'Available' ELSE 'NotAvailable' END" />
+      </PivotItem>
+    </PivotItems>
+  </Attributes>
+  <Entities>
+    <Entity name="Product2" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+     Product2.Id= #ProductPKey#  
+     AND Product2.Sales_Org__c = '#SalesOrg#'
+     ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="ProductPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

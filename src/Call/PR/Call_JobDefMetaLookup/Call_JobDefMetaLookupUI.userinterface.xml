@@ -1,0 +1,46 @@
+<UIDescription name="Call::JobDefMetaLookupUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="CallSelectJobDefMetaTitleId" defaultLabel="Add Question / Survey" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="JobDefMetaList" dataSource="ProcessContext::JobDefinitionMetas.Items[]">
+          <Items name="Items" itemPattern="JobDefMetaList">
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemTitle" bindingId="Text" />
+              </Col>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="Text" type="Text" binding=".text" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="JobDefMetaItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="text" value=".text" />
+                <Param name="dataLength" value=".dataLength" />
+                <Param name="dataType" value=".dataType" />
+                <Param name="toggleId" value=".toggleId" />
+                <Param name="pOS" value=".pOS" />
+                <Param name="jobMetaPKey" value=".jobMetaPKey" />
+                <Param name="considerMinValue" value=".considerMinValue" />
+                <Param name="minValue" value=".minValue" />
+                <Param name="considerMaxValue" value=".considerMaxValue" />
+                <Param name="maxValue" value=".maxValue" />
+                <Param name="stepSize" value=".stepSize" />
+                <Param name="defaultValue" value=".defaultValue" />
+                <Param name="useStepper" value=".useStepper" />
+                <Param name="pictureTaking" value=".pictureTaking" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

@@ -1,0 +1,54 @@
+<Process name="TruckLoad::LoadProcess" defaultAction="Check_IsFakeInwardDocument" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="TruckLoadBo" type="BoTruckLoad" />
+        <Declaration name="InwardDocBo" type="BoTruckLoad" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadBo" actionType="LOAD" type="BoTruckLoad">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::TruckLoadBo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="Check_IsFakeInwardDocument" actionType="LOGIC" call="ProcessContext::TruckLoadBo.checkFakeInwardTransferDocument">
+        <Return name="ProcessContext::IsFakeInwardDocument" />
+        <TransitionTo action="CreateInitialInwardTransferDoc_Decision" />
+      </Action>
+      <Action name="CreateInitialInwardTransferDoc_Decision" actionType="DECISION" parameter="ProcessContext::IsFakeInwardDocument">
+        <Case value="1" action="CreateRealInwardDocument" />
+        <CaseElse action="StartNavigation" />
+      </Action>
+      <Action name="CreateRealInwardDocument" actionType="CREATE" type="BoTruckLoad">
+        <Return name="ProcessContext::InwardDocBo" />
+        <TransitionTo action="InitializeRealInwardDocument" />
+      </Action>
+      <Action name="InitializeRealInwardDocument" actionType="LOGIC" call="ProcessContext::InwardDocBo.initializeInwardTransferDocument">
+        <Parameters>
+          <Input name="outwardDocumentBO" value="ProcessContext::TruckLoadBo" />
+        </Parameters>
+        <Return name="ProcessContext::InwardDocBo" />
+        <TransitionTo action="StartNavigationInitialTransferDoc" />
+      </Action>
+      <Action name="StartNavigationInitialTransferDoc" actionType="PROCESS" process="TruckLoad::PreTruckLoadNavigationProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::InwardDocBo" />
+        </Parameters>
+      </Action>
+      <Action name="StartNavigation" actionType="PROCESS" process="TruckLoad::PreTruckLoadNavigationProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::TruckLoadBo" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

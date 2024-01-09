@@ -1,0 +1,18 @@
+<ListObject name="LoScannedProduct" generateLoadMethod="true" >
+  <DataSource name="DsLoScannedProduct" />
+  <Item objectClass="LiScannedProduct" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <!--<Method name="saveAsync" />-->
+    <Method name="scanBarcode" />
+    <Method name="filterProducts" />
+    <Method name="trimBarcode" />
+    <Method name="filterUnusedProducts" />
+    <Method name="getScannedProducts" />
+  </Methods>
+</ListObject>

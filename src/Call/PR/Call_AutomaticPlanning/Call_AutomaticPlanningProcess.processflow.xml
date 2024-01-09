@@ -1,0 +1,90 @@
+<Process name="Call::AutomaticPlanningProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="AutomaticPlanningCustomers" type="LoAutomaticPlanning" />
+        <Declaration name="CompletedAutomaticCalls" type="LoCompletedAutomaticCalls" />
+        <Declaration name="UserLookUp" type="LuUser" />
+        <Declaration name="autoPlanWeeklyHeader" type="String" />
+        <Declaration name="LocationsList" type="LoLocations" />
+      </Declarations>
+      <Parameters>
+        <Input name="referenceDateFrom" type="String" />
+        <Input name="referenceDateThru" type="String" />
+        <Input name="referenceUserPKey" type="DomPKey" />
+        <Input name="currentWeekStartDate" type="String" />
+        <Input name="overviewList" type="LoAgendaOverview" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="LoadResponsibleLookup" type="LuUser">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::referenceUserPKey" />
+        </Parameters>
+        <Return name="ProcessContext::UserLookUp" />
+      </Action>
+      <Action name="AssignWeeklyTitle" actionType="LOGIC" call="ProcessContext::overviewList.chooseAgendaTitle">
+        <Return name="ProcessContext::autoPlanWeeklyHeader" />
+        <Parameters>
+          <Input name="currentStartDate" value="ProcessContext::currentWeekStartDate" />
+          <Input name="displayCalendarWeek" value="ProcessContext::DisplayCalendarWeek" />
+          <Input name="autoPlanning" value="1" type="Literal" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Call::AutomaticPlanningUI</UIDescription>
+        <Events>
+          <Event name="deleteAutomaticCalls" action="AskforDelete" />
+          <Event name="createAutomaticCalls" action="LoadAutomaticCallPlanning" />
+        </Events>
+      </Action>
+      <Action name="LoadAutomaticCallPlanning" actionType="LOAD" type="LoAutomaticPlanning">
+        <Return name="ProcessContext::AutomaticPlanningCustomers" />
+        <Parameters>
+          <Input name="referenceDateFrom" value="ProcessContext::referenceDateFrom" />
+          <Input name="referenceDateThru" value="ProcessContext::referenceDateThru" />
+          <Input name="referenceUserPKey" value="ProcessContext::referenceUserPKey" />
+        </Parameters>
+        <TransitionTo action="LoadCompletedAutomaticCalls" />
+      </Action>
+      <Action name="LoadCompletedAutomaticCalls" actionType="LOAD" type="LoCompletedAutomaticCalls">
+        <Return name="ProcessContext::CompletedAutomaticCalls" />
+        <Parameters>
+          <Input name="responsiblePKey" value="ProcessContext::referenceUserPKey" />
+          <Input name="referenceDate" value="ProcessContext::currentWeekStartDate" />
+        </Parameters>
+        <TransitionTo action="loadLocations" />
+      </Action>
+      <Action name="loadLocations" actionType="LOAD" type="LoLocations">
+        <Return name="ProcessContext::LocationsList" />
+        <TransitionTo action="CreateAutomaticCallPlanning" />
+      </Action>
+      <Action actionType="LOGIC" name="CreateAutomaticCallPlanning" call="ProcessContext::AutomaticPlanningCustomers.createAutomaticCalls">
+        <Parameters>
+          <Input name="currentWeekStartDate" value="ProcessContext::currentWeekStartDate" />
+          <Input name="responsiblePKey" value="ProcessContext::referenceUserPKey" />
+          <Input name="overviewList" value="ProcessContext::overviewList" />
+          <Input name="completedAutomaticCallList" value="ProcessContext::CompletedAutomaticCalls" />
+          <Input name="LocationsList" value="ProcessContext::LocationsList" />
+        </Parameters>
+        <TransitionTo action="End" />
+      </Action>
+      <Action name="AskforDelete" actionType="LOGIC" call="ProcessContext::overviewList.getAutoCallstoDelete">
+        <Return name="ProcessContext::result" />
+        <TransitionTo action="DeleteAutoPlannedCalls_Decision" />
+      </Action>
+      <Action name="DeleteAutoPlannedCalls_Decision" actionType="DECISION" parameter="ProcessContext::result">
+        <Case value="yes" action="DeleteAutomaticPlannedCalls" />
+        <Case value="no" action="End" />
+        <CaseElse action="End" />
+      </Action>
+      <Action actionType="LOGIC" name="DeleteAutomaticPlannedCalls" call="ProcessContext::overviewList.deleteAutomaticCalls">
+        <TransitionTo action="End" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

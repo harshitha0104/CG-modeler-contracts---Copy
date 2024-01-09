@@ -1,0 +1,12 @@
+<ListItem name="LiSync">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="syncId" type="DomText" dataSourceProperty="syncId" />
+    <SimpleProperty name="changeSetId" type="DomText" dataSourceProperty="changeSetId" />
+    <SimpleProperty name="workState" type="DomText" dataSourceProperty="workState" />
+    <SimpleProperty name="workerStartTime" type="DomText" dataSourceProperty="workerStartTime" />
+    <SimpleProperty name="workerEndTime" type="DomText" dataSourceProperty="workerEndTime" />
+    <SimpleProperty name="registerTime" type="DomText" dataSourceProperty="registerTime" />
+    <SimpleProperty name="packageFileName" type="DomText" dataSourceProperty="packageFileName" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,14 @@
+<ListObject name="LoActivities" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoActivities" />
+  <Item objectClass="LiActivities" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="getActivitiesForCard" />
+    <Method name="getInfoForActivitiesCard" />
+  </Methods>
+</ListObject>

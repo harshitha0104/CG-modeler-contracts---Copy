@@ -1,0 +1,9 @@
+<ListObject name="LoUnitFactorForProduct" generateLoadMethod="true">
+  <DataSource name="DsLoUnitFactorForProduct" />
+  <Item objectClass="LiUnitFactorForProduct" />
+  <Methods>
+    <Method name="convertIvcMeasureToLogisticUnit" />
+    <Method name="convertLogisticUnitToIvcMeasure" />
+    <Method name="getItemByMeasure" />
+  </Methods>
+</ListObject>

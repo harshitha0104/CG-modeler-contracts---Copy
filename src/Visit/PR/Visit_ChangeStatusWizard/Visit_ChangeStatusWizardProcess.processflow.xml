@@ -1,0 +1,104 @@
+<Process name="Visit::ChangeStatusWizardProcess" defaultAction="LoadBo" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="VisitBo" type="BoVisit" />
+        <Declaration name="VisitAssessmentTaskList" type="LoVisitAssessmentTask" />
+      </Declarations>
+      <Parameters>
+        <Input name="VisitPKey" type="DomPKey" />
+        <Input name="targetClbStatus" type="String" />
+        <Input name="ResponsiblePKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="LoadBo" actionType="LOAD" type="BoVisit">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::VisitPKey" />
+          <Input name="referenceUserPKey" value="ProcessContext::ResponsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::VisitBo" />
+        <TransitionTo action="LoadVisitAssessmentTasks" />
+      </Action>
+      <Action actionType="LOAD" name="LoadVisitAssessmentTasks" type="LoVisitAssessmentTask">
+        <Return name="ProcessContext::VisitAssessmentTaskList" />
+        <Parameters>
+          <Input name="visitId" value="ProcessContext::VisitPKey"></Input>
+        </Parameters>
+        <TransitionTo action="ClbStatus_Decision" />
+      </Action>
+      <Action name="ClbStatus_Decision" actionType="DECISION" parameter="ProcessContext::targetClbStatus">
+        <Case value="Completed" action="CheckMandatoryTasks" />
+        <CaseElse action="endWithoutRefresh" />
+        <CaseEmpty action="endWithoutRefresh" />
+      </Action>
+      <Action actionType="END" name="endWithRefresh">
+        <ReturnValues>
+          <Return name="refreshRequired" type="Literal" value="1" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="endWithoutRefresh">
+        <ReturnValues>
+          <Return name="refreshRequired" type="Literal" value="0" />
+        </ReturnValues>
+      </Action>
+      <Action name="CheckMandatoryTasks" actionType="LOGIC" call="ProcessContext::VisitAssessmentTaskList.checkForIncompleteMandatoryTasks">
+        <Return name="ProcessContext::ValidationResult" />
+        <TransitionTo action="CompleteOrAbandonVisit" />
+      </Action>
+      <Action name="CompleteOrAbandonVisit" actionType="DECISION" parameter="ProcessContext::ValidationResult">
+        <Case value="openOffline" action="ConfirmAbandonOfflineOnly" />
+        <Case value="openOnline" action="ConfirmAbandonOnlineOnly" />
+        <Case value="openMixed" action="ConfirmAbandonMixed" />
+        <Case value="No" action="ConfirmEndVisit" />
+        <Case value="NoButOpenOnline" action="ConfirmEndVisitOpenOnline" />
+        <CaseElse action="endWithoutRefresh" />
+        <CaseEmpty action="endWithoutRefresh" />
+      </Action>
+      <Action name="ConfirmAbandonOfflineOnly" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="ConfirmAbandonMessageOfflineOnly" />
+        <Cases>
+          <Case value="Yes" action="AbandonVisit" />
+          <Case value="No" action="endWithoutRefresh" />
+        </Cases>
+      </Action>
+      <Action name="ConfirmAbandonOnlineOnly" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="ConfirmAbandonMessageOnlineOnly" />
+        <Cases>
+          <Case value="Yes" action="AbandonVisit" />
+          <Case value="No" action="endWithoutRefresh" />
+        </Cases>
+      </Action>
+      <Action name="ConfirmAbandonMixed" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="ConfirmAbandonMessageMixed" />
+        <Cases>
+          <Case value="Yes" action="AbandonVisit" />
+          <Case value="No" action="endWithoutRefresh" />
+        </Cases>
+      </Action>
+      <Action name="ConfirmEndVisitOpenOnline" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="ConfirmEndVisitMessageOpenOnline" />
+        <Cases>
+          <Case value="Yes" action="CompleteVisit" />
+          <Case value="No" action="endWithoutRefresh" />
+        </Cases>
+      </Action>
+      <Action name="ConfirmEndVisit" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="ConfirmEndVisitMessage" />
+        <Cases>
+          <Case value="Yes" action="CompleteVisit" />
+          <Case value="No" action="endWithoutRefresh" />
+        </Cases>
+      </Action>
+      <Action name="CompleteVisit" actionType="LOGIC" call="ProcessContext::VisitBo.endVisit">
+        <TransitionTo action="endWithRefresh" />
+      </Action>
+      <Action name="AbandonVisit" actionType="LOGIC" call="ProcessContext::VisitBo.abandonVisit">
+        <TransitionTo action="endWithRefresh" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

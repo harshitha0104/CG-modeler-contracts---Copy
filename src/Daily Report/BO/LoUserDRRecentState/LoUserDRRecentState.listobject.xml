@@ -1,0 +1,13 @@
+<ListObject name="LoUserDRRecentState" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoUserDRRecentState" />
+  <Item objectClass="LiUserDRRecentState" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="addRecentState" />
+  </Methods>
+</ListObject>

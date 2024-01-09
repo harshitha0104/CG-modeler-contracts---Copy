@@ -1,0 +1,18 @@
+<DataSource name="DsLoUserDocMeta" backendSystem="sf" businessObjectClass="LoUserDocMeta" external="false" editableEntity="User_Document_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="User_Document_Template__c" column="Id" />
+    <Attribute name="text" table="User_Document_Template__c" column="Description_#Language#__c" />
+    <DerivedAttribute name="uiGroup" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="User_Document_Template__c" alias="" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        User_Document_Template__c.Mobility_Relevant__c = '1' AND User_Document_Template__c.Active__c = '1'
+      ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="User_Document_Template__c" attribute="Sort__c = '0'" direction="ASC" />
+    <OrderCriterion entity="User_Document_Template__c" attribute="Sort__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters />
+</DataSource>

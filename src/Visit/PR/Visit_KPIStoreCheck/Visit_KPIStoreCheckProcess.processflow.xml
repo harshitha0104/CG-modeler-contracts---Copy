@@ -1,0 +1,80 @@
+<Process name="Visit::KPIStoreCheckProcess" defaultAction="ShowStoreCheck" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="BoAssessmentTask" type="BoVisitAssessmentTask" />
+        <Declaration name="contextMenuList" type="LoKPIContextMenu" />
+        <Declaration name="RetailStoreDetail" type="BoRetailStore" />
+      </Declarations>
+      <Parameters>
+        <Input name="RetailStoreName" type="String" />
+        <Input name="BoVisit" type="BoVisit" />
+        <Input name="AssessmentTaskId" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadAssessmentTask" actionType="LOAD" type="BoVisitAssessmentTask">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::AssessmentTaskId" />
+        </Parameters>
+        <Return name="ProcessContext::BoAssessmentTask" />
+      </Action>
+      <Action actionType="LOAD" name="LoadRetailStore" type="BoRetailStore">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::BoVisit.StoreId" />
+        </Parameters>
+        <Return name="ProcessContext::RetailStoreDetail" />
+      </Action>
+      <Action name="LoadInStoreLocations" actionType="LOGIC" call="ProcessContext::RetailStoreDetail.loadLoInStoreLocationAsync">
+        <Parameters>
+          <Input name="addStoreDefault" value="1" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="FilterByStoreLocation" call="ProcessContext::BoAssessmentTask.filterRetailVisitKPI">
+        <Parameters>
+          <Input name="value" value="Store" type="Literal" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowStoreCheck">
+        <UIDescription>Visit::KPIStoreCheckUI</UIDescription>
+        <Events>
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+          <Event name="locationSelected" action="FilterByLocation" />
+        </Events>
+      </Action>
+      <!-- LOAD ContextMenu -->
+      <Action name="GetContextMenu" actionType="LOAD" type="LoKPIContextMenu">
+        <Return name="ProcessContext::contextMenuList" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="AddImage" action="AddImage" />
+        <Case value="ReviewImages" action="ReviewImages" />
+        <CaseElse action="ShowStoreCheck" />
+        <CaseEmpty action="ShowStoreCheck" />
+      </Action>
+      <!-- Action for Adding image to KPI-->
+      <Action name="AddImage" actionType="PROCESS" process="Visit::CapturePictureProcess">
+        <Parameters>
+          <Input name="parentId" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <Action name="ReviewImages" actionType="PROCESS" process="Visit::ReviewImageProcess">
+        <Parameters>
+          <Input name="parentId" value="Event.pKey" />
+          <Input name="retailStoreName" value="ProcessContext::RetailStoreName" />
+        </Parameters>
+      </Action>
+      <!-- Tab filter -->
+      <Action actionType="LOGIC" name="FilterByLocation" call="ProcessContext::BoAssessmentTask.filterRetailVisitKPI">
+        <Parameters>
+          <Input name="locationName" value="Event.storeLocation" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

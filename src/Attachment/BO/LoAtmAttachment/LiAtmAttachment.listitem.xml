@@ -1,0 +1,14 @@
+<ListItem name="LiAtmAttachment" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="businessModified" type="DomBusinessModified" dataSourceProperty="businessModified" />
+    <SimpleProperty name="attachmentPKey" type="DomPKey" dataSourceProperty="attachmentPKey" />
+    <SimpleProperty name="referencePKey" type="DomPKey" dataSourceProperty="referencePKey" />
+    <SimpleProperty name="objectType" type="DomAtmObjectType" dataSourceProperty="objectType" />
+    <SimpleProperty name="creationDate" type="DomDate" dataSourceProperty="creationDate" />
+    <SimpleProperty name="fileName" type="DomFileName" dataSourceProperty="fileName" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+    <SimpleProperty name="textPKey" type="DomPKey" dataSourceProperty="textPKey" />
+  </SimpleProperties>
+</ListItem>

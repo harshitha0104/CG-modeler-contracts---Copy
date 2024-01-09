@@ -1,0 +1,25 @@
+<DataSource name="DsLoLogistics" backendSystem="sf" businessObjectClass="LoLogistics" external="false" editableEntity="Unit_of_Measure__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Unit_of_Measure__c" column="Id" />
+    <Attribute name="piecesPerParentUnit" table="Unit_of_Measure__c" column="Pieces_per_parent_unit__c" />
+    <Attribute name="unitType" table="Unit_of_Measure__c" column="Unit_Type__c" />
+    <Attribute name="cndCpVolume" table="Unit_of_Measure__c" column="Volume__c" />
+    <Attribute name="cndCpWeight" table="Unit_of_Measure__c" column="Weight__c" />
+    <Attribute name="eAN" table="Unit_of_Measure__c" column="GTIN__c" />
+    <DerivedAttribute name="empties" value="''" />
+    <DerivedAttribute name="emptiesQuantity" value="''" />
+    <DerivedAttribute name="piecesPerSmallestUnit" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="Unit_of_Measure__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   Unit_of_Measure__c.Product__c = #ProductPKey#
+        ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Unit_of_Measure__c" attribute="Sort__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="ProductPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

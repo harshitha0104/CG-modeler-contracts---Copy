@@ -1,0 +1,11 @@
+<ListItem name="LiEmptiesBom">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" />
+    <SimpleProperty name="parentEmptyPKey" type="DomPKey" storable="false" dataSourceProperty="parentEmptyPKey" />
+    <SimpleProperty name="childPKey" type="DomPKey" storable="false" dataSourceProperty="childPKey" />
+    <SimpleProperty name="childId" type="DomPKey" storable="false" dataSourceProperty="childId" />
+    <SimpleProperty name="childDescription" type="DomPKey" storable="false" dataSourceProperty="childDescription" />
+    <SimpleProperty name="quantity" type="DomPKey" storable="false" dataSourceProperty="quantity" />
+    <SimpleProperty name="childTaxClassification" type="DomTaxClassification" storable="false" dataSourceProperty="childTaxClassification" />
+  </SimpleProperties>
+</ListItem>

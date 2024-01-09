@@ -1,0 +1,9 @@
+<ListItem name="LiUomSummary">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="unit" type="DomText" storable="false" dataSourceProperty="unit" />
+    <SimpleProperty name="quantityOut" type="DomInteger" storable="false" dataSourceProperty="quantityOut" />
+    <SimpleProperty name="quantityIn" type="DomInteger" storable="false" dataSourceProperty="quantityIn" />
+    <SimpleProperty name="order" type="DomInteger" storable="false" dataSourceProperty="order" />
+  </SimpleProperties>
+</ListItem>

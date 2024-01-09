@@ -1,0 +1,49 @@
+<DataSource name="DsLoMeAuthorizationListWithoutModules" backendSystem="sf" businessObjectClass="LoMeAuthorizationListWithoutModules" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+			var customerPKey = "";		
+            if (Utils.isDefined(jsonQuery.customerPKey)) {
+             customerPKey = Utils.convertForDBParam(jsonQuery.customerPKey, "DomPKey");
+            }
+			
+			var sqlParams = {customerPKey};
+			var sqlStmt = "SELECT prdMainPKey ";
+			sqlStmt += ",customerProductNumber ";
+			sqlStmt += ",focusProductType ";
+			sqlStmt += ",'1' AS listed ";
+			sqlStmt += ",'Hit' AS listing ";
+			sqlStmt += ",'None' AS listingWithModules ";
+			sqlStmt += ",focusProductImage ";
+			sqlStmt += "FROM ";
+
+			sqlStmt += "(SELECT AssortmentProduct.ProductId AS prdMainPKey ";
+			sqlStmt += ",AssortmentProduct.Account_Product_Number__c AS customerProductNumber ";
+			sqlStmt += ",AssortmentProduct.Focus_Product_Type__c AS focusProductType ";
+			sqlStmt += ",AssortmentProduct.Valid_From__c AS validFrom ";
+			sqlStmt += ",AssortmentProduct.Valid_Thru__c AS validThru ";
+			sqlStmt += ",CASE AssortmentProduct.Focus_Product_Type__c WHEN ' ' THEN 'EmptyImage' ELSE 'FocusIcon' END AS focusProductImage ";
+			sqlStmt += "FROM AssortmentProduct ";
+			sqlStmt += "INNER JOIN Product_Assortment_Store__c ON AssortmentProduct.AssortmentId = Product_Assortment_Store__c.Assortment__c ";
+			sqlStmt += "AND AssortmentProduct.IsDeleted <> '1' ";
+			sqlStmt += "AND Product_Assortment_Store__c.IsDeleted <> '1' ";
+			sqlStmt += "INNER JOIN Assortment ON Assortment.Id = Product_Assortment_Store__c.Assortment__c ";
+			sqlStmt += "AND Assortment.IsDeleted <> '1' ";
+			sqlStmt += "INNER JOIN Product_Assortment_Template__c ON Product_Assortment_Template__c.Id = Assortment.Product_Assortment_Template__c ";
+			sqlStmt += "AND Product_Assortment_Template__c.IsDeleted <> '1' ";
+			sqlStmt += "INNER JOIN RecordType ON Product_Assortment_Template__c.RecordTypeId = RecordType.Id ";
+			sqlStmt += "AND RecordType.DeveloperName = 'Assortment_List' ";
+			sqlStmt += "AND RecordType.IsDeleted <> '1' ";
+			sqlStmt += "WHERE 1 = 1 ";
+			sqlStmt += "AND Product_Assortment_Store__c.Store__c = #customerPKey# ";
+			sqlStmt += "AND AssortmentProduct.Active__c = '1' ";
+			sqlStmt += "AND #compareAsDate('AssortmentProduct.Valid_From__c', 'Date','<=' ,#TodayAsDate#, 'Date')# ";
+			sqlStmt += "AND #compareAsDate('AssortmentProduct.Valid_Thru__c', 'Date','>=' ,#TodayAsDate#, 'Date')# ";
+			sqlStmt += "ORDER BY AssortmentProduct.Id ASC) ";
+
+			sqlStmt += "GROUP BY prdMainPKey ";
+			sqlStmt += "HAVING MAX (validThru || 9999999999 - validFrom) ";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+  </Database>
+</DataSource>

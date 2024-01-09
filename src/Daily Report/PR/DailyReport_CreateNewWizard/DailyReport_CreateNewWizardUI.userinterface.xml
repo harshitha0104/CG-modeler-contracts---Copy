@@ -1,0 +1,49 @@
+<UIDescription name="DailyReport::CreateNewWizardUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="AddDailyReportId" defaultLabel="Add Daily Report" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="NewDailyReport">
+          <Bindings>
+            <Resource target="Text" type="Label" id="createNewDailyReportId" defaultLabel="Create" />
+            <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="createDailyReport">
+              <Params>
+                <Param name="buttonPressed" value="createDailyReport" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="CreateNewDailyReport">
+          <DatePickerField name="InitiationDate">
+            <Bindings>
+              <Resource target="Label" type="Label" id="Date" defaultLabel="Date" />
+              <Binding target="Value" binding="ProcessContext::DateFrom" bindingMode="TWO_WAY" />
+            </Bindings>
+          </DatePickerField>
+          <SelectionBox name="MetaPKey" editable="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="Type" defaultLabel="Type" />
+              <Binding target="DataSource" binding="ProcessContext::UserDocMetaList" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::UsrDocMetaPKey" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".pKey" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

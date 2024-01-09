@@ -1,0 +1,10 @@
+<ListItem name="LiTargetFulFillment">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="periodText" type="DomId" storable="false" />
+    <SimpleProperty name="plannedTarget" type="DomDecimal" storable="false" />
+    <SimpleProperty name="actualTarget" type="DomDecimal" storable="false" />
+    <SimpleProperty name="validFrom" type="DomDate" storable="false" />
+    <SimpleProperty name="validThru" type="DomValidThru" storable="false" />
+  </SimpleProperties>
+</ListItem>

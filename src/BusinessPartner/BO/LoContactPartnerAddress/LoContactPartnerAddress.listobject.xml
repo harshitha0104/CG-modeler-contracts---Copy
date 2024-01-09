@@ -1,0 +1,10 @@
+<ListObject name="LoContactPartnerAddress" generateLoadMethod="true" >
+  <DataSource name="DsLoContactPartnerAddress" />
+  <Item objectClass="LiContactPartnerAddress" />
+  <Methods>
+    <Method name="saveAsync" />
+    <Method name="addItem" />
+    <Method name="deleteItem" />
+    <Method name="getMainAddress" /> 
+  </Methods>
+</ListObject>

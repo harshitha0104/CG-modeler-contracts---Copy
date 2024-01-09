@@ -1,0 +1,47 @@
+<TempTable name="TmpOrderItemMergeResult_T" schemaVersion="">
+  <columns>
+    <column name="PrdMainPKey" defaultValue="" nullable="true" domain="DomPKey" migrationDefault=" " />
+    <column name="Listed" defaultValue="0" nullable="true" domain="DomBool" migrationDefault=" " />
+    <column name="Listing" defaultValue="'None'" nullable="true" domain="DomSdoPdaListingFinding" migrationDefault=" " />
+    <column name="ListingWithModules" defaultValue="'None'" nullable="true" domain="DomSdoPdaListingFinding" migrationDefault=" " />
+    <column name="CustomerProductNumber" defaultValue="' '" nullable="true" domain="DomId" migrationDefault=" " />
+    <column name="FocusProductType" defaultValue="' '" nullable="true" domain="DomPrdFocusProductType" migrationDefault=" " />
+    <column name="FocusProductImage" defaultValue="' '" nullable="true" domain="DomString" migrationDefault=" " />
+    <column name="OutOfStock" defaultValue="0" nullable="true" domain="DomBool" migrationDefault=" " />
+    <column name="SdoAssortment" defaultValue="0" nullable="true" domain="DomBool" migrationDefault=" " />
+    <column name="History" defaultValue="0" nullable="true" domain="DomBool" migrationDefault=" " />
+    <column name="Promoted" defaultValue="0" nullable="true" domain="DomBool" migrationDefault=" " />
+    <column name="DefaultQuantityLogisticUnit" defaultValue="" nullable="true" domain="DomPrdLogisticUnit" migrationDefault=" " />
+    <column name="DefaultPiecesPerSmallestUnit" defaultValue="" nullable="true" domain="DomDecimal" migrationDefault=" " />
+    <column name="Text1" defaultValue="" nullable="true" domain="DomText" migrationDefault=" " />
+    <column name="Text2" defaultValue="" nullable="true" domain="DomText" migrationDefault=" " />
+    <column name="PrdId" defaultValue="" nullable="true" domain="DomId" migrationDefault=" " />
+    <column name="ShortId" defaultValue="" nullable="true" domain="DomPrdNumber" migrationDefault=" " />
+    <column name="TaxClassification" defaultValue="" nullable="true" domain="DomTaxClassification" migrationDefault=" " />
+    <column name="SimplePricingBasePrice" defaultValue="" nullable="true" domain="DomMoney" migrationDefault=" " />
+    <column name="DeliveryState" defaultValue="" nullable="true" domain="DomPrdState" migrationDefault=" " />
+    <column name="FieldState" defaultValue="" nullable="true" domain="DomPrdState" migrationDefault=" " />
+    <column name="ForeignProduct" defaultValue="" nullable="true" domain="DomBool" migrationDefault=" " />
+    <column name="EAN" defaultValue="" nullable="true" domain="DomPrdNumber" migrationDefault=" " />
+    <column name="NewState" defaultValue="" nullable="true" domain="DomPrdState" migrationDefault=" " />
+    <column name="PiecesPerSmallestUnitForBasePrice" defaultValue="" nullable="true" domain="DomPrdPiecesPerUnit" migrationDefault=" " />
+    <column name="GroupId" defaultValue="" nullable="true" domain="DomId" migrationDefault=" " />
+    <column name="GroupText" defaultValue="" nullable="true" domain="DomText" migrationDefault=" " />
+    <column name="Category" defaultValue="" nullable="true" domain="DomPrdCategory" migrationDefault=" " />
+    <column name="PrdType" defaultValue="" nullable="true" domain="DomPrdType" migrationDefault=" " />
+    <column name="PromotionPKey" defaultValue="' '" nullable="true" domain="DomPKey" migrationDefault=" " />
+    <column name="ProductClassifications" defaultValue="' '" nullable="true" domain="DomText" migrationDefault=" " />
+    <column name="SpecialPromoted" defaultValue="0" nullable="true" domain="DomBool" migrationDefault=" " />
+    <column name="SpecialQuantity" defaultValue="0" nullable="true" domain="DomDecimal" migrationDefault=" " />
+    <column name="SuggestedQuantity" defaultValue="0" nullable="true" domain="DomDecimal" migrationDefault=" " />
+    <column name="GroupName" defaultValue="' '" nullable="true" domain="DomText" migrationDefault=" " />
+    <column name="GroupSort" defaultValue="' '" nullable="true" domain="DomDecimal" migrationDefault=" " />    
+    <column name="GroupIdSort" defaultValue="' '" nullable="true" domain="DomDecimal" migrationDefault=" " />
+    <column name="TacticProductPKey" defaultValue="" nullable="true" domain="DomPKey" migrationDefault=" " />
+    <column name="PromotedPrice" defaultValue="' '" nullable="true" domain="DomMoney" migrationDefault=" " />
+    <column name="DefaultValue" defaultValue="' '" nullable="true" domain="DomDecimal" migrationDefault=" " />
+    <column name="MaxValue" defaultValue="" nullable="true" domain="DomDecimal" migrationDefault=" " />
+    <column name="IsDeleted" defaultValue="" nullable="true" domain="DomBool" migrationDefault="0" />
+  </columns>
+  <indexes />
+</TempTable>

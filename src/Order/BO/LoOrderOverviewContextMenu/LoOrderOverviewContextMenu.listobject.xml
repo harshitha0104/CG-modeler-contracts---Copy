@@ -1,0 +1,7 @@
+<ListObject name="LoOrderOverviewContextMenu" generateLoadMethod="false">
+  <DataSource name="DsLoOrderOverviewContextMenu" />
+  <Item objectClass="LiOrderOverviewContextMenu" />
+  <Methods>
+    <Method name="loadAsync" />
+  </Methods>
+</ListObject>

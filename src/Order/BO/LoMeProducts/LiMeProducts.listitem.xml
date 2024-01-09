@@ -1,0 +1,36 @@
+<ListItem name="LiMeProducts" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="text1" type="DomText" storable="false" dataSourceProperty="text1" />
+    <SimpleProperty name="text2" type="DomText" storable="false" dataSourceProperty="text2" />
+    <SimpleProperty name="prdId" type="DomId" storable="false" dataSourceProperty="prdId" />
+    <SimpleProperty name="shortId" type="DomId" storable="false" dataSourceProperty="shortId" />
+    <SimpleProperty name="deliveryState" type="DomBool" storable="false" dataSourceProperty="delivery" />
+    <SimpleProperty name="fieldState" type="DomBool" storable="false" dataSourceProperty="field" />
+    <SimpleProperty name="newState" type="DomPrdState" storable="false" dataSourceProperty="newState" />
+    <SimpleProperty name="groupingAttribute" type="DomString" storable="false" dataSourceProperty="groupingAttribute" />
+    <SimpleProperty name="foreignProduct" type="DomBool" storable="false" dataSourceProperty="foreignProduct" />
+    <SimpleProperty name="eAN" type="DomPrdNumber" storable="false" dataSourceProperty="eAN" />
+    <SimpleProperty name="category" type="DomPrdCategory" storable="false" dataSourceProperty="category" />
+    <SimpleProperty name="prdType" type="DomPrdType" storable="false" dataSourceProperty="prdType" />
+    <SimpleProperty name="productGroup" type="DomText" storable="false" dataSourceProperty="productGroup" />
+    <SimpleProperty name="groupText" type="DomString" storable="false" dataSourceProperty="groupText" />
+    <SimpleProperty name="groupId" type="DomId" storable="false" dataSourceProperty="groupId" />
+    <SimpleProperty name="sdoItemMeta1" type="DomBool" />
+    <SimpleProperty name="sdoItemMeta2" type="DomBool" />
+    <SimpleProperty name="sdoItemMeta3" type="DomBool" />
+    <SimpleProperty name="sdoItemMeta4" type="DomBool" />
+    <SimpleProperty name="sdoItemMeta5" type="DomBool" />
+    <SimpleProperty name="sdoItemMeta6" type="DomBool" />
+    <SimpleProperty name="sdoItemMeta7" type="DomBool" />
+    <SimpleProperty name="sdoItemMeta8" type="DomBool" />
+    <SimpleProperty name="sdoItemMeta9" type="DomBool" />
+    <SimpleProperty name="sdoItemMeta10" type="DomBool" />
+    <SimpleProperty name="sdoItemMeta11" type="DomBool" />
+    <SimpleProperty name="sdoItemMeta12" type="DomBool" />
+    <SimpleProperty name="listing" type="DomSdoPdaListingFinding" storable="false" dataSourceProperty="listing" />
+    <SimpleProperty name="listingWithModules" type="DomSdoPdaListingFinding" storable="false" dataSourceProperty="listingWithModules" />
+    <SimpleProperty name="listed" type="DomBool" />
+    <SimpleProperty name="customerAssortment" type="DomBool" storable="false" dataSourceProperty="customerAssortment" />
+  </SimpleProperties>
+</ListItem>

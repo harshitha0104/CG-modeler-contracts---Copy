@@ -1,0 +1,151 @@
+<DataSource name="DsLoAutomaticPlanning" backendSystem="sf" objectClass="LoAutomaticPlanning" businessObjectClass="LoAutomaticPlanning" external="true" editableEntity="Account" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account" column="Id" />
+    <Attribute name="clbMetaPKey" table="Account_Visit_Setting__c" column="Visit_Template__c" />
+    <Attribute name="validFrom" table="Account_Visit_Setting__c" column="Valid_From__c" />
+    <Attribute name="frequency" table="Account_Visit_Setting__c" column="Frequency__c" />
+    <Attribute name="startWeek" table="Account_Visit_Setting__c" column="Start_Week__c" />
+    <Attribute name="timeOfDay" table="Account_Visit_Setting__c" column="Time_Of_Day__c" />
+    <Attribute name="dayOfWeek" table="Account_Visit_Setting__c" column="Day_Of_Week__c" />
+    <Attribute name="duration" table="Account_Visit_Setting__c" column="Duration__c" />
+    <DerivedAttribute name="substitutedUsrPKey" value="''" />
+    <DerivedAttribute name="isSubstituted" value="'0'" />
+    <DerivedAttribute name="managed" value="'0'" />
+    <Attribute name="planningMode" table="Account_Visit_Setting__c" column="Planning_Mode__c" />
+    <Attribute name="WorksOnMonday" table="Sales_Organization_User__c" column="Works_On_Monday__c" />
+    <Attribute name="WorksOnTuesday" table="Sales_Organization_User__c" column="Works_On_Tuesday__c" />
+    <Attribute name="WorksOnWednesday" table="Sales_Organization_User__c" column="Works_On_Wednesday__c" />
+    <Attribute name="WorksOnThursday" table="Sales_Organization_User__c" column="Works_On_Thursday__c" />
+    <Attribute name="WorksOnFriday" table="Sales_Organization_User__c" column="Works_On_Friday__c" />
+    <Attribute name="WorksOnSaturday" table="Sales_Organization_User__c" column="Works_On_Saturday__c" />
+    <Attribute name="WorksOnSunday" table="Sales_Organization_User__c" column="Works_On_Sunday__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var referenceUserPKey = "";
+			var referenceDateThru;
+			var referenceDateFrom;
+			
+			if (Utils.isDefined(jsonQuery.referenceUserPKey)){
+              referenceUserPKey = Utils.convertForDBParam(jsonQuery.referenceUserPKey,'DomPKey');
+			}
+			if (Utils.isDefined(jsonQuery.referenceDateFrom) && Utils.isDefined(jsonQuery.referenceDateThru)){
+              referenceDateThru = Utils.convertForDBParam(jsonQuery.referenceDateThru,'DomDate');
+			  referenceDateFrom = Utils.convertForDBParam(jsonQuery.referenceDateFrom,'DomDate');
+			}
+			else{
+              referenceDateThru = Utils.convertForDBParam(Utils.createAnsiDateToday(), 'DomDate');
+              referenceDateFrom = Utils.convertForDBParam(Utils.createAnsiDateToday(), 'DomDate');
+			}
+
+			var sqlParams = {referenceDateThru, referenceDateFrom, referenceUserPKey};
+			
+			var sqlStmt = "SELECT ";		
+			sqlStmt +=      "customers.pKey AS pKey, ";
+			sqlStmt +=      "customers.clbMetaPKey AS clbMetaPKey, ";
+			sqlStmt +=      "customers.frequency AS frequency, ";
+			sqlStmt +=      "customers.validFrom AS validFrom, ";
+			sqlStmt +=      "customers.startWeek AS startWeek, ";
+			sqlStmt +=      "customers.timeOfDay AS timeOfDay, ";
+			sqlStmt +=      "customers.dayOfWeek AS dayOfWeek, ";
+			sqlStmt +=      "customers.duration AS duration, ";
+            sqlStmt +=      "customers.substitutedUsrPKey as substitutedUsrPKey, "; 
+			sqlStmt +=      "customers.isSubstituted as isSubstituted, "; 
+			sqlStmt +=      "customers.isManager as managed, ";
+			sqlStmt +=      "customers.planningMode AS planningMode, ";
+			sqlStmt +=      "customers.WorksOnMonday As WorksOnMonday, ";
+	  		sqlStmt +=      "customers.WorksOnTuesday As WorksOnTuesday, ";
+	  		sqlStmt +=      "customers.WorksOnWednesday As WorksOnWednesday, ";
+	  		sqlStmt +=      "customers.WorksOnThursday As WorksOnThursday, ";
+	  		sqlStmt +=      "customers.WorksOnFriday As WorksOnFriday, ";
+	  		sqlStmt +=      "customers.WorksOnSaturday As WorksOnSaturday, ";
+	  		sqlStmt +=      "customers.WorksOnSunday As WorksOnSunday ";
+			sqlStmt +=      "FROM ( ";
+			sqlStmt +=      " SELECT  ";
+			sqlStmt +=          "Account.Id AS pKey, ";
+			sqlStmt +=          "Account_Visit_Setting__c.Visit_Template__c AS clbMetaPKey, ";
+			sqlStmt +=          "Account_Visit_Setting__c.Frequency__c AS frequency, ";
+			sqlStmt +=          "Account_Visit_Setting__c.Valid_From__c AS validFrom, ";
+			sqlStmt +=          "Account_Visit_Setting__c.Start_Week__c AS startWeek, ";
+			sqlStmt +=          "Account_Visit_Setting__c.Time_Of_Day__c AS timeOfDay, ";
+			sqlStmt +=          "Account_Visit_Setting__c.Day_Of_Week__c AS dayOfWeek, ";
+			sqlStmt +=          "Account_Visit_Setting__c.Duration__c AS duration, ";
+            sqlStmt +=          "substitution.SubMainUsrMainPKey AS substitutedUsrPKey, ";
+			sqlStmt +=          "CASE WHEN substitution.SubMainUsrMainPKey <> ' ' THEN '1' ELSE '0' END AS isSubstituted, ";
+			sqlStmt +=          "CASE WHEN Account_Manager__c.Id <> ' ' THEN '1' ELSE '0' END as isManager, ";
+			sqlStmt +=          "Account_Visit_Setting__c.Planning_Mode__c AS planningMode, ";
+			sqlStmt +=          "Sales_Organization_User__c.Works_On_Monday__c As WorksOnMonday, ";
+	  		sqlStmt +=          "Sales_Organization_User__c.Works_On_Tuesday__c As WorksOnTuesday, ";
+	  		sqlStmt +=          "Sales_Organization_User__c.Works_On_Wednesday__c As WorksOnWednesday, ";
+	  		sqlStmt +=          "Sales_Organization_User__c.Works_On_Thursday__c As WorksOnThursday, ";
+	  		sqlStmt +=          "Sales_Organization_User__c.Works_On_Friday__c As WorksOnFriday, ";
+	  		sqlStmt +=          "Sales_Organization_User__c.Works_On_Saturday__c As WorksOnSaturday, ";
+	  		sqlStmt +=          "Sales_Organization_User__c.Works_On_Sunday__c As WorksOnSunday ";
+			sqlStmt +=      " FROM  ";
+			sqlStmt +=          "Account";
+			sqlStmt +=      " JOIN ";
+			sqlStmt +=          "Account_Extension__c ";
+			sqlStmt +=              "ON Account.Id = Account_Extension__c.Account__c ";
+			sqlStmt +=      " LEFT OUTER JOIN ";
+			sqlStmt +=          " Account_Trade_Org_Hierarchy__c";
+			sqlStmt +=              " ON Account.Id = Account_Trade_Org_Hierarchy__c.Child_Account__c ";                    
+			sqlStmt +=              "AND #compareAsDate('Account_Trade_Org_Hierarchy__c.Valid_From__c', 'Date','<=',#referenceDateThru#, 'Date')# ";
+			sqlStmt +=              "AND #compareAsDate('Account_Trade_Org_Hierarchy__c.Valid_Thru__c', 'Date','>=',#referenceDateFrom#, 'Date')# ";  
+			sqlStmt +=      " LEFT OUTER JOIN ";
+			sqlStmt +=          " Account TradeOrg ";
+			sqlStmt +=              "ON TradeOrg.Id = Account_Trade_Org_Hierarchy__c.Parent_Account__c ";       
+			sqlStmt +=      " JOIN ";
+			sqlStmt +=          " User ";     
+			sqlStmt +=              " ON (User.Id = #referenceUserPKey# ";
+  			sqlStmt +=                 ")"; 
+			sqlStmt +=      " LEFT OUTER JOIN ";
+			sqlStmt +=          "Account_Manager__c ";
+			sqlStmt +=              "ON Account_Manager__c.User__c = User.Id ";
+			sqlStmt +=              "AND Account_Manager__c.Account__c = Account.Id ";  
+			sqlStmt += 		" AND #compareAsDate('Account_Manager__c.Valid_From__c', 'Date','<=',#referenceDateThru#, 'Date')# ";
+			sqlStmt += 		" AND #compareAsDate('Account_Manager__c.Valid_Thru__c', 'Date','>=',#referenceDateFrom#, 'Date')# ";
+			sqlStmt +=      "LEFT OUTER JOIN ( ";
+			sqlStmt +=              "SELECT SubBpaRel.Account__c as BpaMainPKey, ";
+			sqlStmt +=              "SubBpaRel.Valid_From__c as SubBpaRelValidFrom, ";
+			sqlStmt +=              "SubBpaRel.Valid_Thru__c as SubBpaRelValidThru, ";
+			sqlStmt +=              "SubBpaRel.Substitute__c as SubBpaRelUsrMainPKey, ";
+			sqlStmt +=              "SubMain.Substituted__c as SubMainUsrMainPKey ";
+			sqlStmt +=              "FROM Substitution__c AS SubBpaRel ";
+			sqlStmt +=              "INNER JOIN Substitution__c AS SubMain ON SubMain.Id = SubBpaRel.Substitution__c AND SubMain.Sales_Org__c = '#SALESORG#' ";
+			sqlStmt +=          "AND (SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400) <= #referenceDateThru# ";
+			sqlStmt +=          "AND (SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400) >= #referenceDateFrom# ";
+			sqlStmt +=          "AND (SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400) <= #referenceDateThru# ";
+			sqlStmt +=          "AND (SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400) >= #referenceDateFrom# ";
+			sqlStmt +=              "AND SubMain.Active__c = '1' ";
+			sqlStmt +=              "AND SubBpaRel.Active__c = '1' ";
+			sqlStmt +=              " ) Substitution ";
+			sqlStmt +=              "ON Substitution.BpaMainPKey = Account.Id AND Substitution.SubBpaRelUsrMainPKey = #referenceUserPKey# "; 
+			sqlStmt +=              "INNER JOIN Account_Visit_Setting__c ";
+			sqlStmt +=              "ON Account_Visit_Setting__c.Account__c = Account_Manager__c.Account__c AND Account_Visit_Setting__c.Active__c='1' ";
+            sqlStmt +=              "AND Account_Manager__c.Management_Type__c = Account_Visit_Setting__c.Management_Type__c ";
+			sqlStmt +=              "AND Account_Visit_Setting__c.Planning_Mode__c <> ' ' ";
+			sqlStmt +=              "AND #compareAsDate('Account_Visit_Setting__c.Valid_From__c', 'Date','<=',#referenceDateFrom#, 'Date')# ";
+			sqlStmt +=              "AND #compareAsDate('Account_Visit_Setting__c.Valid_Thru__c', 'Date','>=',#referenceDateFrom#, 'Date')# ";
+			sqlStmt +=              "INNER JOIN Sales_Organization_User__c on Sales_Organization_User__c.User__c = #referenceUserPKey# ";
+			sqlStmt +=              "INNER JOIN Sales_Organization__c on Sales_Organization_User__c.Sales_Organization__c =Sales_Organization__c.Id ";
+			sqlStmt +=              "AND Sales_Organization__c.Name = '#SALESORG#' ";
+			sqlStmt +=    " WHERE ";
+			sqlStmt +=      "( ";
+			sqlStmt +=          "(NOT Account_Manager__c.Id IS NULL)  ";   
+			sqlStmt +=          "OR (NOT Substitution.SubMainUsrMainPKey is NULL) "; 
+			sqlStmt +=          "OR EXISTS ";
+			sqlStmt +=          "( ";
+			sqlStmt +=              "SELECT NULL FROM Visit WHERE Account.Id = Visit.AccountId AND Visit.Accountable__c = #referenceUserPKey#) ";
+			sqlStmt +=          ")";
+			sqlStmt +=      ") customers ";
+			sqlStmt +=    "WHERE 1=1 ";
+			sqlStmt +=    "group by customers.pKey, customers.clbMetaPKey ";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+  </Database>
+</DataSource>

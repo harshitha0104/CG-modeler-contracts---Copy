@@ -1,0 +1,89 @@
+<DataSource name="DsLuInventoryDocumentCount" backendSystem="sf" objectClass="LuInventoryDocumentCount" businessObjectClass="LuInventoryDocumentCount" readOnly="true" external="true" editableEntity="Order__c" schemaVersion="2.0">
+	<Database platform="SQLite">
+		<Load><![CDATA[     
+
+			var currentTourPKey = ApplicationContext.get('currentTourPKey');
+			var tmgMainPKey = "";
+
+			if(Utils.isDefined(currentTourPKey) && ApplicationContext.get('currentTourStatus') === "Running"){
+				tmgMainPKey = Utils.convertForDBParam(currentTourPKey);
+			}
+			if(ApplicationContext.get('user').hasRole('TourUser') && Utils.isEmptyString(tmgMainPKey)){
+				tmgMainPKey = 'NoTourSelected';
+			}
+
+			var sqlParams = {tmgMainPKey};
+
+			var sqlStmt_OutwardDocsCount = "SELECT Order__c.Id, COUNT(*) AS docsCount,'0' As InwardDocsCount  FROM Order__c ";
+			sqlStmt_OutwardDocsCount += "INNER JOIN Order_Template__c ON ";
+			sqlStmt_OutwardDocsCount += "Order__c.Order_Template__c = Order_Template__c.Id ";
+			sqlStmt_OutwardDocsCount += "INNER JOIN Tour_Object_Reference__c ON ";
+			sqlStmt_OutwardDocsCount += "Order__c.Order_Template__c = Tour_Object_Reference__c.Order_Template__c ";
+
+			sqlStmt_OutwardDocsCount += "INNER JOIN RecordType ON ";
+			sqlStmt_OutwardDocsCount += "Order_Template__c.RecordTypeId = RecordType.Id ";
+
+			sqlStmt_OutwardDocsCount += "WHERE (1=1) ";
+			sqlStmt_OutwardDocsCount += "AND RecordType.Name = 'TruckLoad' ";
+			sqlStmt_OutwardDocsCount += "AND Order__c.Phase__c = 'Initial' ";
+			sqlStmt_OutwardDocsCount += "AND Order__c.Tour__c = #tmgMainPKey# ";
+			sqlStmt_OutwardDocsCount += "AND Order_Template__c.Document_Type__c in('TruckIvcTransferOutward','TruckIvcTransferInward') ";
+
+			// Count for Fake Inward Documents
+			var sqlStmt_InwardDocsCount = "SELECT Order__c.Id, COUNT(*) AS docsCount,";
+			sqlStmt_InwardDocsCount += "(SELECT COUNT(*) FROM Tour_Object_Reference__c WHERE Tour_Object_Reference__c.Usage__c='SdoMeta.TckIvcTransferInward') As ";
+			sqlStmt_InwardDocsCount += "InwardDocsCount  FROM Order__c ";
+			sqlStmt_InwardDocsCount += "INNER JOIN Order_Template__c ON ";
+			sqlStmt_InwardDocsCount += "Order__c.Order_Template__c = Order_Template__c.Id ";
+			sqlStmt_InwardDocsCount += "INNER JOIN Tour_Object_Reference__c ON ";
+			sqlStmt_InwardDocsCount += "Order__c.Order_Template__c = Tour_Object_Reference__c.Order_Template__c ";
+
+			sqlStmt_InwardDocsCount += "INNER JOIN RecordType ON ";
+			sqlStmt_InwardDocsCount += "Order_Template__c.RecordTypeId = RecordType.Id ";
+
+			sqlStmt_InwardDocsCount += "WHERE (1=1) ";
+			sqlStmt_InwardDocsCount += "AND RecordType.Name = 'TruckLoad' ";
+			sqlStmt_InwardDocsCount += "AND Order__c.Phase__c = 'Released' ";
+			sqlStmt_InwardDocsCount += "AND Order__c.Delivery_Recipient__c  = '#UserPKey#' ";
+			sqlStmt_InwardDocsCount += "AND Order_Template__c.Document_Type__c = 'TruckIvcTransferOutward' ";
+			sqlStmt_InwardDocsCount += "GROUP BY Order__c.Id ";
+			sqlStmt_InwardDocsCount += "HAVING InwardDocsCount > 0 ";   
+
+			// Count for Rejected Fake Inward Documents
+			var sqlStmt_RejectedInwardDocsCount = "SELECT Order__c.Id, COUNT(*) AS docsCount,";
+			sqlStmt_RejectedInwardDocsCount += "(SELECT COUNT(*) FROM Tour_Object_Reference__c WHERE Tour_Object_Reference__c.Usage__c='SdoMeta.TckIvcTransferInward') As ";
+			sqlStmt_RejectedInwardDocsCount += "InwardDocsCount  FROM Order__c ";
+			sqlStmt_RejectedInwardDocsCount += "INNER JOIN Order_Template__c ON ";
+			sqlStmt_RejectedInwardDocsCount += "Order__c.Order_Template__c = Order_Template__c.Id ";
+			sqlStmt_RejectedInwardDocsCount += "INNER JOIN Tour_Object_Reference__c ON ";
+			sqlStmt_RejectedInwardDocsCount += "Order__c.Order_Template__c = Tour_Object_Reference__c.Order_Template__c ";
+
+			sqlStmt_RejectedInwardDocsCount += "INNER JOIN RecordType ON ";
+			sqlStmt_RejectedInwardDocsCount += "Order_Template__c.RecordTypeId = RecordType.Id ";
+
+			sqlStmt_RejectedInwardDocsCount += "WHERE (1=1) ";
+			sqlStmt_RejectedInwardDocsCount += "AND RecordType.Name = 'TruckLoad' ";
+			sqlStmt_RejectedInwardDocsCount += "AND Order__c.Phase__c = 'Canceled' ";
+			sqlStmt_RejectedInwardDocsCount += "AND Order_Template__c.Document_Type__c = 'TruckIvcTransferInward' ";
+			sqlStmt_RejectedInwardDocsCount += "GROUP BY Order__c.Id ";
+			sqlStmt_RejectedInwardDocsCount += "HAVING InwardDocsCount > 0 ";       
+
+
+			var sqlStmt = "SELECT SUM(docsCount) AS inventoryDocumentCount FROM (" + sqlStmt_OutwardDocsCount + " UNION ALL " + sqlStmt_InwardDocsCount + " UNION ALL " + sqlStmt_RejectedInwardDocsCount + ")";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+		<Update><![CDATA[ 
+			// Intended to be empty     
+			return undefined;     
+		]]></Update>
+		<Insert><![CDATA[     
+			// Intended to be empty     
+			return undefined;     
+		]]></Insert>
+		<Delete><![CDATA[      
+			// Intended to be empty     
+			return undefined;     
+		]]></Delete>
+	</Database>
+</DataSource>

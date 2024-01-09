@@ -1,0 +1,45 @@
+<DataSource name="DsBoUsrNotification" backendSystem="sf" businessObjectClass="BoUsrNotification" external="false" editableEntity="Task" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Task" column="Id" />
+    <DerivedAttribute name="businessModified" value="Task.LastModifiedDate" />
+    <Attribute name="priority" table="Task" column="Priority" />
+    <!-- isReadForSF has been introduced to map the status in SF backend to the boolean flag - business logic differentiates and handles the setting of the values -->
+    <DerivedAttribute name="isRead" value="CASE Task.Status WHEN 'Completed' THEN '1' ELSE '0' END" />
+    <Attribute name="isReadForSF" table="Task" column="Status" />
+    <Attribute name="subject" table="Task" column="Description" />
+    <Attribute name="category" table="Task" column="Subject" />
+    <Attribute name="dueDate" table="Task" column="ActivityDate" />
+    <Attribute name="usrMainPKey" table="Task" column="OwnerId" />
+    <Attribute name="initiatorUsrMainPKey" table="Task" column="CreatedById" />
+    <DerivedAttribute name="objectType" value="'No'" />
+    <DerivedAttribute name="usrName" type="String" value="User.Name" />
+    <DerivedAttribute name="referencePKey" value="' '" />
+    <DerivedAttribute name="private" value="'0'" />
+    <DerivedAttribute name="usrNotificationMetaPKey" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="Task" alias="" idAttribute="Id" />
+    <Entity name="User" alias="">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="Task.OwnerId" comparator="eq" rightSideType="Attribute" rightSideValue="User.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="RecordType" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Task.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+          <Condition leftSideValue="RecordType.DeveloperName" comparator="eq" rightSideType="Literal" rightSideValue="'User_Notification'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[ 
+  Task.Id = #pKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

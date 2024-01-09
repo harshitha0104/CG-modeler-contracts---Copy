@@ -1,0 +1,400 @@
+<UIDescription name="TourManagement::DetailUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionPage" cachable="false">
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::TourDescriptionValue" />
+        <!-- CW-REQUIRED: removed title binding -->
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="TabbedViewAreaSection" currentTab="ProcessContext::currentTabName">
+      <!-- Tab Pane -->
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="Main">
+              <Bindings>
+                <Resource target="image" type="Image" id="MainGrey24" defaultImage="MainGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="MainId" defaultLabel="Main" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Checklist">
+              <Bindings>
+                <Binding type="Visible" target="Visible" call="ProcessContext::TourDetail.checkListTabVisibility" />
+                <Resource target="image" type="Image" id="Checklist24" defaultImage="Checklist24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="ChecklistId" defaultLabel="Checklist" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="tabSelected" storeTabNameIn="currentTabName" />
+          </Events>
+        </TabSelector>
+      </Area>
+      <Area areaName="Main" areaPattern="GroupedElementsArea">
+        <MenuItems>
+          <MenuItem directlyVisible="true" itemId="reviewReleaseInformation">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::TourDetail.checkButtonVisibility">
+                <Parameters>
+                  <Input name="mode" type="Literal" value="reviewReleaseInformation" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="reviewRelease" defaultLabel="Release Info" />
+              <Resource target="Icon" type="Image" id="CompleteDarkGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="reviewReleaseInformation" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="reviewCompleteInformation">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::TourDetail.checkButtonVisibility">
+                <Parameters>
+                  <Input name="mode" type="Literal" value="reviewCompleteInformation" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="reviewComplete" defaultLabel="Complete Info" />
+              <Resource target="Icon" type="Image" id="CompleteDarkGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="reviewCompleteInformation" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="ReleaseTour">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::TourDetail.checkButtonVisibility">
+                <Parameters>
+                  <Input name="mode" type="Literal" value="release" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="ReleaseTourId" defaultLabel="Release" />
+              <Resource target="Icon" type="Image" id="CheckBlueGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="releaseTour" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="CompleteTour">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::TourDetail.checkButtonVisibility">
+                <Parameters>
+                  <Input name="mode" type="Literal" value="complete" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="CompleteTourId" defaultLabel="Complete" />
+              <Resource target="Icon" type="Image" id="CompleteBlueGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="completeTour" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <GroupElement name="TourInformation">
+          <Bindings>
+            <Resource target="Title" type="Label" id="TourInformationId" defaultLabel="Tour Information" />
+          </Bindings>
+          <Merger name="TourIdStatus" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Tour Id" id="TourId" />
+            </Bindings>
+            <InputArea name="TourId" editable="false">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::TourDetail.tourId" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <SelectionBox name="TourStatus" editable="false">
+              <Bindings>
+                <Binding target="DataSource" toggleId="TmgStatus" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::TourDetail.tmgStatus" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </Merger>
+          <InputArea name="Tour Description" editable="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Description" id="TourDescriptionId" />
+              <Binding target="Value" binding="ProcessContext::TourDetail.loTourDescription.Current.text" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <DatePickerField name="PlannedTourDate" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Planned Tour Date" id="PlannedTourDate" />
+              <Binding target="Value" binding="ProcessContext::TourDetail.dateFrom" bindingMode="ONE_WAY" />
+            </Bindings>
+          </DatePickerField>
+          <Merger name="WorkStartDateTime" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Work Start" id="WorkStartDateTimeId" />
+            </Bindings>
+            <DatePickerField name="WorkStartDate" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Work Start Date" id="WorkStartDateId" />
+                <Binding target="Value" binding="ProcessContext::TourDetail.dateFrom" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <TimePickerField name="TimeFrom" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Work Start Time" id="WorkStartTimeId" />
+                <Binding target="Value" binding="ProcessContext::TourDetail.timeFrom" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+          <Merger name="WorkEndDateTime" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Work End" id="WorkEndDateTimeId" />
+            </Bindings>
+            <DatePickerField name="WorkEndDate" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Work End Date" id="WorkEndDateId" />
+                <Binding target="Value" binding="ProcessContext::TourDetail.dateThru" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <TimePickerField name="TimeEnd" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Work End Time" id="WorkEndTimeId" />
+                <Binding target="Value" binding="ProcessContext::TourDetail.timeThru" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+          <InputArea name="DriverId" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="User" id="DriverId" />
+              <Binding target="Value" binding="ProcessContext::TourDetail.luDriver.name" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <Lookup name="CoDriver">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Support User" id="CoDriverId" />
+              <Binding target="Value" binding="ProcessContext::TourDetail.luCoDriver.name" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="coDriverLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+        <GroupElement name="Warehouse">
+          <Bindings>
+            <Resource target="Title" type="Label" id="WarehouseId" defaultLabel="Warehouse" />
+          </Bindings>
+          <!--<SelectionBox name="StartWarehouse">
+            <Bindings>
+              <Binding target="Value" binding="ProcessContext::TourDetail.startEtpWarehousePKey" bindingMode="TWO_WAY" />
+              <Binding target="DataSource" binding="ProcessContext::TourDetail.loEtpWarehouse.Items[]" bindingMode="TWO_WAY" />
+              <Resource target="Label" type="Label" id="StartWarehouseId" defaultLabel="Start Warehouse" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".pKey" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox> -->
+          <Lookup name="StartWarehouse">
+            <Bindings>
+              <Resource target="Label" type="Label" id="StartWhLblId" defaultLabel="Start Warehouse" />
+              <Binding target="Value" binding="ProcessContext::TourDetail.luEtpWarehouse.text" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="wareHouseLookup" />
+            </Events>
+          </Lookup>
+          <Lookup name="EndWarehouse">
+            <Bindings>
+              <Resource target="Label" type="Label" id="EndtWhLblId" defaultLabel="End Warehouse" />
+              <Binding target="Value" binding="ProcessContext::TourDetail.luEndEtpWarehouse.text" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="endWareHouseLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+        <GroupElement name="Vehicle">
+          <Bindings>
+            <Resource target="Title" type="Label" id="VehicleId" defaultLabel="Vehicle" />
+          </Bindings>
+          <!--
+          <InputArea name="TruckId">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Truck Id" id="TruckId" />
+              <Binding target="Value" binding="ProcessContext::TourDetail.truckId" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>-->
+          <Lookup name="Truck">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Truck Id" id="TruckId" />
+              <Binding target="Value" binding="ProcessContext::TourDetail.luTruck.truckId" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="truckLookup" />
+            </Events>
+          </Lookup>
+          <Merger name="TrailorInfo" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Trailer 1/2" id="TrailorsId" />
+            </Bindings>
+            <!--<InputArea name="Trailor">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Trailer" id="TrailorId" />
+                <Binding target="Value" binding="ProcessContext::TourDetail.trailerId" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea> -->
+            <Lookup name="Trailor">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Trailer" id="TrailorId" />
+                <Binding target="Value" binding="ProcessContext::TourDetail.luTrailer1.truckId" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Events>
+                <LookupEvent event="trailer1Lookup" />
+              </Events>
+            </Lookup>
+            <!-- <InputArea name="Trailor2">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Trailer 2" id="Trailor2Id" />
+                <Binding target="Value" binding="ProcessContext::TourDetail.trailerId2" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea> -->
+            <Lookup name="Trailor2">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Trailer 2" id="Trailor2Id" />
+                <Binding target="Value" binding="ProcessContext::TourDetail.luTrailer2.truckId" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Events>
+                <LookupEvent event="trailer2Lookup" />
+              </Events>
+            </Lookup>
+          </Merger>
+        </GroupElement>
+        <GroupElement name="TruckInformation">
+          <Bindings>
+            <Resource target="Title" type="Label" id="TruckInformationTitleId" defaultLabel="Truck Information" />
+          </Bindings>
+          <Merger name="TruckInformation" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Odometer Start/End" id="TruckInformationId" />
+            </Bindings>
+            <InputArea name="OdometerStart">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="OdometerStart" id="OdometerStartId" />
+                <Binding target="Value" type="Decimal" formatV2="8.0" binding="ProcessContext::TourDetail.mileageStart" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="OdometerEnd">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="OdometerEnd" id="OdometerEndId" />
+                <Binding target="Value" type="Decimal" formatV2="8.0" binding="ProcessContext::TourDetail.mileageEnd" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+          </Merger>
+          <CheckBox name="TruckOkStart">
+            <Bindings>
+              <Resource target="Label" type="Label" id="TruckOkStartId" defaultLabel="Truck ok start" />
+              <Binding target="checkedValue" binding="ProcessContext::TourDetail.vehicleOKStart" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+          <SelectionBox name="ReasonCodeStart">
+            <Bindings>
+              <Resource target="Label" type="Label" id="ReasonCodeStartId" defaultLabel="Reason Code" />
+              <Binding target="DataSource" toggleId="TmgVehicleStatus" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::TourDetail.vehicleStatusStart" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <CheckBox name="TruckOkEnd">
+            <Bindings>
+              <Resource target="Label" type="Label" id="TruckOkEndId" defaultLabel="Truck ok end" />
+              <Binding target="checkedValue" binding="ProcessContext::TourDetail.vehicleOKEnd" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+          <SelectionBox name="ReasonCodeEnd">
+            <Bindings>
+              <Resource target="Label" type="Label" id="ReasonCodeEndId" defaultLabel="Reason Code" />
+              <Binding target="DataSource" toggleId="TmgVehicleStatus" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::TourDetail.vehicleStatusEnd" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+        </GroupElement>
+        <GroupElement name="MessageText">
+          <Bindings>
+            <Resource target="title" type="Label" id="MessageId" defaultLabel="Message" />
+          </Bindings>
+          <InputAreaMultiLine name="Message" editable="true" noOfRows="8">
+            <Bindings>
+              <Binding target="Value" binding="ProcessContext::TourDetail.message" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+        </GroupElement>
+        <GroupElement name="Cancel Information">
+          <Bindings>
+            <Resource target="title" type="Label" id="CancelInformationId" defaultLabel="CANCEL INFORMATION" />
+          </Bindings>
+          <SelectionBox name="ReasonCode" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="ReasonId" defaultLabel="Cancel Reason" />
+              <Binding target="DataSource" toggleId="TmgCancelReason" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::TourDetail.cancelReason" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <InputAreaMultiLine name="CancelNote" disabled="false" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="CancelTourNote" defaultLabel="Cancel Note" />
+              <Binding target="Value" binding="ProcessContext::TourDetail.cancelNote" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+        </GroupElement>
+      </Area>
+      <Area areaName="Checklist" areaPattern="SingleElementArea">
+        <GroupedList name="TourCheckslist" groupBy="checkDefinitionText" sortBy="sortTextUI" direction="ASC" dataSource="ProcessContext::TourDetail.loTourChecks.Items[]">
+          <Items name="Items" itemPattern="ChecklistItem">
+            <ItemListLayout>
+              <Default>
+                <Col width="9em" layoutType="itemName" bindingId="label" />
+                <Col layoutType="Dynamic itemRight" bindingId="question" />
+                <!-- text-align:right -->
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="20em" layoutType="itemName" bindingId="label" />
+                  <Col layoutType="Dynamic itemRight" bindingId="question" />
+                  <!-- text-align:right -->
+                </Default>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col width="9em" layoutType="itemName" bindingId="label" />
+                  <Col layoutType="Dynamic itemRight" bindingId="question" />
+                  <!-- text-align:right -->
+                </Default>
+              </Phone>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="question" type="Dynamic" binding=".value" typeField="dataType" toggleId="toggleId" bindingMode="TWO_WAY" />
+              <Binding target="label" type="Text" binding=".text" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

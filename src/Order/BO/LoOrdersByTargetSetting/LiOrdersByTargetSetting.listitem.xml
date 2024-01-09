@@ -1,0 +1,8 @@
+<ListItem name="LiOrdersByTargetSetting">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="sdoMainPKey" type="DomPKey" storable="false" dataSourceProperty="sdoMainPKey" />
+    <SimpleProperty name="grossTotalValue" type="DomMoney" storable="false" dataSourceProperty="grossTotalValue" />
+    <SimpleProperty name="targetSettingConsideration" type="DomSdoTargetSettingConsideration" storable="false" dataSourceProperty="targetSettingConsideration" />
+  </SimpleProperties>
+</ListItem>

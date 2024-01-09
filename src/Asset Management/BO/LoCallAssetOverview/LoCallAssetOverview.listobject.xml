@@ -1,0 +1,19 @@
+<ListObject name="LoCallAssetOverview" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoCallAssetOverview" />
+  <Item objectClass="LiCallAssetOverview" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="scanBarcode" />
+    <Method name="setAssetFilter" />
+    <Method name="prepareAstSurveyItem" />
+    <Method name="handleRegisterUnknownAsset" />
+    <Method name="trimBarcode" />
+  </Methods>
+</ListObject>

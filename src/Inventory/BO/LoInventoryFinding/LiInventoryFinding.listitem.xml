@@ -1,0 +1,14 @@
+<ListItem name="LiInventoryFinding" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="ivcMainPKey" type="DomPKey" storable="false" dataSourceProperty="ivcMainPKey" />
+    <SimpleProperty name="ivcMetaPKey" type="DomPKey" storable="false" dataSourceProperty="ivcMetaPKey" />
+    <SimpleProperty name="usrMainPKey" type="DomPKey" storable="false" dataSourceProperty="usrMainPKey" />
+    <SimpleProperty name="bpaMainPKey" type="DomPKey" storable="false" dataSourceProperty="bpaMainPKey" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" storable="false" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="balance" type="DomDecimal" storable="false" dataSourceProperty="balance" />
+    <SimpleProperty name="tmgTourPKey" type="DomPKey" storable="false" dataSourceProperty="tmgTourPKey" />
+    <SimpleProperty name="etpVehiclePKey" type="DomPKey" storable="false" dataSourceProperty="etpVehiclePKey" />
+    <SimpleProperty name="currency" type="DomCurrency" storable="false" dataSourceProperty="currency" />
+  </SimpleProperties>
+</ListItem>

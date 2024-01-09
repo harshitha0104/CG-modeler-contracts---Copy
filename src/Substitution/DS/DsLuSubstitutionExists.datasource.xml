@@ -1,0 +1,42 @@
+<DataSource name="DsLuSubstitutionExists" businessObjectClass="LuSubstitutionExists" external="false" readOnly="true" editableEntity="SubMain" schemaVersion="2.0">
+  <Attributes>
+    <!-- First attribute is a workaround to get the DS generated - "Could not find table column type for  in table SubMain!" -->
+    <Attribute name="pKey" table="SubMain" column="PKey" />
+    <Attribute name="validThru" table="SubBpaRel" column="ValidThru" />
+    <DerivedAttribute name="count" value="Count(*)" />
+  </Attributes>
+  <Entities>
+    <Entity name="SubMain" alias="" idAttribute="PKey" />
+    <Entity name="SubBpaRel" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SubMain.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="SubBpaRel.SubMainPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="WfeState" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SubMain.ActualStatePKey" comparator="eq" rightSideType="Attribute" rightSideValue="WfeState.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        WfeState.StateType = 'Active'
+        AND SubBpaRel.BpaMainPKey = #bpaMainPKey#
+        AND SubBpaRel.ValidFrom <= #dateFrom#
+        AND SubBpaRel.ValidThru >= #dateFrom#
+        AND SubMain.ValidFrom <= #dateFrom#
+        AND SubMain.ValidThru >= #dateFrom#
+        AND SubMain.UsrMainPKey = #subMainUsrMainPKey#
+        AND (#subBpaRelUsrMainPKey# = '' OR SubBpaRel.UsrMainPKey = #subBpaRelUsrMainPKey#)    
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="bpaMainPKey" type="TEXT" />
+    <Parameter name="dateFrom" type="TEXT" />
+    <Parameter name="subMainUsrMainPKey" type="TEXT" />
+    <Parameter name="subBpaRelUsrMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

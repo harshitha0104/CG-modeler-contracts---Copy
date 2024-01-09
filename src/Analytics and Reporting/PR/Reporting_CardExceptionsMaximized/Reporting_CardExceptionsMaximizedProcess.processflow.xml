@@ -1,0 +1,41 @@
+<Process name="Reporting::CardExceptionsMaximizedProcess" defaultAction="Set_DataLoaded" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <!-- Card: Reporting -->
+        <Declaration name="CardReportingSurveyExceptions_DataLoaded" type="DomBool" />
+        <Declaration name="CardReportingSurveyExceptions_ModeMaximized" type="String" />
+        <Declaration name="IsPhone" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="SurveyExceptions" type="Object" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="IsPhone" call="Utils.isPhone">
+        <Return name="ProcessContext::IsPhone" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="Set_DataLoaded" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::CardReportingSurveyExceptions_DataLoaded" />
+        <TransitionTo action="SetMaximizedMode" />
+      </Action>
+      <Action name="SetMaximizedMode" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::CardReportingSurveyExceptions_ModeMaximized" />
+        <TransitionTo action="ShowReporting" />
+      </Action>
+      <Action actionType="View" name="ShowReporting">
+        <UIDescription>Reporting::CardExceptionsMaximizedUI</UIDescription>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

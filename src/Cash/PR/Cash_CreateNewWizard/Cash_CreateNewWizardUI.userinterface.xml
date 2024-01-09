@@ -1,0 +1,52 @@
+<UIDescription name="Cash::CreateNewWizardUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionDialogPage" >
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="CreateNew" defaultLabel="New Document" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="NewCashDocuemnt">
+          <Bindings>
+            <Resource target="Text" type="Label" id="createNewCashDocuemntId" defaultLabel="Create" />
+            <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="createDocument">
+              <Params>
+                <Param name="buttonPressed" value="createDocument" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="CreateNewCheckOut">
+          <SelectionBox name="MetaPKey" editable="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="Type" defaultLabel="Type" />
+              <Binding target="DataSource" binding="ProcessContext::TemplateList" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::SdoMetaPKey" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".pKey" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <Lookup name="Warehouse">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Warehouse" id="WarehouseId" />
+              <Binding target="Value" binding="ProcessContext::WizardBo.luEtpWarehouse.text" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="warehouseLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

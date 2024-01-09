@@ -1,0 +1,116 @@
+<BusinessObject name="BoOrderMeta"  generateLoadMethod="false" OERReference="SdoMeta" schemaVersion="2.0">
+  <DataSource name="DsBoOrderMeta" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="active" type="DomBool" storable="false" dataSourceProperty="active" />
+    <SimpleProperty name="creationPlatform" type="DomCreationPlatform" storable="false" dataSourceProperty="creationPlatform" />
+    <SimpleProperty name="id" type="DomId" storable="false" dataSourceProperty="id" />
+    <SimpleProperty name="minOrderValue" type="DomMoney" storable="false" dataSourceProperty="minOrderValue" />
+    <SimpleProperty name="maxOrderValue" type="DomMoney" storable="false" dataSourceProperty="maxOrderValue" />
+    <SimpleProperty name="disposalListProposal" type="DomSdoDispoListProposalType" storable="false" dataSourceProperty="disposalListProposal" />
+    <SimpleProperty name="considerFieldStatus" type="DomBool" storable="false" dataSourceProperty="considerFieldStatus" />
+    <SimpleProperty name="considerListing" type="DomSdoUseListing" storable="false" dataSourceProperty="considerListing" />
+    <SimpleProperty name="considerPromotion" type="DomBool" storable="false" dataSourceProperty="considerPromotion" />
+    <SimpleProperty name="filterByBpaAssortment" type="DomBool" storable="false" dataSourceProperty="filterByBpaAssortment" />
+    <SimpleProperty name="filterBySdoAssortment" type="DomBool" storable="false" dataSourceProperty="filterBySdoAssortment" />
+    <SimpleProperty name="filterByCurrentInventory" type="DomBool" storable="false" dataSourceProperty="filterByCurrentInventory" />
+    <SimpleProperty name="useBpaAssortment" type="DomBool" storable="false" dataSourceProperty="useBpaAssortment" />
+    <SimpleProperty name="useSalesDocAssortment" type="DomBool" storable="false" dataSourceProperty="useSalesDocAssortment" />
+    <SimpleProperty name="text" type="DomString" storable="false" dataSourceProperty="text" />
+    <SimpleProperty name="listing" type="DomString" storable="false" dataSourceProperty="listing" />
+    <SimpleProperty name="listingWithModules" type="DomString" storable="false" dataSourceProperty="listingWithModules" />
+    <SimpleProperty name="allowForeignProducts" type="DomBool" storable="false" dataSourceProperty="allowForeignProducts" />
+    <SimpleProperty name="deliveryDatePolicy" type="DomString" storable="false" dataSourceProperty="deliveryDatePolicy" />
+    <SimpleProperty name="considerSunday" type="DomBool" storable="false" dataSourceProperty="considerSunday" />
+    <SimpleProperty name="considerSaturday" type="DomBool" storable="false" dataSourceProperty="considerSaturday" />
+    <SimpleProperty name="considerLeadTime" type="DomBool" storable="false" dataSourceProperty="considerLeadTime" />
+    <SimpleProperty name="leadTime" type="DomDecimal" storable="false" dataSourceProperty="leadTime" />
+    <SimpleProperty name="maxLeadTime" type="DomDecimal" storable="false" dataSourceProperty="maxLeadTime" />
+    <SimpleProperty name="checkDeliveryDate" type="DomSdoCheckType" storable="false" dataSourceProperty="checkDeliveryDate" />
+    <SimpleProperty name="editDeliveryDate" type="DomBool" storable="false" dataSourceProperty="editDeliveryDate" />
+    <SimpleProperty name="considerNewProducts" type="DomSdoNewItem" storable="false" dataSourceProperty="considerNewProducts" />
+    <SimpleProperty name="considerOutOfStock" type="DomSdoConsiderOutOfStock" storable="false" dataSourceProperty="considerOutOfStock" />
+    <SimpleProperty name="addHistoryItem" type="DomBool" storable="false" dataSourceProperty="addHistoryItem" />
+    <SimpleProperty name="considerMaxHistoryDays" type="DomInteger" storable="false" dataSourceProperty="considerMaxHistoryDays" />
+    <SimpleProperty name="cancelReasonRequired" type="DomBool" storable="false" dataSourceProperty="cancelReasonRequired" />
+    <SimpleProperty name="ivcRefPKey1Usage" type="DomSdoIvcRefPKeyUsage" storable="false" dataSourceProperty="ivcRefPKey1Usage" />
+    <SimpleProperty name="ivcRefPKey2Usage" type="DomSdoIvcRefPKeyUsage" storable="false" dataSourceProperty="ivcRefPKey2Usage" />
+    <SimpleProperty name="ivcRefPKey3Usage" type="DomSdoIvcRefPKeyUsage" storable="false" dataSourceProperty="ivcRefPKey3Usage" />
+    <SimpleProperty name="ivcRefPKey4Usage" type="DomSdoIvcRefPKeyUsage" storable="false" dataSourceProperty="ivcRefPKey4Usage" />
+    <SimpleProperty name="ivcRefPKey5Usage" type="DomSdoIvcRefPKeyUsage" storable="false" dataSourceProperty="ivcRefPKey5Usage" />
+    <SimpleProperty name="ivcTAReceiver" type="DomSdoIvcTAReceiver" storable="false" dataSourceProperty="ivcTAReceiver" />
+    <SimpleProperty name="brokerRequired" type="DomBool" storable="false" dataSourceProperty="brokerRequired" />
+    <SimpleProperty name="hideBroker" type="DomBool" storable="false" dataSourceProperty="hideBroker" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" storable="false" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="displayIvcBalance" type="DomBool" storable="false" dataSourceProperty="displayIvcBalance" />
+    <SimpleProperty name="deletionAllowed" type="DomBool" storable="false" dataSourceProperty="deletionAllowed" />
+    <SimpleProperty name="mobilityRelevant" type="DomBool" storable="false" dataSourceProperty="mobilityRelevant" />
+    <SimpleProperty name="syncOptions" type="DomSdoSyncOptions" storable="false" dataSourceProperty="syncOptions" />
+    <SimpleProperty name="itemListOption" type="DomSdoItemListOption" storable="false" dataSourceProperty="itemListOption" />
+    <SimpleProperty name="cpPricingType" type="DomSdoMetaCpPricingType" storable="false" dataSourceProperty="cpPricingType" />
+    <SimpleProperty name="cpPricingDate" type="DomSdoCpPricingDate" storable="false" dataSourceProperty="cpPricingDate" />
+    <SimpleProperty name="computePrice" type="DomSdoComputePrice" storable="false" dataSourceProperty="computePrice" />
+    <SimpleProperty name="flatItemListGrouping" type="DomPrdGroupLevel" storable="false" dataSourceProperty="flatItemListGrouping" />
+    <SimpleProperty name="sysNumberPKey" type="DomPKey" storable="false" dataSourceProperty="sysNumberPKey" />
+    <SimpleProperty name="docNumberGenBehavior" type="DomRpsSysNumberGenBehavior" storable="false" dataSourceProperty="docNumberGenBehavior" />
+    <SimpleProperty name="recalculationRequired" type="DomSdoRecalculationRequired" storable="false" dataSourceProperty="recalculationRequired" />
+    <SimpleProperty name="notifyOutdatedCalculation" type="DomBool" storable="false" dataSourceProperty="notifyOutdatedCalculation" />
+    <SimpleProperty name="quantityRounding" type="DomSdoQuantityRounding" storable="false" dataSourceProperty="quantityRounding" />
+    <SimpleProperty name="barcodeScanBehavior" type="DomSdoBarcodeScanBehavior" storable="false" dataSourceProperty="barcodeScanBehavior" />
+    <SimpleProperty name="sysReleaseProcessPKey" type="DomPKey" storable="false" dataSourceProperty="sysReleaseProcessPKey" />
+    <SimpleProperty name="sdoSubType" type="DomSdoSubType" storable="false" dataSourceProperty="sdoSubType" />
+    <SimpleProperty name="cndCpCalculationSchemaPKey" type="DomPKey" storable="false" dataSourceProperty="cndCpCalculationSchemaPKey" />
+    <SimpleProperty name="considerInventory" type="DomBool" storable="false" dataSourceProperty="considerInventory" />
+    <!-- These objects are used at runtime and do not origin directly from the database -->
+    <SimpleProperty name="itemMetaDictionary" type="Object" storable="false" />
+    <SimpleProperty name="docInvoiceNumberGenBehavior" type="DomRpsSysNumberGenBehavior" storable="false" dataSourceProperty="docInvoiceNumberGenBehavior" />
+    <SimpleProperty name="considerBpaDocTaType" type="DomBool" storable="false" dataSourceProperty="considerBpaDocTaType" />
+    <SimpleProperty name="docTaType" type="DomBpaPaymentPolicy" storable="false" dataSourceProperty="docTaType" />
+    <SimpleProperty name="considerQuantitySuggestion" type="DomSdoConsiderQuantitySuggestion" storable="false" dataSourceProperty="considerQuantitySuggestion" />
+    <SimpleProperty name="considerItemModReason" type="DomBool" storable="false" dataSourceProperty="considerItemModReason" />
+    <SimpleProperty name="paymentModReasonRequired" type="DomSdoModReasonRequired" storable="false" dataSourceProperty="paymentModReasonRequired" />
+    <SimpleProperty name="captureReleaseTime" type="DomBool" storable="false" dataSourceProperty="captureReleaseTime" />
+    <SimpleProperty name="itemPresettingPolicy" type="DomSdoPrdCountingPolicy" storable="false" dataSourceProperty="itemPresettingPolicy" />
+    <SimpleProperty name="prdCheckInPolicy" type="DomSdoPrdCheckInPolicy" storable="false" dataSourceProperty="prdCheckInPolicy" />
+    <SimpleProperty name="itemInputRequired" type="DomBool" storable="false" dataSourceProperty="itemInputRequired" />
+    <SimpleProperty name="reportPolicy" type="DomSdoReportPolicy" storable="false" dataSourceProperty="reportPolicy" />
+    <SimpleProperty name="splittingOption" type="DomSdoSplittingOption" storable="false" dataSourceProperty="splittingOption" />
+    <SimpleProperty name="splittingRule" type="DomSdoSplittingRule" storable="false" dataSourceProperty="splittingRule" />
+    <SimpleProperty name="usrNotificationMetaPKey" type="DomPKey" storable="false" dataSourceProperty="usrNotificationMetaPKey" />
+    <SimpleProperty name="numberOfHistValues" type="DomString" storable="false" dataSourceProperty="numberOfHistValues" />
+    <SimpleProperty name="generatePricingLog" type="DomSdoGeneratePricingLog" storable="false" dataSourceProperty="generatePricingLog" />
+    <SimpleProperty name="generatePricingInformation" type="DomString" storable="false" dataSourceProperty="generatePricingInformation" />
+    <SimpleProperty name="considerSelectablePromotion" type="DomBool" storable="false" dataSourceProperty="considerSelectablePromotion" />
+    <SimpleProperty name="isFirstPromotionSelected" type="DomBool" storable="false" dataSourceProperty="promotionFilterSelection" />
+    <SimpleProperty name="specialOrderHandling" type="DomText" storable="false" dataSourceProperty="specialOrderHandling" />
+    <SimpleProperty name="generateRewardsLog" type="DomSdoGenerateRewardsLog" storable="false" dataSourceProperty="generateRewardsLog" />
+    <SimpleProperty name="cashFloatRecordTypeId" type="DomPKey" storable="false" />
+    <SimpleProperty name="productInventoryRecordTypeId" type="DomPKey" storable="false" />
+  </SimpleProperties>
+  <ListObjects>
+    <ListObject name="loOrderItemMetas" objectClass="LoOrderItemMetas" dataSourceProperty="pKey" listProperty="sdoMetaPKey" loadMode="LoadImmediate" />
+    <ListObject name="loInventoryMetaByItemMeta" objectClass="LoInventoryMetaByItemMeta" dataSourceProperty="pKey" listProperty="sdoMetaPKey" loadMode="LoadImmediate" />
+    <ListObject name="loInventoryMetaByPaymentMeta" objectClass="LoInventoryMetaByPaymentMeta" dataSourceProperty="pKey" listProperty="sdoMetaPKey" loadMode="LoadImmediate" />
+    <!-- Notes LO is loaded during the load of the BoOrderMeta if the attribute itemListOption = "Hierarchy" -->
+    <ListObject name="loPrdGroupLevelCriterionMapping" objectClass="LoPrdGroupLevelCriterionMapping" dataSourceProperty="empty" listProperty="empty" loadMode="LoadOnDemand" />
+    <ListObject name="loProductSelector" objectClass="LoOrderMetaPrdSelector" dataSourceProperty="pKey" listProperty="sdoMetaPKey" loadMode="LoadOnDemand" />
+    <ListObject name="loPaymentMeta" objectClass="LoPaymentMeta" dataSourceProperty="empty" listProperty="empty" />
+  </ListObjects>
+  <ObjectLookups>
+    <ObjectLookup name="luOrderMetaForFreeItems" objectClass="LuOrderMetaforFreeItems" dataSourceProperty="pKey" lookupProperty="sdoMetaPKey" />
+  </ObjectLookups>
+  <Methods>
+    <Method name="beforeLoadAsync" />
+    <Method name="setIvcSearchKeysForItemMetas" />
+    <Method name="setIvcSearchKeysForPaymentMetas" />
+    <Method name="getIvcMetaByItemMeta_UsedForDisplay" />
+    <Method name="getIvcMetasByItemMeta" />
+    <Method name="getIvcMetasByPaymentMeta" />
+    <Method name="getCriterionAttributeForLevel" />
+    <Method name="getCriterionAttributeForFlatList" />
+    <Method name="getBreadCrumbRootLabel" />
+    <Method name="getProductHierarchyForAddItem" />
+    <Method name="getItemMetaJsonDictionary" />
+    <Method name="getNumberOfHierarchyLevels" />
+  </Methods>
+</BusinessObject>

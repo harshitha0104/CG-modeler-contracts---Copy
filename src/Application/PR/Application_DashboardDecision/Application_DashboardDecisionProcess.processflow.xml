@@ -1,0 +1,67 @@
+<Process name="Application::DashboardDecisionProcess" defaultAction="PromotionApprover_Decision" schemaVersion="0.0.0.5" >
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="SalesRepRole" type="LuUserHasRoleById" />
+        <Declaration name="PrmApproverRole" type="LuUserHasRoleById" />
+        <Declaration name="TourUserRole" type="LuUserHasRoleById" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadSalesRepRole" actionType="LOAD" type="LuUserHasRoleById">
+        <Parameters>
+          <Input name="usrRole" type="Literal" value="SalesRep" />
+          <Input name="usrPKey" value="ApplicationContext::User.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::SalesRepRole" />
+      </Action>
+      <Action name="LoadPrmApproverRole" actionType="LOAD" type="LuUserHasRoleById">
+        <Parameters>
+          <Input name="usrRole" type="Literal" value="PromotionApprover" />
+          <Input name="usrPKey" value="ApplicationContext::User.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::PrmApproverRole" />
+      </Action>
+      <Action name="LoadTourUserRole" actionType="LOAD" type="LuUserHasRoleById">
+        <Parameters>
+          <Input name="usrRole" type="Literal" value="TourUser" />
+          <Input name="usrPKey" value="ApplicationContext::User.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::TourUserRole" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <!-- If no PromotionApprover Role, decide between DSD and SalesRep Dashboard -->
+      <Action name="PromotionApprover_Decision" actionType="DECISION" parameter="ProcessContext::PrmApproverRole.pKey">
+        <CaseEmpty action="DSD_Decision" />
+        <CaseElse action="SalesRep_Decision" />
+      </Action>
+      <!-- Check if User had TourUser role -->
+      <Action name="DSD_Decision" actionType="DECISION" parameter="ProcessContext::TourUserRole.pKey">
+        <CaseEmpty action="SalesRepDashboard" />
+        <CaseElse action="DSDDashboard" />
+      </Action>
+      <!-- Check if both Roles (PrmApprover and SalesRep) are active. If Yes open Dashboarddecision UI-->
+      <Action name="SalesRep_Decision" actionType="DECISION" parameter="ProcessContext::SalesRepRole.pKey">
+        <CaseEmpty action="PromotionApproverDashboard" />
+        <CaseElse action="Menu_Decision" />
+      </Action>
+      <Action name="Menu_Decision" actionType="DECISION" parameter="ProcessContext::PrmApproverRole.pKey">
+        <CaseEmpty action="SalesRepDashboard" />
+        <CaseElse action="ShowMainMenu" />
+      </Action>
+      <Action actionType="VIEW" name="ShowMainMenu">
+        <UIDescription>Application::DashboardDecisionUI</UIDescription>
+        <Events>
+          <Event name="openSalesRepDashboard" action="SalesRepDashboard" />
+          <Event name="openPromotionApproverDashboard" action="PromotionApproverDashboard" />
+        </Events>
+      </Action>
+      <Action actionType="PROCESS" name="SalesRepDashboard" process="Application::DashboardProcess" />
+      <Action actionType="PROCESS" name="PromotionApproverDashboard" process="Application::PrmApproverDashboardProcess" />
+      <Action actionType="PROCESS" name="DSDDashboard" process="Application::DSDDashboardProcess" />
+    </Actions>
+  </Body>
+</Process>

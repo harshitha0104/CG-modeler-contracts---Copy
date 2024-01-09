@@ -1,0 +1,108 @@
+<UIDescription name="Call::ActivityPerformanceUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionPage" cachable="false">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="ActivityPerformanceId" defaultLabel="Activity Performance" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="MasterList" dataSource="ProcessContext::ActivityPerformanceList">
+          <Items name="Items" itemPattern="ActivityPerformancePattern">
+            <ItemListLayout>
+              <Default>
+                <Col width="3em" height="3em" layoutType="Image" bindingId="MediaPath" />
+                <Col flex="1">
+                  <Row layoutType="itemIdentifierSmall" bindingId="Slogan" />
+                  <Row>
+                    <Col layoutType="itemSecondary" bindingId="ValidFrom" />
+                    <Col width="0.4em" height="1.5em" layoutType="itemSecondary" bindingId="Separator" />
+                    <Col layoutType="itemSecondary" bindingId="ValidThru" />
+                  </Row>
+                </Col>
+                <Col flex="1">
+                  <Row>
+                    <Col width="10.0em" layoutType="itemLabel itemLeft" bindingId="ActivityTemplateLabel" />
+                    <Col flex="1" layoutType="itemValue" bindingId="ActivityTemplate" />
+                  </Row>
+                  <Row>
+                    <Col width="10.0em" layoutType="itemLabel itemLeft" bindingId="RelatedPromotion" />
+                    <Col flex="1" layoutType="itemValue" bindingId="PromotionSlogan" />
+                  </Row>
+                  <Row>
+                    <Col width="10.0em" layoutType="itemLabel itemLeft" bindingId="TimeFromThru" />
+                    <Col flex="1" layoutType="itemValue" bindingId="PromotionDate" />
+                  </Row>
+                </Col>
+                <Col width="3em" height="1em" layoutType="itemTitle" bindingId="Threshold" />
+                <Col width="1em" height="1em" layoutType="Image" bindingId="ThresholdIcon" />
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="3em" height="3em" layoutType="Image" bindingId="MediaPath" />
+                  <Col flex="1">
+                    <Row layoutType="itemIdentifierSmall" bindingId="Slogan" />
+                    <Row>
+                      <Col layoutType="itemSecondary" bindingId="ValidFrom" />
+                      <Col width="0.4em" height="1.5em" layoutType="itemSecondary" bindingId="Separator" />
+                      <Col layoutType="itemSecondary" bindingId="ValidThru" />
+                    </Row>
+                  </Col>
+                  <Col flex="1">
+                    <Row>
+                      <Col width="10.0em" layoutType="itemLabel itemLeft" bindingId="ActivityTemplateLabel" />
+                      <Col flex="1" layoutType="itemValue" bindingId="ActivityTemplate" />
+                    </Row>
+                    <Row>
+                      <Col width="10.0em" layoutType="itemLabel itemLeft" bindingId="RelatedPromotion" />
+                      <Col flex="1" layoutType="itemValue" bindingId="PromotionSlogan" />
+                    </Row>
+                    <Row>
+                      <Col width="10.0em" layoutType="itemLabel itemLeft" bindingId="TimeFromThru" />
+                      <Col flex="1" layoutType="itemValue" bindingId="PromotionDate" />
+                    </Row>
+                  </Col>
+                  <Col width="3em" height="1em" layoutType="itemTitle" bindingId="Threshold" />
+                  <Col width="1em" height="1em" layoutType="Image" bindingId="ThresholdIcon" />
+                </Default>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col width="3em" height="3em" layoutType="Image" bindingId="MediaPath" />
+                  <Col flex="1">
+                    <Row layoutType="itemIdentifierSmall" bindingId="Slogan" />
+                    <Row>
+                      <Col layoutType="itemSecondary" bindingId="ValidFrom" />
+                      <Col width="0.4em" height="1.5em" layoutType="itemSecondary" bindingId="Separator" />
+                      <Col layoutType="itemSecondary" bindingId="ValidThru" />
+                    </Row>
+                    <Row layoutType="itemLabel" bindingId="ActivityTemplate" />
+                    <Row layoutType="itemLabel" bindingId="PromotionSlogan" />
+                    <Row layoutType="itemLabel" bindingId="PromotionDate" />
+                  </Col>
+                  <Col width="3em" height="1em" layoutType="itemTitle" bindingId="Threshold" />
+                  <Col width="1em" height="1em" layoutType="Image" bindingId="ThresholdIcon" />
+                </Default>
+              </Phone>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="MediaPath" type="Blob" binding=".mediaPath" roundedEdge="true" fileTypeBinding=".fileType" />
+              <Binding target="Slogan" type="Text" binding=".activityDescription" bindingMode="ONE_WAY" />
+              <Binding target="ValidFrom" type="Date" binding=".activityValidFrom" bindingMode="ONE_WAY" />
+              <Binding target="ValidThru" type="Date" binding=".activityValidThru" bindingMode="ONE_WAY" />
+              <Binding target="ActivityTemplate" type="Text" binding=".activityTemplateDescription" bindingMode="ONE_WAY" />
+              <Binding target="PromotionSlogan" type="Text" binding=".promotionDescription" bindingMode="ONE_WAY" />
+              <Binding target="PromotionDate" type="Text" binding=".promotionDateText" bindingMode="ONE_WAY" />
+              <Binding target="Threshold" type="Text" binding=".thresholdText" bindingMode="ONE_WAY" />
+              <Binding target="ThresholdIcon" type="Image" imageType=".svg" binding=".thresholdIcon" bindingMode="ONE_WAY" />
+              <Resource target="Separator" type="Label" defaultLabel=" - " id="separatorMinus" />
+              <Resource target="ActivityTemplateLabel" type="Label" defaultLabel="Activity Template" id="ActivityTemplateId" />
+              <Resource target="RelatedPromotion" type="Label" defaultLabel="Related Promotion" id="RelatedPromotion" />
+              <Resource target="TimeFromThru" type="Label" defaultLabel="From/Thru" id="TimeFromThru" />
+            </Bindings>
+          </Items>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

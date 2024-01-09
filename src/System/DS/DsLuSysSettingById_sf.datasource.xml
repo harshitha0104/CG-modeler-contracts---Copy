@@ -1,0 +1,16 @@
+<DataSource name="DsLuSysSettingById" backendSystem="sf" businessObjectClass="LuSysSettingById" external="false" distinct="false" readOnly="true" editableEntity="System_Setting__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="System_Setting__c" column="Id" />
+    <Attribute name="value" table="System_Setting__c" column="Value__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="System_Setting__c" alias="" idAttribute="Id" />
+  </Entities>
+  <OrderCriteria />
+  <QueryCondition><![CDATA[
+			replace(System_Setting__c.Name, '_', '') = #iD#
+		]]></QueryCondition>
+  <Parameters>
+    <Parameter name="iD" type="TEXT" />
+  </Parameters>
+</DataSource>

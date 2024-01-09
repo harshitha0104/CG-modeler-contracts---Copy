@@ -1,0 +1,89 @@
+<Datasource objectClass="LoPrmCttTactics" backendSystem="sf" businessObjectClass="LoPrmCttTactics" readOnly="false" external="true" editableEntity="Contract_Tactic__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contract_Tactic__c" column="Id" />
+    <Attribute name="active" table="Contract_Tactic__c" column="Active__c" />
+    <Attribute name="costAmount" table="Contract_Tactic__c" column="Cost_Amount__c" />
+    <Attribute name="dateFrom" table="Contract_Tactic__c" column="Valid_From__c" />
+    <Attribute name="dateThru" table="Contract_Tactic__c" column="Valid_Thru__c" />
+    <Attribute name="tacticParentPKey" table="Contract_Tactic__c" column="Contract__c" />
+    <Attribute name="tacticMetaName" table="Contract_Template__c" column="Description_#Language#__c" />
+    <Attribute name="prmMetaPKey" table="Contract_Tactic__c" column="Contract_Tactic_Template__c" />
+    <Attribute name="metaId" table="Contract_Tactic__c" column="Meta_Type__c" />
+    <Attribute name="bpaCustomerPKey" table="Contract__c" column="Account__c" />
+    <Attribute name="salesOrg" table="Contract_Template__c" column="Sales_Org__c" />
+    <Attribute name="tacticId" table="Contract_Tactic__c" column="Name" />
+    <Attribute name="initiatorPKey" table="Contract_Tactic__c" column="CreatedById" />
+    <DerivedAttribute name="useStepper" value="'0'" />
+    <DerivedAttribute name="managementType" value="' '" />    
+  </Attributes>
+  <Entities>
+    <Entity name="Contract_Tactic__c" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var tacticParentPKey = "";
+
+			if(Utils.isDefined(jsonQuery.tacticParentPKey)){
+				tacticParentPKey = Utils.convertForDBParam(jsonQuery.tacticParentPKey, "DomPKey");
+			}
+
+			var sqlParams = {tacticParentPKey};
+
+			var sqlStmt = "SELECT Contract_Tactic__c.Id AS pKey ";
+			sqlStmt+=" 		,Contract_Tactic__c.Active__c AS active ";
+			sqlStmt+=" 		,Contract_Tactic__c.Cost_Amount__c AS costAmount ";
+			sqlStmt+=" 		,Contract_Tactic__c.Valid_From__c AS dateFrom ";
+			sqlStmt+=" 		,Contract_Tactic__c.Valid_Thru__c AS dateThru ";
+			sqlStmt+=" 		,Contract_Tactic__c.Contract__c AS tacticParentPKey ";
+			sqlStmt+=" 		,Contract_Template__c.Description_#Language#__c AS tacticMetaName ";
+			sqlStmt+=" 		,Contract_Tactic__c.Contract_Tactic_Template__c AS prmMetaPKey ";
+			sqlStmt+=" 		,Contract_Template__c.Meta_Type__c AS metaId ";
+			sqlStmt+=" 		,' ' AS managementType ";
+			sqlStmt+=" 		,Contract__c.Account__c AS bpaCustomerPKey ";
+			sqlStmt+=" 		,Contract_Template__c.Sales_Org__c AS salesOrg ";    
+			sqlStmt+=" 		,Contract_Tactic__c.Name AS tacticId "; 
+			sqlStmt+=" 		,Contract_Tactic__c.CreatedById AS initiatorPKey "; 
+			sqlStmt+=" 		,'Decimal' AS dataType ";      
+			sqlStmt+=" 		,'0' AS useStepper ";
+			sqlStmt+=" 		,'0' AS stepSize ";  
+			sqlStmt+=" 		,'0' AS minValue ";
+			sqlStmt+=" 		,'9999999' AS maxValue ";
+			sqlStmt+=" 	FROM Contract_Tactic__c ";
+			sqlStmt+=" 	JOIN Contract_Template__c ON Contract_Tactic__c.Contract_Tactic_Template__c = Contract_Template__c.Id ";
+			sqlStmt+=" 	JOIN Contract__c ON Contract_Tactic__c.Contract__c = Contract__c.Id ";
+			sqlStmt+=" 	WHERE ";
+			sqlStmt+=" 		Contract_Tactic__c.Contract__c = #tacticParentPKey# ";
+			sqlStmt+=" 		AND Contract_Tactic__c.IsDeleted = '0' ";
+			sqlStmt+=" 		AND Contract_Template__c.Sales_Org__c = '#SALESORG#' ";
+			sqlStmt+=" 	ORDER BY dateFrom ASC ";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+    <Custom>
+      <TacticPresets><![CDATA[  
+
+				var contractMetaPKey = "";
+
+				if(Utils.isDefined(jsonParams.contractMetaPKey)){
+					contractMetaPKey = Utils.convertForDBParam(jsonParams.contractMetaPKey, "DomPKey");
+				}
+
+				var sqlParams = {contractMetaPKey};
+
+				var sqlStmt = "SELECT ContractTacticMeta.Id AS tacticMetaPKey ";
+				sqlStmt+=" 	,ContractTacticMeta.Name AS tacticMetaId ";
+				sqlStmt+=" 	,ContractTacticMeta.Description_#Language#__c AS tacticMetaName ";
+				sqlStmt+=" FROM Contract_Template__c AS ContractMeta ";
+				sqlStmt+=" INNER JOIN Contract_Template__c as ContractTacticMeta ON ContractMeta.Id = ContractTacticMeta.Account_Contract_Template__c ";
+				sqlStmt+=" WHERE (1 = 1) ";
+				sqlStmt+=" 	AND ContractMeta.Sales_Org__c = '#SALESORG#' ";
+				sqlStmt+=" 	AND ContractTacticMeta.Sales_Org__c = '#SALESORG#' ";
+				sqlStmt+=" 	AND ContractTacticMeta.Preset__c = '1' ";
+				sqlStmt+=" 	AND ContractMeta.Id = #contractMetaPKey# "; 
+				
+				return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+			]]></TacticPresets>
+    </Custom>
+  </Database>
+</Datasource>

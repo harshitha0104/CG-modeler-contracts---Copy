@@ -1,0 +1,85 @@
+<DataSource name="DsLoSuggestedQuantity" backendSystem="sf" objectClass="LoSuggestedQuantity" businessObjectClass="LoSuggestedQuantity" readOnly="true" external="true" editableEntity="Order_Item__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="prdMainPKey" table="Order_Item__c" column="Product__c" />
+    <Attribute name="quantityLogisticUnit" table="Order_Item__c " column="Uom__c" />
+    <Attribute name="sdoItemMetaPKey" table="Order_Item__c" column="Quantity__c" />
+    <DerivedAttribute name="suggestedQuantity" value="0" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order_Item__c" alias="" idAttribute="Product__c" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var ordererPKey = "";
+			var sdoMetaPKey = "";
+			var documentType = "";
+			var numberOfHistValues = "";
+
+			if(Utils.isDefined(jsonQuery.ordererPKey)){
+				ordererPKey = jsonQuery.ordererPKey;
+			}
+			if(Utils.isDefined(jsonQuery.sdoMetaPKey)){
+				sdoMetaPKey = jsonQuery.sdoMetaPKey;
+			}
+			if(Utils.isDefined(jsonQuery.documentType)){
+				documentType = jsonQuery.documentType;
+			}
+			if(Utils.isDefined(jsonQuery.numberOfHistValues)){
+				numberOfHistValues = jsonQuery.numberOfHistValues;
+			}
+			
+			var sqlParams = {ordererPKey, sdoMetaPKey, documentType, numberOfHistValues};
+			
+			var sqlStmt=  "WITH ";
+			sqlStmt += "cte_sdoItem (sdoMainPKey,PrdMainPKey,QuantityLogisticUnit,Quantity, SdoItemMetaPKey) ";
+			sqlStmt += "AS ";
+			sqlStmt += "( ";
+			sqlStmt += "SELECT ";
+			sqlStmt += "sdoOrder.Id as sdoMainPKey, ";
+			sqlStmt += "Order_Item__c.Product__c as PrdMainPKey, ";
+			sqlStmt += "Order_Item__c.Uom__c as QuantityLogisticUnit, "; 
+			sqlStmt += "Order_Item__c.Quantity__c as Quantity, ";    
+			sqlStmt += "Order_Item__c.Order_Item_Template__c as SdoItemMetaPKey ";
+            sqlStmt += "FROM (select Id from Order__c where Order_Account__c = #ordererPKey# ";
+			sqlStmt += "and Order_Template__c = #sdoMetaPKey# and phase__c IN ('Released','Ready') ";			
+			sqlStmt += "and Document_Type__c = #documentType#  order by Order_Date__c DESC, Release_Time__c DESC limit #numberOfHistValues# ";
+			sqlStmt += ") sdoOrder ";
+			sqlStmt += "LEFT JOIN Order_Item__c ON sdoOrder.Id = Order_Item__c.Order__c ";
+			sqlStmt += "AND (Order_Item__c.Parent_Order_Item__c = '' OR Order_Item__c.Parent_Order_Item__c = ' ') ";
+			sqlStmt += "LEFT JOIN Order_Item_Template__c ON Order_Item__c.Order_Item_Template__c = Order_Item_Template__c.Id ";
+			sqlStmt += "AND Order_Item_Template__c.Quantity_Suggestion_Policy__c = 'OrderedQuantity' ";
+			sqlStmt += ")"
+
+			sqlStmt += "Select sdoItem_AllOrderItems.PrdMainPKey as prdMainPKey, ";
+			sqlStmt += "sdoItem_AllOrderItems.QuantityLogisticUnit as quantityLogisticUnit, ";
+			sqlStmt += "sdoItem_AllOrderItems.SdoItemMetaPKey as sdoItemMetaPKey, ";
+			sqlStmt += "ROUND(avg(IFNULL(sdoItem_All.Quantity,0))) as suggestedQuantity ";
+			sqlStmt += "FROM ";
+			sqlStmt += "(SELECT * FROM ";
+			sqlStmt += "(Select Distinct sdoMainPKey from cte_sdoItem) sdoItem_distinctOrder "; 
+			sqlStmt += "Cross Join "; 
+			sqlStmt += "(Select Distinct PrdMainPKey,QuantityLogisticUnit,SdoItemMetaPKey from cte_sdoItem) sdoItem_distinctItem) sdoItem_AllOrderItems ";
+			sqlStmt += "LEFT OUTER JOIN ";
+			sqlStmt += "(Select sdoMainPKey,PrdMainPKey,QuantityLogisticUnit,SdoItemMetaPKey,SUM(Quantity) as Quantity from cte_sdoItem ";
+			sqlStmt += "group by cte_sdoItem.PrdMainPKey, cte_sdoItem.QuantityLogisticUnit, cte_sdoItem.SdoItemMetaPKey, cte_sdoItem.sdoMainPKey) sdoItem_All ";
+			sqlStmt += "on sdoItem_All.PrdMainPKey = sdoItem_AllOrderItems.PrdMainPKey and sdoItem_All.QuantityLogisticUnit = sdoItem_AllOrderItems.QuantityLogisticUnit ";
+			sqlStmt += "and sdoItem_All.SdoItemMetaPKey = sdoItem_AllOrderItems.SdoItemMetaPKey and sdoItem_All.sdoMainPKey = sdoItem_AllOrderItems.sdoMainPKey ";
+			sqlStmt += "group by sdoItem_AllOrderItems.PrdMainPKey, sdoItem_AllOrderItems.QuantityLogisticUnit, sdoItem_AllOrderItems.SdoItemMetaPKey ";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+    <Update><![CDATA[
+			// Intended to be empty
+			return undefined;
+		]]></Update>
+    <Insert><![CDATA[   
+			// Intended to be empty     
+			return undefined;           
+		]]></Insert>
+    <Delete><![CDATA[
+			// Intended to be empty
+			return undefined;  
+		]]></Delete>
+  </Database>
+</DataSource>

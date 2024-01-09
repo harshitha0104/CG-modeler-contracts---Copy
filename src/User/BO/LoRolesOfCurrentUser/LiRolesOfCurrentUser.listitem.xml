@@ -1,0 +1,6 @@
+<ListItem name="LiRolesOfCurrentUser">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="usrRoleId" type="DomId" dataSourceProperty="usrRoleId" />
+  </SimpleProperties>
+</ListItem>

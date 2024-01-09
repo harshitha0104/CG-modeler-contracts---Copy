@@ -1,0 +1,7 @@
+<ListItem name="LiMePromotion" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty id="true" name="prdMainPKey" type="DomPKey" storable="false" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="promoted" type="DomBool" storable="false" dataSourceProperty="promoted" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,49 @@
+<DataSource name="DsLoReplenishmentMeta" businessObjectClass="LoReplenishmentMeta" external="true" readOnly="true" editableEntity="SdoMeta" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[     
+
+			var tmgMainPKey = "";
+			
+			if(Utils.isDefined(ApplicationContext.get('currentTourPKey')) && ApplicationContext.get('currentTourStatus') === "Running"){
+				tmgMainPKey = Utils.convertForDBParam(ApplicationContext.get('currentTourPKey'), 'DomPKey');
+			}
+			if(ApplicationContext.get('user').hasRole('TourUser') && Utils.isEmptyString(tmgMainPKey)){ 
+				tmgMainPKey = "'NoTourSelected'";
+			}
+
+			var sqlParams = {tmgMainPKey};
+
+			var sqlStmt = "SELECT SdoMeta.PKey AS pKey, ";
+			sqlStmt += "SdoText.Text As text ";
+			sqlStmt += "FROM SdoMeta ";
+			sqlStmt += "INNER JOIN TmgTourObjectRel ON ";
+			sqlStmt += "SdoMeta.PKey = TmgTourObjectRel.ObjectMetaPKey ";
+			sqlStmt += "INNER JOIN SdoText ON ";
+			sqlStmt += "SdoMeta.PKey = SdoText.AppPKey ";
+			sqlStmt += "WHERE (1=1) AND SdoMeta.Active = '1'";
+			sqlStmt += "AND SdoMeta.CreationPlatform IN ('Both', 'Mobility') ";
+			sqlStmt += "AND SdoMeta.ValidFrom <=  '#Today#' ";
+			sqlStmt += "AND SdoMeta.ValidThru >=  '#Today#' ";
+			sqlStmt += "AND SdoMeta.SdoSubType = 'Replenishment' ";
+			sqlStmt += "AND SdoMeta.MetaType = 'OrderEntry' ";
+			sqlStmt += "AND TmgTourObjectRel.Usage = 'SdoMeta.Replenishment' ";
+			sqlStmt += "AND TmgTourObjectRel.TmgTourPKey = #tmgMainPKey# ";
+			sqlStmt += "AND SdoText.Language = '#Language#' ";
+			sqlStmt += "ORDER BY text ASC ";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+    <Update><![CDATA[ 
+			// Intended to be empty     
+			return undefined;     
+		]]></Update>
+    <Insert><![CDATA[     
+			// Intended to be empty     
+			return undefined;     
+		]]></Insert>
+    <Delete><![CDATA[      
+			// Intended to be empty     
+			return undefined;     
+		]]></Delete>
+  </Database>
+</DataSource>

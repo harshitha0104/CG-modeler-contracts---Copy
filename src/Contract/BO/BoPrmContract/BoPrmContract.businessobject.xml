@@ -1,0 +1,89 @@
+<BusinessObject name="BoPrmContract"  generateLoadMethod="true" generateCreateMethod="true" OERReference="PrmContract" schemaVersion="1.1">
+  <DataSource name="DsBoPrmContract" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="prmId" type="DomId" dataSourceProperty="prmId" />
+    <SimpleProperty name="bpaCustomerPKey" type="DomPKey" dataSourceProperty="bpaCustomerPKey" />
+    <SimpleProperty name="dateFrom" type="DomDate" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" dataSourceProperty="dateThru" />
+    <SimpleProperty name="dateInitiation" type="DomDate" dataSourceProperty="dateInitiation" />
+    <SimpleProperty name="actualStatePKey" type="DomPKey" dataSourceProperty="actualStatePKey" />
+    <SimpleProperty name="nextStatePKey" type="DomPKey" dataSourceProperty="nextStatePKey" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="initiatorPKey" type="DomPKey" dataSourceProperty="initiatorPKey" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="phaseType" type="DomText" dataSourceProperty="phaseType" />
+    <SimpleProperty name="wfeStateText" type="DomText" dataSourceProperty="wfeStateText" />
+    <SimpleProperty name="phase" type="DomPrmContractPhase" dataSourceProperty="phase" />
+    <SimpleProperty name="metaId" type="DomId" dataSourceProperty="metaId" />
+    <SimpleProperty name="prmMetaPKey" type="DomPKey" dataSourceProperty="prmMetaPKey" />
+    <SimpleProperty name="commitDate" type="DomDate" dataSourceProperty="commitDate" />
+    <SimpleProperty name="ownerPKey" type="DomPKey" dataSourceProperty="ownerPKey" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="managementType" type="DomBpaManagementType" dataSourceProperty="managementType" />
+  </SimpleProperties>
+  <ObjectLookups>
+    <ObjectLookup name="luPrmMeta" objectClass="LuPrmMeta" dataSourceProperty="prmMetaPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luCustomer" objectClass="LuCustomer" dataSourceProperty="bpaCustomerPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luInitiator" objectClass="LuUser" dataSourceProperty="initiatorPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luOwner" objectClass="LuUser" dataSourceProperty="ownerPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luResponsible" objectClass="LuUser" dataSourceProperty="responsiblePKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luPrmCttTacticProductCount" objectClass="LuPrmCttTacticProductCount" dataSourceProperty="pKey" lookupProperty="prmContractPKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luCustomerManagementInfo" objectClass="LuCustomerManagementInfo" dataSourceProperty="pKey" lookupProperty="bpaCustomerPKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <ListObjects>
+    <ListObject name="loPrmCttTactics" objectClass="LoPrmCttTactics" dataSourceProperty="pKey" listProperty="tacticParentPKey" loadMode="LoadImmediate">
+      <Events>
+        <Event name="listItemChanged" eventHandler="onTacticChanged" />
+      </Events>
+    </ListObject>
+    <ListObject name="loPrmCttProducts" objectClass="LoPrmCttProducts" dataSourceProperty="pKey" listProperty="prmContractPKey" loadMode="LoadImmediate">
+      <Events>
+        <Event name="listItemChanged" eventHandler="onProductChanged" />
+      </Events>
+    </ListObject>
+    <ListObject name="loPrmCttComment" objectClass="LoPrmCttComment" dataSourceProperty="pKey" listProperty="prmContractPKey" loadMode="LoadImmediate" />
+    <ListObject name="loRecentState" objectClass="LoPrmCttRecentState" dataSourceProperty="pKey" listProperty="prmContractPKey" loadMode="OnDemand" />
+    <ListObject name="loCssBLProcessingSchedule" objectClass="LoCssBLProcessingSchedule" dataSourceProperty="pKey" listProperty="objectPKey" loadMode="LoadImmediate" />
+    <!--<ListObject name="loAttachment" objectClass="LoPrmCttAttachment" dataSourceProperty="pKey" listProperty="prmContractPKey" loadMode="LoadImmediate" />-->
+  </ListObjects>
+  <NestedObjects>
+    <NestedObject name="boSlogan" objectClass="BoPrmCttSlogan" dataSourceProperty="pKey" nestingProperty="prmContractPKey" loadMode="LoadImmediate" />
+    <NestedObject name="boWorkflow" objectClass="BoWorkflow" dataSourceProperty="wfeWorkflowPKey" nestingProperty="pKey" loadMode="LoadImmediate" />
+  </NestedObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterInitialize" />
+    <Method name="beforeInitialize" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="createAsync" />
+    <Method name="addTactic" />
+    <Method name="addProduct" />
+    <Method name="addProductGroup" />
+    <Method name="checkProductTabVisible" />
+    <Method name="isNextStateAvailable" />
+    <Method name="isContractEditable" />
+    <Method name="stateTransition" />
+    <Method name="setEARights" />
+    <Method name="doDelete" />
+    <Method name="setProductDeleted" />
+    <Method name="setTacticDeleted" />
+    <Method name="copyBO" />
+    <Method name="onTacticChanged" />
+    <Method name="onProductChanged" />
+    <Method name="getValidStepperValue" />
+  </Methods>
+  <Validations>
+    <Validation name="validateNotEmpty" />
+    <Validation name="validateDate" />
+    <Validation name="validateProducts" />
+    <Validation name="validateTactics" />
+  </Validations>
+</BusinessObject>

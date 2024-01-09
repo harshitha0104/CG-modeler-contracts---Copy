@@ -1,0 +1,10 @@
+<ListItem name="LiOverdueCustomers">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="customerName" type="DomText" dataSourceProperty="customerName" />
+    <SimpleProperty name="customerAddress" type="DomText" dataSourceProperty="customerAddress" />
+    <SimpleProperty name="jdlCount" type="DomInteger" dataSourceProperty="jdlCount" />
+    <SimpleProperty name="promotionCount" type="DomInteger" dataSourceProperty="promotionCount" />
+    <SimpleProperty name="overdueImage" type="DomString" />
+  </SimpleProperties>
+</ListItem>

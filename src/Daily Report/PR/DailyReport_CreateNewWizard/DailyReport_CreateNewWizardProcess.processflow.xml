@@ -1,0 +1,83 @@
+<Process name="DailyReport::CreateNewWizardProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="DateFrom" type="DomDate" />
+        <Declaration name="UserDocMetaList" type="LoUserDocMeta" />
+        <Declaration name="UsrDocMetaPKey" type="String" />
+        <Declaration name="ValidationBo" type="BoDailyReportCreateNewWizard" />
+        <Declaration name="LuUniquePerDay" type="LuUsrDRUniquePerDay" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="getCurrentDate" call="Utils.createAnsiToday">
+        <Return name="ProcessContext::DateFrom" />
+      </Action>
+      <Action actionType="LOAD" name="GetUserDocMetaList" type="LoUserDocMeta">
+        <Return name="ProcessContext::UserDocMetaList" />
+      </Action>
+      <Action actionType="LOGIC" name="setFirstItem" call="ProcessContext::UserDocMetaList.getFirstItemPKey">
+        <Return name="ProcessContext::UsrDocMetaPKey" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>DailyReport::CreateNewWizardUI</UIDescription>
+        <Events>
+          <Event name="createDailyReport" action="LoadValidationBO" />
+        </Events>
+      </Action>
+      <!--  Validation -->
+      <Action actionType="LOAD" name="LoadValidationBO" type="BoDailyReportCreateNewWizard">
+        <Parameters>
+          <Input name="usrDocMetaPKey" value="ProcessContext::UsrDocMetaPKey" />
+        </Parameters>
+        <Return name="ProcessContext::ValidationBo" />
+        <TransitionTo action="ValidateDateField" />
+      </Action>
+      <Action actionType="VALIDATION" name="ValidateDateField">
+        <Validations>
+          <Validation name="ProcessContext::ValidationBo.validateNotEmpty" />
+        </Validations>
+        <TransitionTo action="ValidateNotEmpty_Result_Decision" />
+      </Action>
+      <Action name="ValidateNotEmpty_Result_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="LoadDataforUniqueCheck" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action actionType="LOAD" name="LoadDataforUniqueCheck" type="LuUsrDRUniquePerDay">
+        <Parameters>
+          <Input name="dateFrom" value="ProcessContext::DateFrom" />
+          <Input name="usrDocMetaPKey" value="ProcessContext::UsrDocMetaPKey" />
+        </Parameters>
+        <Return name="ProcessContext::LuUniquePerDay" />
+        <TransitionTo action="WizardValidations" />
+      </Action>
+      <Action actionType="VALIDATION" name="WizardValidations">
+        <Validations>
+          <Validation name="ProcessContext::ValidationBo.validateNoOpenTimeCard" />
+          <Validation name="ProcessContext::ValidationBo.validatePostDating" />
+          <Validation name="ProcessContext::ValidationBo.validateUniquePerDay" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="EndCreateDailyReport" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <!--  End and Cancel Action -->
+      <Action actionType="END" name="EndCreateDailyReport">
+        <ReturnValues>
+          <Return name="dateFrom" value="ProcessContext::DateFrom" />
+          <Return name="usrDocMetaPKey" value="ProcessContext::UsrDocMetaPKey" />
+          <Return name="buttonPressed" value="Event.buttonPressed" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndCancel" />
+    </Actions>
+  </Body>
+</Process>

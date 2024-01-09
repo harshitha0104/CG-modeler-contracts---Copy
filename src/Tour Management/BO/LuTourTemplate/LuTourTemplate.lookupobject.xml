@@ -1,0 +1,14 @@
+<LookupObject name="LuTourTemplate" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuTourTemplate" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="Id" type="DomId" storable="false" dataSourceProperty="id" />
+    <SimpleProperty name="text" type="DomText" storable="false" dataSourceProperty="text" />
+    <SimpleProperty name="considerMileage" type="DomTmgConsiderMileage" dataSourceProperty="considerMileage" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

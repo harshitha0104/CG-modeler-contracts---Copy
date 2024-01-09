@@ -1,0 +1,100 @@
+<Process name="ContractPayment::PaymentRequestProcess" defaultAction="GetPaymentRequestList" schemaVersion="1.1">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="PaymentRequestsList" type="LoPayCttPayment" />
+        <Declaration name="PaymentRequestDetail" type="BoPayCttPayment" />
+        <Declaration name="StateType" type="String" />
+        <Declaration name="currentTabPage" type="String" />
+      </Declarations>
+    </ProcessContext>
+    <!-- Entry actions are executed sequentially in the order listed here. -->
+    <EntryActions>
+      <Action actionType="LOGIC" name="LoadTeamOfUser" call="ApplicationContext::User.loadTeamOfUser">
+        <Parameters>
+          <Input name="includeCurrentUser" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="GetPaymentRequestList" actionType="LOAD" type="LoPayCttPayment">
+        <Return name="ProcessContext::PaymentRequestsList" />
+        <TransitionTo action="ShowPaymentRequestsList" />
+      </Action>
+      <!-- Show GUI and handle events -->
+      <Action actionType="VIEW" name="ShowPaymentRequestsList">
+        <UIDescription>ContractPayment::ContractPaymentRequestUI</UIDescription>
+        <Events>
+          <Event name="listItemSelected" action="OverviewListMasterDetail" />
+          <Event name="releasePayment" action="ReleasePaymentRequest" />
+          <Event name="approvePayment" action="ApprovePaymentRequest" />
+          <Event name="rejectPayment" action="RejectPaymentRequest" />
+          <Event name="tabSelected" action="setCurrentTabName_Decision" />
+        </Events>
+      </Action>
+      <Action name="setCurrentTabName_Decision" actionType="DECISION" parameter="Event.tabName">
+        <Case value="Main" action="setCurrentTabName_Main" />
+        <Case value="Tactic" action="setCurrentTabName_Tactic" />
+        <CaseElse action="setCurrentTabName_Main" />
+      </Action>
+      <Action name="setCurrentTabName_Main" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::currentTabPage" />
+        <Parameters>
+          <Input name="value" value="Main" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="setCurrentTabName_Tactic" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::currentTabPage" />
+        <Parameters>
+          <Input name="value" value="Tactic" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="OverviewListMasterDetail" actionType="MASTER_DETAIL_HANDLER">
+        <MasterList name="ProcessContext::PaymentRequestsList">
+          <ItemUnselected type="RELOAD" />
+        </MasterList>
+        <DetailObject name="ProcessContext::PaymentRequestDetail" objectClass="BoPayCttPayment">
+          <Save type="ALWAYS" confirmation="FALSE" validate="FALSE" />
+        </DetailObject>
+      </Action>
+      <Action name="ReleasePaymentRequest" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="ForApproval" />
+        </Parameters>
+        <Return name="ProcessContext::StateType" />
+        <TransitionTo action="ContractStateTransition" />
+      </Action>
+      <Action name="ApprovePaymentRequest" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="Committed" />
+        </Parameters>
+        <Return name="ProcessContext::StateType" />
+        <TransitionTo action="ContractStateTransition" />
+      </Action>
+      <Action name="RejectPaymentRequest" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="Rejected" />
+        </Parameters>
+        <Return name="ProcessContext::StateType" />
+        <TransitionTo action="ContractStateTransition" />
+      </Action>
+      <Action name="ContractStateTransition" actionType="LOGIC" call="ProcessContext::PaymentRequestDetail.stateTransition">
+        <Parameters>
+          <Input name="stateType" value="ProcessContext::StateType" />
+        </Parameters>
+        <TransitionTo action="SaveContract" />
+      </Action>
+      <Action name="SaveContract" actionType="SAVE">
+        <TransitionTo action="refreshEARights" />
+      </Action>
+      <Action name="refreshEARights" actionType="LOGIC" call="BindingUtils.refreshEARights">
+        <Parameters>
+          <Input name="includeLists" type="Literal" value="1" />
+        </Parameters>
+        <TransitionTo action="GetPaymentRequestList" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

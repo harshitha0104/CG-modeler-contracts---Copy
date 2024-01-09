@@ -1,0 +1,28 @@
+<DataSource name="DsLoProductGroupOverview" backendSystem="sf" businessObjectClass="LoProductGroupOverview" distinct="false" readonly="false" external="false" editableEntity="Product2" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Product2" column="Id" />
+    <Attribute name="id" table="Product2" column="Consumer_Goods_Product_Code__c" />
+    <Attribute name="text1" table="Product2" column="Description_1_#Language#__c" />
+    <Attribute name="text2" table="Product2" column="Description_2_#Language#__c" />
+    <Attribute name="shortText" table="Product2" column="Short_Description_#Language#__c" />
+    <DerivedAttribute name="grouping1" value="substr(Product2.Description_1_#Language#__c,1,1)" />
+  </Attributes>
+  <Entities>
+    <Entity name="Product2" alias="" idAttribute="Id" />
+    <Entity name="RecordType" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product2.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+          <Condition leftSideValue="RecordType.DeveloperName" comparator="eq" rightSideType="Literal" rightSideValue="'Product_Group'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+    Product2.Sales_Org__c = '#SalesOrg#'
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Product2" attribute="Short_Description_#Language#__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters />
+</DataSource>

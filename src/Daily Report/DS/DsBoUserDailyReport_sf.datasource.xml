@@ -1,0 +1,69 @@
+<DataSource name="DsBoUserDailyReport" backendSystem="sf" businessObjectClass="BoUserDailyReport" external="false" editableEntity="User_Document__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="User_Document__c" column="Id" />
+    <Attribute name="salesOrg" table="User_Document_Template__c" column="Sales_Org__c" />
+    <Attribute name="id" table="User_Document__c" column="Name" />
+    <Attribute name="usrDocMetaPKey" table="User_Document__c" column="User_Document_Template__c" />
+    <Attribute name="phase" table="User_Document__c" column="Phase__c" />
+    <Attribute name="initiationDate" table="User_Document__c" column="Creation_Date__c" />
+    <Attribute name="dateFrom" table="User_Document__c" column="Date__c" />
+    <Attribute name="ownerUsrMainPKey" table="User_Document__c" column="Accountable__c" />
+    <Attribute name="responsiblePKey" table="User_Document__c" column="Responsible__c" />
+    <Attribute name="type" table="User_Document__c" column="Template_Description__c" />
+    <Attribute name="workTimeFrom" table="User_Document__c" column="Work_Time_From__c" />
+    <Attribute name="workTimeThru" table="User_Document__c" column="Work_Time_Thru__c" />
+    <DerivedAttribute name="actualStatePKey" value="#toggleMapping('User_Document__c', 'Phase__c')#" />
+    <DerivedAttribute name="nextStatePKey" value="' '" />
+    <DerivedAttribute name="wfeWorkflowPKey" value="User_Document_Template__c.Workflow__c" />
+    <DerivedAttribute name="user" value="owner.FirstName || ' ' ||  owner.LastName" />
+    <DerivedAttribute name="responsible" value="resp.FirstName || ' ' ||  resp.LastName" />
+    <DerivedAttribute name="totalHours" value="0" />
+    <DerivedAttribute name="totalMinutes" value="0" />
+    <DerivedAttribute name="totalLineString" value="' '" />
+    <DerivedAttribute name="totalWorkingTime" value="' '" />
+    <DerivedAttribute name="nonProductiveTime" value="' '" />
+    <DerivedAttribute name="productiveTime" value="' '" />
+    <DerivedAttribute name="tourId" value="' '" />
+    <DerivedAttribute name="releaseProcessActive" value="'0'" />
+  </Attributes>
+  <Entities>
+    <Entity name="User_Document__c" alias="" idAttribute="Id" />
+    <Entity name="User_Document_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="User_Document__c.User_Document_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="User_Document_Template__c.Id" />
+          <Condition leftSideValue="User_Document_Template__c.Mobility_Relevant__c" comparator="eq" rightSideType="Literal" rightSideValue="'1'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="RecordType" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="User_Document_Template__c.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+          <Condition leftSideValue="RecordType.DeveloperName" comparator="eq" rightSideType="Literal" rightSideValue="'Daily_Report'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="User" alias="Owner">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="User_Document__c.Accountable__c" comparator="eq" rightSideType="Attribute" rightSideValue="Owner.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="User" alias="resp">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="User_Document__c.Responsible__c" comparator="eq" rightSideType="Attribute" rightSideValue="resp.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[      
+       (User_Document__c.Id = #pKey#)
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

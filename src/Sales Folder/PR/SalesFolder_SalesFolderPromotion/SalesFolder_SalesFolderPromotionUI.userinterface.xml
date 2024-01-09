@@ -1,0 +1,63 @@
+<UIDescription name="SalesFolder::SalesFolderPromotionUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader titleBinding="ProcessContext::SloganTextValue">
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="SelectPromotions">
+          <Bindings>
+            <Binding type="Visible" target="Visible" call="ProcessContext::PromotionList.getButtonVisibility" />
+            <Resource target="Icon" type="Image" id="Promotion_PB" />
+            <Resource target="Text" type="Label" id="PromotionsId" defaultLabel="Promotions" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="loadPromotionsForSalesFolder" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <AttachmentFolder name="SalesFolderAttachmentFolder" maxVisibleAttachments="5" attachmentList="attachments" dataSource="ProcessContext::SalesFolderPromotionList.Items[]">
+          <Items>
+            <Bindings>
+              <Binding target="PKey" type="Text" binding=".prmPKey" />
+              <Binding target="Title" type="Text" binding=".sloganText" />
+              <Binding target="sloganText" type="Text" binding=".sloganText" />
+              <Binding target="annotationText" type="Text" binding=".annotationText" />
+            </Bindings>
+          </Items>
+          <Bindings>
+            <List target="attachments" dataSource="ProcessContext::PromotionIcons.Items[]">
+              <Binding bindingMode="ONE_WAY" target="MainPKey" type="Text" binding=".prmPKey" />
+              <Binding bindingMode="ONE_WAY" target="Type" type="Text" binding=".type" />
+              <Binding bindingMode="ONE_WAY" target="MediaPath" type="Text" binding=".mediaPath" />
+            </List>
+          </Bindings>
+          <AttachmentFolderInfoSections noOfColumns="2">
+            <AttachmentFolderInfoSection name="LocationSection" backendSystem="both">
+              <Bindings>
+                <Resource id="Location24" target="InfoIcon" type="Image" />
+              </Bindings>
+              <AttachmentFolderInfoSectionAttribute name="LocationInfoText" mappedTarget="annotationText" />
+            </AttachmentFolderInfoSection>
+          </AttachmentFolderInfoSections>
+          <LinkBar>
+            <ImageButton name="ShowDetails">
+              <Bindings>
+                <Resource target="Text" type="Label" id="ShowDetailsLink" defaultLabel="Show Details" bindingMode="ONE_WAY" />
+                <Resource target="Image" type="Image" id="ShowDetails16" defaultImage="ShowDetails16" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="openDetail">
+                  <Params>
+                    <Param name="pKey" value=".pKey" />
+                    <Param name="sloganText" value=".sloganText" />
+                  </Params>
+                </ButtonPressedEvent>
+              </Events>
+            </ImageButton>
+          </LinkBar>
+        </AttachmentFolder>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

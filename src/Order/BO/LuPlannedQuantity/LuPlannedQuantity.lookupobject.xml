@@ -1,0 +1,11 @@
+<LookupObject name="LuPlannedQuantity" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuPlannedQuantity" />
+  <SimpleProperties>
+    <SimpleProperty name="targetQuantity" type="DomDecimal" dataSourceProperty="targetQuantity" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

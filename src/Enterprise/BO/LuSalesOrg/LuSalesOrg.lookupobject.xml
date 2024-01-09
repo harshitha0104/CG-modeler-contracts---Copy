@@ -1,0 +1,21 @@
+<LookupObject name="LuSalesOrg" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuSalesOrg" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="street" type="DomStreet" dataSourceProperty="street" />
+    <SimpleProperty name="houseNumber" type="DomHouseNumber" dataSourceProperty="houseNumber" />
+    <SimpleProperty name="zipCode" type="DomZipCode" dataSourceProperty="zipCode" />
+    <SimpleProperty name="city" type="DomCity" dataSourceProperty="city" />
+    <SimpleProperty name="phone1" type="DomDial" dataSourceProperty="phone1" />
+    <SimpleProperty name="fax1" type="DomDial" dataSourceProperty="fax1" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+    <SimpleProperty name="taxJurisdictionCode" type="DomTaxJurisdictionCode" dataSourceProperty="taxJurisdictionCode" />
+    <SimpleProperty name="accountNumber" type="DomId" dataSourceProperty="accountNumber" />
+    <SimpleProperty name="legalInformation" type="DomLongDescription" dataSourceProperty="legalInformation" />
+    <SimpleProperty name="currency" type="DomCurrency" dataSourceProperty="currency" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

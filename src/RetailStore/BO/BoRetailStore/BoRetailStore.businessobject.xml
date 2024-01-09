@@ -1,0 +1,61 @@
+<BusinessObject name="BoRetailStore" schemaVersion="1.1">
+  <DataSource name="DsBoRetailStore" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" id="true" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="name" type="DomText" dataSourceProperty="name" />
+    <SimpleProperty name="priority" type="DomStorePriority" dataSourceProperty="priority" />
+    <SimpleProperty name="deliveryMethod" type="DomDeliveryMethod" dataSourceProperty="deliveryMethod" />
+    <SimpleProperty name="primaryContactId" type="DomPKey" dataSourceProperty="primaryContactId" />
+    <SimpleProperty name="deliveryFrequencyType" type="DomDeliveryFrequencyType" dataSourceProperty="deliveryFrequencyType" />
+    <SimpleProperty name="city" type="DomText" dataSourceProperty="city" />
+    <SimpleProperty name="state" type="DomText" dataSourceProperty="state" />
+    <SimpleProperty name="street" type="DomText" dataSourceProperty="street" />
+    <SimpleProperty name="country" type="DomText" dataSourceProperty="country" />
+    <SimpleProperty name="postalCode" type="DomText" dataSourceProperty="postalCode" />
+    <SimpleProperty name="locationId" type="DomPKey" id="true" dataSourceProperty="locationId" />
+    <SimpleProperty name="priorityImage" type="DomString" storable="false" dataSourceProperty="priorityImage" />
+    <SimpleProperty name="latitude" type="DomText" dataSourceProperty="latitude" />
+    <SimpleProperty name="longitude" type="DomText" dataSourceProperty="longitude" />
+    <SimpleProperty name="preferredVisitHoursId" type="DomPKey" id="true" dataSourceProperty="preferredVisitHoursId" />
+    <SimpleProperty name="operatingHoursId" type="DomPKey" dataSourceProperty="operatingHoursId" />
+    <SimpleProperty name="accountId" type="DomPKey" id="true" dataSourceProperty="accountId" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+  </SimpleProperties>
+  <NestedObjects />
+  <ObjectLookups>
+    <ObjectLookup name="luContact" objectClass="LuContact" dataSourceProperty="primaryContactId" lookupProperty="pKey" />
+    <ObjectLookup name="luLocation" objectClass="LuLocation" dataSourceProperty="locationId" lookupProperty="pKey" />
+  </ObjectLookups>
+  <ListObjects>
+    <ListObject name="loInStoreLocation" objectClass="LoInStoreLocation" dataSourceProperty="pKey" listProperty="retailStoreId" loadMode="OnDemand" />
+    <ListObject name="loPreviousVisits" objectClass="LoPreviousVisit" dataSourceProperty="pKey" listProperty="retailStoreId" loadMode="OnDemand" />
+    <ListObject name="loPreferredVisitHour" objectClass="LoTimeSlot" dataSourceProperty="preferredVisitHoursId" listProperty="operatingHoursId" loadMode="LoadImmediate" />
+    <ListObject name="loOpenHours" objectClass="LoTimeSlot" dataSourceProperty="operatingHoursId" listProperty="operatingHoursId" loadMode="LoadImmediate" />
+    <ListObject name="loContact" objectClass="LoContact" dataSourceProperty="accountId" listProperty="accountId" loadMode="OnDemand" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+    <Method name="processSmsSending" />
+    <Method name="processPhoneCall" />
+    <Method name="sendMail" />
+    <Method name="getRetailStoreAddress" />
+    <Method name="loadLoInStoreLocationAsync" />
+    <Method name="loadLoPreviousVisitsAsync" />
+    <Method name="loadLoContactAsync" />
+    <Method name="navigateToCustomer" />
+    <Method name="getRetailStoreLatLong" />
+  </Methods>
+</BusinessObject>

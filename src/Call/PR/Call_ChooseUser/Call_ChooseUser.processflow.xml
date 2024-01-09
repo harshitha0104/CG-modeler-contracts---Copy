@@ -1,0 +1,67 @@
+<Process name="Call::ChooseUser" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="UserList" type="LoTeamOfUser" />
+        <Declaration name="UserPKey" type="String" />
+        <Declaration name="UserName" type="String" />
+        <Declaration name="DateFromAnsi" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="DateFrom" type="String" />
+        <Input name="UserPKey" type="String" />
+        <Input name="UserName" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="ConvertToAnsi" call="Utils.convertDate2Ansi">
+        <Parameters>
+          <Input name="date" value="ProcessContext::DateFrom" />
+        </Parameters>
+        <Return name="ProcessContext::DateFromAnsi" />
+      </Action>
+      <!-- Reload team list of user (could be changed via background sync) param 0 means excluding current user -->
+      <Action actionType="LOGIC" name="LoadTeamOfUser" call="ApplicationContext::User.loadTeamOfUser">
+        <Parameters>
+          <Input name="includeCurrentUser" type="Literal" value="0" />
+        </Parameters>
+      </Action>
+      <Action name="LoadUserList" actionType="LOAD" type="LoTeamOfUser">
+        <Parameters>
+          <Input name="currentResponsiblePKey" value="ProcessContext::UserPKey" />
+        </Parameters>
+        <Return name="ProcessContext::UserList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Call::ChooseUserUI</UIDescription>
+        <Events>
+          <Event name="UserSelected" action="AssignUserPKey" />
+        </Events>
+      </Action>
+      <Action actionType="LOGIC" name="AssignUserPKey" call="Utils.identity">
+        <Parameters>
+          <Input name="userPKey" value="Event.userPKey" />
+        </Parameters>
+        <Return name="ProcessContext::UserPKey" />
+        <TransitionTo action="AssignUserName" />
+      </Action>
+      <Action actionType="LOGIC" name="AssignUserName" call="Utils.identity">
+        <Parameters>
+          <Input name="userName" value="Event.userName" />
+        </Parameters>
+        <Return name="ProcessContext::UserName" />
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="UserPKey" value="ProcessContext::UserPKey" />
+          <Return name="UserName" value="ProcessContext::UserName" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

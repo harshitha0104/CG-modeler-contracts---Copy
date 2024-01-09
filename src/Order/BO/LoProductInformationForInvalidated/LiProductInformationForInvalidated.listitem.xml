@@ -1,0 +1,10 @@
+<ListItem name="LiProductInformationForInvalidated" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" storable="true" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="text1" type="DomText" storable="false" dataSourceProperty="text1" />
+    <SimpleProperty name="shortId" type="DomId" storable="false" dataSourceProperty="shortId" />
+    <SimpleProperty name="groupText" type="DomString" storable="false" dataSourceProperty="groupText" />
+    <SimpleProperty name="groupId" type="DomId" storable="false" dataSourceProperty="groupId" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,32 @@
+<DataSource name="DsLoInventory" backendSystem="sf" businessObjectClass="LoInventory" external="false" editableEntity="Inventory__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Inventory__c" column="Id" />
+    <Attribute name="ivcMetaPKey" table="Inventory__c" column="Inventory_Template__c" />
+    <Attribute name="usrMainPKey" table="Inventory__c" column="User__c" />
+    <Attribute name="bpaMainPKey" table="Inventory__c" column="Account__c" />
+    <Attribute name="prdMainPKey" table="Inventory__c" column="Product__c" />
+    <Attribute name="phase" table="Inventory__c" column="Phase__c" />
+    <Attribute name="validFrom" table="Inventory__c" column="Valid_From__c" />
+    <Attribute name="validThru" table="Inventory__c" column="Valid_Thru__c" />
+    <Attribute name="invalid" table="Inventory__c" column="Invalid__c" />
+    <Attribute name="salesOrg" table="Inventory__c" column="Sales_Org__c" />
+    <DerivedAttribute name="id" value="''" />
+    <DerivedAttribute name="tmgTourPKey" value="''" />
+    <DerivedAttribute name="etpVehiclePKey" value="''" />
+    <Attribute name="currency" table="Inventory__c" column="Currency__c" />
+    <Attribute name="recordTypeId" table="Inventory__c" column="RecordTypeId" />
+  </Attributes>
+  <Entities>
+    <Entity name="Inventory__c" alias="" idAttribute="Id" />
+    <Entity name="RecordType" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Inventory__c.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition />
+  <OrderCriteria />
+  <Parameters />
+</DataSource>

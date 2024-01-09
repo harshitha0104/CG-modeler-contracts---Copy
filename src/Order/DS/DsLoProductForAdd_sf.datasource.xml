@@ -1,0 +1,186 @@
+<DataSource name="DsLoProductForAdd" backendSystem="sf" businessObjectClass="LoProductForAdd" external="true" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="prdMainPKey" table="TmpOrderItemMergeResult_T" column="PrdMainPKey" />
+    <Attribute name="category" table="TmpOrderItemMergeResult_T" column="Category" />
+    <Attribute name="customerProductNumber" table="TmpOrderItemMergeResult_T" column="CustomerProductNumber" />
+    <Attribute name="deliveryState" table="TmpOrderItemMergeResult_T" column="DeliveryState" />
+    <Attribute name="eAN" table="TmpOrderItemMergeResult_T" column="EAN" />
+    <Attribute name="fieldState" table="TmpOrderItemMergeResult_T" column="FieldState" />
+    <Attribute name="focusProductImage" table="TmpOrderItemMergeResult_T" column="FocusProductImage" />
+    <Attribute name="focusProductType" table="TmpOrderItemMergeResult_T" column="FocusProductType" />
+    <Attribute name="foreignProduct" table="TmpOrderItemMergeResult_T" column="ForeignProduct" />
+    <Attribute name="groupId" table="TmpOrderItemMergeResult_T" column="GroupId" />
+    <Attribute name="groupText" table="TmpOrderItemMergeResult_T" column="GroupText" />
+    <Attribute name="groupingAttribute" table="TmpOrderItemMergeResult_T" column="Text1" />
+    <DerivedAttribute name="itemState" value="' '" />
+    <Attribute name="listed" table="TmpOrderItemMergeResult_T" column="Listed" />
+    <Attribute name="listing" table="TmpOrderItemMergeResult_T" column="Listing" />
+    <Attribute name="listingWithModules" table="TmpOrderItemMergeResult_T" column="ListingWithModules" />
+    <Attribute name="newState" table="TmpOrderItemMergeResult_T" column="NewState" />
+    <Attribute name="outOfStock" table="TmpOrderItemMergeResult_T" column="OutOfStock" />
+    <Attribute name="piecesPerSmallestUnitForBasePrice" table="TmpOrderItemMergeResult_T" column="PiecesPerSmallestUnitForBasePrice" />
+    <Attribute name="prdId" table="TmpOrderItemMergeResult_T" column="PrdId" />
+    <Attribute name="promoted" table="TmpOrderItemMergeResult_T" column="Promoted" />
+    <Attribute name="shortId" table="TmpOrderItemMergeResult_T" column="ShortId" />
+    <Attribute name="simplePricingBasePrice" table="TmpOrderItemMergeResult_T" column="SimplePricingBasePrice" />
+    <Attribute name="taxClassification" table="TmpOrderItemMergeResult_T" column="TaxClassification" />
+    <Attribute name="text1" table="TmpOrderItemMergeResult_T" column="Text1" />
+    <Attribute name="productGroup" table="TmpOrderItemMergeResult_T" column="Text1" />
+    <Attribute name="text2" table="TmpOrderItemMergeResult_T" column="Text2" />
+    <Attribute name="prdType" table="TmpOrderItemMergeResult_T" column="PrdType" />
+    <DerivedAttribute name="sdoItemMeta1" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta2" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta3" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta4" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta5" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta6" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta7" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta8" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta9" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta10" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta11" value="'0'" />
+    <DerivedAttribute name="sdoItemMeta12" value="'0'" />
+    <DerivedAttribute name="basePriceReceipt" value="'0'" />
+  </Attributes>
+  <Entities>
+    <Entity name="TmpOrderItemMergeResult_T" alias="" idAttribute="PrdMainPKey" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+var params = jsonQuery.params;
+var addCond_ProductPKeys;
+var closedListingCondition = "";
+var queryCondition = "";
+var filterOutCompetitorProducts = '0';
+
+//############################
+//## Advanced Search Paging ##
+//############################
+var addCondSearch = "";
+var prdId= "";
+var eAN= "";
+var text1= "";
+var prdType= "";
+var foreignProduct= "";
+var category = "";
+
+/**  prdId */
+if (Utils.isDefined(jsonQuery.prdId)){
+	prdId = Utils.convertForDBParam(jsonQuery.prdId, "DomId");
+	addCondSearch += " AND PrdId " + Utils.replaceOperator(jsonQuery.prdIdComp) + "#prdId# ";
+}
+
+/** text1 */
+if (Utils.isDefined(jsonQuery.text1)){
+	text1 = Utils.convertForDBParam(jsonQuery.text1, "DomText");
+	addCondSearch += " AND Text1 " + Utils.replaceOperator(jsonQuery.text1Comp) + " #text1# ";
+}
+
+/** eAN */
+if (Utils.isDefined(jsonQuery.eAN)){
+	eAN = Utils.convertForDBParam(jsonQuery.eAN, "DomPrdNumber");
+	addCondSearch += " AND EAN " + Utils.replaceOperator(jsonQuery.eANComp) + " #eAN# ";
+}
+
+/** prdType */
+if (Utils.isDefined(jsonQuery.prdType)){
+	prdType = Utils.convertForDBParam(jsonQuery.prdType, "DomPrdType");
+	addCondSearch += " AND PrdType " + Utils.replaceOperator(jsonQuery.prdTypeComp) + " #prdType# ";
+}
+
+/** foreignProduct */
+if (Utils.isDefined(jsonQuery.foreignProduct)){
+	foreignProduct = Utils.convertForDBParam(jsonQuery.foreignProduct, "DomBool");
+	addCondSearch += " AND ForeignProduct " + Utils.replaceOperator(jsonQuery.foreignProductComp) + " #foreignProduct# ";
+}
+
+/** category */
+if (Utils.isDefined(jsonQuery.category)){
+	category = Utils.convertForDBParam(jsonQuery.category, "DomPrdCategory");
+	addCondSearch += " AND Category " + Utils.replaceOperator(jsonQuery.categoryComp) + " #category# ";
+}
+
+var index = 0;
+for (index in params){
+  switch (params[index].field) {                           
+    case "addCond_ProductPKeys":
+      addCond_ProductPKeys = params[index].value;
+      break;
+    case "closedListingCondition":
+      closedListingCondition = params[index].value;
+      break;
+    case "queryCondition":
+      queryCondition = params[index].value;
+      break;
+    case "filterOutCompetitorProducts":
+      filterOutCompetitorProducts = params[index].value;
+      break;
+  }
+}
+
+var productCondition;
+if (!Utils.isEmptyString(addCond_ProductPKeys)) {
+  productCondition = Utils.getListParams(addCond_ProductPKeys);
+}
+
+var competitorProductsCondition = "";
+if (filterOutCompetitorProducts == '1') {
+  competitorProductsCondition = " AND ForeignProduct = '0' ";
+}			
+
+var sqlParams = {prdId, text1, eAN, prdType, foreignProduct, category}; 
+var sqlStmt = "";
+sqlStmt += "SELECT ";
+sqlStmt += "DISTINCT PrdMainPKey AS prdMainPKey, ";
+sqlStmt += "Category AS category, ";
+sqlStmt += "CustomerProductNumber AS customerProductNumber, ";
+sqlStmt += "DeliveryState AS deliveryState, ";
+sqlStmt += "EAN AS eAN, ";
+sqlStmt += "FieldState AS fieldState, ";
+sqlStmt += "FocusProductImage AS focusProductImage, ";
+sqlStmt += "FocusProductType AS focusProductType, ";
+sqlStmt += "ForeignProduct AS foreignProduct, ";
+sqlStmt += "GroupId AS groupId, ";
+sqlStmt += "GroupText AS groupText, ";
+sqlStmt += "SUBSTR(Text1,1,1) AS groupingAttribute, ";
+sqlStmt += "CASE WHEN Promoted = '1' AND Listed = '1' THEN 'PL' WHEN Promoted = '1' AND Listed = '0' THEN 'P' WHEN Promoted = '0' AND Listed = '1' THEN 'L' ELSE ' ' END AS itemState, ";
+sqlStmt += "Listed AS listed, ";
+sqlStmt += "Listing AS listing, ";
+sqlStmt += "ListingWithModules AS listingWithModules, ";
+sqlStmt += "NewState AS newState, ";
+sqlStmt += "OutOfStock AS outOfStock, ";
+sqlStmt += "PiecesPerSmallestUnitForBasePrice AS piecesPerSmallestUnitForBasePrice, ";
+sqlStmt += "PrdId AS prdId, ";
+sqlStmt += "Promoted AS promoted, ";
+sqlStmt += "ShortId AS shortId, ";
+sqlStmt += "SimplePricingBasePrice AS simplePricingBasePrice, ";
+sqlStmt += "TaxClassification AS taxClassification, ";
+sqlStmt += "Text1 AS text1, ";
+sqlStmt += "Text1 AS productGroup, ";
+sqlStmt += "Text2 AS text2, ";
+sqlStmt += "PrdType AS prdType ";
+sqlStmt += "FROM TmpOrderItemMergeResult_T ";
+sqlStmt += "WHERE ";
+sqlStmt += queryCondition;
+sqlStmt += closedListingCondition;
+// Add additional conditions for restricting products, e.g. invalid product check (called from LoOrderItems.processInvalidItems());  
+if (!Utils.isEmptyString(addCond_ProductPKeys)) {
+  sqlStmt += " AND PrdMainPKey IN (" + productCondition.sql + ") ";
+}
+sqlStmt += " AND EXISTS (SELECT NULL FROM Unit_of_Measure__c ";
+sqlStmt += " WHERE Unit_of_Measure__c.Product__c = TmpOrderItemMergeResult_T.PrdMainPKey ";
+sqlStmt += " AND Unit_of_Measure__c.Order_Ability__c = '1') ";
+sqlStmt += competitorProductsCondition; 
+sqlStmt += " AND FieldState = 'Available' ";
+sqlStmt += addCondSearch;
+sqlStmt += " ORDER BY PrdMainPKey ASC"
+
+var finalQuery=Utils.replaceMacrosParam(sqlStmt, sqlParams);
+var finalParams = finalQuery.params;
+if (!Utils.isEmptyString(addCond_ProductPKeys)) {
+  finalParams = productCondition.params.concat(finalQuery.params);
+}
+return {sql:finalQuery.sql, params:finalParams};
+    ]]></Load>
+  </Database>
+</DataSource>

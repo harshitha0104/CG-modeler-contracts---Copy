@@ -1,0 +1,22 @@
+<DataSource name="DsLoUsrDRActivity" backendSystem="sf" businessObjectClass="LoUsrDRActivity" external="false" editableEntity="User_Document_Activity__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="User_Document_Activity__c" column="Id" />
+    <Attribute name="usrDocPKey" table="User_Document_Activity__c" column="User_Document__c" />
+    <Attribute name="duration" table="User_Document_Activity__c" column="Duration__c" />
+    <Attribute name="hours" table="User_Document_Activity__c" column="Hours__c" />
+    <Attribute name="minutes" table="User_Document_Activity__c" column="Minutes__c" />
+    <Attribute name="clbMetaPKey" table="User_Document_Activity__c" column="Activity__c" />
+    <DerivedAttribute name="clbText" value="CASE WHEN Activity__c=' ' THEN ' ' ELSE (SELECT Description_#Language#__c FROM Visit_Template__c WHERE Id=User_Document_Activity__c.Activity__c) END" />
+    <DerivedAttribute name="callType" value="CASE WHEN Activity__c=' ' THEN ' ' ELSE (SELECT Meta_Type__c FROM Visit_Template__c WHERE Id=User_Document_Activity__c.Activity__c) END" />
+  </Attributes>
+  <Entities>
+    <Entity name="User_Document_Activity__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        User_Document_Activity__c.User_Document__c = #usrDocPKey#
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="usrDocPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

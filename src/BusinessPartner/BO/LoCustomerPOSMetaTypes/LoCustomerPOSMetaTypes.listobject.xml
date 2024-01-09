@@ -1,0 +1,8 @@
+<ListObject name="LoCustomerPOSMetaTypes" generateLoadMethod="true" >
+  <DataSource name="DsLoCustomerPOSMetaTypes" />
+  <Item objectClass="LiCustomerPOSMetaTypes" />
+  <Methods>
+    <Method name="saveAsync" />
+    <Method name="getFirst" />
+  </Methods>
+</ListObject>

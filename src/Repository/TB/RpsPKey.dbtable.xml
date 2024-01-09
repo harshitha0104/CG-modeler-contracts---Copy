@@ -1,0 +1,13 @@
+<DBTable name="RpsPKey" namespace="core" schemaVersion="1.0">
+  <columns>
+    <column name="PKey" defaultValue="" nullable="false" domain="DomPKey" migrationDefault=" " />
+    <column name="UserLu" defaultValue="" nullable="true" domain="DomSysLu" migrationDefault=" " />
+    <column name="NextSystemGenerationCounter" defaultValue="" nullable="false" domain="DomNextSystemGenerationCounter" migrationDefault=" " />
+    <column name="SystemInitializationCounter" defaultValue="" nullable="false" domain="DomSystemInitializationCounter" migrationDefault=" " />
+  </columns>
+  <indexes>
+    <index name="RpsPKey_UK_RpsPKey" unique="1">
+      <column name="PKey" />
+    </index>
+  </indexes>
+</DBTable>

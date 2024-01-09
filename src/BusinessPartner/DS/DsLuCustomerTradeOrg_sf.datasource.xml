@@ -1,0 +1,28 @@
+<DataSource name="DsLuCustomerTradeOrg" businessObjectClass="LuCustomerTradeOrg" backendSystem="sf" external="false" editableEntity="Account_Trade_Org_Hierarchy__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="customerPKey" table="Account_Trade_Org_Hierarchy__c" column="Child_Account__c" />
+    <Attribute name="tradeOrgPKey" table="Account_Trade_Org_Hierarchy__c" column="Parent_Account__c" />
+    <DerivedAttribute name="structureType" value="'TradeOrg'" />
+    <Attribute name="id" table="Account" column="Account_Number__c" />
+    <Attribute name="name" table="Account" column="Name" />
+    <Attribute name="name2" table="Account" column="Name_2__c" />
+    <Attribute name="city" table="Account" column="ShippingCity" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Trade_Org_Hierarchy__c" alias="" idAttribute="Id" />
+    <Entity name="Account" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Account.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Account_Trade_Org_Hierarchy__c.Parent_Account__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+   Account_Trade_Org_Hierarchy__c.Child_Account__c = #pKey#
+        ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

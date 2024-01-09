@@ -1,0 +1,61 @@
+<UIDescription name="Visit::RescheduleUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="VisitRescheduleId" defaultLabel="Reschedule" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="rescheduleVisit">
+          <Bindings>
+            <Resource target="Text" type="Label" id="rescheduleVisitId" defaultLabel="Done" />
+            <Resource target="Icon" type="Image" id="CheckGrey24" defaultImage="light/done_24.png" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="rescheduleVisit" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="VisitInfoGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="VisitInformation" defaultLabel=" " />
+          </Bindings>
+          <Merger name="StartDateMerger" pattern="twoInputControls" labelHandling="Combined" separator="," leftRatio="5" rightRatio="5">
+            <DatePickerField name="VisitStartDate">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Visit Start Date/Time" id="VisitStartDate" />
+                <Binding target="Value" binding="ProcessContext::RescheduleVisitBo.dateFrom" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <TimePickerField name="TimeFrom">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::RescheduleVisitBo.timeFrom" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+          <Merger name="EndDateMerger" pattern="twoInputControls" labelHandling="Combined" separator="," leftRatio="5" rightRatio="5">
+            <DatePickerField name="VisitEndDate">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Visit End Date/Time" id="VisitEndDate" />
+                <Binding target="Value" binding="ProcessContext::RescheduleVisitBo.dateThru" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <TimePickerField name="TimeThru">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::RescheduleVisitBo.timeThru" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+          <InputArea name="Duration" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Duration" id="Duration" />
+              <Binding target="Value" binding="ProcessContext::RescheduleVisitBo.duration" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

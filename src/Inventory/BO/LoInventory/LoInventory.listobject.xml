@@ -1,0 +1,11 @@
+<ListObject name="LoInventory" generateLoadMethod="true" lightWeight="only">
+  <DataSource name="DsLoInventory" />
+  <Item objectClass="LiInventory" />
+  <Methods>
+    <Method name="createInventoryForOrderItem" />
+    <Method name="createInventoryForOrderPayment" />
+    <Method name="saveAsync" />
+    <Method name="createInventoryForTruckLoadItem" />
+    <Method name="createInventoryForCashPayment" />
+  </Methods>
+</ListObject>

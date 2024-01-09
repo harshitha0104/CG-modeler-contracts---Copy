@@ -1,0 +1,7 @@
+<LookupObject name="LuLogisticUnit">
+  <DataSource name="DsLuLogisticUnit" />
+  <SimpleProperties>
+    <SimpleProperty name="PiecesPerSmallestUnit" type="DomDecimal" dataSourceProperty="piecesPerSmallestUnit" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>

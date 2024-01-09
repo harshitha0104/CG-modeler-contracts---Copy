@@ -1,0 +1,40 @@
+<Datasource name="DsLuPrmTacticProductCount" objectClass="LuPrmTacticProductCount" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[	  
+
+  var pKey = "";
+  if(Utils.isDefined(jsonQuery.pKey)) {
+    pKey = Utils.convertForDBParam(jsonQuery.pKey, "DomPKey");
+  }
+
+  var sqlParams = {pKey};
+
+  var sqlStmt = "";
+  sqlStmt += "SELECT productCount ";
+  sqlStmt += "	,tacticCount ";
+  sqlStmt += "FROM ( ";
+  sqlStmt += "		SELECT Count(PrmPromotionProduct.PKey) AS productCount ";
+  sqlStmt += "		FROM PrmPromotionProduct ";
+  sqlStmt += "		WHERE PrmPromotionProduct.PrmPromotionPKey = #pKey# ";
+  sqlStmt += "	) ";
+  sqlStmt += "	,( ";
+  sqlStmt += "		SELECT Count(PrmTactic.PKey) AS tacticCount ";
+  sqlStmt += "		FROM PrmTactic ";
+  sqlStmt += "		WHERE PrmTactic.TacticParentPKey = #pKey# ";
+  sqlStmt += "		AND PrmTactic.SalesOrg='#SALESORG#' ";
+  sqlStmt += "	) ";
+
+  return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+]]></Load>
+    <Update><![CDATA[ 
+return undefined;
+]]></Update>
+    <Insert><![CDATA[     
+return undefined;
+]]></Insert>
+    <Delete><![CDATA[   
+return undefined;   
+]]></Delete>
+  </Database>
+</Datasource>

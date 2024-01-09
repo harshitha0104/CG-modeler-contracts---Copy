@@ -1,0 +1,7 @@
+<LookupObject name="LuExistsSyncTable">
+  <DataSource name="DsLuExistsSyncTable" />
+  <SimpleProperties>
+    <SimpleProperty name="tableExists" type="DomInteger" dataSourceProperty="tableExists" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>

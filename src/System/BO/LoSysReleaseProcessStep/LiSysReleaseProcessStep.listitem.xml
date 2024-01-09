@@ -1,0 +1,11 @@
+<ListItem name="LiSysReleaseProcessStep">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="authentication" type="DomSysSignatureAuthenticationOptions" storable="false" dataSourceProperty="authentication" />
+    <SimpleProperty name="signatureRequired" type="DomBool" storable="false" dataSourceProperty="signatureRequired" />
+    <SimpleProperty name="sort" type="DomSort" storable="false" dataSourceProperty="sort" />
+    <SimpleProperty name="usrRoleId" type="DomId" storable="false" dataSourceProperty="usrRoleId" />
+    <SimpleProperty name="sysReleaseProcessPKey" type="DomPKey" storable="false" dataSourceProperty="sysReleaseProcessPKey" />
+    <SimpleProperty name="text" type="DomText" storable="false" dataSourceProperty="text" />
+  </SimpleProperties>
+</ListItem>

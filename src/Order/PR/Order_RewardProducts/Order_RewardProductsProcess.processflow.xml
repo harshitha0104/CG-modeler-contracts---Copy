@@ -1,0 +1,44 @@
+<Process name="Order::RewardProductsProcess" defaultAction="generateTitleForList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="listTitle" type="DomString" />
+        <Declaration name="ValidationBo" type="BoRewardProductValidation" />
+      </Declarations>
+      <Parameters>
+        <Input name="HurdleEvaluationHelper" type="BoHurdleEvaluationHelper" />
+        <Input name="rewardId" type="DomString" />
+        <Input name="boHelperHurdleExpressionFunctions" type="BoHelperHurdleExpressionFunctions" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateRewardProductValidation" actionType="CREATE" type="BoRewardProductValidation">
+        <Parameters>
+          <Input name="hurdleEvaluationHelper" value="ProcessContext::HurdleEvaluationHelper" />
+          <Input name="rewardId" value="ProcessContext::rewardId" />
+        </Parameters>
+        <Return name="ProcessContext::ValidationBo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="showView">
+        <UIDescription>Order::RewardProductsUI</UIDescription>
+      </Action>
+      <Action actionType="LOGIC" name="generateTitleForList" call="ProcessContext::HurdleEvaluationHelper.loRewards.getProductsSelectionTitle">
+        <Parameters>
+          <Input name="loRewards" value="ProcessContext::HurdleEvaluationHelper.loRewards" />
+          <Input name="rewardId" value="ProcessContext::rewardId" />
+        </Parameters>
+        <Return name="ProcessContext::listTitle" />
+        <TransitionTo action="showView" />
+      </Action>
+    </Actions>
+  </Body>
+  <ExitHandlers>
+    <ExitHandler handlerName="beforeExitRP" type="Validate" name="ProcessContext::ValidationBo">
+      <OnValidationError transitionTo="showView" />
+    </ExitHandler>
+  </ExitHandlers>
+</Process>

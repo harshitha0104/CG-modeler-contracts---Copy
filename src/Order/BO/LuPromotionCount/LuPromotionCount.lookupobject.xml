@@ -1,0 +1,10 @@
+<LookupObject name="LuPromotionCount" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuPromotionCount" />
+  <SimpleProperties>
+    <SimpleProperty name="promotionCount" type="DomInteger" storable="false" dataSourceProperty="promotionCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

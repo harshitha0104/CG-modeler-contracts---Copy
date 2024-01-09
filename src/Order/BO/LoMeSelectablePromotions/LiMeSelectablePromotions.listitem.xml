@@ -1,0 +1,13 @@
+<ListItem name="LiMeSelectablePromotions">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="productPKey" type="DomPKey" storable="false" dataSourceProperty="productPkey" />
+    <SimpleProperty name="promotionPKey" type="DomBool" storable="false" dataSourceProperty="promotionPkey" />
+    <SimpleProperty name="promoted" type="DomBool" storable="false" dataSourceProperty="promoted" />
+    <SimpleProperty name="specialPromoted" type="DomBool" storable="false" dataSourceProperty="specialPromoted" />
+    <SimpleProperty name="specialQuantity" type="DomInteger" storable="false" dataSourceProperty="specialQuantity" />
+    <SimpleProperty name="groupName" type="DomString" dataSourceProperty="groupName" />
+    <SimpleProperty name="groupSort" type="DomString" dataSourceProperty="groupSort" />    
+    <SimpleProperty name="groupIdSort" type="DomString" dataSourceProperty="groupIdSort" />
+  </SimpleProperties>
+</ListItem>

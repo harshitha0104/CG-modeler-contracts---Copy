@@ -1,0 +1,64 @@
+<Process name="Product::OverviewProcess" defaultAction="ShowProductList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="ProductList" type="LoProductOverview" />
+        <Declaration name="ProductDetail" type="BoProduct" />
+      </Declarations>
+      <Parameters></Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="GetProductList" type="LoProductOverview">
+        <Return name="ProcessContext::ProductList" />
+        <Parameters>
+          <Input name="asoName" value="AsoProductOverview" type="Literal" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="VIEW" name="ShowProductList">
+        <UIDescription>Product::OverviewUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="ProductListMasterDetail" />
+          <Event name="tabSelected" action="TabDecision" />
+        </Events>
+      </Action>
+      <Action name="ProductListMasterDetail" actionType="MASTER_DETAIL_HANDLER">
+        <MasterList name="ProcessContext::ProductList">
+          <!--RELOAD|UPDATE|NONE-->
+          <ItemUnselected type="RELOAD" />
+        </MasterList>
+        <DetailObject name="ProcessContext::ProductDetail" objectClass="BoProduct">
+          <!--type="DIRTY|ALWAYS|NEVER" confirmation="TRUE|FALSE" validate="TRUE|FALSE" -->
+          <Save type="DIRTY" confirmation="FALSE" validate="FALSE" />
+        </DetailObject>
+        <TransitionTo action="TabDecision" />
+      </Action>
+      <Action name="TabDecision" actionType="DECISION" parameter="Event.tabName">
+        <Case value="Logistics" action="LoadLoLogistics" />
+        <Case value="Attachments" action="LoadLoAttachment" />
+        <Case value="BoM" action="LoadLoBoM" />
+        <CaseElse action="ShowProductList" />
+      </Action>
+      <!-- BEGIN: Handling TabDecision -->
+      <Action name="LoadLoLogistics" actionType="LOGIC" call="ProcessContext::ProductDetail.loadOnDemand">
+        <Parameters>
+          <Input name="loadMode" type="Literal" value="Logistics" />
+        </Parameters>
+      </Action>
+      <Action name="LoadLoBoM" actionType="LOGIC" call="ProcessContext::ProductDetail.loadOnDemand">
+        <Parameters>
+          <Input name="loadMode" type="Literal" value="BoM" />
+        </Parameters>
+      </Action>
+      <Action name="LoadLoAttachment" actionType="LOGIC" call="ProcessContext::ProductDetail.loadOnDemand">
+        <Parameters>
+          <Input name="loadMode" type="Literal" value="Attachments" />
+        </Parameters>
+      </Action>
+      <!-- END: Handling TabDecision -->
+    </Actions>
+  </Body>
+</Process>

@@ -1,0 +1,145 @@
+<UIDescription name="Call::CardPictureMaximizedPhoneUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="MaximizedPictureCardTitleId" defaultLabel="Picture" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="pictureArea" areaPattern="GroupedElementsArea">
+        <MediaListControl name="CallAttachments" dataSource="ProcessContext::Pictures.Items[]">
+          <Bindings>
+            <Binding bindingMode="ONE_WAY" binding=".attachmentBlob" type="Text" target="MediaPath" />
+            <Binding bindingMode="ONE_WAY" binding=".fileType" type="Text" target="Type" />
+          </Bindings>
+          <Items></Items>
+        </MediaListControl>
+        <GroupElement name="SystemTags">
+          <Bindings>
+            <Resource target="Title" type="Label" id="SystemTags" defaultLabel="System Tags" />
+          </Bindings>
+          <Merger name="Created" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Created" id="Created" />
+            </Bindings>
+            <DatePickerField name="CreationDate" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Creation Date" id="CreationDate" />
+                <Binding target="Value" binding="ProcessContext::LatestPicture.creationDate" bindingMode="ONE_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <TimePickerField name="CreationTime" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Creation Time" id="CreationTime" />
+                <Binding target="Value" binding="ProcessContext::LatestPicture.creationTime" bindingMode="ONE_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+          <Merger name="Location" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Location" id="Location" />
+            </Bindings>
+            <InputArea name="Latitude" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Latitude" defaultLabel="Latitude" />
+                <Binding target="Value" binding="ProcessContext::LatestPicture.latitude" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="Longitude" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Longitude" defaultLabel="Longitude" />
+                <Binding target="Value" binding="ProcessContext::LatestPicture.longitude" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </Merger>
+          <SelectionBox name="Deviation" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="Deviation" defaultLabel="Deviation" />
+              <Binding target="DataSource" toggleId="ClbLocationDeviation" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::LatestPicture.locationDeviation" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+        </GroupElement>
+        <GroupElement name="UserDefined">
+          <Bindings>
+            <Resource target="Title" type="Label" id="UserDefined" defaultLabel="Content" />
+          </Bindings>
+          <InputArea name="Note" editable="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="NoteId" defaultLabel="Note" />
+              <Binding target="Value" binding="ProcessContext::LatestPicture.subjectTag" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <SelectionBox name="Type" editable="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="Type" defaultLabel="Type" />
+              <Binding target="DataSource" toggleId="ClbTypeTag" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::LatestPicture.typeTag" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <SelectionBox name="Area" editable="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="Area" defaultLabel="Area" />
+              <Binding target="DataSource" toggleId="ClbAreaTag" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::LatestPicture.areaTag" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <CheckBox name="Competitor" editable="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="CompetitorId" defaultLabel="Competitor" />
+              <Binding target="checkedValue" binding="ProcessContext::LatestPicture.competitorTag" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+        </GroupElement>
+        <ActionBar>
+          <ImageButton name="Sketch">
+            <Bindings>
+              <Resource target="Text" type="Label" id="Sketch" defaultLabel="Sketch" />
+              <Resource target="Image" type="Image" id="Draw" defaultImage="Draw" />
+              <Binding type="Visible" target="Visible" call="ProcessContext::Call.getButtonVisibility">
+                <Parameters>
+                  <Input name="token" type="Literal" value="btnSketch" />
+                </Parameters>
+              </Binding>
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="SketchButtonPressed" />
+            </Events>
+          </ImageButton>
+          <ImageButton name="DeletePicture">
+            <Bindings>
+              <Resource target="Text" type="Label" id="Delete" defaultLabel="Delete" />
+              <Resource target="Image" type="Image" id="Trashcan" defaultImage="Trashcan" />
+              <Binding type="Visible" target="Visible" call="ProcessContext::Call.getButtonVisibility">
+                <Parameters>
+                  <Input name="token" type="Literal" value="btnDeletePicture" />
+                </Parameters>
+              </Binding>
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="DeleteButtonPressed" />
+            </Events>
+          </ImageButton>
+        </ActionBar>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

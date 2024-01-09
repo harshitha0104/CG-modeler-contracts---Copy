@@ -1,0 +1,10 @@
+<ListItem name="LiCpReadUnitFactors">
+  <SimpleProperties>
+    <SimpleProperty name="PiecesPerSmallestUnit" type="DomPrdPiecesPerUnit" storable="false" dataSourceProperty="PiecesPerSmallestUnit" />
+    <SimpleProperty name="IsOrderUnit" type="DomBool" storable="false" dataSourceProperty="IsOrderUnit" />
+    <SimpleProperty name="IsConsumerUnit" type="DomBool" storable="false" dataSourceProperty="IsConsumerUnit" />
+    <SimpleProperty name="IsPriceUnit" type="DomBool" storable="false" dataSourceProperty="IsPriceUnit" />
+    <SimpleProperty name="CndCpVolume" type="DomDecimal" storable="false" dataSourceProperty="CndCpVolume" />
+    <SimpleProperty name="CndCpWeight" type="DomDecimal" storable="false" dataSourceProperty="CndCpWeight" />
+  </SimpleProperties>
+</ListItem>

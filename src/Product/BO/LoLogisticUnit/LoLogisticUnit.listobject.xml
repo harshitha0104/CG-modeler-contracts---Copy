@@ -1,0 +1,8 @@
+<ListObject name="LoLogisticUnit" generateLoadMethod="true" >
+  <DataSource name="DsLoLogisticUnit" />
+  <Item objectClass="LiLogisticUnit" />
+  <Methods>
+    <!--Method name="loadAsync" /-->
+    <Method name="getPiecesPerSmallestUnitByUnit" />
+  </Methods>
+</ListObject>

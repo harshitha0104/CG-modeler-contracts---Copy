@@ -1,0 +1,156 @@
+<UIDescription name="Application::DSDDashboardUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="DashboardTitle" defaultLabel="" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="DashboardSection" showInfoArea="true" showPasswordChangeButton="false">
+      <Bindings>
+        <Resource target="LogoIcon" type="Image" id="LogoSalesforce" />
+        <Resource target="AltLogoIcon" type="Image" id="EmptyImage" />
+      </Bindings>
+      <Area areaName="welcomeArea" areaPattern="WelcomeArea">
+        <Welcome name="Welcome">
+          <Bindings>
+            <Resource target="Welcome" type="Label" id="welcome" defaultLabel="Welcome" />
+            <Binding target="User" type="Text" binding="ApplicationContext::User.name" bindingMode="ONE_WAY" />
+          </Bindings>
+        </Welcome>
+      </Area>
+      <Area areaName="buttonGridArea" areaPattern="ButtonGridArea">
+        <ImageButton name="CockpitButton">
+          <Bindings>
+            <Resource target="Image" type="Image" id="MenuYourDay" />
+            <Resource target="Text" type="Label" id="cockpitLabelId" defaultLabel="Your Day" />
+            <Binding type="Visible" target="Visible" binding="ApplicationContext::User.showCockpitInDashboard" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="openCockpit" />
+          </Events>
+          <VisibilityRoles allRoles="false">
+            <Role name="TourUser" />
+            <Role name="RetailUser" />
+          </VisibilityRoles>
+        </ImageButton>
+        <ImageButton name="AgendaButton">
+          <Bindings>
+            <Resource target="Image" type="Image" id="MenuCalendar" />
+            <Resource target="Text" type="Label" id="agendaOverviewLabelId" defaultLabel="Visit Execution" />
+            <Binding target="Info" binding="ProcessContext::LuCallCount.callCount" bindingMode="ONE_WAY" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="openAgendaOverview" />
+          </Events>
+          <VisibilityRoles allRoles="false">
+            <Role name="TourUser" />
+            <Role name="RetailUser" />
+          </VisibilityRoles>
+        </ImageButton>
+        <ImageButton name="TourButton" backendSystem="both">
+          <Bindings>
+            <Resource target="Image" type="Image" id="MenuTour" />
+            <Resource target="Text" type="Label" id="tourLabelId" defaultLabel="Tour" />
+            <Binding target="Info" binding="ProcessContext::LuTourCount.tourCount" bindingMode="ONE_WAY" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="openTourOverview" />
+          </Events>
+          <VisibilityRoles allRoles="false">
+            <Role name="TourUser" />
+          </VisibilityRoles>
+        </ImageButton>
+        <ImageButton name="NotificationsButton" backendSystem="both">
+          <Bindings>
+            <Resource target="Image" type="Image" id="MenuSpeechBubble" />
+            <Resource target="Text" type="Label" id="NotificationsLabelId" defaultLabel="Notifications" />
+            <Binding target="Info" binding="ProcessContext::LuNotificationCount.notificationCount" bindingMode="ONE_WAY" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="openNotifications" />
+          </Events>
+          <VisibilityRoles allRoles="false">
+            <Role name="TourUser" />
+            <Role name="RetailUser" />
+          </VisibilityRoles>
+        </ImageButton>
+        <ImageButton name="CustomerButton">
+          <Bindings>
+            <Resource target="Image" type="Image" id="MenuUserTie" />
+            <Resource target="Text" type="Label" id="customerOverviewLabelId" defaultLabel="Customer" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="openCustomerOverview" />
+          </Events>
+          <VisibilityRoles allRoles="false">
+            <Role name="TourUser" />
+            <Role name="RetailUser" />
+          </VisibilityRoles>
+        </ImageButton>
+        <ImageButton name="ProductButton">
+          <Bindings>
+            <Resource target="Image" type="Image" id="MenuProducts" />
+            <Resource target="Text" type="Label" id="productOverviewLabelId" defaultLabel="Product" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="openProductOverview" />
+          </Events>
+          <VisibilityRoles allRoles="false">
+            <Role name="TourUser" />
+            <Role name="RetailUser" />
+          </VisibilityRoles>
+        </ImageButton>
+        <ImageButton name="OrderButton">
+          <Bindings>
+            <Resource target="Image" type="Image" id="MenuClipboard" />
+            <Resource target="Text" type="Label" id="orderOverviewLabelId" defaultLabel="Order" />
+            <Binding target="Info" binding="ProcessContext::LuOrderCount.orderCount" bindingMode="ONE_WAY" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="openOrderOverview" />
+          </Events>
+          <VisibilityRoles allRoles="false">
+            <Role name="TourUser" />
+            <Role name="RetailUser" />
+          </VisibilityRoles>
+        </ImageButton>
+        <ImageButton name="ReportingButton">
+          <Bindings>
+            <Resource target="Image" type="Image" id="MenuReport" />
+            <Resource target="Text" type="Label" id="ReportingLabelId" defaultLabel="Reports" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="openReporting" />
+          </Events>
+          <VisibilityRoles allRoles="false">
+            <Role name="TourUser" />
+            <Role name="RetailUser" />
+          </VisibilityRoles>
+        </ImageButton>
+        <ImageButton name="PersonalSettingsButton" backendSystem="both">
+          <Bindings>
+            <Resource target="Image" type="Image" id="MenuUserCog" />
+            <Resource target="Text" type="Label" id="PersonalSettingsLabelId" defaultLabel="My Settings" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="openUsrSettings" />
+          </Events>
+          <VisibilityRoles allRoles="false">
+            <Role name="TourUser" />
+            <Role name="RetailUser" />
+          </VisibilityRoles>
+        </ImageButton>
+        <ImageButton name="About">
+          <Bindings>
+            <Resource target="Image" type="Image" id="MenuInfo" />
+            <Resource target="Text" type="Label" id="AboutLabelId" defaultLabel="About" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="openAboutScreen" />
+          </Events>
+          <VisibilityRoles allRoles="true"></VisibilityRoles>
+        </ImageButton>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

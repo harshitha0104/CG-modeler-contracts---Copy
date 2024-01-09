@@ -1,0 +1,402 @@
+<UIDescription  name="Issue::OverviewUI" schemaVersion="0.0.0.5" simpleEditorOnly="true">
+  <Page pagePattern="MasterDetailSectionPage" selectFirstItemInList="true" masterSectionFlex="45" detailSectionFlex="55">
+    <ViewVariables>
+      <ViewVariable name="currentTabName" value="Main" />
+    </ViewVariables>
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TitleId" defaultLabel="Issue Overview" bindingMode="ONE_TIME" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="AddIssue">
+          <Bindings>
+            <Resource target="Text" type="Label" id="AddIssueId" defaultLabel="Add Issue" />
+            <Resource target="Icon" type="Image" id="Plus_PB" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="addIssue" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <!-- Master Section -->
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <MenuItems>
+          <MenuItem directlyVisible="false" itemId="AllIssue">
+            <Bindings>
+              <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+              <Resource target="Text" type="Label" id="AllIssueId" defaultLabel="All Issues" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="showAllIssue" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="false" itemId="RelevantIssue">
+            <Bindings>
+              <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+              <Resource target="Text" type="Label" id="RelevantIssueId" defaultLabel="Only Active" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="showRelevantIssue" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <GroupedList name="IssueList" searchable="true" master="true" dataSource="ProcessContext::IssueList.Items[]">
+          <Items name="Items" itemPattern="UserIssueItem">
+            <Bindings>
+              <Binding target="Phase" type="Text" binding=".issuePhase.text" bindingMode="ONE_WAY" />
+              <Binding target="Text" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              <Binding target="Priority" type="Text" binding=".priorityUIText" bindingMode="ONE_WAY" />
+              <Binding target="InitiationDate" type="Date" binding=".initiationDate" bindingMode="ONE_WAY" />
+              <Binding target="DueDate" type="Date" binding=".dueDate" bindingMode="ONE_WAY" />
+              <Binding target="ResponsibleName" type="Text" binding=".responsibleName" bindingMode="ONE_WAY" />
+              <Binding target="OwnerName" type="Text" binding=".ownerName" bindingMode="ONE_WAY" />
+              <Binding target="CustomerName" type="Text" binding=".customerName" bindingMode="ONE_WAY" />
+              <Binding target="RespImage" type="Image" binding=".responsibleIcon" bindingMode="ONE_WAY" />
+              <Resource target="CreatedLabel" type="Label" id="CreatedLabel" defaultLabel="Created" />
+              <Resource target="DueLabel" type="Label" id="DueLabel" defaultLabel="Due" />
+              <Resource target="PhaseImage" type="Image" id="InfoDarkGrey16" defaultImage="InfoDarkGrey16" bindingMode="ONE_TIME" />
+              <Resource target="OwnerImage" type="Image" id="UserDarkGrey16" defaultImage="UserDarkGrey16" bindingMode="ONE_TIME" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col>
+                  <Row flex="1" layoutType="itemIdentifier" bindingId="Text"></Row>
+                  <Row flex="1" layoutType="itemSecondary" bindingId="CustomerName"></Row>
+                  <Row flex="1" layoutType="itemSecondary" bindingId="Spacer"></Row>
+                  <Row>
+                    <Col width="1.3em" layoutType="itemSecondary" bindingId="Spacer" align="left" />
+                    <Col width="8em" layoutType="itemSecondary" bindingId="CreatedLabel" align="left" />
+                    <Col width="1.3em" layoutType="itemSecondary" bindingId="Spacer" align="left" />
+                    <Col width="6em" layoutType="itemSecondary" bindingId="InitiationDate" align="left" />
+                  </Row>
+                  <Row>
+                    <Col width="1.3em" layoutType="itemSecondary" bindingId="Spacer" align="left" />
+                    <Col width="8em" layoutType="itemSecondary" bindingId="DueLabel" align="left" />
+                    <Col width="1.3em" layoutType="itemSecondary" bindingId="Spacer" align="left" />
+                    <Col width="6em" layoutType="itemSecondary" bindingId="DueDate" align="left" />
+                  </Row>
+                  <Row>
+                    <Col width="1.3em" layoutType="Image" bindingId="PhaseImage" align="left" />
+                    <Col width="8em" layoutType="itemSecondary" bindingId="Phase" align="left" />
+                    <Col width="1.3em" layoutType="itemSecondary" bindingId="Spacer" align="left" />
+                    <Col layoutType="itemSecondary" bindingId="Priority" align="left" />
+                  </Row>
+                  <Row>
+                    <Col width="1.3em" layoutType="Image" bindingId="RespImage" align="left" />
+                    <Col width="8em" layoutType="itemSecondary" bindingId="ResponsibleName" align="left" />
+                    <Col width="1.3em" layoutType="Image" bindingId="OwnerImage" align="left" />
+                    <Col layoutType="itemSecondary" bindingId="OwnerName" align="left" />
+                  </Row>
+                </Col>
+              </Default>
+            </ItemListLayout>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::ContextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                  <Binding type="Visible" target="Visible" binding=".actionVisible" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected" resetMultiAreas="true">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="tabName" value="View::currentTabName" />
+              </Params>
+            </ItemSelectedEvent>
+            <ContextOpeningEvent event="contextMenuOpening">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="issuePhase" value=".issuePhase" />
+                <Param name="responsiblePKey" value=".responsiblePKey" />
+                <Param name="initiatorPKey" value=".initiatorPKey" />
+                <Param name="isPrivate" value=".isPrivate" />
+                <Param name="wfeWorkflowPKey" value=".wfeWorkflowPKey" />
+                <Param name="actualStatePKey" value=".actualStatePKey" />
+                <Param name="isActive" value=".isActive" />
+                <Param name="svcMetaPKey" value=".svcMetaPKey" />
+                <Param name="substitutionStatus" value=".substitutionStatus" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="contextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="issuePhase" value=".issuePhase" />
+              </Params>
+            </ContextSelectedEvent>
+          </Events>
+          <SearchAttributes>
+            <SearchAttribute name="Text" />
+            <SearchAttribute name="ResponsibleName" />
+            <SearchAttribute name="CustomerName" />
+            <SearchAttribute name="IssuePhase" />
+          </SearchAttributes>
+        </GroupedList>
+      </Area>
+    </Section>
+    <!-- Detail Section -->
+    <Section sectionName="detailSection" sectionPattern="TabbedViewAreaSection" currentTab="View::currentTabName">
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="Main">
+              <Bindings>
+                <Resource target="image" type="Image" id="MainGrey24" defaultImage="MainGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="MainId" defaultLabel="Main" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Attachments">
+              <Bindings>
+                <Resource target="image" type="Image" id="ClipGrey24" defaultImage="ClipGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="AttachmentId" defaultLabel="Attachments" bindingMode="ONE_TIME" />
+                <Binding target="Info" binding="ProcessContext::IssueDetail.luIssueAttachmentCount.issueAttachmentCount" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="tabSelected" storeTabNameIn="currentTabName" />
+          </Events>
+        </TabSelector>
+      </Area>
+      <Area areaPattern="MultiArea" areaName="Main">
+        <Area areaName="Main" areaPattern="GroupedElementsArea">
+          <!-- Release button for Work Flow Transition for Issue -->
+          <MenuItems>
+            <MenuItem directlyVisible="true" itemId="ReleaseIssue">
+              <Bindings>
+                <Binding type="Visible" target="Visible" call="ProcessContext::IssueDetail.checkButtonVisibility">
+                  <Parameters>
+                    <Input name="mode" type="Literal" value="release" />
+                  </Parameters>
+                </Binding>
+                <Resource target="Text" type="Label" id="ReleaseIssueId" defaultLabel="Release" />
+                <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="releaseIssue" />
+              </Events>
+            </MenuItem>
+            <MenuItem directlyVisible="true" itemId="CompleteIssue">
+              <Bindings>
+                <Binding type="Visible" target="Visible" call="ProcessContext::IssueDetail.checkButtonVisibility">
+                  <Parameters>
+                    <Input name="mode" type="Literal" value="complete" />
+                  </Parameters>
+                </Binding>
+                <Resource target="Text" type="Label" id="CompleteIssueId" defaultLabel="Complete" />
+                <Resource target="Icon" type="Image" id="Complete_PB" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="completeIssue" />
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <GroupElement name="IssueIdentificationGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="IssueIdentificationTitle" defaultLabel="Identification" />
+            </Bindings>
+            <InputArea name="Description">
+              <Bindings>
+                <Resource target="Label" type="Label" id="IssueDescription" defaultLabel="Description" />
+                <Binding target="Value" binding="ProcessContext::IssueDetail.text" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <SelectionBox name="Classification">
+              <Bindings>
+                <Resource target="Label" type="Label" id="IssueClassificationId" defaultLabel="Classification" />
+                <Binding target="DataSource" toggleId="SvcClassification" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::IssueDetail.classification" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <InputArea name="Customer" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CustomerId" defaultLabel="Customer" />
+                <Binding target="Value" binding="ProcessContext::IssueDetail.luCustomer.name" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <Merger name="CreationDueDates" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Creation / Due Date" id="CreationDueDatesId" />
+              </Bindings>
+              <DatePickerField name="CreationDate" editable="false">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="CreationDateId" defaultLabel="Creation Date" />
+                  <Binding target="Value" binding="ProcessContext::IssueDetail.initiationDate" bindingMode="ONE_WAY" />
+                </Bindings>
+              </DatePickerField>
+              <DatePickerField name="DueDate">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="DueDateId" defaultLabel="Due Date" />
+                  <Binding target="Value" binding="ProcessContext::IssueDetail.dueDate" bindingMode="TWO_WAY" />
+                </Bindings>
+              </DatePickerField>
+            </Merger>
+            <SelectionBox name="Priority">
+              <Bindings>
+                <Resource target="Label" type="Label" id="PriorityId" defaultLabel="Priority" />
+                <Binding target="DataSource" toggleId="ABC" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::IssueDetail.priority" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <InputArea name="Type" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="IssueType" defaultLabel="Type" />
+                <Binding target="Value" binding="ProcessContext::IssueDetail.boSvcRequestMeta.issueTypeText" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </GroupElement>
+          <GroupElement name="Substitution">
+            <Bindings>
+              <Resource target="title" type="Label" id="SubstitutionGroupId" defaultLabel="Substitution" />
+            </Bindings>
+            <Lookup name="SubstitutionFor" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Substitution for" id="SubstitutionFor" />
+                <Binding target="Value" binding="ProcessContext::IssueDetail.luCustomerManagementInfo.combinedSubstitutedName" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Lookup>
+            <Lookup name="SubstitutedBy" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Substituted by" id="SubstitutedBy" />
+                <Binding target="Value" binding="ProcessContext::IssueDetail.luCustomerManagementInfo.combinedSubstituteName" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Lookup>
+          </GroupElement>
+          <GroupElement name="CurrentStatusGroup">
+            <Bindings>
+              <Resource target="title" type="Label" id="CurrentStatusGroupId" defaultLabel="Current Status" />
+            </Bindings>
+            <SelectionBox name="Phase" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="StatusId" defaultLabel="Status" />
+                <Binding target="DataSource" toggleId="SvcIssuePhase" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::IssueDetail.issuePhase" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <InputArea name="Initiator" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Initiator" defaultLabel="Initiator" />
+                <Binding target="Value" binding="ProcessContext::IssueDetail.luInitiator.name" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="Owner" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Owner" defaultLabel="Owner" />
+                <Binding target="Value" binding="ProcessContext::IssueDetail.luOwner.name" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="Responsible" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Responsible" defaultLabel="Responsible" />
+                <Binding target="Value" binding="ProcessContext::IssueDetail.luResponsible.name" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </GroupElement>
+          <GroupElement name="IssueDescriptionText">
+            <Bindings>
+              <Resource target="title" type="Label" id="IssueTextId" defaultLabel="Issue" />
+            </Bindings>
+            <InputAreaMultiLine name="Message" editable="true" noOfRows="8">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::IssueDetail.boIssueNote.text" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputAreaMultiLine>
+          </GroupElement>
+        </Area>
+      </Area>
+      <Area areaName="Attachments" areaPattern="SingleElementArea">
+        <MenuItems>
+          <MenuItem directlyVisible="true" itemId="TakePicture">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::IssueDetail.checkButtonVisibility">
+                <Parameters>
+                  <Input name="mode" type="Literal" value="TakePicture" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="TakePictureId" defaultLabel="Take Picture" />
+              <Resource target="Icon" type="Image" id="CameraDarkGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="TakePicture" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="SelectPicture">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::IssueDetail.checkButtonVisibility">
+                <Parameters>
+                  <Input name="mode" type="Literal" value="SelectPicture" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="SelectPictureId" defaultLabel="Select Picture" />
+              <Resource target="Icon" type="Image" id="Picture_PB" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="SelectPicture" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <MediaListControl name="IssueAttachments" dataSource="ProcessContext::IssueDetail.loIssueAttachments.Items[]">
+          <Bindings>
+            <Binding bindingMode="ONE_WAY" binding=".attachmentBlob" type="Text" target="MediaPath" />
+            <Binding bindingMode="ONE_WAY" binding=".attachmentText" type="Text" target="Description" />
+            <Binding bindingMode="ONE_WAY" binding=".fileType" type="Text" target="Type" />
+          </Bindings>
+          <Items>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::AttachmentsContextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="AttachmentsContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding target="Editable" type="Editable" binding=".actionEnabled" />
+                  <Binding target="Visible" type="Visible" binding=".actionVisible" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+          </Items>
+          <Events>
+            <ContextSelectedEvent event="attachmentsContextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextSelectedEvent>
+            <ContextOpeningEvent event="attachmentsContextMenuOpening">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextOpeningEvent>
+          </Events>
+        </MediaListControl>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

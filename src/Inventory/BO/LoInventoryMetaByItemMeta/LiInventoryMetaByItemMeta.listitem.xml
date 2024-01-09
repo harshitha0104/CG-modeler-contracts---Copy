@@ -1,0 +1,31 @@
+<ListItem name="LiInventoryMetaByItemMeta" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <!-- Attributes to be filled via datasource -->
+    <SimpleProperty name="sdoItemMetaPKey" type="DomPKey" storable="false" dataSourceProperty="sdoItemMetaPKey" />
+    <SimpleProperty name="usedForDisplay" type="DomBool" storable="false" dataSourceProperty="usedForDisplay" />
+    <SimpleProperty name="metaId" type="DomIvcMetaType" storable="false" dataSourceProperty="metaId" />
+    <SimpleProperty name="ivcMetaPKey" type="DomPKey" storable="false" dataSourceProperty="ivcMetaPKey" />
+    <SimpleProperty name="ivcTaMetaPKey" type="DomPKey" storable="false" dataSourceProperty="ivcTaMetaPKey" />
+    <SimpleProperty name="taType" type="DomIvcTAType" storable="false" dataSourceProperty="taType" />
+    <SimpleProperty name="taControl" type="DomIvcTAControl" storable="false" dataSourceProperty="taControl" />
+    <SimpleProperty name="prdPolicy" type="DomIvcPrdPolicy" storable="false" dataSourceProperty="prdPolicy" />
+    <SimpleProperty name="usrPolicy" type="DomIvcUserPolicy" storable="false" dataSourceProperty="usrPolicy" />
+    <SimpleProperty name="bpaPolicy" type="DomIvcBpaPolicy" storable="false" dataSourceProperty="bpaPolicy" />
+    <SimpleProperty name="useIvcRefPKey1" type="DomBool" storable="false" dataSourceProperty="useIvcRefPKey1" />
+    <SimpleProperty name="useIvcRefPKey2" type="DomBool" storable="false" dataSourceProperty="useIvcRefPKey2" />
+    <SimpleProperty name="useIvcRefPKey3" type="DomBool" storable="false" dataSourceProperty="useIvcRefPKey3" />
+    <SimpleProperty name="useIvcRefPKey4" type="DomBool" storable="false" dataSourceProperty="useIvcRefPKey4" />
+    <SimpleProperty name="useIvcRefPKey5" type="DomBool" storable="false" dataSourceProperty="useIvcRefPKey5" />
+    <SimpleProperty name="ivcMeasure" type="DomIvcMeasure" storable="false" dataSourceProperty="ivcMeasure" />
+    <SimpleProperty name="tmgPolicy" type="DomIvcTmgPolicy" storable="false" dataSourceProperty="tmgPolicy" />
+    <SimpleProperty name="vehiclePolicy" type="DomIvcVehiclePolicy" storable="false" dataSourceProperty="vehiclePolicy" />
+    <SimpleProperty name="currencyPolicy" type="DomIvcCurrencyPolicy" storable="false" dataSourceProperty="currencyPolicy" />
+    <!-- Attributes to be filled by business logic -->
+    <!-- Store the general (fixed) search keys for inventory search for the current sales document item -->
+    <SimpleProperty name="usrMainPKey" type="DomPKey" storable="false" dataSourceProperty="usrMainPKey" />
+    <SimpleProperty name="bpaMainPKey" type="DomPKey" storable="false" dataSourceProperty="bpaMainPKey" />
+    <SimpleProperty name="tmgTourPKey" type="DomPKey" storable="false" dataSourceProperty="tmgTourPKey" />
+    <SimpleProperty name="etpVehiclePKey" type="DomPKey" storable="false" dataSourceProperty="etpVehiclePKey" />
+  </SimpleProperties>
+</ListItem>

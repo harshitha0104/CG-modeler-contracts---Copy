@@ -1,0 +1,11 @@
+<LookupObject name="LuNotificationCount">
+  <DataSource name="DsLuNotificationCount" />
+  <SimpleProperties>
+    <SimpleProperty name="notificationCount" type="DomInteger" storable="true" dataSourceProperty="notificationCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

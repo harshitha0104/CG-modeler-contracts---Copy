@@ -1,0 +1,41 @@
+<Process name="DeliveryRecipient::LookupProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="DeliveryRecipientList" type="LoDeliveryRecipientForCustomer" />
+      </Declarations>
+      <Parameters>
+        <Input name="pKey" type="DomPKey" />
+        <Input name="deliveryRecipientPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="GetDeliveryRecipientList" type="LoDeliveryRecipientForCustomer">
+        <Parameters>
+          <Input name="toPKey" value="ProcessContext::pKey" />
+        </Parameters>
+        <Return name="ProcessContext::DeliveryRecipientList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>DeliveryRecipient::Lookup</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="EndWithNewValue" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="EndWithNewValue">
+        <ReturnValues>
+          <Return name="customerPKey" value="Event.pKey" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="customerPKey" value="ProcessContext::deliveryRecipientPKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

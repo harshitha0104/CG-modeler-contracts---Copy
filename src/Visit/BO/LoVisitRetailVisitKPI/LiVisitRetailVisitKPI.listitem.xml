@@ -1,0 +1,53 @@
+<ListItem name="LiVisitRetailVisitKPI">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="productId" type="DomPKey" dataSourceProperty="productId" />
+    <SimpleProperty name="productName" type="DomText" dataSourceProperty="productName" />
+    <SimpleProperty name="productCode" type="DomText" dataSourceProperty="productCode" />
+    <SimpleProperty name="productDescription" type="DomText" dataSourceProperty="productDescription" />
+    <SimpleProperty name="productCategoryName" type="DomText" storable="false" dataSourceProperty="productCategoryName" />
+    <SimpleProperty name="customContextRecordName" type="DomText" dataSourceProperty="customContextRecordName" />
+    <SimpleProperty name="question" type="DomLongDescription" dataSourceProperty="question" />
+    <SimpleProperty name="aidDataType" type="DomText" dataSourceProperty="aidDataType" />
+    <SimpleProperty name="toggleId" type="DomId" storable="false" dataSourceProperty="toggleId" />
+    <SimpleProperty name="assessmentIndicatorDefinitionId" type="DomPKey" dataSourceProperty="assessmentIndicatorDefinitionId" />
+    <SimpleProperty name="assessmentTaskId" type="DomPKey" dataSourceProperty="assessmentTaskId" />
+    <SimpleProperty name="isAssessmentTaskRequired" type="DomBool" dataSourceProperty="isAssessmentTaskRequired" />
+    <SimpleProperty name="primaryDisplayOrder" type="DomInteger" dataSourceProperty="primaryDisplayOrder" />    
+    <SimpleProperty name="displayOrder" type="DomInteger" dataSourceProperty="displayOrder" />
+    <SimpleProperty name="inStoreLocationName" type="DomText" dataSourceProperty="inStoreLocationName" />
+    <SimpleProperty name="groupText" type="DomText" dataSourceProperty="groupText" />
+    <SimpleProperty name="customGroupName" type="DomText" dataSourceProperty="customGroupName" />
+    <SimpleProperty name="actualIntegerValue" type="DomNullableDecimal" dataSourceProperty="actualIntegerValue" />
+    <SimpleProperty name="targetIntegerValue" type="DomNullableDecimal" dataSourceProperty="targetIntegerValue" storable="false" />
+    <SimpleProperty name="actualBooleanValue" type="DomNullableBool" dataSourceProperty="actualBooleanValue" />
+    <SimpleProperty name="targetBooleanValue" type="DomNullableBool" dataSourceProperty="targetBooleanValue" storable="false" />
+    <SimpleProperty name="targetDate" type="DomNullableDate" id="false" dataSourceProperty="targetDate" storable="false" />
+    <SimpleProperty name="targetTime" type="DomNullableString" id="false" dataSourceProperty="targetTime" storable="false" />
+    <!--<SimpleProperty name="targetDate" type="DomText" id="false" dataSourceProperty="targetDate" storable="false" />
+    <SimpleProperty name="targetTime" type="DomText" id="false" dataSourceProperty="targetTime" storable="false"/>-->
+    <SimpleProperty name="actualDecimalValue" type="DomNullableDecimal" dataSourceProperty="actualDecimalValue" />
+    <SimpleProperty name="targetDecimalValue" type="DomNullableDecimal" dataSourceProperty="targetDecimalValue" storable="false" />
+    <SimpleProperty name="actualStringValue" type="DomNullableString" dataSourceProperty="actualStringValue" />
+    <SimpleProperty name="targetStringValue" type="DomNullableString" dataSourceProperty="targetStringValue" storable="false" />
+    <SimpleProperty name="actualValue" type="DomVariant" dataSourceProperty="actualValue" />
+    <SimpleProperty name="targetValue" type="DomVariant" dataSourceProperty="targetValue" storable="false" />
+    <SimpleProperty name="sortAttribute" type="DomText" dataSourceProperty="sortAttribute" />
+    <SimpleProperty name="linkedRecordId" type="DomPKey" />
+    <SimpleProperty name="isPrimaryKPI" type="DomBool" />
+    <!--actualDateTime -->
+    <SimpleProperty name="actualDateTime" type="DomNullableDateTime" id="false" dataSourceProperty="actualDateTime" />
+    <SimpleProperty name="actualDate" type="DomNullableDate" id="false" />
+    <SimpleProperty name="actualTime" type="DomNullableString" id="false" />
+    <!-- Dynamic control Handling -->
+    <SimpleProperty name="dataType" type="DomText" dataSourceProperty="dataType" />
+    <SimpleProperty name="formatType" type="DomString" />
+    <SimpleProperty name="stepSize" type="DomDecimal" />
+    <!-- Image Support -->
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" />
+    <SimpleProperty name="fileType" type="DomFileType" dataSourceProperty="fileType" />
+    <SimpleProperty name="gtin" type="DomText" dataSourceProperty="gtin" />
+    <SimpleProperty name="minValue" type="DomString" storable="false" dataSourceProperty="minValue" />
+    <SimpleProperty name="maxValue" type="DomString" storable="false" dataSourceProperty="maxValue" />
+  </SimpleProperties>
+</ListItem>

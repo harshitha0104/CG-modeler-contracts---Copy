@@ -1,0 +1,11 @@
+<LookupObject name="LuUsrDRUniquePerDay" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuUsrDRUniquePerDay" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="dailyReportCount" type="DomInteger" storable="false" dataSourceProperty="dailyReportCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

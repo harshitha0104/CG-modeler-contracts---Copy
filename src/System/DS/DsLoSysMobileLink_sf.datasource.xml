@@ -1,0 +1,98 @@
+<Datasource name="DsLoSysMobileLink" backendSystem="sf" businessObjectClass="LoSysMobileLink" external="true" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Mobile_Link__c" column="Id" />
+    <Attribute name="active" table="Mobile_Link__c" column="Active__c" />
+    <Attribute name="sort" table="Mobile_Link__c" column="Sort__c" />
+    <Attribute name="dashboardState" table="Mobile_Link__c" column="Dashboard_State__c" />
+    <Attribute name="description" table="Mobile_Link__c" column="Description_#Language#__c" />
+    <Attribute name="schemeName" table="Mobile_Link__c" column="Scheme_Name__c" />
+    <Attribute name="orgId" table="Mobile_Link__c" column="Org_Id__c" />
+    <Attribute name="loginHost" table="Mobile_Link__c" column="Login_Host__c" />
+    <Attribute name="assetId" table="Mobile_Link__c" column="Asset_Id__c" />
+    <Attribute name="assetType" table="Mobile_Link__c" column="Asset_Type__c" />
+    <Attribute name="displayIn" table="Mobile_Link__c" column="Display_In__c" />
+    <Attribute name="url" table="Mobile_Link__c" column="URL__c" />
+    <DerivedAttribute name="mediaPath" value="' '" />
+    <DerivedAttribute name="fileType" value="' '" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+var sqlParams = {};
+var sqlStmt = "";
+var addCond = "";
+
+if(jsonQuery.card == "QuickAccess"){
+	addCond += " AND Mobile_Link__c.Record_Type_Name__c = 'Quick_Access' ";
+}
+if(jsonQuery.card == "MobileLinks"){
+    addCond += " AND Mobile_Link__c.Record_Type_Name__c = 'Einstein_Analytics' ";
+    addCond += " AND Mobile_Link__c.Asset_Type__c = 'dashboard' ";
+    addCond += " AND Mobile_Link__c.Dashboard_State__c != ' ' ";
+}
+if(jsonQuery.cockpit == "YourDay"){
+    addCond += " AND Mobile_Link__c.Display_In__c LIKE '%Your Day%' ";
+}
+if(jsonQuery.cockpit == "StoreCockpit"){
+    addCond += " AND Mobile_Link__c.Display_In__c LIKE '%Store Cockpit%' ";
+}
+
+sqlStmt += " SELECT pKey, ";
+sqlStmt += " active, ";
+sqlStmt += " sort, ";
+sqlStmt += " orgId, ";
+sqlStmt += " loginHost,";
+sqlStmt += " assetId, ";
+sqlStmt += " assetType, ";
+sqlStmt += " dashboardState, ";
+sqlStmt += " schemeName, ";
+sqlStmt += " description, ";
+sqlStmt += " max(usage), ";
+sqlStmt += " displayIn, ";
+sqlStmt += " url, ";
+sqlStmt += " parentid, ";
+sqlStmt += " fileName, ";
+sqlStmt += " fileType, ";
+sqlStmt += " mediaPath ";
+sqlStmt += " FROM ";
+
+sqlStmt += " (SELECT DISTINCT Mobile_Link__c.Id as pKey, ";
+sqlStmt += " Mobile_Link__c.Active__c as active, ";
+sqlStmt += " Mobile_Link__c.Sort__c as sort, ";
+sqlStmt += " Mobile_Link__c.Org_Id__c as orgId, ";
+sqlStmt += " Mobile_Link__c.Login_Host__c as loginHost, ";
+sqlStmt += " Mobile_Link__c.Asset_Id__c as assetId, ";
+sqlStmt += " Mobile_Link__c.Asset_Type__c as assetType, ";
+sqlStmt += " Mobile_Link__c.Dashboard_State__c as dashboardState, ";
+sqlStmt += " Mobile_Link__c.Scheme_Name__c as schemeName, ";
+sqlStmt += " Mobile_Link__c.Description_#Language#__c as description, ";
+sqlStmt += " Mobile_Link__c.Display_In__c as displayIn, ";
+sqlStmt += " Mobile_Link__c.URL__c as url, ";
+sqlStmt += " SF_File.Usage__c as usage, ";
+sqlStmt += " SF_FileLink.ParentId as parentid, ";
+sqlStmt += " SF_File.PathOnClient as fileName, ";
+sqlStmt += " replace(SF_File.PathOnClient, rtrim(SF_File.PathOnClient,replace(SF_File.PathOnClient, '.', '')),'') as fileType, ";
+sqlStmt += " CASE SF_File.Usage__c WHEN 'Icon' THEN SF_File.VersionData ELSE ' ' END as mediaPath ";
+sqlStmt += " FROM Mobile_Link__c ";
+sqlStmt += " LEFT OUTER JOIN SF_FileLink ON SF_FileLink.ParentId = Mobile_Link__c.Id ";
+sqlStmt += " AND SF_FileLink.IsDeleted <> '1' ";
+sqlStmt += " LEFT OUTER JOIN SF_File ON SF_FileLink.FileId = SF_File.Id ";
+sqlStmt += " AND SF_File.Usage__c = 'Icon' ";
+sqlStmt += " AND SF_File.IsDeleted <> '1' ";
+sqlStmt += " WHERE 1=1 ";
+sqlStmt += " AND Mobile_Link__c.Active__c = '1' ";
+sqlStmt += " AND Mobile_Link__c.Sales_Org__c = '#SALESORG#' ";
+sqlStmt +=	 addCond;
+sqlStmt += " AND Mobile_Link__c.IsDeleted <> '1' ";
+sqlStmt += " ORDER BY Mobile_Link__c.Id AND SF_File.Usage__c = 'Icon' ASC) ";
+
+sqlStmt += " GROUP BY pKey ";
+
+sqlStmt += " ORDER BY CAST(sort as integer) ASC, ";
+sqlStmt += " UPPER(description) ASC ";
+
+return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+  ]]></Load>
+  </Database>
+</Datasource>

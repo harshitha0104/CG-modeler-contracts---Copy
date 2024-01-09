@@ -1,0 +1,6 @@
+<ListItem name="LiCashDocumentMetaType">
+   <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomString" storable="false" dataSourceProperty="text" />
+  </SimpleProperties>
+</ListItem>

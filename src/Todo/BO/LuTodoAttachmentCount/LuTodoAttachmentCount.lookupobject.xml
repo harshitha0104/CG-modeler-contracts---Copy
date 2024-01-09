@@ -1,0 +1,10 @@
+<LookupObject name="LuTodoAttachmentCount" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuTodoAttachmentCount" />
+  <SimpleProperties>
+    <SimpleProperty name="todoAttachmentCount" type="DomInteger" dataSourceProperty="todoAttachmentCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

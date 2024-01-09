@@ -1,0 +1,17 @@
+<DataSource name="DsBoIssueNote" backendSystem="sf" businessObjectClass="BoIssueNote" external="false" editableEntity="Account_Task__c" readOnly="false" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Task__c" column="Id" />
+    <Attribute name="text" table="Account_Task__c" column="Note__c" />
+    <DerivedAttribute name="svcIssuePKey" value="Account_Task__c.Id" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Task__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+		Account_Task__c.Id= #svcIssuePKey#
+		]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="svcIssuePKey" type="TEXT" />
+  </Parameters>
+</DataSource>

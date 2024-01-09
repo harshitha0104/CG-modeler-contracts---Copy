@@ -1,0 +1,15 @@
+<DataSource name="DsLoUserAndSupervisor" backendSystem="sf" businessObjectClass="LoUserAndSupervisor" external="false" editableEntity="User" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="User" column="Id" />
+    <DerivedAttribute name="name" value="User.LastName || ', ' || User.FirstName" />
+  </Attributes>
+  <Entities>
+    <Entity name="User" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+		User.Id = '#UserPKey#'
+		OR User.Id IN (SELECT ManagerId FROM User WHERE User.Id = '#UserPKey#' AND User.Mobility_Sales_Org__c = '#SalesOrg#')
+		]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters></Parameters>
+</DataSource>

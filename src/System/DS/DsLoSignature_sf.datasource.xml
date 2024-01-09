@@ -1,0 +1,36 @@
+<DataSource name="DsLoSignature" businessObjectClass="LoSysSignature" backendSystem="sf" external="false" editableEntity="Signature__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="signaturePKey" table="Signature__c" column="Id" />
+    <Attribute name="bpaCustomerPKey" table="Signature__c" column="Account__c" />
+    <Attribute name="name" table="Signature__c" column="Name__c" />
+    <Attribute name="referencePKey" table="Signature__c" column="Order__c" />
+    <Attribute name="referenceObjectPhase" table="Signature__c" column="Reference_Object_Phase__c" />
+    <Attribute name="sysReleaseProcessStepPKey" table="Signature__c" column="Signature_Flow_Step__c" />
+    <Attribute name="usrUserPKey" table="Signature__c" column="User__c" />
+    <Attribute name="sysReleaseStepText" table="Signature_Flow_Step__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Signature__c" idAttribute="Id" />
+    <Entity name="Attachment" alias="">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="Attachment.ParentId" comparator="eq" rightSideType="Attribute" rightSideValue="Signature__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Signature_Flow_Step__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Signature_Flow_Step__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Signature__c.Signature_Flow_Step__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Signature__c.Order__c = #referencePKey#
+      ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="referencePKey" type="TEXT" />
+  </Parameters>
+</DataSource>

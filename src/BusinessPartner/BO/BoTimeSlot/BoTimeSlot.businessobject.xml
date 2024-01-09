@@ -1,0 +1,37 @@
+<BusinessObject name="BoTimeSlot" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsBoTimeSlot"/>
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" storable="false"/>
+    <SimpleProperty name="dayOfWeek" type="DomDayOfWeek" dataSourceProperty="dayOfWeek" storable="false"/>
+    <SimpleProperty name="operatingHoursId" type="DomPKey" dataSourceProperty="operatingHoursId"/>
+    <SimpleProperty name="startTime" type="DomTime" dataSourceProperty="startTime" storable="false"/>
+    <SimpleProperty name="endTime" type="DomTime" dataSourceProperty="endTime" storable="false"/>
+    <SimpleProperty name="type" type="DomText" dataSourceProperty="type" storable="false"/>
+    <SimpleProperty name="timeZone" type="DomOperatingHoursTimeZones" dataSourceProperty="timeZone" storable="false"/>
+    <!-- needed to validate time slot overlap -->
+    <SimpleProperty name="listTimeSlots" type="Object"/>
+  </SimpleProperties>
+  <NestedObjects/>
+  <ObjectLookups/>
+  <ListObjects/>
+  <Methods>
+    <Method name="beforeSaveAsync"/>
+    <Method name="afterSaveAsync"/>
+    <Method name="beforeLoadAsync"/>
+    <Method name="afterLoadAsync"/>
+    <Method name="beforeInitialize"/>
+    <Method name="afterInitialize"/>
+    <Method name="beforeDoValidateAsync"/>
+    <Method name="afterDoValidateAsync"/>
+    <Method name="beforeCreateAsync"/>
+    <Method name="afterCreateAsync"/>
+    <Method name="loadAsync"/>
+    <Method name="saveAsync"/>
+    <Method name="createAsync"/>
+    <Method name="getComparableTicksFromTime"/>
+    <Method name="setEARights"/>
+  </Methods>
+  <Validations>
+    <Validation name="validateTimeSlot"/>
+  </Validations>
+</BusinessObject>

@@ -1,0 +1,18 @@
+<DataSource name="DsLuStoreManager" backendSystem="sf" businessObjectClass="LuStoreManager" external="false" editableEntity="Contact" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contact" column="Id" />
+    <Attribute name="name" table="Contact" column="Name" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contact" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        Contact.AccountId = #pKey#
+        AND IsDeleted <> '1'
+ ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="customerPKey" type="TEXT" />
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

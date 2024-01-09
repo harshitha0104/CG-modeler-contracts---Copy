@@ -1,0 +1,13 @@
+<DataSource name="DsLoCustomerVisit" backendSystem="sf" businessObjectClass="LoCustomerVisit" external="false" editableEntity="Tour_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Tour_Template__c" column="Id" />        
+    <Attribute name="name" table="Tour_Template__c" column="Name" />         
+    <Attribute name="lastModifiedById" table="Tour_Template__c" column="LastModifiedById" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tour_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition />
+  <OrderCriteria />
+  <Parameters />
+</DataSource>

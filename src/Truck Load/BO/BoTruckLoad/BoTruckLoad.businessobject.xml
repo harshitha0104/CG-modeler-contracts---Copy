@@ -1,0 +1,181 @@
+<BusinessObject name="BoTruckLoad" schemaVersion="1.1" OERReference="SdoMain">
+  <DataSource name="DsBoTruckLoad" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="id" type="DomId" dataSourceProperty="id" />
+    <SimpleProperty name="commitDate" type="DomDate" dataSourceProperty="commitDate" />
+    <SimpleProperty name="phase" type="DomSdoPhase" dataSourceProperty="phase" />
+    <SimpleProperty name="ivcRef1PKey" type="DomPKey" dataSourceProperty="ivcRef1PKey" />
+    <SimpleProperty name="ivcRef2PKey" type="DomPKey" dataSourceProperty="ivcRef2PKey" />
+    <SimpleProperty name="ivcRef3PKey" type="DomPKey" dataSourceProperty="ivcRef3PKey" />
+    <SimpleProperty name="ivcRef4PKey" type="DomPKey" dataSourceProperty="ivcRef4PKey" />
+    <SimpleProperty name="ivcRef5PKey" type="DomPKey" dataSourceProperty="ivcRef5PKey" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="docTaType" type="DomBpaPaymentPolicy" dataSourceProperty="docTaType" />
+    <SimpleProperty name="sdoMetaPKey" type="DomPKey" dataSourceProperty="sdoMetaPKey" />
+    <SimpleProperty name="releaseTime" type="DomDateTime" dataSourceProperty="releaseTime" />
+    <SimpleProperty name="actualStatePKey" type="DomPKey" dataSourceProperty="actualStatePKey" />
+    <SimpleProperty name="nextStatePKey" type="DomPKey" dataSourceProperty="nextStatePKey" />
+    <SimpleProperty name="documentType" type="DomSdoSubType" dataSourceProperty="documentType" />
+    <SimpleProperty name="tmgMainPKey" type="DomPKey" dataSourceProperty="tmgMainPKey" />
+    <SimpleProperty name="etpWarehousePKey" type="DomPKey" dataSourceProperty="etpWarehousePKey" />
+    <SimpleProperty name="ownerPKey" type="DomPKey" dataSourceProperty="ownerPKey" />
+    <SimpleProperty name="initiatorPKey" type="DomPKey" dataSourceProperty="initiatorPKey" />
+    <SimpleProperty name="currency" type="DomCurrency" dataSourceProperty="currency" />
+    <SimpleProperty name="initiationDate" type="DomDate" dataSourceProperty="initiationDate" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="pricingDate" type="DomDateTime" dataSourceProperty="pricingDate" />
+    <SimpleProperty name="calculationStatus" type="DomSdoCalculationStatus" dataSourceProperty="calculationStatus" />
+    <SimpleProperty name="calculationTime" type="DomDateTime" dataSourceProperty="calculationTime" />
+    <SimpleProperty name="totalValue" type="DomMoney" dataSourceProperty="totalValue" />
+    <SimpleProperty name="totalValueReceipt" type="DomMoney" dataSourceProperty="totalValueReceipt" />
+    <SimpleProperty name="grossTotalValue" type="DomMoney" dataSourceProperty="grossTotalValue" />
+    <SimpleProperty name="grossTotalValueReceipt" type="DomMoney" dataSourceProperty="grossTotalValueReceipt" />
+    <SimpleProperty name="merchandiseValue" type="DomMoney" dataSourceProperty="merchandiseValue" />
+    <SimpleProperty name="merchandiseValueReceipt" type="DomMoney" dataSourceProperty="merchandiseValueReceipt" />
+    <SimpleProperty name="totalShippedQuantity" type="DomDecimal" dataSourceProperty="totalShippedQuantity" />
+    <SimpleProperty name="totalReturnedQuantity" type="DomDecimal" dataSourceProperty="totalReturnedQuantity" />
+    <SimpleProperty name="paidAmount" type="DomMoney" dataSourceProperty="paidAmount" />
+    <SimpleProperty name="paidAmountReceipt" type="DomMoney" dataSourceProperty="paidAmountReceipt" />
+    <SimpleProperty name="deliveryDate" type="DomDate" dataSourceProperty="deliveryDate" />
+    <SimpleProperty name="headerDiscount" type="DomDecimal" dataSourceProperty="headerDiscount" />
+    <SimpleProperty name="billToCustomerPKey" type="DomPKey" dataSourceProperty="billToCustomerPKey" />
+    <SimpleProperty name="payerCustomerPKey" type="DomPKey" dataSourceProperty="payerCustomerPKey" />
+    <SimpleProperty name="brokerCustomerPKey" type="DomPKey" dataSourceProperty="brokerCustomerPKey" />
+    <SimpleProperty name="cndCpCalculationSchemaPKey" type="DomPKey" dataSourceProperty="cndCpCalculationSchemaPKey" />
+    <SimpleProperty name="distribChannel" type="DomDistribChannel" dataSourceProperty="distribChannel" />
+    <SimpleProperty name="division" type="DomSysIntDivision" dataSourceProperty="division" />
+    <SimpleProperty name="paymentReason" type="DomSdoPaymentReason" dataSourceProperty="paymentReason" />
+    <SimpleProperty name="addProduct_ItemMeta" type="Object" storable="false" />
+    <SimpleProperty name="addProduct_ScanIncrementQuantity" type="DomInteger" storable="false" />
+    <SimpleProperty name="deliveryRecipientPKey" type="DomPKey" dataSourceProperty="deliveryRecipientPKey" />
+    <SimpleProperty name="ordererPKey" type="DomPKey" dataSourceProperty="ordererPKey" />
+    <SimpleProperty name="validateInventories" type="DomBool" />
+    <SimpleProperty name="loInventories" type="Object" />
+    <SimpleProperty name="loInventoryTransactions" type="Object" />
+    <SimpleProperty name="validateForQuantity" type="DomBool" />
+    <SimpleProperty name="validateForUniqueness" type="DomBool" />
+    <SimpleProperty name="validateForBlindMode" type="DomBool" />
+    <SimpleProperty name="bookInventoryValue" type="DomMoney" dataSourceProperty="bookInventoryValue" />
+    <SimpleProperty name="amountDifference" type="DomMoney" />
+    <SimpleProperty name="sdoConditionsJson" type="Object" />
+    <SimpleProperty name="pricingJSON" type="Object" />
+    <SimpleProperty name="pricingReady" type="DomBool" />
+    <SimpleProperty name="releaseTriggered" type="DomBool" />
+    <SimpleProperty name="releaseIgnored" type="DomBool" />
+    <SimpleProperty name="cancelReason" type="DomSdoCancelReason" dataSourceProperty="cancelReason" />
+    <SimpleProperty name="absolutePaidAmount" type="DomMoney" storable="true" dataSourceProperty="absolutePaidAmount" />
+    <SimpleProperty name="actualPrdCheckOutType" type="DomSdoPrdCheckOutType" storable="true" dataSourceProperty="actualPrdCheckOutType" />
+    <SimpleProperty name="storedSysReleasePKey" type="DomPKey" />
+    <SimpleProperty name="senderPKey" type="DomPKey" dataSourceProperty="senderPKey" />
+    <SimpleProperty name="recipientPKey" type="DomPKey" dataSourceProperty="recipientPKey" />
+    <SimpleProperty name="sysReleaseProcessStepsExists" type="DomBool" />
+    <SimpleProperty name="loModReasonCache" type="Object" />
+    <SimpleProperty name="actualValueCurrency" type="DomCurrency" dataSourceProperty="actualValueCurrency" />
+    <SimpleProperty name="inwardTransferDocumentPKey" type="DomPKey" dataSourceProperty="inwardTransferDocumentPKey" />
+    <SimpleProperty name="itemListEventBuffer" type="Object" />
+    <SimpleProperty name="itemListEventBufferingActive" type="DomString" />
+    <SimpleProperty name="mode" type="DomString" />
+    <SimpleProperty name="eventTimer" type="Object" />
+  </SimpleProperties>
+  <NestedObjects>
+    <NestedObject name="boOrderMeta" objectClass="BoOrderMeta" dataSourceProperty="sdoMetaPKey" nestingProperty="pKey" />
+    <NestedObject name="boWorkflow" objectClass="BoWorkflow" dataSourceProperty="wfeWorkflowPKey" nestingProperty="pKey" />
+    <NestedObject name="boUsrNotification" objectClass="BoUsrNotification" dataSourceProperty="pKey" nestingProperty="referencePKey" />
+  </NestedObjects>
+  <ObjectLookups>
+    <ObjectLookup name="luResponsible" objectClass="LuUser" dataSourceProperty="responsiblePKey" lookupProperty="pKey" />
+    <ObjectLookup name="luOwner" objectClass="LuUser" dataSourceProperty="ownerPKey" lookupProperty="pKey" />
+    <ObjectLookup name="luSender" objectClass="LuUser" dataSourceProperty="senderPKey" lookupProperty="pKey" />
+    <ObjectLookup name="luRecipientDriver" objectClass="LuUser" dataSourceProperty="recipientPKey" lookupProperty="pKey" />
+    <ObjectLookup name="luEtpWarehouse" objectClass="LuEtpWarehouse" dataSourceProperty="etpWarehousePKey" lookupProperty="pKey" />
+    <ObjectLookup name="luTourInformation" objectClass="LuTourInformation" dataSourceProperty="tmgMainPKey" lookupProperty="pKey" />
+    <!--<ObjectLookup name="luSdoMetaShortText" objectClass="LuSdoMetaShortText" dataSourceProperty="pKey" lookupProperty="pKey" />-->
+  </ObjectLookups>
+  <ListObjects>
+    <ListObject name="loItems" objectClass="LoTruckLoadItems" dataSourceProperty="pKey" listProperty="sdoMainPKey">
+      <Events>
+        <Event name="listItemChanged" eventHandler="onTruckLoadItemChanged" />
+      </Events>
+    </ListObject>
+    <ListObject name="loUnitOfMeasure" objectClass="LoTruckLoadItems" dataSourceProperty="pKey" listProperty="sdoMainPKey" />
+    <ListObject name="loQuantitySums" objectClass="LoQuantitySums" dataSourceProperty="sdoMetaPKey" listProperty="pKey" />
+    <ListObject name="loWfeRecentState" objectClass="LoOrderRecentState" dataSourceProperty="pKey" listProperty="pKey" />
+    <ListObject name="loSdoConditions" objectClass="LoSdoConditions" dataSourceProperty="pKey" listProperty="sdoMainPKey" />
+    <ListObject name="loOrderAttachment" objectClass="LoOrderAttachment" dataSourceProperty="pKey" listProperty="sdoMainPKey" />
+    <ListObject name="loSysSignatureAttribute" objectClass="LoSysSignatureAttribute" dataSourceProperty="pKey" listProperty="sdoMainPKey" />
+    <ListObject name="loSysSignatureBlob" objectClass="LoSysSignatureBlob" dataSourceProperty="pKey" listProperty="sdoMainPKey" />
+    <ListObject name="loGeoLocation" objectClass="LoCallLocation" dataSourceProperty="pKey" listProperty="sdoMainPKey" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="loadBoOrderMeta" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+    <Method name="onTruckLoadItemChanged" />
+    <Method name="cpCalculate" />
+    <Method name="cpGetRelevantOrderAttributes" />
+    <Method name="cpInitComplexPricing" />
+    <!-- In CGCloud we create order Sdo Conditions in preparePrint method now. Thus the below method must be adapted when Truckload is enabled in CGCloud.   -->
+    <Method name="cpCreateSdoConditionRecords" />
+    <Method name="cpAttachDebugJSON" />
+    <Method name="setIvcRefPKeys" />
+    <Method name="setCurrentItem" />
+    <Method name="resetCurrentItemFilter" />
+    <Method name="setNextWorkflowState" />
+    <Method name="validateScannedProduct" />
+    <Method name="validateScannedUoM" />
+    <Method name="validateScannedItem" />
+    <Method name="selectItemAfterAdd" />
+    <Method name="simulateItemChangedEvent" />
+    <Method name="setEARights" />
+    <Method name="getButtonVisibility" />
+    <Method name="checkResponsibleEqUser" />
+    <Method name="deleteDocument" />
+    <Method name="cancel" />
+    <Method name="addItemsBasedOnInventory" />
+    <Method name="setCheckOutType" />
+    <Method name="prepopulateQuantity" />
+    <Method name="determineSysReleaseProcessPKey" />
+    <Method name="getReleaseTitle" />
+    <Method name="storeSysReleaseProcessPKey" />
+    <Method name="isReleaseInformationVisible" />
+    <!-- Inventory Handling -->
+    <Method name="processInventoryActions" />
+    <Method name="addMessageToContainer" />
+    <Method name="calculateLogisticUnitTotals" />
+    <Method name="getAvailableUoMForProduct" />
+    <Method name="getDefaultUoMForProduct" />
+    <Method name="addMissingUoMsForAllItems" />
+    <Method name="createDisplayInformationForList" />
+    <Method name="createDisplayInformationForListItem" />
+    <Method name="createDisplayInformationForUoMItem" />
+    <Method name="reasonCodeItemValidation" />
+    <Method name="createPricingInformationForList" />
+    <Method name="releaseButtonActive" />
+    <Method name="resetCalculationResult" />
+    <Method name="checkRecipientDriver" />
+    <Method name="resetInventoryTransaction" />
+    <Method name="releaseButtonVisible" />
+    <Method name="checkFakeInwardTransferDocument" />
+    <Method name="initializeInwardTransferDocument" />
+    <Method name="setInventoryBalanceOfItem" />
+  </Methods>
+  <Validations>
+    <Validation name="validateQuantityModifications" />
+    <Validation name="validateInventory" />
+    <Validation name="validateProductUniqueness" />
+    <Validation name="validateBlindMode" />
+  </Validations>
+</BusinessObject>

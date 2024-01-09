@@ -1,0 +1,20 @@
+<DataSource name="DsLoUserSetting" backendSystem="sf" businessObjectClass="LoUserSetting" external="false" editableEntity="User_Setting__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="ClbCalendarInitialViewMobility" table="User_Setting__c" column="Initial_View__c" />
+    <DerivedAttribute name="ClbVisitsInMapMobility" value="'0'" />
+    <DerivedAttribute name="ClbDisplayUserInMapMobility" value="'0'" />
+    <DerivedAttribute name="ClbDisplayVisitsInMapMobility" value="'0'" />
+    <!-- Avoid automatic date transformation as the fields are designed as 'Text' in SF -->
+    <DerivedAttribute name="ClbCalendarInitialTime" value="User_Setting__c.Initial_Time__c" />
+    <Attribute name="ClbCalendarDefaultCallStatus" table="User_Setting__c" column="Default_Visit_Status__c" />
+    <Attribute name="SyncTimeIntervall" table="User_Setting__c" column="Sync_Time_Interval__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="User_Setting__c" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        User_Setting__c.User__c = '#UserPKey#'
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters />
+</DataSource>

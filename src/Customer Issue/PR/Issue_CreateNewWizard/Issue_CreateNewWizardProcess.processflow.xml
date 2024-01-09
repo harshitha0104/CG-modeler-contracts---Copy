@@ -1,0 +1,183 @@
+<Process name="Issue::CreateNewWizardProcess" defaultAction="ReloadManagementInformation" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="ValidationBo" type="BoWizardCreateNewIssue" />
+        <Declaration name="CustomerPKey" type="DomPKey" />
+        <Declaration name="SvcRequestMetaPKey" type="DomPKey" />
+        <Declaration name="SvcRequestMetaList" type="LoSvcRequestMeta" />
+        <Declaration name="IsSubstitution" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="CallCustomerPKey" type="DomPKey" />
+        <Input name="CallPKey" type="DomPKey" />
+        <Input name="cardDate" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateWizardBo" actionType="CREATE" type="BoWizardCreateNewIssue">
+        <Parameters>
+          <Input name="userPKey" value="ApplicationContext::User.pKey" />
+          <Input name="callCustomerPKey" value="ProcessContext::CallCustomerPKey" />
+          <Input name="cardDate" value="ProcessContext::cardDate" />
+          <Input name="customerPKey" type="Literal" value="" />
+          <Input name="svcRequestMetaPKey" type="Literal" value="" />
+        </Parameters>
+        <Return name="ProcessContext::ValidationBo" />
+      </Action>
+      <Action actionType="LOAD" name="GetSvcRequestMetaList" type="LoSvcRequestMeta">
+        <Parameters>
+          <Input name="metaType" value="Issue" type="Literal" />
+          <Input name="issueType" value="CustomerIssue" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::SvcRequestMetaList" />
+      </Action>
+      <Action name="SetSvcRequestMetaPKey_DefaultTemplate" actionType="LOGIC" call="ProcessContext::SvcRequestMetaList.getFirstEntry">
+        <Return name="ProcessContext::SvcRequestMetaPKey" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="VIEW" name="ShowView">
+        <UIDescription>Issue::CreateNewWizardUI</UIDescription>
+        <Events>
+          <Event name="CreateNewIssue" action="setDirty" />
+          <Event name="CustomerLookup" action="OpenCustomerNameLookup" />
+          <Event name="svcMetaLookup" action="OpenSvcRequestMetaLookup" />
+        </Events>
+      </Action>
+      <!-- Set validation business object dirty on clicking done button-->
+      <Action actionType="LOGIC" name="setDirty" call="ProcessContext::ValidationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="5" />
+        </Parameters>
+        <TransitionTo action="WizardValidation" />
+      </Action>
+      <!-- Validation actions -->
+      <Action actionType="VALIDATION" name="WizardValidation">
+        <Validations>
+          <Validation name="ProcessContext::ValidationBo.validateNotEmpty" />
+          <Validation name="ProcessContext::ValidationBo.validateDueDate" />
+          <Validation name="ProcessContext::ValidationBo.validateSub" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="Substitution_Decision" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <!-- Handle substitution -->
+      <Action name="Substitution_Decision" actionType="DECISION" parameter="ProcessContext::ValidationBo.isSubstituted">
+        <Case value="0" action="EndCreateNewIssue" />
+        <Case value="1" action="EndCreateNewIssueSubstitution" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action actionType="END" name="EndCancel" />
+      <Action actionType="END" name="EndCreateNewIssue">
+        <ReturnValues>
+          <Return name="svcRequestMetaPKey" value="ProcessContext::ValidationBo.luSvcRequestMeta.PKey" />
+          <Return name="customerPKey" value="ProcessContext::ValidationBo.luCustomer.PKey" />
+          <Return name="clbMainPKey" value="ProcessContext::CallPKey" />
+          <Return name="description" value="ProcessContext::ValidationBo.text" />
+          <Return name="dueDate" value="ProcessContext::ValidationBo.dueDate" />
+          <Return name="buttonPressed" type="Literal" value="create" />
+          <Return name="issueStatus" type="Literal" value="create" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndCreateNewIssueSubstitution">
+        <ReturnValues>
+          <Return name="svcRequestMetaPKey" value="ProcessContext::ValidationBo.luSvcRequestMeta.PKey" />
+          <Return name="customerPKey" value="ProcessContext::ValidationBo.luCustomer.PKey" />
+          <Return name="substitutedUsrPKey" value="ProcessContext::ValidationBo.substitutedUsrPKey" />
+          <Return name="isManagedCustomer" value="ProcessContext::ValidationBo.isManagedCustomer" />
+          <Return name="clbMainPKey" value="ProcessContext::CallPKey" />
+          <Return name="description" value="ProcessContext::ValidationBo.text" />
+          <Return name="dueDate" value="ProcessContext::ValidationBo.dueDate" />
+          <Return name="buttonPressed" type="Literal" value="create" />
+          <Return name="issueStatus" type="Literal" value="create" />
+        </ReturnValues>
+      </Action>
+      <!-- Customer handling -->
+      <Action actionType="PROCESS" name="OpenCustomerNameLookup" process="Customer::LookupProcess">
+        <ReturnValues>
+          <Return name="ProcessContext::CustomerPKey" value="customerPKey" />
+        </ReturnValues>
+        <TransitionTo action="LoadCustomerLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadCustomerLookup" type="LuCustomer">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CustomerPKey" />
+        </Parameters>
+        <Return name="ProcessContext::ValidationBo.luCustomer" />
+        <TransitionTo action="ReloadManagementInformation" />
+      </Action>
+      <Action actionType="LOGIC" name="ReloadManagementInformation" call="ProcessContext::ValidationBo.reloadManagementInformation">
+        <TransitionTo action="CheckSubstitution" />
+      </Action>
+      <Action actionType="LOGIC" name="CheckSubstitution" call="ProcessContext::ValidationBo.checkSubstitution">
+        <Return name="ProcessContext::IsSubstitution" />
+        <TransitionTo action="ReloadSvcRequestMetaList_Decision" />
+      </Action>
+      <Action name="ReloadSvcRequestMetaList_Decision" actionType="DECISION" parameter="ProcessContext::IsSubstitution">
+        <Case value="1" action="FilterSvcRequestMetaList_Substitution" />
+        <Case value="0" action="FilterSvcRequestMetaList_NoRestriction" />
+        <CaseElse action="FilterSvcRequestMetaList_NoRestriction" />
+      </Action>
+      <!-- Filtering of template list -->
+      <Action actionType="LOGIC" name="FilterSvcRequestMetaList_Substitution" call="ProcessContext::SvcRequestMetaList.setFilter">
+        <Parameters>
+          <Input name="fieldName" value="IsPrivate" type="Literal" />
+          <Input name="value" value="0" type="Literal" />
+          <Input name="operator" value="EQ" type="Literal" />
+        </Parameters>
+        <TransitionTo action="SetSvcRequestMetaPKey_SetDefaultTemplate" />
+      </Action>
+      <Action actionType="LOGIC" name="FilterSvcRequestMetaList_NoRestriction" call="ProcessContext::SvcRequestMetaList.resetAllFilters">
+        <TransitionTo action="SetSvcRequestMetaPKey_SetDefaultTemplate" />
+      </Action>
+      <Action name="SetSvcRequestMetaPKey_SetDefaultTemplate" actionType="LOGIC" call="ProcessContext::SvcRequestMetaList.getFirstEntry">
+        <Return name="ProcessContext::SvcRequestMetaPKey" />
+        <TransitionTo action="ReloadSvcRequestMetaLookup" />
+      </Action>
+      <Action actionType="LOAD" name="ReloadSvcRequestMetaLookup" type="LuSvcRequestMeta">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::SvcRequestMetaPKey" />
+        </Parameters>
+        <Return name="ProcessContext::ValidationBo.luSvcRequestMeta" />
+        <TransitionTo action="setEARights" />
+      </Action>
+      <!-- Edit and access rights -->
+      <Action actionType="LOGIC" name="setEARights" call="ProcessContext::ValidationBo.setEARights">
+        <TransitionTo action="setNew" />
+      </Action>
+      <!-- Set validation business object to new if not the done button has been clicked-->
+      <Action actionType="LOGIC" name="setNew" call="ProcessContext::ValidationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="2" />
+        </Parameters>
+        <TransitionTo action="ShowView" />
+      </Action>
+      <!-- Template handling -->
+      <Action actionType="PROCESS" name="OpenSvcRequestMetaLookup" process="ServiceRequest::MetaLookupProcess">
+        <Parameters>
+          <Input name="MetaType" value="Issue" type="Literal" />
+          <Input name="IssueType" value="CustomerIssue" type="Literal" />
+          <Input name="SvcRequestMetaPKey" value="ProcessContext::SvcRequestMetaPKey" />
+          <Input name="SvcRequestMetaList" value="ProcessContext::SvcRequestMetaList" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::SvcRequestMetaPKey" value="svcRequestMetaPKey" />
+        </ReturnValues>
+        <TransitionTo action="LoadSvcRequestMetaLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadSvcRequestMetaLookup" type="LuSvcRequestMeta">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::SvcRequestMetaPKey" />
+        </Parameters>
+        <Return name="ProcessContext::ValidationBo.luSvcRequestMeta" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

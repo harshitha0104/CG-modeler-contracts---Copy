@@ -1,0 +1,45 @@
+<UIDescription name="Call::NotesTabUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="MasterDetailSectionPage" masterSectionFlex="40" detailSectionFlex="60" selectFirstItemInList="true">
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::MainBO.luCustomer.name"/>
+        <!-- CW-REQUIRED: remove title binding -->
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="CallNotesList" searchable="true" groupBy="noteDate" sortBy="noteDate" master="true" dataSource="ProcessContext::MainBO.loNotes.Items[]" direction="DESC">
+          <SearchAttributes>
+            <SearchAttribute name="text" />
+          </SearchAttributes>
+          <Items name="Items" itemPattern="CallNotesPattern">
+            <ItemListLayout>
+              <Col flex="1">
+                <Row layoutType="itemSecondary" bindingId="Text" />
+              </Col>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="Text" type="Text" binding=".shortText" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+    <Section sectionName="detailSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <InputAreaMultiLine name="NotesDetail" noOfRows="8">
+          <Bindings>
+            <Binding target="Value" binding="ProcessContext::MainBO.loNotes.Current.text" bindingMode="TWO_WAY" />
+          </Bindings>
+        </InputAreaMultiLine>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

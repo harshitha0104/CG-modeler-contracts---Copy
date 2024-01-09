@@ -1,0 +1,94 @@
+<Process name="Product::ScanKPIProductProcess" defaultAction="scanProductBarcode_Logic" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="loScannedProduct" type="LoScannedKPIProducts" />
+        <Declaration name="GTIN" type="String" />
+        <Declaration name="ProductPKey" type="String" />
+        <Declaration name="loScannedProductCount" type="String" />
+        <Declaration name="scannedProductResult" type="String" />
+      </Declarations>
+      <Parameters></Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetScannedProductList" actionType="CREATE" type="LoScannedProduct">
+        <Return name="ProcessContext::loScannedProduct" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="scanProductBarcode_Logic" actionType="LOGIC" call="ProcessContext::loScannedProduct.scanBarcode">
+        <Return name="ProcessContext::GTIN" />
+        <TransitionTo action="scanProductBarcode_Decision" />
+      </Action>
+      <Action name="scanProductBarcode_Decision" actionType="DECISION" parameter="ProcessContext::GTIN">
+        <Case value="cancelled" action="clearGTIN_Logic" />
+        <CaseElse action="loadLoAllProduct" />
+        <CaseEmpty action="loadLoAllProduct" />
+      </Action>
+      <Action actionType="LOGIC" name="clearGTIN_Logic" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value=" " />
+        </Parameters>
+        <Return name="ProcessContext::GTIN" />
+        <TransitionTo action="End" />
+      </Action>
+      <Action name="loadLoAllProduct" actionType="LOAD" type="LoScannedKPIProducts">
+        <Parameters>
+          <Input name="gTIN" value="ProcessContext::GTIN" />
+        </Parameters>
+        <Return name="ProcessContext::loScannedProduct" />
+        <TransitionTo action="loadLoScannedProduct" />
+      </Action>
+      <Action name="loadLoScannedProduct" actionType="LOGIC" call="ProcessContext::loScannedProduct.getScannedProductResult">
+        <Return name="ProcessContext::scannedProductResult" />
+        <TransitionTo action="showScannedProductsFlyout_Decision" />
+      </Action>
+      <Action name="showScannedProductsFlyout_Decision" actionType="DECISION" parameter="ProcessContext::scannedProductResult">
+        <Case value="ONEPRODUCT" action="returnScannedProductValues" />
+        <Case value="MULTIPLEPRODUCTS" action="ShowScannedProductsFlyout" />
+        <Case value="NOPRODUCTS" action="noProducts" />
+        <CaseElse action="noProducts" />
+        <CaseEmpty action="noProducts" />
+      </Action>
+      <Action actionType="Logic" name="noProducts" call="ProcessContext::loScannedProduct.validateNoProduct">
+        <Parameters>
+          <Input name="GTIN" value="ProcessContext::GTIN" />
+        </Parameters>
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="View" name="ShowScannedProductsFlyout">
+        <UIDescription>Product::ScanKPIProductUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="EndItemSelected" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="returnScannedProductValues">
+        <ReturnValues>
+          <Return name="ProductPKey" value="ProcessContext::loScannedProduct.getFirstItem().productPKey" />
+          <Return name="ProductId" value="ProcessContext::loScannedProduct.getFirstItem().id" />
+          <Return name="ProductCode" value="ProcessContext::loScannedProduct.getFirstItem().productCode" />
+          <Return name="GTIN" value="ProcessContext::loScannedProduct.getFirstItem().gtin" />
+          <Return name="Success" type="Literal" value="1" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndItemSelected">
+        <ReturnValues>
+          <Return name="ProductPKey" value="Event.pKey" />
+          <Return name="ProductId" value="Event.id" />
+          <Return name="GTIN" value="Event.gtin" />
+          <Return name="ProductCode" value="Event.productCode" />
+          <Return name="Success" type="Literal" value="1" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="ProductPKey" type="Literal" value=" " />
+          <Return name="ProductId" type="Literal" value=" " />
+          <Return name="Success" type="Literal" value="0" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

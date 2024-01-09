@@ -1,0 +1,20 @@
+<LookupObject name="LuPreviousSurvey" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuPreviousSurvey" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="serialNumber" type="DomId" dataSourceProperty="serialNumber" />
+    <SimpleProperty name="condition" type="DomAstCondition" dataSourceProperty="condition" />
+    <SimpleProperty name="creationDate" type="DomDate" dataSourceProperty="creationDate" />
+    <SimpleProperty name="location" type="DomAstLocation" dataSourceProperty="location" />
+    <SimpleProperty name="locationRating" type="DomAstLocationRating" dataSourceProperty="locationRating" />
+    <SimpleProperty name="method" type="DomAstSurveyMethod" dataSourceProperty="method" />
+    <SimpleProperty name="note" type="DomText" dataSourceProperty="note" />
+    <SimpleProperty name="presence" type="DomBool" dataSourceProperty="presence" />
+    <SimpleProperty name="usage" type="DomAstUsage" dataSourceProperty="usage" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

@@ -1,0 +1,552 @@
+<Process name="Issue::OverviewProcess" defaultAction="UI_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="IssueList" type="LoIssueOverview" />
+        <Declaration name="IssueDetail" type="BoIssue" />
+        <Declaration name="ContextMenuList" type="LoIssueOverViewContextMenu" />
+        <Declaration name="isEqual" type="String" />
+        <Declaration name="CurrentListItem" type="String" />
+        <Declaration name="NextSelectedListItem" type="String" />
+        <Declaration name="CopyIssue_CopiedIssueDetail" type="BoIssue" />
+        <Declaration name="CopyIssue_ButtonPressed" type="String" />
+        <Declaration name="ImageURI" type="String" />
+        <Declaration name="cameraSettings" type="Object" />
+        <Declaration name="attachmentData" type="Object" />
+        <Declaration name="AttachmentsContextMenuList" type="LoIssueAttachmentsContextMenu" />
+        <Declaration name="svcRequestMetaPKey" type="DomPKey" />
+        <Declaration name="ownerBpaMainPKey" type="DomPKey" />
+        <Declaration name="substitutedUsrPKey" type="DomPKey" />
+        <Declaration name="clbMainPKey" type="DomPKey" />
+        <Declaration name="description" type="String" />
+        <Declaration name="dueDate" type="DomDate" />
+        <Declaration name="AddIssue_ButtonPressed" type="String" />
+        <Declaration name="Issue_Status" type="String" />
+        <Declaration name="StateType" type="String" />
+        <Declaration name="currentTabPage" type="String" />
+        <Declaration name="ViewMode" type="String" />
+        <Declaration name="openGallery" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="CallCustomerPKey" type="DomPKey" />
+        <Input name="IsManagedCustomer" type="DomBool" />
+        <Input name="CallPKey" type="DomPKey" />
+        <Input name="CustomerName" type="String" />
+        <Input name="CustomerTaskPKey" type="DomPKey" />
+        <Input name="Mode" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <!-- Reload team list of user (could be changed via background sync) for use in advanced search
+      Team list for issue overview is threaded via LoIssueOverview.beforeLoadAsync that uses the customer selection
+      Param 1 means including current user into teamlist -->
+      <Action actionType="LOGIC" name="LoadTeamOfUser" call="ApplicationContext::User.loadTeamOfUser">
+        <Parameters>
+          <Input name="includeCurrentUser" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+      <Action name="GetOverviewList" actionType="LOAD" type="LoIssueOverview">
+        <Parameters>
+          <Input name="asoName" value="AsoIssue" type="Literal" />
+          <Input name="customerPKey" value="ProcessContext::CallCustomerPKey" />
+        </Parameters>
+        <Return name="ProcessContext::IssueList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="UI_Decision" actionType="DECISION" parameter="ProcessContext::CallCustomerPKey">
+        <CaseEmpty action="TriggerShowIssuesList" />
+        <CaseElse action="TriggerShowIssueListCall" />
+      </Action>
+      <Action name="TriggerShowIssuesList" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="view" type="Literal" value="ShowIssuesList" />
+        </Parameters>
+        <Return name="ProcessContext::ViewMode" />
+        <TransitionTo action="SelectItemFromCockpit_Decision" />
+      </Action>
+      <Action name="TriggerShowIssueListCall" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="view" type="Literal" value="ShowIssueListCall" />
+        </Parameters>
+        <Return name="ProcessContext::ViewMode" />
+        <TransitionTo action="SelectItemFromCockpit_Decision" />
+      </Action>
+      <Action name="ShowIssuesList" actionType="VIEW">
+        <UIDescription>Issue::OverviewUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="LoadIssueDetails" />
+          <!-- Menu item events -->
+          <Event name="showAllIssue" action="ResetIssueListFilter" />
+          <Event name="showRelevantIssue" action="SetIssueFilter_Relevant" />
+          <Event name="addIssue" action="CreateAndValidateIssue" />
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+          <Event name="releaseIssue" action="ReleaseIssue" />
+          <Event name="completeIssue" action="CompleteIssue" />
+          <Event name="tabSelected" action="setCurrentTabName_Decision" />
+          <Event name="TakePicture" action="updateOpenGalleryForTakePicture" />
+          <Event name="SelectPicture" action="updateOpenGalleryForSelectPicture" />
+          <Event name="attachmentsContextMenuOpening" action="GetAttachmentsContextMenu" />
+          <Event name="attachmentsContextMenuItemSelected" action="AttachmentsContextMenu_Result_Decision" />
+        </Events>
+      </Action>
+      <!-- Decision Point for selected Tab Pages -->
+      <Action name="setCurrentTabName_Decision" actionType="DECISION" parameter="Event.tabName">
+        <Case value="Main" action="setCurrentTabName_Main" />
+        <Case value="Attachments" action="LoadLoAttachment" />
+        <CaseElse action="setCurrentTabName_Main" />
+      </Action>
+      <Action name="ShowIssueListCall" actionType="VIEW">
+        <UIDescription>Issue::OverviewCallUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="LoadIssueDetails" />
+          <!-- Menu item events -->
+          <Event name="showAllIssue" action="ResetIssueListFilter" />
+          <Event name="showRelevantIssue" action="SetIssueFilter_Relevant" />
+          <Event name="addIssue" action="CreateAndValidateIssue" />
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+          <Event name="releaseIssue" action="ReleaseIssue" />
+          <Event name="completeIssue" action="CompleteIssue" />
+          <Event name="tabSelected" action="setCurrentTabName_Decision" />
+          <Event name="TakePicture" action="updateOpenGalleryForTakePicture" />
+          <Event name="SelectPicture" action="updateOpenGalleryForSelectPicture" />
+          <Event name="attachmentsContextMenuOpening" action="GetAttachmentsContextMenu" />
+          <Event name="attachmentsContextMenuItemSelected" action="AttachmentsContextMenu_Result_Decision" />
+        </Events>
+      </Action>
+      <Action name="CreateAndValidateIssue" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::IssueDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidationIssueOnDiscard" />
+      </Action>
+      <Action name="ValidationIssueOnDiscard" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateDiscard" action="updateIssueStatus" />
+        <Case value="validateBack" action="ShowIssuesList" />
+        <CaseElse action="LoadIssueDetails.create" />
+      </Action>
+      <Action name="updateIssueStatus" actionType="LOGIC" call="ProcessContext::IssueList.updateIssueStatus">
+        <Parameters>
+          <Input name="IssueDetail" value="ProcessContext::IssueDetail" />
+        </Parameters>
+        <Return name="ProcessContext::Issue_Status" />
+        <TransitionTo action="ValidationAddIssue" />
+      </Action>
+      <Action name="LoadIssueDetails" actionType="MASTER_DETAIL_HANDLER">
+        <MasterList name="ProcessContext::IssueList">
+          <ItemUnselected type="RELOAD" />
+        </MasterList>
+        <DetailObject name="ProcessContext::IssueDetail" objectClass="BoIssue">
+          <Save type="DIRTY" confirmation="FALSE" validate="FALSE" />
+          <Create autoSave="FALSE">
+            <WizardProcess name="Issue::CreateNewWizardProcess" submitParameter="ProcessContext::AddIssue_ButtonPressed">
+              <Parameters>
+                <Input name="CallCustomerPKey" value="ProcessContext::CallCustomerPKey" />
+                <Input name="CallPKey" value="ProcessContext::CallPKey" />
+              </Parameters>
+              <ReturnValues>
+                <Return name="ProcessContext::svcRequestMetaPKey" value="svcRequestMetaPKey" />
+                <Return name="ProcessContext::ownerBpaMainPKey" value="customerPKey" />
+                <Return name="ProcessContext::substitutedUsrPKey" value="substitutedUsrPKey" />
+                <Return name="ProcessContext::isManagedCustomer" value="isManagedCustomer" />
+                <Return name="ProcessContext::clbMainPKey" value="clbMainPKey" />
+                <Return name="ProcessContext::text" value="description" />
+                <Return name="ProcessContext::dueDate" value="dueDate" />
+                <Return name="ProcessContext::AddIssue_ButtonPressed" value="buttonPressed" />
+                <Return name="ProcessContext::Issue_Status" value="issueStatus" />
+              </ReturnValues>
+            </WizardProcess>
+          </Create>
+          <Delete confirmation="TRUE" messageId="CasConfirmIssueDeletionMsg" nextCurrent="Next" />
+        </DetailObject>
+      </Action>
+      <Action name="ValidationAddIssue" actionType="DECISION" parameter="ProcessContext::Issue_Status">
+        <Case value="deleted" action="LoadIssueDetails.create" />
+        <Case value="updated" action="LoadIssueDetails.create" />
+        <CaseElse action="setCurrentTabName_Decision" />
+      </Action>
+      <Action name="SelectItemFromCockpit_Decision" actionType="DECISION" parameter="ProcessContext::Mode">
+        <Case value="Cockpit" action="SelectItemFromCockpit" />
+        <CaseElse action="View_Decision" />
+      </Action>
+      <Action name="SelectItemFromCockpit" actionType="LOGIC" call="ProcessContext::IssueList.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CustomerTaskPKey" />
+          <Input name="selected" type="Literal" value="true" />
+        </Parameters>
+        <TransitionTo action="View_Decision" />
+      </Action>
+      <!-- Issue ContextMenu -->
+      <Action actionType="LOAD" name="GetContextMenu" type="LoIssueOverViewContextMenu">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="issuePhase" value="Event.issuePhase" />
+          <Input name="responsiblePKey" value="Event.responsiblePKey" />
+          <Input name="initiatorPKey" value="Event.initiatorPKey" />
+          <Input name="isPrivate" value="Event.isPrivate" />
+          <Input name="wfeWorkflowPKey" value="Event.wfeWorkflowPKey" />
+          <Input name="actualStatePKey" value="Event.actualStatePKey" />
+          <Input name="isActive" value="Event.isActive" />
+          <Input name="svcMetaPKey" value="Event.svcMetaPKey" />
+          <Input name="substitutionStatus" value="Event.substitutionStatus" />
+          <Input name="isManagedCustomer" value="ProcessContext::IsManagedCustomer" />
+        </Parameters>
+        <Return name="ProcessContext::ContextMenuList" />
+        <TransitionTo action="SetFocusOnListItem" />
+      </Action>
+      <Action name="SetFocusOnListItem" actionType="LOGIC" call="ProcessContext::IssueList.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="PKeyCompare" />
+      </Action>
+      <Action name="PKeyCompare" actionType="LOGIC" call="Utils.startsWith">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="pkey2" value="ProcessContext::IssueDetail.PKey" />
+        </Parameters>
+        <Return name="ProcessContext::isEqual" />
+        <TransitionTo action="CheckIfNotEqualLoadedBO" />
+      </Action>
+      <Action name="CheckIfNotEqualLoadedBO" actionType="DECISION" parameter="ProcessContext::isEqual">
+        <Case value="false" action="LoadFocusedBo" />
+        <CaseElse action="UI_Decision" />
+      </Action>
+      <Action name="LoadFocusedBo" actionType="LOAD" type="BoIssue">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::IssueDetail" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Cancel" action="CancelIssue" />
+        <Case value="Delete" action="LoadIssueDetails.delete" />
+        <Case value="Copy" action="SaveValidateIssueAndShowCopyWizard" />
+        <CaseElse action="View_Decision" />
+      </Action>
+      <!-- 2. Get Current of Issue list -->
+      <Action actionType="LOGIC" name="GetCurrentListItem" call="ProcessContext::IssueList.getCurrent">
+        <Return name="ProcessContext::CurrentListItem" />
+        <TransitionTo action="GetNextSelectedListItem" />
+      </Action>
+      <!-- 3. Get next list item to select -->
+      <Action name="GetNextSelectedListItem" actionType="LOGIC" call="ProcessContext::IssueList.getNextListItemPKey">
+        <Parameters>
+          <Input name="record" value="ProcessContext::CurrentListItem" />
+        </Parameters>
+        <Return name="ProcessContext::NextSelectedListItem" />
+        <TransitionTo action="ReloadIssueList" />
+      </Action>
+      <!-- 4. Reload Issue list for removing deleted Issue(Workaround)-->
+      <Action actionType="LOAD" name="ReloadIssueList" type="LoIssueOverview">
+        <Parameters>
+          <Input name="asoName" value="AsoIssue" type="Literal" />
+          <Input name="customerPKey" value="ProcessContext::CallCustomerPKey" />
+        </Parameters>
+        <Return name="ProcessContext::IssueList" />
+        <TransitionTo action="SetNextSelectedListItem" />
+      </Action>
+      <!-- 5. Set next list item selected -->
+      <Action name="SetNextSelectedListItem" actionType="LOGIC" call="ProcessContext::IssueList.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::NextSelectedListItem" />
+        </Parameters>
+        <TransitionTo action="CheckIfNextItemIsAvailable" />
+      </Action>
+      <!--  6. Check if last element of list was deleted -->
+      <Action name="CheckIfNextItemIsAvailable" actionType="DECISION" parameter="ProcessContext::NextSelectedListItem">
+        <CaseEmpty action="UI_Decision" />
+        <CaseElse action="LoadSelectedBo" />
+      </Action>
+      <!-- 7. Load new selected Issue for UI detail area -->
+      <Action name="LoadSelectedBo" actionType="LOAD" type="BoIssue">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::NextSelectedListItem" />
+        </Parameters>
+        <Return name="ProcessContext::IssueDetail" />
+      </Action>
+      <!-- End Delete Refresh -->
+      <!-- Copy Issues -->
+      <Action name="SaveValidateIssueAndShowCopyWizard" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::IssueDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="CopyValidationResult_Decision" />
+      </Action>
+      <Action name="CopyValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="SaveAndShowCopyWizard" />
+        <Case value="validateDiscard" action="View_Decision" />
+        <CaseElse action="View_Decision" />
+      </Action>
+      <Action name="SaveAndShowCopyWizard" actionType="SAVE">
+        <TransitionTo action="ShowCopyWizard" />
+      </Action>
+      <Action name="ShowCopyWizard" actionType="PROCESS" process="Issue::CopyFlyoutProcess">
+        <Parameters>
+          <Input name="CallCustomerPKey" value="ProcessContext::CallCustomerPKey" />
+          <Input name="IssueDetail" value="ProcessContext::IssueDetail" />
+          <Input name="CallPKey" value="ProcessContext::CallPKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CopyIssue_CopiedIssueDetail" value="copiedIssueDetail" />
+          <Return name="ProcessContext::CopyIssue_ButtonPressed" value="buttonPressed" />
+        </ReturnValues>
+        <TransitionTo action="AssignCopyIssueWizard_Decision" />
+      </Action>
+      <Action name="AssignCopyIssueWizard_Decision" actionType="DECISION" parameter="ProcessContext::CopyIssue_ButtonPressed">
+        <CaseEmpty action="View_Decision" />
+        <CaseElse action="AssignCopyIssue" />
+      </Action>
+      <Action actionType="LOGIC" name="AssignCopyIssue" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="ProcessContext::CopyIssue_CopiedIssueDetail" />
+        </Parameters>
+        <Return name="ProcessContext::IssueDetail" />
+        <TransitionTo action="UnprotectedSave" />
+      </Action>
+      <Action name="UnprotectedSave" actionType="SAVE">
+        <TransitionTo action="ClearCopyBo" />
+      </Action>
+      <Action name="ClearCopyBo" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="undefined" />
+        </Parameters>
+        <Return name="ProcessContext::CopyIssue_CopiedIssueDetail" />
+        <TransitionTo action="AddNewIssueToList" />
+      </Action>
+      <Action name="AddNewIssueToList" actionType="LOGIC" call="ProcessContext::IssueList.addItem">
+        <Parameters>
+          <Input name="newIssueDetail" value="ProcessContext::IssueDetail" />
+        </Parameters>
+      </Action>
+      <!-- Complete issue validations -->
+      <Action name="CompleteIssue" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::IssueDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidationResultForComplete_Decision" />
+      </Action>
+      <Action name="ValidationResultForComplete_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="CompleteIssueIfValid" />
+        <Case value="validateDiscard" action="validateDiscard_clearState" />
+        <CaseElse action="UI_Decision" />
+      </Action>
+      <Action name="validateDiscard_clearState" actionType="LOGIC" call="ProcessContext::IssueDetail.clearState">
+        <TransitionTo action="GetCurrentListItem" />
+      </Action>
+      <!-- Action for Release Issue -->
+      <Action name="ReleaseIssue" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::IssueDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidationResultForRelease_Decision" />
+      </Action>
+      <Action name="ValidationResultForRelease_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="ReleaseIssueIfValid" />
+        <Case value="validateDiscard" action="GetCurrentListItem" />
+        <CaseElse action="UI_Decision" />
+      </Action>
+      <!-- Action for Cancel Issue -->
+      <Action name="CancelIssue" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::IssueDetail.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidationResultForCancel_Decision" />
+      </Action>
+      <Action name="ValidationResultForCancel_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="CancelIssueIfValid" />
+        <Case value="validateDiscard" action="GetCurrentListItem" />
+        <CaseElse action="UI_Decision" />
+      </Action>
+      <!-- Workflow Status Change -->
+      <Action name="CancelIssueIfValid" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="Cancelled" />
+        </Parameters>
+        <Return name="ProcessContext::StateType" />
+        <TransitionTo action="IssueStateTransition" />
+      </Action>
+      <Action name="CompleteIssueIfValid" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="Closed" />
+        </Parameters>
+        <Return name="ProcessContext::StateType" />
+        <TransitionTo action="IssueStateTransition" />
+      </Action>
+      <Action name="ReleaseIssueIfValid" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="Released" />
+        </Parameters>
+        <Return name="ProcessContext::StateType" />
+        <TransitionTo action="IssueStateTransition" />
+      </Action>
+      <Action name="IssueStateTransition" actionType="LOGIC" call="ProcessContext::IssueDetail.stateTransition">
+        <Parameters>
+          <Input name="stateType" value="ProcessContext::StateType" />
+        </Parameters>
+        <TransitionTo action="SaveReloadLoIssue" />
+      </Action>
+      <!-- Save -->
+      <Action name="SaveReloadLoIssue" actionType="SAVE">
+        <TransitionTo action="refreshEARights" />
+      </Action>
+      <Action name="refreshEARights" actionType="LOGIC" call="BindingUtils.refreshEARights">
+        <Parameters>
+          <Input name="includeLists" type="Literal" value="1" />
+        </Parameters>
+        <TransitionTo action="GetOverviewListWithFilter" />
+      </Action>
+      <Action name="GetOverviewListWithFilter" actionType="LOAD" type="LoIssueOverview">
+        <Parameters>
+          <Input name="asoName" value="AsoIssue" type="Literal" />
+          <Input name="customerPKey" value="ProcessContext::CallCustomerPKey" />
+        </Parameters>
+        <Return name="ProcessContext::IssueList" />
+        <TransitionTo action="SetOnlyRelevantFilterAfterAction" />
+      </Action>
+      <Action name="setOnlyRelevantFilterAfterAction" actionType="LOGIC" call="ProcessContext::IssueList.setOnlyRelevantFilterAfterAction">
+        <Parameters>
+          <Input name="issueDetail" value="ProcessContext::IssueDetail" />
+        </Parameters>
+      </Action>
+      <!-- Filter handling -->
+      <Action name="SetIssueFilter_Relevant" actionType="LOGIC" call="ProcessContext::IssueList.setOnlyRelevantFilter"></Action>
+      <Action name="ResetIssueListFilter" actionType="LOGIC" call="ProcessContext::IssueList.resetAllFilters">
+        <TransitionTo action="SetFirstItemAsSelected" />
+      </Action>
+      <Action name="SetFirstItemAsSelected" actionType="LOGIC" call="ProcessContext::IssueList.setFirstItemAsCurrent"></Action>
+      <!-- BEGIN: Handling TabDecision -->
+      <Action actionType="LOGIC" name="setCurrentTabName_Main" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Main" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+      </Action>
+      <!-- Attachments Tab -->
+      <Action name="LoadLoAttachment" actionType="LOGIC" call="ProcessContext::IssueDetail.loadOnDemand">
+        <Parameters>
+          <Input name="object" type="Literal" value="Attachments" />
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_Attachments" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_Attachments" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="Attachments" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+      </Action>
+      <!-- END: Handling TabDecision -->
+      <!-- Issue Attachments Process  -->
+      <Action actionType="LOGIC" name="updateOpenGalleryForTakePicture" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="0" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::openGallery" />
+        <TransitionTo action="getCameraSettings" />
+      </Action>
+      <Action actionType="LOGIC" name="updateOpenGalleryForSelectPicture" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::openGallery" />
+        <TransitionTo action="getCameraSettings" />
+      </Action>
+      <Action actionType="LOGIC" name="getCameraSettings" call="ProcessContext::IssueDetail.loIssueAttachments.getCameraSettings">
+        <Parameters>
+          <Input name="settingsType" type="Literal" value="picture" />
+        </Parameters>
+        <Return name="ProcessContext::cameraSettings" />
+        <TransitionTo action="CapturePicture" />
+      </Action>
+      <Action actionType="LOGIC" name="CapturePicture" call="ProcessContext::IssueDetail.loIssueAttachments.capturePicture">
+        <Parameters>
+          <Input name="cameraSettings" value="ProcessContext::cameraSettings" />
+          <Input name="openGallery" value="ProcessContext::openGallery" />
+        </Parameters>
+        <Return name="ProcessContext::ImageURI" />
+        <TransitionTo action="CapturePicture_Decision" />
+      </Action>
+      <Action name="CapturePicture_Decision" actionType="DECISION" parameter="ProcessContext::ImageURI">
+        <CaseEmpty action="clearImageURI" />
+        <CaseElse action="CreateNewAttachmentByMediaPath" />
+      </Action>
+      <Action actionType="LOGIC" name="CreateNewAttachmentByMediaPath" call="ProcessContext::IssueDetail.loIssueAttachments.addItem">
+        <Parameters>
+          <Input name="mediaPath" value="ProcessContext::ImageURI" />
+          <Input name="svcIssuePkey" value="ProcessContext::IssueDetail.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::attachmentData" />
+        <TransitionTo action="CreateNewAtmAttachment" />
+      </Action>
+      <Action actionType="LOGIC" name="CreateNewAtmAttachment" call="ProcessContext::IssueDetail.loAtmAttachment.addItem">
+        <Parameters>
+          <Input name="attachmentPKey" value="ProcessContext::attachmentData.pKey" />
+          <Input name="referencePKey" value="ProcessContext::attachmentData.svcIssuePKey" />
+          <Input name="objectType" type="Literal" value="SvcIssue" />
+          <Input name="fileName" value="ProcessContext::attachmentData.fileName" />
+          <Input name="fileType" value="ProcessContext::attachmentData.fileType" />
+          <Input name="attachmentText" value="ProcessContext::attachmentData.attachmentText" />
+        </Parameters>
+        <TransitionTo action="UpdateCounterForAdd" />
+      </Action>
+      <Action actionType="LOGIC" name="UpdateCounterForAdd" call="ProcessContext::IssueDetail.updateAttachmentCount">
+        <Parameters>
+          <Input name="update" type="Literal" value="Add" />
+        </Parameters>
+        <TransitionTo action="clearImageURI" />
+      </Action>
+      <Action actionType="LOGIC" name="clearImageURI" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value=" " />
+        </Parameters>
+        <Return name="ProcessContext::ImageURI" />
+      </Action>
+      <!-- Issue Attachments Context Menu  -->
+      <Action actionType="LOAD" name="GetAttachmentsContextMenu" type="LoIssueAttachmentsContextMenu">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="issueDetail" value="ProcessContext::IssueDetail" />
+        </Parameters>
+        <Return name="ProcessContext::attachmentsContextMenuList" />
+      </Action>
+      <Action name="AttachmentsContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Delete" action="DeleteAttachmentConfirm" />
+        <CaseElse action="UI_Decision" />
+      </Action>
+      <Action name="DeleteAttachmentConfirm" actionType="CONFIRM" confirmType="YesNo">
+        <Message messageId="CasConfirmAttachmentDeletionMsg"></Message>
+        <Cases>
+          <Case value="Yes" action="DeleteAttachment" />
+          <Case value="No" action="View_Decision" />
+        </Cases>
+      </Action>
+      <Action name="View_Decision" actionType="DECISION" parameter="ProcessContext::ViewMode">
+        <Case value="ShowIssuesList" action="ShowIssuesList" />
+        <Case value="ShowIssueListCall" action="ShowIssueListCall" />
+        <CaseElse action="UI_Decision" />
+      </Action>
+      <Action name="DeleteAttachment" actionType="LOGIC" call="ProcessContext::IssueDetail.loIssueAttachments.deleteItem">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="DeleteAtmAttachment" />
+      </Action>
+      <Action actionType="LOGIC" name="DeleteAtmAttachment" call="ProcessContext::IssueDetail.loAtmAttachment.deleteItem">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <TransitionTo action="UpdateCounterForDelete" />
+      </Action>
+      <Action actionType="LOGIC" name="UpdateCounterForDelete" call="ProcessContext::IssueDetail.updateAttachmentCount">
+        <Parameters>
+          <Input name="update" type="Literal" value="Delete" />
+        </Parameters>
+        <TransitionTo action="UI_Decision" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

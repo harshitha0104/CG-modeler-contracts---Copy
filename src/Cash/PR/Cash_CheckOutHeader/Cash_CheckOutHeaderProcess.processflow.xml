@@ -1,0 +1,100 @@
+<Process name="Cash::CheckOutHeaderProcess" defaultAction="ShowHeaderUI" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="EtpWarehousePKey" type="DomPKey" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBo" type="BoCash" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="StoreSysReleasePKey" call="ProcessContext::MainBo.storeSysReleaseProcessPKey">
+        <Parameters />
+      </Action>
+      <Action actionType="LOGIC" name="setEARights" call="ProcessContext::MainBo.setEARights" />
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="VIEW" name="ShowHeaderUI">
+        <UIDescription>Cash::CheckOutHeaderUI</UIDescription>
+        <Events>
+          <Event name="releaseDocument" action="ReleaseDocument" />
+          <Event name="reviewReleaseInformation" action="ReviewReleaseInformation" />
+          <Event name="etpWarehouseLookup" action="OpenEtpWarehouseLookup" />
+        </Events>
+      </Action>
+      <Action actionType="LOGIC" name="ReleaseDocument" call="ProcessContext::MainBo.release">
+        <TransitionTo action="Release_Validate" />
+      </Action>
+      <Action name="Release_Validate" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::MainBo.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="Release_CheckValidationResult" />
+      </Action>
+      <!-- Integration of release process -->
+      <Action name="Release_CheckValidationResult" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="OpenReleaseProcess" />
+        <CaseElse action="CancelRelease" />
+      </Action>
+      <Action actionType="PROCESS" name="OpenReleaseProcess" process="System::ReleaseHandlerProcess">
+        <Parameters>
+          <Input name="referenceObject" value="ProcessContext::MainBo" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::releaseResultByProcess" value="releaseProcessOutcome" />
+        </ReturnValues>
+        <TransitionTo action="CheckReleaseResultByProcess" />
+      </Action>
+      <Action name="CheckReleaseResultByProcess" actionType="DECISION" parameter="ProcessContext::releaseResultByProcess">
+        <Case value="Confirm" action="setSetPhaseInBeforeSave" />
+        <Case value="Cancel" action="CancelRelease" />
+        <CaseElse action="ShowHeaderUI" />
+      </Action>
+      <Action actionType="LOGIC" name="setSetPhaseInBeforeSave" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::MainBo.SetPhaseInBeforeSave" />
+        <TransitionTo action="End" />
+      </Action>
+      <!-- End Integration of release process -->
+      <!-- Release Information Review -->
+      <Action actionType="PROCESS" name="ReviewReleaseInformation" process="System::ReleaseHandlerProcess">
+        <Parameters>
+          <Input name="referenceObject" value="ProcessContext::MainBo" />
+          <Input name="readOnlyMode" type="Literal" value="1" />
+        </Parameters>
+        <TransitionTo action="ShowHeaderUI" />
+      </Action>
+      <!-- End of Release Information Review -->
+      <!--Actions for warehouse selection-->
+      <Action actionType="PROCESS" name="OpenEtpWarehouseLookup" process="TourManagement::FlyoutSelectWarehouseProcess">
+        <ReturnValues>
+          <Return name="ProcessContext::EtpWarehousePKey" value="warehousePKey" />
+        </ReturnValues>
+        <TransitionTo action="SetEtpWarehousePKey" />
+      </Action>
+      <Action actionType="LOGIC" name="SetEtpWarehousePKey" call="ProcessContext::MainBo.setEtpWarehousePKey">
+        <Parameters>
+          <Input name="newValue" value="ProcessContext::EtpWarehousePKey" />
+        </Parameters>
+        <TransitionTo action="LoadEtpWarehouseLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadEtpWarehouseLookup" type="LuEtpWarehouse">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::EtpWarehousePKey" />
+        </Parameters>
+        <Return name="ProcessContext::MainBo.luEtpWarehouse" />
+      </Action>
+      <!-- End Warehouse Selection-->
+      <Action actionType="LOGIC" name="CancelRelease" call="ProcessContext::MainBo.cancelRelease">
+        <Parameters />
+        <TransitionTo action="ShowHeaderUI" />
+      </Action>
+      <Action actionType="END" name="End"></Action>
+    </Actions>
+  </Body>
+</Process>

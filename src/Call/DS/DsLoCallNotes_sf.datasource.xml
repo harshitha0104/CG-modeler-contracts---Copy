@@ -1,0 +1,35 @@
+<DataSource name="DsLoCallNotes" backendSystem="sf" businessObjectClass="LoCallNotes" external="false" distinct="false" readOnly="true" editableEntity="Visit" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Visit" column="Id" />
+    <Attribute name="bpaMainPKey" table="Visit" column="AccountId" />
+    <Attribute name="noteDate" table="Visit" column="PlannedVisitStartTime" />
+    <Attribute name="text" table="Visit" column="Note__c" />
+    <Attribute name="responsiblePKey" table="Visit" column="Responsible__c" />
+    <DerivedAttribute name="responsibleName" type="String" value="responsibleUser.Name" />
+  </Attributes>
+  <Entities>
+    <Entity name="Visit" alias="" idAttribute="Id" />
+    <Entity name="User" alias="responsibleUser">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="Visit.Responsible__c" comparator="eq" rightSideType="Attribute" rightSideValue="responsibleUser.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+			Visit.AccountId = #bpaMainPKey#
+			AND Visit.Note__c <> ' ' 
+			AND Visit.Note__c <> '' 
+			AND Visit.PlannedVisitStartTime <= (SELECT Visit.PlannedVisitStartTime FROM Visit WHERE Visit.Id = #clbMainPKey# )
+		]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Visit" attribute="CreatedDate" direction="DESC" />
+    <OrderCriterion entity="Visit" attribute="PlannedVisitStartTime" direction="DESC" />
+    <OrderCriterion entity="Visit" attribute="LastModifiedDate" direction="DESC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="bpaMainPKey" type="TEXT" />
+    <Parameter name="clbMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

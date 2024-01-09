@@ -1,0 +1,26 @@
+<DataSource name="DsLuEtpSalesOrgKPI" backendSystem="cas" businessObjectClass="LuEtpSalesOrgKPI" external="false" editableEntity="EtpSalesOrgKPI" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="redThreshold" table="EtpSalesOrgKPI" column="RedThreshold" />
+    <Attribute name="amberThreshold" table="EtpSalesOrgKPI" column="AmberThreshold" />
+  </Attributes>
+  <Entities>
+    <Entity name="EtpSalesOrgKPI" alias="" idAttribute="PKey" />
+    <Entity name="EtpSalesOrg" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="EtpSalesOrgKPI.EtpSalesOrgPKey" comparator="eq" rightSideType="Attribute" rightSideValue="EtpSalesOrg.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+    EtpSalesOrgKPI.ValidFrom <= '#Today#' AND EtpSalesOrgKPI.ValidThru >= '#Today#'
+    AND EtpSalesOrgKPI.KPIValueType = #kpiValueType# AND EtpSalesOrgKPI.StructureType = #structureType#
+    AND EtpSalesOrg.Id = '#SalesOrg#'
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="kpiValueType" type="TEXT" />
+    <Parameter name="structureType" type="TEXT" />
+  </Parameters>
+</DataSource>

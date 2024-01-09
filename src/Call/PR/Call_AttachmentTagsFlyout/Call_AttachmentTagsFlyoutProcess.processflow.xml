@@ -1,0 +1,40 @@
+<Process name="Call::AttachmentTagsFlyoutProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="attachmentTags" type="LiCallAttachments" />
+      </Declarations>
+      <Parameters>
+        <Input name="pKey" type="String" />
+        <Input name="boCall" type="BoCall" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="getLiAttachment_Logic" actionType="LOGIC" call="ProcessContext::boCall.loCallAttachments.getLiAttachmentByPKey">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::pKey" />
+        </Parameters>
+        <Return name="ProcessContext::attachmentTags" />
+      </Action>
+      <Action name="setLoCallAttachmentsEARights" actionType="LOGIC" call="ProcessContext::boCall.loCallAttachments.setEARights">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::pKey" />
+          <Input name="boCall" value="ProcessContext::boCall" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Call::AttachmentTagsFlyoutUI</UIDescription>
+        <Events></Events>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="attachmentTagsLi" value="ProcessContext::attachmentTags" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

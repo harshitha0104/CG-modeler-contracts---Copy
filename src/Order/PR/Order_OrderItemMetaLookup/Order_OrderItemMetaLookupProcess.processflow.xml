@@ -1,0 +1,42 @@
+<Process name="Order::OrderItemMetaLookupProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="buttonPressed" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="OrderItemMetaList" type="LoOrderItemMetas" />
+        <Input name="orderItemMetaPKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="InitializeButtonPressed" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="done" />
+        </Parameters>
+        <Return name="ProcessContext::buttonPressed" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Order::OrderItemMetaLookup</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="EndWithNewValue" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="EndWithNewValue">
+        <ReturnValues>
+          <Return name="orderItemMetaPKey" value="Event.pKey" />
+          <Return name="buttonPressed" value="ProcessContext::buttonPressed" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="orderItemMetaPKey" value="ProcessContext::orderItemMetaPKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

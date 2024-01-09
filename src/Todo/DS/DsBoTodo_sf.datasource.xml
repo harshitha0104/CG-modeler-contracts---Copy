@@ -1,0 +1,48 @@
+<DataSource name="DsBoTodo" backendSystem="sf" businessObjectClass="BoTodo" external="false" editableEntity="Task" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Task" column="Id" />
+    <Attribute name="text" table="Task" column="Subject" />
+    <Attribute name="classification" table="Task" column="Type" />
+    <Attribute name="initiationDate" table="Task" column="CreatedDate" />
+    <Attribute name="dueDate" table="Task" column="ActivityDate" />
+    <Attribute name="priority" table="Task" column="Priority" />
+    <Attribute name="responsiblePKey" table="Task" column="OwnerId" />
+    <Attribute name="ownerPKey" table="User_Accountable__c" column="User__c" />
+    <Attribute name="userAccountable" table="Task" column="User_Accountable__c" />
+    <Attribute name="initiatorPKey" table="Task" column="CreatedById" />
+    <Attribute name="issuePhase" table="Task" column="Status" />
+    <DerivedAttribute name="id" value="' '" />
+    <Attribute name="svcRequestMetaPKey" table="Task" column="RecordTypeId" />
+    <DerivedAttribute name="actualStatePKey" value="' '" />
+    <DerivedAttribute name="nextStatePKey" value="' '" />
+    <DerivedAttribute name="wfeWorkflowPKey" value="' '" />
+    <DerivedAttribute name="metaType" value="'Issue'" />
+    <DerivedAttribute name="salesOrg" value="'#SalesOrg#'" />
+    <DerivedAttribute name="todoId" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="Task" alias="" idAttribute="Id" />
+    <Entity name="User_Accountable__c">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Task.User_Accountable__c" comparator="eq" rightSideType="Attribute" rightSideValue="User_Accountable__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="RecordType" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Task.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+          <Condition leftSideValue="RecordType.DeveloperName" comparator="eq" rightSideType="Literal" rightSideValue="'User_Task'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Task.Id = #pKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

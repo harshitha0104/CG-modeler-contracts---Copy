@@ -1,0 +1,34 @@
+<ListItem name="LiMeProductInformation" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" />
+    <SimpleProperty name="text1" type="DomText" dataSourceProperty="text1" />
+    <SimpleProperty name="text2" type="DomText" dataSourceProperty="text2" />
+    <SimpleProperty name="prdId" type="DomId" dataSourceProperty="prdId" />
+    <SimpleProperty name="shortId" type="DomId" dataSourceProperty="shortId" />
+    <SimpleProperty name="taxClassification" type="DomTaxClassification" dataSourceProperty="taxClassification" />
+    <SimpleProperty name="basePrice" type="DomMoney" />
+    <SimpleProperty name="deliveryState" type="DomBool" dataSourceProperty="deliveryState" />
+    <SimpleProperty name="fieldState" type="DomBool" dataSourceProperty="fieldState" />
+    <SimpleProperty name="foreignProduct" type="DomBool" dataSourceProperty="foreignProduct" />
+    <SimpleProperty name="eAN" type="DomPrdNumber" dataSourceProperty="eAN" />
+    <SimpleProperty name="newState" type="DomPrdState" dataSourceProperty="newState" />
+    <SimpleProperty name="piecesPerSmallestUnitForBasePrice" type="DomDecimal" dataSourceProperty="piecesPerSmallestUnitForBasePrice" />
+    <SimpleProperty name="orderQuantityLogisticUnit" type="DomPrdLogisticUnit" dataSourceProperty="orderQuantityLogisticUnit" />
+    <SimpleProperty name="orderPiecesPerSmallestUnit" type="DomDecimal" dataSourceProperty="orderPiecesPerSmallestUnit" />
+    <SimpleProperty name="consumerQuantityLogisticUnit" type="DomPrdLogisticUnit" dataSourceProperty="consumerQuantityLogisticUnit" />
+    <SimpleProperty name="consumerPiecesPerSmallestUnit" type="DomDecimal" dataSourceProperty="consumerPiecesPerSmallestUnit" />
+    <SimpleProperty name="priceQuantityLogisticUnit" type="DomPrdLogisticUnit" dataSourceProperty="priceQuantityLogisticUnit" />
+    <SimpleProperty name="pricePiecesPerSmallestUnit" type="DomDecimal" dataSourceProperty="pricePiecesPerSmallestUnit" />
+    <SimpleProperty name="groupText" type="DomString" dataSourceProperty="groupText" />
+    <SimpleProperty name="groupId" type="DomId" dataSourceProperty="groupId" />
+    <SimpleProperty name="prdType" type="DomPrdType" dataSourceProperty="prdType" />
+    <SimpleProperty name="criterion1" type="DomVariant" dataSourceProperty="criterion1" />
+    <SimpleProperty name="criterion2" type="DomVariant" dataSourceProperty="criterion2" />
+    <SimpleProperty name="criterion3" type="DomVariant" dataSourceProperty="criterion3" />
+    <SimpleProperty name="criterion4" type="DomVariant" dataSourceProperty="criterion4" />
+    <SimpleProperty name="criterion5" type="DomVariant" dataSourceProperty="criterion5" />
+    <SimpleProperty name="criterion6" type="DomVariant" dataSourceProperty="criterion6" />
+    <SimpleProperty name="category" type="DomPrdCategory" dataSourceProperty="category" />
+  </SimpleProperties>
+</ListItem>

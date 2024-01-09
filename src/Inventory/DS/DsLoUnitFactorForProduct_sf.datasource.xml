@@ -1,0 +1,21 @@
+<DataSource name="DsLoUnitFactorForProduct" backendSystem="sf" businessObjectClass="LoUnitFactorForProduct" external="false" readOnly="true" editableEntity="Unit_of_Measure__c" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="pKey" value="' '" />
+    <DerivedAttribute name="productPKey" value="' '" />
+    <Attribute name="piecesPerSmallestUnit" table="Unit_of_Measure__c" column="Pieces_per_Smallest_Unit__c" />
+    <Attribute name="isOrderUnit" table="Unit_of_Measure__c" column="Is_Order_Unit__c" />
+    <Attribute name="isConsumerUnit" table="Unit_of_Measure__c" column="Is_Consumer_Unit__c" />
+    <Attribute name="unitType" table="Unit_of_Measure__c" column="Unit_Type__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Unit_of_Measure__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        Unit_of_Measure__c.Product__c = #productPKey#
+        AND (Unit_of_Measure__c.Is_Order_Unit__c = '1' OR Unit_of_Measure__c.Is_Consumer_Unit__c = '1')
+    ]]></QueryCondition>
+  <OrderCriteria/>
+  <Parameters>
+    <Parameter name="productPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

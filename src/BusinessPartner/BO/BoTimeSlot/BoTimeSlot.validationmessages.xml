@@ -1,0 +1,5 @@
+<ValidationMessages name="BoTimeSlotMessages" businessObject="BoTimeSlot" schemaVersion="0.0.0.5">
+  <ValidationMessage name="CasBoTimeSlotStartTimeBiggerEndTime" defaultMessage="Enter a start time that’s earlier than the end time." comment="Validates if start time is smaller end time." />
+  <ValidationMessage name="CasBoTimeSlotOverlap" defaultMessage="One or more time slots overlap with the times you entered. Update existing time slots in the Time Slots related list, or create a time slot that doesn’t overlap." comment="Validates if time slot does not overlap with other time slots." />
+  <ValidationMessage name="CasBoTimeSlotDayOfWeekMandatory" defaultMessage="Select the day of week." comment="Day of Week must be filled." />
+</ValidationMessages>

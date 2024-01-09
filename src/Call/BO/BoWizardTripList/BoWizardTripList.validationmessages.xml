@@ -1,0 +1,5 @@
+<ValidationMessages name="BoWizardTripListMessages" businessObject="BoWizardTripList" schemaVersion="1.1">
+  <ValidationMessage name="CasTripListFillInAllValues" defaultMessage="Please fill in all values." comment="All fields need to be filled with values." />
+  <ValidationMessage name="CasTripListCheckDaterange" defaultMessage="Please enter a Date Thru that is greater than Date From." comment="Day value cannot be 'No Day' for Daily Type." />
+  <ValidationMessage name="CasTripListCheckDay" defaultMessage="For type as Daily, Day value cannot be No Day." comment="Day value cannot be 'No Day' for Daily Type." />
+</ValidationMessages>

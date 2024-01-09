@@ -1,0 +1,50 @@
+<Process name="Cash::CheckInNavigationProcess" defaultAction="StartNavigation" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="currentTabPage" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBo" type="BoCash" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="NAVIGATION" name="StartNavigation">
+        <Parameters name="ProcessContext::NavigationName">
+          <Processes defaultProcess ="CashCheckInItems">
+            <Process id="CashCheckInItems" image="ShoppingCartItem" label="checkInItems" defaultLabel="Main" process="Cash::CheckInItemsProcess" action="setCurrentTabName_items" />
+            <Process id="CashCheckInHeader" image="Info" label="checkInHeader" defaultLabel="Summary" process="Cash::CheckInHeaderProcess" action="setCurrentTabName_header" />
+          </Processes>
+        </Parameters>
+        <TransitionTo action="setCurrentTabName_items" />
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_header" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Header" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="StartHeaderProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartHeaderProcess" process="Cash::CheckInHeaderProcess">
+        <Parameters>
+          <Input name="MainBo" value="ProcessContext::MainBo" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="setCurrentTabName_items" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="tab_Items" />
+        </Parameters>
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="StartItemsProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartItemsProcess" process="Cash::CheckInItemsProcess">
+        <Parameters>
+          <Input name="MainBo" value="ProcessContext::MainBo" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

@@ -1,0 +1,6 @@
+<ValidationMessages name="BoUserMessages" businessObject="BoUser" schemaVersion="">
+  <ValidationMessage name="CasBoUserFillInAllValues" defaultMessage="Please fill in all values." comment="All fields need to be filled with values." />
+  <ValidationMessage name="CasBoUserTimeIntervalZero" defaultMessage="Please enter a time interval greater than 0." comment="Time interval in sync must be greater than 0." />
+  <ValidationMessage name="CasBoUserNoOpenTimeCard" defaultMessage="No open time card available. You can create one manually." comment="Time Card- Message about current situation." />
+  <ValidationMessage name="CasBoUserRunningTimeEntryByCall" defaultMessage="There is a open time entry for a #subject# Call. The time entry stared at #startTime#. With the confirmation of this message the system will capture the current time as end time of this time entry." comment="Time Card- Message about running time entry created by Call." />
+</ValidationMessages>

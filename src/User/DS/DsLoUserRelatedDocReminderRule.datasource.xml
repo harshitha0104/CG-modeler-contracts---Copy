@@ -1,0 +1,39 @@
+<DataSource name="DsLoUserRelatedDocReminderRule" businessObjectClass="LoUserRelatedDocReminderRule" readOnly="true" editableEntity="UsrReminderRule" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var sqlParams = {};
+
+			var sqlStmt = "SELECT ";
+			sqlStmt += "UsrReminderRule.PKey as pKey, ";
+			sqlStmt += "UsrReminderRule.ReminderRuleType as reminderRuleType, ";
+			sqlStmt += "UsrReminderRule.DocumentType as documentType ";	 
+			sqlStmt += "FROM UsrReminderRule ";
+			sqlStmt += "LEFT OUTER JOIN UsrEtpWarehouseRel ON UsrEtpWarehouseRel.UsrMainPKey='#UserPKey#' AND UsrEtpWarehouseRel.SalesOrg= '#SALESORG#'  ";
+			sqlStmt += "AND UsrEtpWarehouseRel.Active='1' LEFT OUTER JOIN EtpWarehouse ON EtpWarehouse.PKey=UsrEtpWarehouseRel.EtpWarehousePKey ";
+			sqlStmt += "WHERE 1=1 ";
+			sqlStmt += "AND UsrReminderRule.SalesOrg = '#SALESORG#' ";
+			sqlStmt += "AND (UsrReminderRule.UsrRolePKey=' ' OR UsrReminderRule.UsrRolePKey IN (SELECT UsrRolePKey FROM UsrRoleRel WHERE UsrRoleRel.UsrMainPKey='#UserPKey#' AND UsrRoleRel.Exclude='0' AND UsrRoleRel.SalesOrg= '#SALESORG#')) ";      
+			sqlStmt += "AND (UsrReminderRule.CountryState = ' ' OR UsrReminderRule.CountryState=EtpWarehouse.CountryState) ";
+			sqlStmt += "AND UsrReminderRule.Active='1' ";
+			sqlStmt += "AND UsrReminderRule.ValidFrom <= '#Today#' ";
+			sqlStmt += "AND UsrReminderRule.ValidThru >= '#Today#' ";
+			sqlStmt += "AND UsrReminderRule.ReminderRuleType IN ('DocumentExpiration','DocumentMissing') ";
+			sqlStmt += "AND (UsrEtpWarehouseRel.SalesOrg = '#SALESORG#' OR UsrEtpWarehouseRel.SalesOrg is NULL) ";      
+			sqlStmt += "AND (EtpWarehouse.SalesOrg = '#SALESORG#' OR EtpWarehouse.SalesOrg is NULL) ";
+			sqlStmt += "GROUP BY UsrReminderRule.ReminderRuleType, UsrReminderRule.DocumentType ";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+		]]></Load>
+    <Update><![CDATA[
+			// Intended to be empty
+			return undefined;]]></Update>
+    <Insert><![CDATA[   
+			// Intended to be empty     
+			return undefined;]]></Insert>
+    <Delete><![CDATA[
+			// Intended to be empty
+			return undefined; ]]></Delete>
+  </Database>
+</DataSource>

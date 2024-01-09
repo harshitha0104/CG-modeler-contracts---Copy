@@ -1,0 +1,28 @@
+<DataSource name="DsLuTimeEntryType" businessObjectClass="LuTimeEntryType" external="false" editableEntity="UsrTimeEntryMeta" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="UsrTimeEntryMeta" column="PKey" />
+    <Attribute name="id" table="UsrTimeEntryMeta" column="Id" />
+    <Attribute name="showAggregation" table="UsrTimeEntryMeta" column="ShowAggregation" />
+    <Attribute name="productiveTimeEffect" table="UsrTimeEntryMeta" column="ProductiveTimeEffect" />
+    <Attribute name="manualAddAllowed" table="UsrTimeEntryMeta" column="ManualAddAllowed" />
+    <Attribute name="text" table="UsrTimeEntryMetaText" column="Text" />
+    <Attribute name="activityType" table="UsrTimeEntryMeta" column="ActivityType" />
+  </Attributes>
+  <Entities>
+    <Entity name="UsrTimeEntryMeta" alias="" idAttribute="PKey" />
+    <Entity name="UsrTimeEntryMetaText" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="UsrTimeEntryMeta.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="UsrTimeEntryMetaText.UsrTimeEntryMetaPKey"></Condition>
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+		UsrTimeEntryMeta.PKey= #pKey#
+		]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

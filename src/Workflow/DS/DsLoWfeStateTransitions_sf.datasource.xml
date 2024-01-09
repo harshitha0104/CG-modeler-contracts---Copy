@@ -1,0 +1,23 @@
+<DataSource name="DsLoWfeStateTransitions" backendSystem="sf" businessObjectClass="LoWfeStateTransitions" external="false" editableEntity="Workflow_State_Transition__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Workflow_State_Transition__c" column="Id" />
+    <Attribute name="fromStatePKey" table="Workflow_State_Transition__c" column="From_Status__c" />
+    <Attribute name="toStatePKey" table="Workflow_State_Transition__c" column="To_Status__c" />
+    <Attribute name="event" table="Workflow_State_Transition__c" column="Event__c" />
+    <Attribute name="wfeWorkflowPKey" table="Workflow_State_Transition__c" column="Workflow__c" />
+    <!-- SF/CASDIF: Relation between UserRole and Workflow currently not available in SF -->
+    <DerivedAttribute name="usrRolePKey" value="' '" />
+    <DerivedAttribute name="salesOrg" value="'#SALESORG#'" />
+    <DerivedAttribute name="usrUserPKey" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="Workflow_State_Transition__c" alias="" idAttribute="PKey" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        Workflow_State_Transition__c.Workflow__c = #wfeWorkflowPKey#
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="wfeWorkflowPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

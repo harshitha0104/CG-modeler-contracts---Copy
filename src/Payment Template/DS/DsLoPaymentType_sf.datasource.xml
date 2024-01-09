@@ -1,0 +1,13 @@
+<DataSource name="DsLoPaymentType" backendSystem="sf" businessObjectClass="LoPaymentType" external="false" editableEntity="Contract_Payment_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contract_Payment_Template__c" column="Id" />
+    <Attribute name="text" table="Contract_Payment_Template__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contract_Payment_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+  ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters />
+</DataSource>

@@ -1,0 +1,26 @@
+<BusinessObject name="BoPrmAnchor"  generateLoadMethod="true" generateCreateMethod="true">
+  <DataSource name="DsBoPrmAnchor" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+    <SimpleProperty name="prmPromotionPKey" type="DomPKey" dataSourceProperty="prmPromotionPKey" />
+  </SimpleProperties>
+  <ObjectLookups />
+  <ListObjects />
+  <NestedObjects />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterInitialize" />
+    <Method name="beforeInitialize" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="createAsync" />
+  </Methods>
+  <Validations />
+</BusinessObject>

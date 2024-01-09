@@ -1,0 +1,13 @@
+<ListItem name="LiCndCpReadKeyTypes">
+  <SimpleProperties>
+    <SimpleProperty name="CndCpSearchStrategyPKey" type="DomPKey" storable="false" dataSourceProperty="CndCpSearchStrategyPKey" />
+    <SimpleProperty name="SearchStrategyId" type="DomCndCpKeyTypeId" storable="false" dataSourceProperty="SearchStrategyId" />
+    <SimpleProperty name="CndCpKeyTypePKey" type="DomPKey" storable="false" dataSourceProperty="CndCpKeyTypePKey" />
+    <SimpleProperty name="BpaHierarchySearch" type="DomCndCpBpaHierarchySearch" storable="false" dataSourceProperty="BpaHierarchySearch" />
+    <SimpleProperty name="PrdHierarchySearch" type="DomCndCpPrdHierarchySearch" storable="false" dataSourceProperty="PrdHierarchySearch" />
+    <SimpleProperty name="ConsiderBpaMain" type="DomBool" storable="false" dataSourceProperty="ConsiderBpaMain" />
+    <SimpleProperty name="ConsiderBpaSet" type="DomBool" storable="false" dataSourceProperty="ConsiderBpaSet" />
+    <SimpleProperty name="ConsiderPrdMain" type="DomBool" storable="false" dataSourceProperty="ConsiderPrdMain" />
+    <SimpleProperty name="MobilityEntity" type="DomRpsTableName" storable="false" dataSourceProperty="MobilityEntity" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,7 @@
+<ListObject name="LoTripList" generateLoadMethod="true">
+  <DataSource name="DsLoTripList" />
+  <Item objectClass="LiTripList" />
+  <Methods>
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</ListObject>

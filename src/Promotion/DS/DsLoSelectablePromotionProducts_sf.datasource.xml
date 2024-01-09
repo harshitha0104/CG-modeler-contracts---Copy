@@ -1,0 +1,70 @@
+<Datasource name="DsLoSelectablePromotionProducts" backendSystem="sf" businessObjectClass="LoSelectablePromotionProducts" external="true" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Tactic_Product__c" column="Id" />
+    <Attribute name="prdMainPKey" table="Tactic_Product__c" column="Product__c" />
+    <Attribute name="promotionPKey" table="Promotion__c" column="Id" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+    var currentDate = "";
+    var customer = "";
+    var addCondition = "";
+
+    var promotionCondition;
+     if(Utils.isDefined(jsonQuery.addCondition_Promotion)){
+      promotionCondition = Utils.getListParams(jsonQuery.addCondition_Promotion);
+    }
+
+    var promotionProductCondition;
+     if(Utils.isDefined(jsonQuery.addCondition_PromotionProducts)){
+      promotionProductCondition = Utils.getListParams(jsonQuery.addCondition_PromotionProducts);
+    }
+
+    if (Utils.isDefined(jsonQuery.currentDate)){
+        currentDate = Utils.convertForDBParam(jsonQuery.currentDate, "DomDate");
+    }
+    if (Utils.isDefined(jsonQuery.customer)){
+        customer = Utils.convertForDBParam(jsonQuery.customer, "DomPKey");
+    }
+    if(Utils.isDefined(jsonQuery.addCondition_Promotion)){
+        addCondition = " AND (Promotion__c.Id IN (" + promotionCondition.sql + ") AND Product2.Id IN (" + promotionProductCondition.sql + ")) ";
+    }
+
+    var sqlParams = {currentDate, customer};
+        
+	var sqlStmt =  "SELECT Tactic_Product__c.Id as pKey, Tactic_Product__c.Product__c as prdMainPKey, Promotion__c.Id AS promotionPKey ";
+    sqlStmt += "FROM Promotion__c ";
+    sqlStmt += "JOIN Promotion_Template__c ON Promotion__c.Promotion_Template__c = Promotion_Template__c.Id ";
+    sqlStmt += "LEFT OUTER JOIN Promotion_Store__c ON Promotion_Store__c.Promotion__c = Promotion__c.Id ";
+    sqlStmt += "LEFT OUTER JOIN Account_Set_Account__c ON Promotion__c.Anchor_Account_Set__c = Account_Set_Account__c.Account_Set__c ";
+    sqlStmt += "JOIN Tactic__c ON Tactic__c.Promotion__c = Promotion__c.Id ";
+    sqlStmt += "JOIN Tactic_Product__c ON Tactic_Product__c.Tactic__c = Tactic__c.Id ";
+	sqlStmt += "INNER JOIN Product2 ON Product2.Id = Tactic_Product__c.Product__c AND Product2.Sales_Org__c = '#SalesOrg#' AND ";
+	sqlStmt += "Product2.State__c = '4' AND ";
+	sqlStmt += "#compareAsDate('Product2.Field_Valid_From__c', 'Date','<=' , #currentDate# , 'Date')# AND ";
+    sqlStmt += "#compareAsDate('Product2.Field_Valid_Thru__c', 'Date','>=' , #currentDate# , 'Date')# ";
+    sqlStmt += "WHERE ";
+    sqlStmt += "Promotion__c.Active__c = '1' AND ";
+    sqlStmt += "Promotion__c.Phase__c = 'Committed' AND ";
+	sqlStmt += "#compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #currentDate# , 'Date')# AND ";
+    sqlStmt += "#compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #currentDate# , 'Date')# AND ";
+    sqlStmt += "Tactic_Product__c.Included__c = '1' AND ";
+    sqlStmt += "Promotion_Template__c.Selectable_Promotion__c = '1' AND ";
+	sqlStmt += "Tactic__c.Included__c  = '1' AND ";
+    sqlStmt += "#compareAsDate('Tactic__c.Date_From__c', 'Date','<=' ,#currentDate#, 'Date')# AND #compareAsDate('Tactic__c.Date_Thru__c', 'Date','>=' ,#currentDate#, 'Date')# AND ";
+    sqlStmt += "(Promotion_Store__c.Store__c = #customer# OR ";
+    sqlStmt += "Account_Set_Account__c.Account_Set_Account__c = #customer#) ";
+    sqlStmt += addCondition;
+
+	var finalQuery=Utils.replaceMacrosParam(sqlStmt, sqlParams);
+    var finalParams = finalQuery.params;
+   	if(Utils.isDefined(jsonQuery.addCondition_Promotion)){
+      finalParams =finalQuery.params.concat(promotionCondition.params).concat(promotionProductCondition.params);
+    }
+
+    return {sql:finalQuery.sql, params:finalParams};
+
+ ]]></Load>
+  </Database>
+</Datasource>

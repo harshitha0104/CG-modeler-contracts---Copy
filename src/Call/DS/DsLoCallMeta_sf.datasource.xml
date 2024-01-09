@@ -1,0 +1,74 @@
+<DataSource name="DsLoCallMeta" backendSystem="sf" businessObjectClass="LoCallMeta" external="true" distinct="false" readOnly="true" editableEntity="Visit_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Visit_Template__c" column="Id" />
+    <Attribute name="id" table="Visit_Template__c" column="Name" />
+    <Attribute name="active" table="Visit_Template__c" column="Active__c" />
+    <Attribute name="metaType" table="Visit_Template__c" column="Meta_Type__c" />
+    <Attribute name="creationPlatform" table="Visit_Template__c" column="Creation_Platform__c" />
+    <Attribute name="companyRequired" table="Visit_Template__c" column="Company_Required__c" />
+    <Attribute name="sort" table="Visit_Template__c" column="Sort__c" />
+    <Attribute name="text" table="Visit_Template__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Visit_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+      
+var tmgMainPKey = "";
+var companyRequired = "";
+
+//Get Tour from Context
+if (Utils.isDefined(ApplicationContext.get('currentTourPKey')))
+	tmgMainPKey = ApplicationContext.get('currentTourPKey');
+
+if (Utils.isDefined(jsonQuery.companyRequired)){
+	companyRequired = jsonQuery.companyRequired;
+}
+
+var sqlParams = {companyRequired, tmgMainPKey};
+
+var sqlStmt = "SELECT DISTINCT Visit_Template__c.Id AS pKey, Visit_Template__c.Name AS id, Visit_Template__c.Active__c AS active, ";
+	sqlStmt += "Visit_Template__c.Meta_Type__c AS metaType, Visit_Template__c.Creation_Platform__c AS creationPlatform, ";
+	sqlStmt += "Visit_Template__c.Company_Required__c AS companyRequired,Visit_Template__c.Sort__c AS sort, Visit_Template__c.Description_#Language#__c As text  ";	
+			  
+if (!Utils.isEmptyString(tmgMainPKey)){
+	sqlStmt += "FROM Visit_Template__c ";
+	sqlStmt += "JOIN Tour_Object_Reference__c ON Tour_Object_Reference__c.Visit_Template__c = Visit_Template__c.Id ";
+	sqlStmt += "WHERE 1 = 1 ";
+	sqlStmt += "AND Visit_Template__c.Active__c='1' ";
+	sqlStmt += "AND Visit_Template__c.Meta_Type__c <> 'GroupwareCall' ";
+	sqlStmt += "AND Visit_Template__c.Meta_Type__c <> 'PublicHoliday' ";	
+	sqlStmt += "AND ( #companyRequired# <> '1' OR Visit_Template__c.Company_Required__c <> 'Not required') ";
+	sqlStmt += "AND Visit_Template__c.Creation_Platform__c IN ('Both', 'Mobility') ";
+	sqlStmt += "AND Tour_Object_Reference__c.Usage__c = 'ClbMeta.Visit' ";
+    sqlStmt += "AND Tour_Object_Reference__c.Tour__c = #tmgMainPKey# ";
+	sqlStmt += "AND Visit_Template__c.Sales_Org__c='#SALESORG#' ";
+    sqlStmt += "ORDER BY Visit_Template__c.Sort__c ASC ";
+
+}else {
+	sqlStmt += "FROM Visit_Template__c ";
+	sqlStmt += "INNER JOIN Custom_Permission_User_Role_Mapping__c on ';' || Visit_Template__c.User_Roles__c || ';' like '%;' || Custom_Permission_User_Role_Mapping__c.Custom_Permission_Name__c || ';%' ";
+	sqlStmt += "AND Visit_Template__c.IsDeleted <> '1' AND Custom_Permission_User_Role_Mapping__c.IsDeleted <> '1' "
+	sqlStmt += "INNER JOIN SetupEntityAccess ON Custom_Permission_User_Role_Mapping__c.Custom_Permission__c = SetupEntityAccess.SetupEntityId AND SetupEntityAccess.IsDeleted <> '1' ";
+	sqlStmt += "INNER JOIN PermissionSetAssignment ON SetupEntityAccess.ParentId = PermissionSetAssignment.PermissionSetId AND PermissionSetAssignment.IsDeleted <> '1' ";
+	sqlStmt += "WHERE 1 = 1 ";
+	sqlStmt += "AND Visit_Template__c.Active__c='1' ";
+	sqlStmt += "AND Visit_Template__c.Meta_Type__c <> 'GroupwareCall' ";
+	sqlStmt += "AND Visit_Template__c.Meta_Type__c <> 'PublicHoliday' ";
+	sqlStmt += "AND Visit_Template__c.Meta_Type__c <> 'DeliveryVisit' ";
+	sqlStmt += "AND Visit_Template__c.Creation_Platform__c IN ('Both', 'Mobility') ";
+	sqlStmt += "AND ( #companyRequired# <> '1' OR Visit_Template__c.Company_Required__c <> 'Not required') ";
+	sqlStmt += "AND PermissionSetAssignment.AssigneeId = '#UserSfId#' ";
+    sqlStmt += "AND Visit_Template__c.Sales_Org__c='#SALESORG#' ";
+    sqlStmt += "ORDER BY Visit_Template__c.Sort__c ASC ";
+}
+
+return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+		]]></Load>
+    <Update><![CDATA[
+     return undefined;
+		]]></Update>
+  </Database>
+</DataSource>

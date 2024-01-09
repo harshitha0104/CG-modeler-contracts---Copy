@@ -1,0 +1,24 @@
+<DataSource name="DsLuCallPromotionIconsCount" backendSystem="sf" businessObjectClass="LuCallPromotionIconsCount" external="false" editableEntity="Tactic_Product__c" readOnly="true" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="productsCount" value="COUNT(*)" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tactic_Product__c" alias="" />
+    <Entity name="Tactic__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Tactic__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Tactic_Product__c.Tactic__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Tactic__c.Promotion__c = #prmMainPKey#
+  AND Tactic__c.Included__c  = '1'
+  AND Tactic_Product__c.Included__c = '1'
+  ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="prmMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

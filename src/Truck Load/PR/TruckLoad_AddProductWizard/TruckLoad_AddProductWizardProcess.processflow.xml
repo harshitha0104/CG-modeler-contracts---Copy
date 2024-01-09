@@ -1,0 +1,159 @@
+<Process name="TruckLoad::AddProductWizardProcess" defaultAction="OpenProductLookup" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="PrdMainPKey" type="DomPKey" />
+        <Declaration name="UoM" type="DomPrdLogisticUnit" />
+        <Declaration name="AddProductWizardBo" type="BoTruckLoadWizardAddProduct" />
+        <Declaration name="ProductAddUoMList" type="LoLogisticUnit" />
+        <Declaration name="ProductAddDefaultUoM" type="DomPrdLogisticUnit" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoTruckLoad" />
+        <Input name="AddProduct_ItemTemplate" type="LiOrderItemMeta" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateAddProductBo" actionType="CREATE" type="BoTruckLoadWizardAddProduct">
+        <Parameters>
+          <Input name="productPKey" value="" type="Literal"/>
+        </Parameters>
+        <Return name="ProcessContext::AddProductWizardBo" />
+      </Action>
+      <Action actionType="LOAD" name="LoadWarehouseProductList" type="LoEtpWarehouseProducts">
+        <Parameters>
+          <Input name="etpWarehousePKey" value="ProcessContext::MainBO.etpWarehousePKey" />
+          <Input name="asoName" type="Literal" value="AsoEtpProductForAdd" />
+        </Parameters>
+        <Return name="ProcessContext::AddProductWizardBo.loEtpWarehouseProducts" />
+      </Action>
+      <!-- Reset Add Product List Filters -->
+      <Action name="ResetProductListFilter" actionType="LOGIC" call="ProcessContext::AddProductWizardBo.loEtpWarehouseProducts.resetAllFilters"></Action>
+      <Action actionType="LOGIC" name="setEntryEARights" call="ProcessContext::AddProductWizardBo.setEARights">
+        <Parameters>
+          <Input name="mode" type="String" value="ProcessContext::MainBO.boOrderMeta.sdoSubType" />
+          <Input name="boOrderMeta" type="Object" value="ProcessContext::MainBO.boOrderMeta" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>TruckLoad::AddProductWizardUI</UIDescription>
+        <Events>
+          <Event name="productLookup" action="OpenProductLookup" />
+          <Event name="addProduct" action="setDirty" />
+          <Event name="itemTemplateSelected" action="ReloadItemTemplate" />
+        </Events>
+      </Action>
+      <Action actionType="PROCESS" name="OpenProductLookup" process="TruckLoad::AddProductProcess">
+        <Parameters>
+          <Input name="ProductList" value="ProcessContext::AddProductWizardBo.loEtpWarehouseProducts" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::PrdMainPKey" value="ProductPKey" />
+          <Return name="ProcessContext::AddProduct_ButtonPressed" value="buttonPressed" />
+        </ReturnValues>
+        <TransitionTo action="AddProductViaLookupWizard_Result_Decision" />
+      </Action>
+      <Action name="AddProductViaLookupWizard_Result_Decision" actionType="DECISION" parameter="ProcessContext::AddProduct_ButtonPressed">
+        <Case value="addProduct" action="LoadProductLookup" />
+        <CaseElse action="setNew" />
+        <CaseEmpty action="setNew" />
+      </Action>
+      <Action actionType="LOAD" name="LoadProductLookup" type="LuProduct">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::PrdMainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::AddProductWizardBo.luProduct" />
+        <TransitionTo action="ReloadItemTemplate" />
+      </Action>
+      <Action name="ReloadTemplateRequiredDecision" actionType="DECISION" parameter="ProcessContext::AddProductWizardBo.subType">
+        <Case value="ProductCheckIn" action="ShowView" />
+        <CaseEmpty action="GetUoMListForAdd" />
+        <CaseElse action="GetUoMListForAdd" />
+      </Action>
+      <Action name="ReloadItemTemplate" actionType="LOGIC" call="ProcessContext::MainBO.boOrderMeta.loOrderItemMetas.getItemTemplateByPKey">
+        <Parameters>
+          <Input name="PKey" value="ProcessContext::AddProduct_ItemTemplate.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::AddProduct_ItemTemplate" />
+        <TransitionTo action="GetDefaultTemplateForAdd" />
+      </Action>
+      <Action name="GetDefaultTemplateForAdd" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="PKey" value="ProcessContext::AddProduct_ItemTemplate.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::AddProductWizardBo.sdoItemMetaPKey" />
+        <TransitionTo action="GetUoMListForAdd" />
+      </Action>
+      <Action name="GetUoMListForAdd" actionType="LOGIC" call="ProcessContext::AddProductWizardBo.getAvailableUoMForProduct">
+        <Parameters>
+          <Input name="itemPKey" value="ProcessContext::PrdMainPKey" />
+          <Input name="itemTemplate" value="ProcessContext::AddProduct_ItemTemplate" />
+        </Parameters>
+        <Return name="ProcessContext::ProductAddUoMList" />
+        <TransitionTo action="GetUoMListForSelectionBox" />
+      </Action>
+      <Action name="GetUoMListForSelectionBox" actionType="LOGIC" call="ProcessContext::AddProductWizardBo.getAvailableUoMSelectionBox">
+        <Parameters>
+          <Input name="availableUnits" value="ProcessContext::ProductAddUoMList" />
+        </Parameters>
+        <Return name="ProcessContext::ProductAddUoMListForSelectionBox" />
+        <TransitionTo action="GetDefaultUoMForAdd" />
+      </Action>
+      <Action name="GetDefaultUoMForAdd" actionType="LOGIC" call="ProcessContext::AddProductWizardBo.getDefaultUoMForProduct">
+        <Parameters>
+          <Input name="availableUnits" value="ProcessContext::ProductAddUoMList" />
+          <Input name="itemTemplate" value="ProcessContext::AddProduct_ItemTemplate" />
+        </Parameters>
+        <Return name="ProcessContext::AddProductWizardBo.uoM" />
+        <TransitionTo action="EndAddProduct" />
+      </Action>
+      <!--No EArights and validation required -->
+      <Action actionType="LOGIC" name="setEARights" call="ProcessContext::AddProductWizardBo.setEARights">
+        <Parameters>
+          <Input name="mode" type="String" value="ProcessContext::MainBO.boOrderMeta.sdoSubType" />
+          <Input name="boOrderMeta" type="Object" value="ProcessContext::MainBO.boOrderMeta" />
+        </Parameters>
+        <TransitionTo action="setDirty" />
+      </Action>
+      <!-- Set validation business object to new if not the done button has been clicked-->
+      <Action actionType="LOGIC" name="setNew" call="ProcessContext::AddProductWizardBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="2" />
+        </Parameters>
+        <TransitionTo action="EndCancel" />
+      </Action>
+      <Action actionType="LOGIC" name="setDirty" call="ProcessContext::AddProductWizardBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="5" />
+        </Parameters>
+        <TransitionTo action="WizardValidations" />
+      </Action>
+      <!-- Validation actions -->
+      <Action actionType="VALIDATION" name="WizardValidations">
+        <Validations>
+          <Validation name="ProcessContext::AddProductWizardBo.validateNotEmpty" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="EndAddProduct" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="EndCancel" />
+      </Action>
+      <!-- End actions -->
+      <Action actionType="END" name="EndAddProduct">
+        <ReturnValues>
+          <Return name="ProductPKey" value="ProcessContext::AddProductWizardBo.luProduct.pKey" />
+          <Return name="UoM" value="ProcessContext::AddProductWizardBo.uoM" />
+          <Return name="SdoItemMetaPKey" value="ProcessContext::AddProductWizardBo.sdoItemMetaPKey" />
+          <Return name="buttonPressed" type="Literal" value="addProduct" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndCancel"></Action>
+    </Actions>
+  </Body>
+</Process>

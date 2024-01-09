@@ -1,0 +1,40 @@
+<DataSource name="DsBoUser" backendSystem="sf" businessObjectClass="BoUser" external="false" editableEntity="User" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="User" column="Id" />
+    <DerivedAttribute name="salutation" value="' '" />
+    <Attribute name="firstName" table="User" column="FirstName" />
+    <Attribute name="employeeNumber" table="User" column="EmployeeNumber" />
+    <DerivedAttribute name="middleName" value="' '" />
+    <Attribute name="lastName" table="User" column="LastName" />
+    <DerivedAttribute name="languageSpoken" value="CASE WHEN ((Sales_Organization__c.Language_1__c = User.LanguageLocaleKey OR Sales_Organization__c.Language_2__c = User.LanguageLocaleKey OR Sales_Organization__c.Language_3__c = User.LanguageLocaleKey OR Sales_Organization__c.Language_4__c = User.LanguageLocaleKey) AND (LENGTH(User.LanguageLocaleKey) = 2 OR User.LanguageLocaleKey in ('zh_CN', 'en_US'))) THEN LOWER(substr(User.LanguageLocaleKey, 1, 2)) WHEN ((Sales_Organization__c.Language_1__c = User.LanguageLocaleKey OR Sales_Organization__c.Language_2__c = User.LanguageLocaleKey OR Sales_Organization__c.Language_3__c = User.LanguageLocaleKey OR Sales_Organization__c.Language_4__c = User.LanguageLocaleKey) AND User.LanguageLocaleKey in ('zh_TW','nl_NL','pt_BR','es_MX','en_GB','pt_PT')) THEN LOWER(substr(User.LanguageLocaleKey, 4, 5)) WHEN ((Sales_Organization__c.Language_1__c = 'en' OR Sales_Organization__c.Language_2__c = 'en' OR Sales_Organization__c.Language_3__c = 'en' OR Sales_Organization__c.Language_4__c = 'en') AND User.LanguageLocaleKey = 'en_US') THEN 'en' WHEN Sales_Organization__c.Language_1__c in ('zh_CN', 'en_US') THEN LOWER(substr(Sales_Organization__c.Language_1__c, 1, 2)) WHEN Sales_Organization__c.Language_1__c in ('zh_TW','nl_NL','pt_BR','es_MX','en_GB','pt_PT') THEN LOWER(substr(Sales_Organization__c.Language_1__c, 4, 5)) ELSE Sales_Organization__c.Language_1__c END " />
+    <Attribute name="name" table="User" column="Name" />
+    <DerivedAttribute name="loginName" value="' '" />
+    <Attribute name="salesOrg" table="User" column="Mobility_Sales_Org__c" />
+    <DerivedAttribute name="distribChannel" value="' '" />
+    <DerivedAttribute name="division" value="' '" />
+    <DerivedAttribute name="usrDocMetaPKey" value="' '" />
+    <DerivedAttribute name="showTimecardInfo" value="'0'" />
+    <DerivedAttribute name="password" value="' '" />
+    <Attribute name="currency" table="Sales_Organization__c" column="Currency__c" />
+    <DerivedAttribute name="distanceUnit" value="CASE WHEN Sales_Organization__c.Distance_Unit__c = 'km' THEN 'kilometers' ELSE Sales_Organization__c.Distance_Unit__c END " />
+    <Attribute name="sfId" table="User" column="Id" />
+    <DerivedAttribute name="sfLanguagePostfix" value="CASE WHEN Sales_Organization__c.Language_1__c = User.LanguageLocaleKey Then 'Language_1' WHEN Sales_Organization__c.Language_2__c = User.LanguageLocaleKey Then 'Language_2' WHEN Sales_Organization__c.Language_3__c = User.LanguageLocaleKey Then 'Language_3' WHEN Sales_Organization__c.Language_4__c = User.LanguageLocaleKey Then 'Language_4' WHEN Sales_Organization__c.Language_1__c = 'en' AND User.LanguageLocaleKey = 'en_US' Then 'Language_1' WHEN Sales_Organization__c.Language_2__c = 'en' AND User.LanguageLocaleKey = 'en_US' Then 'Language_2' WHEN Sales_Organization__c.Language_3__c = 'en' AND User.LanguageLocaleKey = 'en_US' Then 'Language_3' WHEN Sales_Organization__c.Language_4__c = 'en' AND User.LanguageLocaleKey = 'en_US' Then 'Language_4' ELSE 'Language_1'  END " />
+  </Attributes>
+  <Entities>
+    <Entity name="User" alias="" idAttribute="Id" />
+    <Entity name="Sales_Organization__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="User.Mobility_Sales_Org__c" comparator="eq" rightSideType="Attribute" rightSideValue="Sales_Organization__c.Name" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        User.ID = #sfUserId#
+     ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="sfUserId" type="TEXT" />
+  </Parameters>
+</DataSource>

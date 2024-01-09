@@ -1,0 +1,3 @@
+<ValidationMessages name="BoPosMessages" businessObject="BoPos" schemaVersion="0.0.0.5">
+  <ValidationMessage name="CasBoPosNameMustBeUniquePerTemplate" defaultMessage="For each POS type the POS name must be unique." comment="Validates uniqueness of POS name." />
+</ValidationMessages>

@@ -1,0 +1,89 @@
+<Datasource name="DsLoBpaOpenItem" objectClass="LoBpaOpenItem" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var customerPKey = "";
+
+			if(Utils.isDefined(jsonQuery.customerPKey)) {
+				customerPKey = Utils.convertForDBParam(jsonQuery.customerPKey, "DomPKey");
+			}
+
+			var sqlParams = {customerPKey};
+
+			var sqlStmt = "SELECT ";
+			sqlStmt +=      "customerOpenItems.pKey AS pKey, ";
+			sqlStmt +=      "customerOpenItems.bpaCustomerPKey  as bpaCustomerPKey, ";
+			sqlStmt +=      "customerOpenItems.amount as amount, "; 
+			sqlStmt +=      "customerOpenItems.receiptId as receiptId, "; 
+			sqlStmt +=      "customerOpenItems.receiptDate as receiptDate, "; 
+			sqlStmt +=      "customerOpenItems.debitCredit as debitCredit, "; 
+			sqlStmt +=      "customerOpenItems.dueDate as dueDate, ";
+			sqlStmt +=      "customerOpenItems.currency as currency, ";
+			sqlStmt +=      "CASE customerOpenItems.DebitCredit WHEN 'Debit' THEN 'Minus24' WHEN 'Credit' THEN 'Plus24' ELSE 'EmptyImage' END  as debitCreditIcon ";
+			sqlStmt +=    "FROM (";
+			sqlStmt +=      "SELECT  ";		
+			sqlStmt +=      "BpaOpenItem.PKey AS pKey, ";
+			sqlStmt +=      "BpaOpenItem.BpaCustomerPKey  as bpaCustomerPKey, ";
+			sqlStmt +=      "BpaOpenItem.Amount as amount, "; 
+			sqlStmt +=      "BpaOpenItem.ReceiptId as receiptId, "; 
+			sqlStmt +=      "BpaOpenItem.ReceiptDate as receiptDate, "; 
+			sqlStmt +=      "BpaOpenItem.DebitCredit as debitCredit, "; 
+			sqlStmt +=      "BpaOpenItem.DueDate as dueDate, ";
+			sqlStmt +=      "BpaOpenItem.Currency as currency ";
+			sqlStmt +=      "FROM  ";
+			sqlStmt +=          "BpaOpenItem ";
+			sqlStmt +=      "JOIN ";
+			sqlStmt +=          "BpaPayerRole ";
+			sqlStmt +=              "ON BpaPayerRole.CustomerPKey = BpaOpenItem.BpaCustomerPKey ";
+			sqlStmt +=      "JOIN ";
+			sqlStmt +=          "BpaRole ";
+			sqlStmt +=              "ON BpaRole.PKey = BpaPayerRole.BpaRolePKey ";
+			sqlStmt +=              "AND BpaRole.Category = 'payer' ";
+			sqlStmt +=              "AND BpaRole.ValidFrom <= '#Today#' ";
+			sqlStmt +=              "AND BpaRole.ValidThru >= '#Today#' ";
+			sqlStmt +=              "AND BpaRole.SalesOrg = '#SALESORG#' ";
+			sqlStmt	+= 		"UNION  ";
+			sqlStmt +=      "SELECT  ";		
+			sqlStmt +=      "BpaOpenItem.PKey AS pKey, ";
+			sqlStmt +=      "BpaOpenItem.BpaCustomerPKey  as bpaCustomerPKey, ";
+			sqlStmt +=      "BpaOpenItem.Amount as amount, "; 
+			sqlStmt +=      "BpaOpenItem.ReceiptId as receiptId, "; 
+			sqlStmt +=      "BpaOpenItem.ReceiptDate as receiptDate, "; 
+			sqlStmt +=      "BpaOpenItem.DebitCredit as debitCredit, "; 
+			sqlStmt +=      "BpaOpenItem.DueDate as dueDate, ";
+			sqlStmt +=      "BpaOpenItem.Currency as currency ";
+			sqlStmt +=      "FROM  ";
+			sqlStmt +=          "BpaOpenItem ";
+			sqlStmt +=      "JOIN ";
+			sqlStmt +=          "BpaPayerRole ";
+			sqlStmt +=              "ON BpaPayerRole.CustomerPKey = BpaOpenItem.BpaCustomerPKey ";
+			sqlStmt +=      "JOIN ";
+			sqlStmt +=          "BpaRole ";
+			sqlStmt +=              "ON BpaRole.PKey = BpaPayerRole.BpaRolePKey ";
+			sqlStmt +=              "AND BpaRole.Category = 'order' ";
+			sqlStmt +=              "AND BpaRole.ValidFrom <= '#Today#' ";
+			sqlStmt +=              "AND BpaRole.ValidThru >= '#Today#' ";
+			sqlStmt +=              "AND BpaRole.SalesOrg = '#SALESORG#' ";
+			sqlStmt +=    ") customerOpenItems "; 		
+			sqlStmt +=    "WHERE ";
+			sqlStmt +=      "( ";
+			sqlStmt +=		"customerOpenItems.bpaCustomerPKey = #customerPKey# "; 
+			sqlStmt +=      ") "; 
+			sqlStmt += " ORDER BY customerOpenItems.dueDate ASC";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams); 
+		]]></Load>
+    <Update><![CDATA[
+			// Intended to be empty - This list object gets its items by business logic!
+			return undefined;
+		]]></Update>
+    <Insert><![CDATA[
+			// Intended to be empty - This list object gets its items by business logic!
+			return undefined;   
+		]]></Insert>
+    <Delete><![CDATA[
+			// Intended to be empty - This list object gets its items by business logic!
+			return undefined;  
+		]]></Delete>
+  </Database>
+</Datasource>

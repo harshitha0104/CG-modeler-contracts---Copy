@@ -1,0 +1,61 @@
+<BusinessObject name="BoPromotion"  generateLoadMethod="true" generateCreateMethod="true" OERReference="PrmPromotion" schemaVersion="1.1">
+  <DataSource name="DsBoPromotion" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="prmId" type="DomId" dataSourceProperty="prmId" />
+    <SimpleProperty name="bpaCustomerPKey" type="DomPKey" dataSourceProperty="bpaCustomerPKey" />
+    <SimpleProperty name="dateFrom" type="DomDate" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" dataSourceProperty="dateThru" />
+    <SimpleProperty name="dateInitiation" type="DomDate" dataSourceProperty="dateInitiation" />
+    <SimpleProperty name="actualStatePKey" type="DomPKey" dataSourceProperty="actualStatePKey" />
+    <SimpleProperty name="nextStatePKey" type="DomPKey" dataSourceProperty="nextStatePKey" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="initiatorPKey" type="DomPKey" dataSourceProperty="initiatorPKey" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="phase" type="DomPrmPhase" dataSourceProperty="phase" />
+    <SimpleProperty name="metaId" type="DomId" dataSourceProperty="metaId" />
+    <SimpleProperty name="prmMetaPKey" type="DomPKey" dataSourceProperty="prmMetaPKey" />
+    <SimpleProperty name="commitDate" type="DomDate" dataSourceProperty="commitDate" />
+    <SimpleProperty name="ownerPKey" type="DomPKey" dataSourceProperty="ownerPKey" />
+  </SimpleProperties>
+  <ObjectLookups>
+    <ObjectLookup name="luPrmMeta" objectClass="LuPrmMeta" dataSourceProperty="prmMetaPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luInitiator" objectClass="LuUser" dataSourceProperty="initiatorPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luOwner" objectClass="LuUser" dataSourceProperty="ownerPKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luResponsible" objectClass="LuUser" dataSourceProperty="responsiblePKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+    <ObjectLookup name="luWfeState" objectClass="LuWfeState" dataSourceProperty="actualStatePKey" lookupProperty="pKey" loadMode="LoadImmediate" />
+  </ObjectLookups>
+  <ListObjects>
+    <ListObject name="loKPIs" objectClass="LoPrmKPIs" dataSourceProperty="pKey" listProperty="prmPromotionPKey" loadMode="LoadImmediate" />
+    <ListObject name="loTactics" objectClass="LoPrmTactics" dataSourceProperty="pKey" listProperty="tacticParentPKey" loadMode="LoadImmediate" />
+    <ListObject name="loProducts" objectClass="LoPrmProducts" dataSourceProperty="pKey" listProperty="prmPromotionPKey" loadMode="LoadImmediate" />
+    <ListObject name="loRecentState" objectClass="LoPrmRecentState" dataSourceProperty="pKey" listProperty="prmPromotionPKey" loadMode="LoadImmediate" />
+  </ListObjects>
+  <NestedObjects>
+    <NestedObject name="boSlogan" objectClass="BoPrmSlogan" dataSourceProperty="pKey" nestingProperty="prmPromotionPKey" loadMode="LoadImmediate" />
+    <NestedObject name="boAnchor" objectClass="BoPrmAnchor" dataSourceProperty="pKey" nestingProperty="prmPromotionPKey" loadMode="LoadImmediate" />
+    <NestedObject name="boAnnotation" objectClass="BoPrmAnnotation" dataSourceProperty="pKey" nestingProperty="prmPromotionPKey" loadMode="LoadImmediate" />
+    <NestedObject name="boWorkflow" objectClass="BoWorkflow" dataSourceProperty="wfeWorkflowPKey" nestingProperty="pKey" loadMode="LoadImmediate" />
+  </NestedObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="createAsync" />
+    <Method name="stateTransition" />
+    <Method name="setEARights" />
+    <Method name="isNextStateAvailable" />
+    <Method name="isPromotionEditable" />
+  </Methods>
+  <Validations>
+    <!--<Validation name="" />-->
+  </Validations>
+</BusinessObject>

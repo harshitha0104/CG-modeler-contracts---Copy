@@ -1,0 +1,11 @@
+<LookupObject name="LuNavigation" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuNavigation" />
+  <SimpleProperties>
+    <SimpleProperty name="sdoSubType" type="DomString" storable="true" dataSourceProperty="sdoSubType" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

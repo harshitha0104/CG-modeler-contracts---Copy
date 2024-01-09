@@ -1,0 +1,15 @@
+<ListItem name="LiScannedProduct" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="productPKey" type="DomPKey" dataSourceProperty="productPKey" />
+    <SimpleProperty name="logisticPKey" type="DomPKey" storable="false" dataSourceProperty="logisticPKey" />
+    <SimpleProperty name="prdStatePKey" type="DomPKey" storable="false" dataSourceProperty="prdStatePKey" />
+    <SimpleProperty name="productId" type="DomId" dataSourceProperty="productId" />
+    <SimpleProperty name="shortText" type="DomText" storable="false" dataSourceProperty="shortText" />
+    <SimpleProperty name="eAN" type="DomPrdNumber" storable="false" dataSourceProperty="eAN" />
+    <SimpleProperty name="fieldStateValid" type="DomBool" storable="false" dataSourceProperty="fieldStateValid" />
+    <SimpleProperty name="foreignProduct" type="DomBool" storable="false" dataSourceProperty="foreignProduct" />
+    <SimpleProperty name="unitType" type="DomPrdLogisticUnit" storable="false" dataSourceProperty="unitType" />
+    <SimpleProperty name="grouping1" type="DomText" storable="false" dataSourceProperty="grouping1" />
+  </SimpleProperties>
+</ListItem>

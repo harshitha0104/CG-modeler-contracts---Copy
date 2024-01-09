@@ -1,0 +1,73 @@
+<Datasource name="DsLoTeamOfUser" backendSystem="sf" objectClass="LoTeamOfUser" businessObjectClass="LoTeamOfUser" external="true" editableEntity="User" schemaVersion="2.0">
+  <Entities>
+    <Entity name="User" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[        
+
+        var user = ApplicationContext.get('user');
+        
+		if (Utils.isDefined(jsonQuery)){
+			var newParams = jsonQuery;
+			if (Utils.isOldParamsFormat(newParams)){
+				newParams = Utils.convertDsParamsOldToNew(newParams);
+            }
+        }  
+		var currentResponsiblePKey = "";
+		var teamListObj = [];
+		if(Utils.isDefined(jsonQuery.currentResponsiblePKey)) {      		
+        	currentResponsiblePKey = Utils.convertForDBParam(jsonQuery.currentResponsiblePKey, "DomPKey");
+        }
+		
+		if(Utils.isDefined(user.getTeamList()) && (user.getTeamList() != "")) {      		
+        	teamListObj = user.getTeamList();
+		    teamListObj = Utils.getListParams(teamListObj);
+}
+		var sqlParams1 = {currentResponsiblePKey};
+		var sqlParams2 = {};
+
+
+        var sqlStmt = "SELECT ";
+        sqlStmt +=          "User.Id as userPKey, ";
+        sqlStmt +=          "User.FirstName || ' ' || User.LastName as userName, ";
+        sqlStmt +=          "'0' as isSelf, ";
+        sqlStmt +=          "' ' as groupAttribute, ";
+        sqlStmt +=          "CASE WHEN User.Id= #currentResponsiblePKey# THEN 'AgendaUserCurrentlySelected_Yes' ELSE 'AgendaUserCurrentlySelected_No' END as currentlySelectedImageId, ";
+        sqlStmt +=          "User.LastName as sort ";
+        sqlStmt +=     "FROM ";
+        sqlStmt +=          "User "; 
+        sqlStmt +=     "WHERE ";
+        sqlStmt +=         "User.Id IN (";                          
+                     
+         var sql2 =     ")";
+
+         var sqlStmt1Result = Utils.replaceMacrosParam(sqlStmt, sqlParams1);
+		 var sqlStmt2Result = Utils.replaceMacrosParam(sql2, sqlParams2);
+		 var finalSql;
+		 var finalParams;
+		if(Utils.isDefined(teamListObj) && (teamListObj != "")) { 
+         finalSql = sqlStmt1Result.sql + teamListObj.sql + sqlStmt2Result.sql;
+         finalParams = sqlStmt1Result.params.concat(teamListObj.params).concat(sqlStmt2Result.params);
+		}		
+		 else
+		{
+ 		  finalSql = sqlStmt1Result.sql + sqlStmt2Result.sql;
+          finalParams = sqlStmt1Result.params.concat(sqlStmt2Result.params);
+		}
+
+		 return {sql: finalSql, params: finalParams};
+        ]]></Load>
+    <Update><![CDATA[
+            // Intended to be empty
+            return undefined;
+                    ]]></Update>
+    <Insert><![CDATA[   
+                        // Intended to be empty     
+            return undefined;           
+                    ]]></Insert>
+    <Delete><![CDATA[
+              // Intended to be empty
+              return undefined;  
+                    ]]></Delete>
+  </Database>
+</Datasource>

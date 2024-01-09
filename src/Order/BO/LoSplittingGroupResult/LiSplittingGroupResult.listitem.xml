@@ -1,0 +1,18 @@
+<ListItem name="LiSplittingGroupResult">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="splittingGroup" type="DomId" storable="false" dataSourceProperty="splittingGroup" />
+    <SimpleProperty name="totalValue" type="DomMoney" storable="false" dataSourceProperty="totalValue" />
+    <SimpleProperty name="totalValueReceipt" type="DomMoney" storable="false" dataSourceProperty="totalValueReceipt" />
+    <SimpleProperty name="merchandiseValue" type="DomMoney" storable="false" dataSourceProperty="merchandiseValue" />
+    <SimpleProperty name="merchandiseValueReceipt" type="DomMoney" storable="false" dataSourceProperty="merchandiseValueReceipt" />
+    <SimpleProperty name="grossTotalValue" type="DomMoney" storable="false" dataSourceProperty="grossTotalValue" />
+    <SimpleProperty name="grossTotalValueReceipt" type="DomMoney" storable="false" dataSourceProperty="grossTotalValueReceipt" />
+    <SimpleProperty name="sdoConditions" type="Object" storable="false" dataSourceProperty="sdoConditions" />
+    <SimpleProperty name="pricingJson" type="Object" storable="false" dataSourceProperty="pricingJson" />
+    <SimpleProperty name="currency" type="Object" storable="false" dataSourceProperty="currency" />
+    <SimpleProperty name="paidAmount" type="DomMoney" dataSourceProperty="paidAmount" />
+    <SimpleProperty name="paidAmountReceipt" type="DomMoney" dataSourceProperty="paidAmountReceipt" />
+    <SimpleProperty name="absolutePaidAmount" type="DomMoney" dataSourceProperty="absolutePaidAmount" />
+  </SimpleProperties>
+</ListItem>

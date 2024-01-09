@@ -1,0 +1,12 @@
+<LookupObject name="LuPaymentMetaByPaymentMethod" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuPaymentMetaByPaymentMethod" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="paymentMethod" type="DomPaymentMethod" storable="true" dataSourceProperty="paymentMethod" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

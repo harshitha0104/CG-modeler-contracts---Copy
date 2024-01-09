@@ -1,0 +1,24 @@
+<DataSource name="DsLuCheckOutDocument" businessObjectClass="LuCheckOutDocument" external="false" editableEntity="SdoMain" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="SdoMain" column="PKey" />
+  </Attributes>
+  <Entities>
+    <Entity name="SdoMain" alias="" idAttribute="PKey" />
+    <Entity name="SdoMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoMain.SdoMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoMeta.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  	SdoMain.TmgMainPKey= #TmgMainPKey# AND SdoMeta.MetaType='TruckLoad' AND SdoMain.Phase='Initial'
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="SdoMain" attribute="Id" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="TmgMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

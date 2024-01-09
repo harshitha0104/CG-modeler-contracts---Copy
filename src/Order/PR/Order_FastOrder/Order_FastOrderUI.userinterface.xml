@@ -1,0 +1,121 @@
+<UIDescription name="Order::FastOrderUI" schemaVersion="0.0.0.5">
+  <Page showNavigation="false">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="FastOrderId" defaultLabel="Fast Order" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="PastefromClipboard">
+          <Bindings>
+            <Resource target="Text" type="Label" id="PastefromClipbardId" defaultLabel="Paste from Clipboard" />
+            <Resource target="Icon" type="Image" id="CopyFromClipboard_SB" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="PasteFromClipboard" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="true" itemId="Done">
+          <Bindings>
+            <Resource target="Text" type="Label" id="UpdateId" defaultLabel="Done" />
+            <Resource target="Icon" type="Image" id="Check_PB" />
+            <Binding type="Editable" target="Editable" call="ProcessContext::FastOrderProductsForGrid.checkEmptyList" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="EndFastOrder" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <FastDataEntryGrid name="FastOrderDataEntryGrid">
+          <DataInputArea name="FastOrderDataInputArea">
+            <DataSearchField name="FastOrdeDataSearchField" dataSource="ProcessContext::FastOrderProducts.Items[]">
+              <Items>
+                <Bindings>
+                  <Binding target="PKey" type="Text" binding=".pKey" bindingMode="ONE_WAY" />
+                  <Binding target="Searchable1" type="Text" binding=".productNumber" bindingMode="ONE_WAY" />
+                  <Binding target="Searchable2" type="Text" binding=".productDescription" bindingMode="ONE_WAY" />
+                  <Binding target="SearchResultDisplay1" type="Text" binding=".productNumber" bindingMode="ONE_WAY" />
+                  <Binding target="SearchResultDisplay2" type="Text" binding=".productDescription" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="You can search for [b]Product number[/b] or [b]Product description[/b]." id="SeachBoxId" />
+              </Bindings>
+            </DataSearchField>
+            <NumberInputField name="quantityInputField" formatV2="4.0">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Quantity" id="Quantityid" />
+              </Bindings>
+            </NumberInputField>
+            <Events>
+              <CreateNewRecordEvent event="AddItemToGrid">
+                <Params>
+                  <Param name="productNumber" value=".productNumber" />
+                  <Param name="productDescription" value=".productDescription" />
+                </Params>
+              </CreateNewRecordEvent>
+            </Events>
+          </DataInputArea>
+          <DataGrid name="FastOrderDataGrid" dataSource="ProcessContext::FastOrderProductsForGrid" paging="false">
+            <Bindings>
+              <Resource target="EmptyImage" type="Image" id="EmptyCart_ES" />
+              <Resource target="EmptyMessage" type="Label" id="GridEmptyMessageId" defaultLabel="[b]Nothing ordered yet.[/b] Start typing in the search field to find products. Or copy and paste them from your clipboard." />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="PKey" type="Text" binding=".pKey" bindingMode="ONE_WAY" />
+                <Binding target="ProductNumber" type="Text" binding=".productNumber" bindingMode="ONE_WAY" />
+                <Binding target="ProductDescription" type="Text" binding=".productDescription" bindingMode="ONE_WAY" />
+                <Binding target="ProductQuantity" type="Decimal" formatV2="4.0" binding=".quantity" bindingMode="ONE_WAY" />
+                <Resource target="prdNumberHeader" type="Label" id="ProductNumberId" defaultLabel="Product No" />
+                <Resource target="prdDescriptionHeader" type="Label" id="ProductDescriptionId" defaultLabel="Description" />
+                <Resource target="prdQtyHeader" type="Label" id="ProductQuantityId" defaultLabel="Qty" />
+              </Bindings>
+              <GridLayout>
+                <Default>
+                  <Header>
+                    <Col bindingId="prdNumberHeader" align="left" />
+                    <Col bindingId="prdDescriptionHeader" align="left" />
+                    <Col bindingId="prdQtyHeader" align="left" />
+                  </Header>
+                  <Col width="25%" layoutType="Text" bindingId="ProductNumber" />
+                  <Col width="55%" layoutType="Text" bindingId="ProductDescription" />
+                  <Col width="20%" layoutType="Number" bindingId="ProductQuantity" />
+                </Default>
+                <Tablet>
+                  <Header>
+                    <Col bindingId="prdNumberHeader" align="left" />
+                    <Col bindingId="prdDescriptionHeader" align="left" />
+                    <Col bindingId="prdQtyHeader" align="left" />
+                  </Header>
+                  <Col width="25%" layoutType="Text" bindingId="ProductNumber" />
+                  <Col width="55%" layoutType="Text" bindingId="ProductDescription" />
+                  <Col width="20%" layoutType="Number" bindingId="ProductQuantity" />
+                </Tablet>
+                <Phone>
+                  <Header>
+                    <Col bindingId="prdNumberHeader" align="left" />
+                    <Col bindingId="prdDescriptionHeader" align="left" />
+                    <Col bindingId="prdQtyHeader" align="left" />
+                  </Header>
+                  <Col width="25%" layoutType="Text" bindingId="ProductNumber" />
+                  <Col width="60%" layoutType="Text" bindingId="ProductDescription" />
+                  <Col width="15%" layoutType="Number" bindingId="ProductQuantity" />
+                </Phone>
+              </GridLayout>
+            </Items>
+            <Events>
+              <DeleteRecordEvent event="DeleteItemFromGrid">
+                <Params>
+                  <Param name="desc" value=".productDescription" />
+                </Params>
+              </DeleteRecordEvent>
+            </Events>
+          </DataGrid>
+        </FastDataEntryGrid>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

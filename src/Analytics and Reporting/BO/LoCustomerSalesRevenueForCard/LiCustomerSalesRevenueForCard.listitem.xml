@@ -1,0 +1,10 @@
+<ListItem name="LiCustomerSalesRevenueForCard">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="key" type="DomString" dataSourceProperty="pKey" />
+    <SimpleProperty name="netSales" type="DomMoney" dataSourceProperty="netSales" />
+    <SimpleProperty name="year" type="DomInteger" dataSourceProperty="year" />
+    <SimpleProperty name="month" type="DomSmallInteger" dataSourceProperty="month" />
+    <SimpleProperty name="searchKeys" type="DomString" dataSourceProperty="searchKeys" />
+  </SimpleProperties>
+</ListItem>

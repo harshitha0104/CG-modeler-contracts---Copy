@@ -1,0 +1,8 @@
+<ListObject name="LoDeliveryOverview" generateLoadMethod="false" filter="InDatabase" paging="true" >
+  <DataSource name="DsLoDeliveryOverview" />
+  <Item objectClass="LiDeliveryOverview" />
+  <Methods>
+    <Method name="loadAsync" />
+    <Method name="setOpenOnlyFilter" />
+  </Methods>
+</ListObject>

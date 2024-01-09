@@ -1,0 +1,14 @@
+<ListItem name="LiTmgMetaObjectRel">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="businessModified" type="DomBusinessModified" dataSourceProperty="businessModified" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="tmgMetaPKey" type="DomPKey" dataSourceProperty="tmgMetaPKey" />
+    <SimpleProperty name="usage" type="DomTmgUsage" dataSourceProperty="usage" />
+    <SimpleProperty name="sysReleaseProcessPKey" type="DomPKey" dataSourceProperty="sysSignatureMetaPKey" />
+    <SimpleProperty name="objectMetaPKey" type="DomPKey" dataSourceProperty="objectMetaPKey" />
+    <SimpleProperty name="tmgTourPKey" type="DomPKey" />
+    <SimpleProperty name="usedForStartOfDay" type="DomBool" storable="false" dataSourceProperty="usedForStartOfDay" />
+    <SimpleProperty name="usedForEndOfDay" type="DomBool" storable="false" dataSourceProperty="usedForEndOfDay" />
+  </SimpleProperties>
+</ListItem>

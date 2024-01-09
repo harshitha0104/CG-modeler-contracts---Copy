@@ -1,0 +1,56 @@
+  <Process name="Cash::CreateNewProcess" defaultAction="CreateCashDocument" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CashBo" type="BoCash" />
+        <Declaration name="CashMetaPKey" type="DomPKey" />
+        <Declaration name="LuOrderMeta" type="LuOrderMeta" />
+      </Declarations>
+      <Parameters>
+        <Input name="CashDocumentMetaPKey" type="DomPKey" />
+        <Input name="EtpWarehousePKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadLuOrderMeta" actionType="LOAD" type="LuOrderMeta">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CashDocumentMetaPKey" />
+        </Parameters>
+        <Return name="ProcessContext::LuOrderMeta" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="CreateCashDocument" actionType="CREATE" type="BoCash">
+        <Parameters>
+          <Input name="sdoMetaPKey" value="ProcessContext::CashDocumentMetaPKey" />
+          <Input name="etpWarehousePKey" value="ProcessContext::EtpWarehousePKey" />
+        </Parameters>
+        <Return name="ProcessContext::CashBo" />
+        <TransitionTo action="StartNavigation_Decision" />
+      </Action>
+      <Action name="StartNavigation_Decision" actionType="DECISION" parameter="ProcessContext::LuOrderMeta.sdoSubType">
+        <Case value="CashCheckOut" action="StartCheckOutNavigation" />
+        <Case value="CashCheckIn" action="StartCheckInNavigation" />
+        <Case value="Expenses" action="StartExpenseNavigation" />
+        <CaseElse action="StartCheckOutNavigation" />
+      </Action>
+      <Action name="StartCheckOutNavigation" actionType="PROCESS" process="Cash::CheckOutNavigationProcess">
+        <Parameters>
+          <Input name="MainBo" value="ProcessContext::CashBo" />
+        </Parameters>
+      </Action>
+      <Action name="StartCheckInNavigation" actionType="PROCESS" process="Cash::CheckInNavigationProcess">
+        <Parameters>
+          <Input name="MainBo" value="ProcessContext::CashBo" />
+        </Parameters>
+      </Action>
+      <Action name="StartExpenseNavigation" actionType="PROCESS" process="Cash::CheckOutNavigationProcess">
+        <Parameters>
+          <Input name="MainBo" value="ProcessContext::CashBo" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

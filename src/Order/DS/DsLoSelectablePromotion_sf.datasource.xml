@@ -1,0 +1,72 @@
+<DataSource name="DsLoSelectablePromotion" backendSystem="sf" businessObjectClass="LoSelectablePromotion" external="true" editableEntity="Promotion__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Promotion__c" column="Id" />
+    <Attribute name="promotionSlogan" table="Promotion__c" column="Slogan_#Language#__c" />
+    <Attribute name="mediaPath" table="SF_File" column="VersionData" />
+    <Attribute name="attachmentBlobPKey" table="SF_File" column="Id" />
+    <Attribute name="fileType" table="SF_File" column="PathOnClient" />
+    <Attribute name="bannerMediaPath" table="SF_File" column="VersionData" />
+    <Attribute name="bannerAttachmentBlobPKey" table="SF_File" column="Id" />
+    <Attribute name="bannerFileType" table="SF_File" column="PathOnClient" />
+    <Attribute name="considerPromotionRewards" table="Promotion_Template__c" column="Consider_Promotion_Rewards__c" />
+    <DerivedAttribute name="totalRewardGroup" value="0" />
+    <DerivedAttribute name="satisfiedRewardGroupCount" value="0" />
+    <DerivedAttribute name="specialPromoted" value="CASE WHEN Promotion_Template__c.Special_Order_Relevant__c = 1 THEN '1' ELSE '0' END" />
+  </Attributes>
+  <Entities>
+    <Entity name="Promotion__c" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+var currentDate = "";
+var customer = "";
+var specialOrderHandling = "";
+var addCond = "";
+
+if(Utils.isDefined(jsonQuery.currentDate)) {
+    currentDate = Utils.convertForDBParam(jsonQuery.currentDate, "DomDate");
+}
+if(Utils.isDefined(jsonQuery.customer)) {
+    customer = Utils.convertForDBParam(jsonQuery.customer, "DomPKey");
+}
+if(Utils.isDefined(jsonQuery.specialOrderHandling)) {
+    specialOrderHandling = Utils.convertForDBParam(jsonQuery.specialOrderHandling, "DomText");
+}
+if(specialOrderHandling === "No" || specialOrderHandling === " ") {
+    addCond = "AND Promotion_Template__c.Special_Order_Relevant__c = 0 ";
+}
+if(specialOrderHandling === "ExclusiveSpecialOrder") {
+    addCond = "AND Promotion_Template__c.Special_Order_Relevant__c = 1 ";
+}
+
+var sqlParams = {currentDate, customer};
+
+var sqlStmt =  " SELECT Promotion__c.Id AS pKey, Promotion__c.Slogan_#Language#__c AS promotionSlogan, FilesAuxTable.VersionData AS mediaPath, FilesAuxTable.Id AS attachmentBlobPKey, replace(FilesAuxTable.PathOnClient, rtrim(FilesAuxTable.PathOnClient, replace(FilesAuxTable.PathOnClient, '.', '')), '') AS fileType, ";
+sqlStmt += " BannerFilesTable.VersionData AS bannerMediaPath, BannerFilesTable.Id AS bannerAttachmentBlobPKey, replace(BannerFilesTable.PathOnClient, rtrim(BannerFilesTable.PathOnClient, replace(BannerFilesTable.PathOnClient, '.', '')), '') AS bannerFileType, ";
+sqlStmt += " Promotion_Template__c.Consider_Promotion_Rewards__c AS considerPromotionRewards, ";
+sqlStmt += " (SELECT count(*) FROM Promotion_Reward_Group__c WHERE Promotion_Reward_Group__c.Promotion__c = Promotion__c.Id AND Promotion_Reward_Group__c.Included__c = '1') as totalRewardGroup, ";
+sqlStmt += " CASE WHEN Promotion_Template__c.Special_Order_Relevant__c = 1 THEN '1' ELSE '0' END AS specialPromoted ";
+sqlStmt += " FROM Promotion__c ";
+sqlStmt += " JOIN Promotion_Template__c ON Promotion__c.Promotion_Template__c = Promotion_Template__c.Id ";
+sqlStmt += " LEFT OUTER JOIN Promotion_Store__c ON Promotion_Store__c.Promotion__c = Promotion__c.Id ";
+sqlStmt += " LEFT OUTER JOIN Account_Set_Account__c ON Promotion__c.Anchor_Account_Set__c = Account_Set_Account__c.Account_Set__c ";
+sqlStmt += " LEFT OUTER JOIN (SF_FileLink as FilesAuxLinkTable JOIN SF_File as FilesAuxTable ON FilesAuxLinkTable.FileId = FilesAuxTable.Id AND FilesAuxTable.Usage__c = 'Icon' AND NOT EXISTS (SELECT FilesFilteredIcons.Id FROM SF_File as FilesFilteredIcons, SF_FileLink as FileLinkFilteredIcons WHERE FileLinkFilteredIcons.FileId=FilesFilteredIcons.Id AND FilesFilteredIcons.Usage__c = 'Icon' AND FilesFilteredIcons.CreatedDate > FilesAuxTable.CreatedDate AND FilesAuxLinkTable.ParentId = FileLinkFilteredIcons.ParentId)) ON Promotion__c.Id = FilesAuxLinkTable.ParentId ";
+sqlStmt += " LEFT OUTER JOIN (SF_FileLink as BannerFilesLinkTable JOIN SF_File as BannerFilesTable ON BannerFilesLinkTable.FileId = BannerFilesTable.Id AND BannerFilesTable.Usage__c = 'Banner' AND replace(BannerFilesTable.PathOnClient, rtrim(BannerFilesTable.PathOnClient, replace(BannerFilesTable.PathOnClient, '.', '')), '') IN ('jpg', 'svg', 'png') AND NOT EXISTS (SELECT BannerFilesFilteredIcons.Id FROM SF_File as BannerFilesFilteredIcons, SF_FileLink as BannerFileLinkFilteredIcons WHERE BannerFileLinkFilteredIcons.FileId=BannerFilesFilteredIcons.Id AND BannerFilesFilteredIcons.Usage__c = 'Banner' AND BannerFilesFilteredIcons.CreatedDate > BannerFilesTable.CreatedDate AND BannerFilesLinkTable.ParentId = BannerFileLinkFilteredIcons.ParentId AND replace(BannerFilesFilteredIcons.PathOnClient, rtrim(BannerFilesFilteredIcons.PathOnClient, replace(BannerFilesFilteredIcons.PathOnClient, '.', '')), '') IN ('jpg', 'svg', 'png'))) ON Promotion__c.Id = BannerFilesLinkTable.ParentId ";
+sqlStmt += " WHERE ";
+sqlStmt += " Promotion__c.Active__c = '1' ";
+sqlStmt += " AND Promotion__c.Phase__c = 'Committed' ";
+sqlStmt += " AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #currentDate# , 'Date')# ";
+sqlStmt += " AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #currentDate# , 'Date')# ";
+sqlStmt += " AND Promotion_Template__c.Selectable_Promotion__c = '1' ";
+sqlStmt +=   addCond;
+sqlStmt += " AND EXISTS (SELECT NULL FROM Tactic__c WHERE Tactic__c.Promotion__c = Promotion__c.Id AND #compareAsDate('Tactic__c.Date_From__c', 'Date','<=' ,#currentDate#, 'Date')# AND #compareAsDate('Tactic__c.Date_Thru__c', 'Date','>=' ,#currentDate#, 'Date')#  AND Tactic__c.Included__c  = '1') AND ";
+sqlStmt += " (Promotion_Store__c.Store__c = #customer# ";
+sqlStmt += " OR Account_Set_Account__c.Account_Set_Account__c = #customer#) ";
+sqlStmt += " ORDER BY PromotionSlogan ASC ";
+
+return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+ ]]></Load>
+  </Database>
+</DataSource>

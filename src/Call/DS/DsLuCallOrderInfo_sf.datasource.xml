@@ -1,0 +1,40 @@
+<Datasource objectClass="LuCallOrderInfo" name="DsLuCallOrderInfo" backendSystem="sf" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+      var clbMainPKey = "";
+      var userCurrency = "";
+      if (Utils.isDefined(jsonQuery.clbMainPKey)){
+      clbMainPKey =  Utils.convertForDBParam(jsonQuery.clbMainPKey, "DomPKey");
+  		}
+      userCurrency = ApplicationContext.get('user').getCurrency();
+
+      var sqlParams = {clbMainPKey, userCurrency};
+      var sqlStmt = "SELECT CAST(COUNT(orders.SdoMainPkey) AS varchar) AS orders, ";
+      sqlStmt +=      "CAST(ROUND(total(orders.GrossTotalValue),2) AS varchar) AS totalValue, ";
+      sqlStmt +=      "CAST(Case when SUM(orders.items) > 0 then SUM(orders.items) ";
+      sqlStmt +=      "else 0 end AS varchar) AS items, ";
+      sqlStmt +=      "SUM(orders.nonDeliveryDoc) as openOrders, ";
+      sqlStmt +=      "SUM(orders.deliveryDoc) as openDeliveries, ";
+      sqlStmt +=      "CASE when CAST(COUNT(orders.SdoMainPkey) AS varchar) > 0 then orders.Currency ";
+      sqlStmt +=      "else #userCurrency# end as currency ";
+      sqlStmt +=    "FROM ";
+      sqlStmt +=      "(SELECT Order__c.Id as SdoMainPkey, ";
+      sqlStmt +=      "Order__c.Phase__c as phase, ";
+      sqlStmt +=      "(Order__c.Document_Type__c = 'OrderEntry') as nonDeliveryDoc, ";
+      sqlStmt +=      "(Order__c.Document_Type__c = 'Delivery') as deliveryDoc, ";
+      sqlStmt +=      "Order__c.Gross_Total_Value__c as GrossTotalValue, ";
+      sqlStmt +=      "COUNT(Order_Item__c.Id) as items, ";
+      sqlStmt +=      "Order__c.Currency__c as Currency ";
+      sqlStmt +=      "FROM Order__c ";
+      sqlStmt +=      "left outer join Order_Item__c on Order__c.Id = Order_Item__c.Order__c ";
+      sqlStmt +=      "WHERE ";
+      sqlStmt +=      "Order__c.Visit__c= #clbMainPKey# ";
+      sqlStmt +=      "AND Order__c.Phase__c = 'Initial' ";
+      sqlStmt +=      "AND Order__c.IsDeleted <> '1' ";
+      sqlStmt +=      "group by Order__c.Id) orders";
+
+      return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+]]></Load>
+  </Database>
+</Datasource>

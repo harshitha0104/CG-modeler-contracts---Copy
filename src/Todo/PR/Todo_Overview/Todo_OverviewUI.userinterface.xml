@@ -1,0 +1,296 @@
+<UIDescription name="Todo::OverviewUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="MasterDetailSectionPage" selectFirstItemInList="true" masterSectionFlex="40" detailSectionFlex="60">
+    <ViewVariables>
+      <ViewVariable name="currentTabName" value="Main" />
+    </ViewVariables>
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TodoTitleId" defaultLabel="Todo" bindingMode="ONE_TIME" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="AddTodo">
+          <Bindings>
+            <Resource target="Text" type="Label" id="AddTodoId" defaultLabel="Add Task" />
+            <Resource target="Icon" type="Image" id="Plus_PB" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="addTodo" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <!-- Master Section -->
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <MenuItems>
+          <MenuItem directlyVisible="false" itemId="AllTodos">
+            <Bindings>
+              <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+              <Resource target="Text" type="Label" id="AllTodoId" defaultLabel="All ToDos" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="showAllTodos" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="false" itemId="OpenTodos">
+            <Bindings>
+              <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+              <Resource target="Text" type="Label" id="OpenTodoIds" defaultLabel="Only Active" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="showOpenTodos" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <GroupedList name="TodoList" searchable="true" master="true" dataSource="ProcessContext::OverviewList.Items[]">
+          <Items name="Items" itemPattern="TodoOverviewItemPattern">
+            <Bindings>
+              <Binding target="Text" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              <Binding target="Priority" type="Text" binding=".priority.text" bindingMode="ONE_WAY" />
+              <Resource target="InitiationDateLabel" type="Label" id="InitiationDateLabel" defaultLabel="Created" />
+              <Binding target="InitiationDate" type="Date" binding=".initiationDate" bindingMode="ONE_WAY" />
+              <Resource target="DueDateLabel" type="Label" id="DueDateLabel" defaultLabel="Due" />
+              <Binding target="DueDate" type="Date" binding=".dueDate" bindingMode="ONE_WAY" />
+              <Binding target="IssuePhase" type="Text" binding=".issuePhase.text" bindingMode="ONE_WAY" />
+              <Binding target="ResponsibleName" type="Text" binding=".responsibleName" bindingMode="ONE_WAY" />
+              <Binding target="OwnerName" type="Text" binding=".ownerName" bindingMode="ONE_WAY" />
+              <Resource target="PrioLabel" type="Label" id="PrioLabel" defaultLabel="Prio " />
+              <Resource target="Spacer" type="Label" id="Spacer" defaultLabel="    " />
+              <Resource target="InfoImg" type="Image" id="InfoGrey16" defaultImage="InfoGrey16" bindingMode="ONE_TIME" />
+              <Resource target="OwnerImage" type="Image" id="UserDarkGrey16" defaultImage="UserDarkGrey16" bindingMode="ONE_TIME" />
+              <Resource target="ResponsibleImage" type="Image" id="UserArrowDarkGrey16" defaultImage="UserArrowDarkGrey16" bindingMode="ONE_TIME" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col>
+                  <Row flex="1" layoutType="itemIdentifier" bindingId="Text" />
+                  <Row flex="1" layoutType="itemSecondary" bindingId="Spacer" />
+                  <Row>
+                    <Col width="1.3em" layoutType="itemSecondary" bindingId="Spacer" align="left" />
+                    <Col width="8em" layoutType="itemSecondary" bindingId="InitiationDateLabel" align="left" />
+                    <Col width="1.3em" layoutType="itemSecondary" bindingId="Spacer" align="left" />
+                    <Col width="6em" layoutType="itemSecondary" bindingId="InitiationDate" align="left" />
+                  </Row>
+                  <Row>
+                    <Col width="1.3em" layoutType="itemSecondary" bindingId="Spacer" align="left" />
+                    <Col width="8em" layoutType="itemSecondary" bindingId="DueDateLabel" align="left" />
+                    <Col width="1.3em" layoutType="itemSecondary" bindingId="Spacer" align="left" />
+                    <Col width="6em" layoutType="itemSecondary" bindingId="DueDate" align="left" />
+                  </Row>
+                  <Row>
+                    <Col width="1.3em" layoutType="Image" bindingId="InfoImg" align="left" />
+                    <Col width="8em" layoutType="itemSecondary" bindingId="IssuePhase" align="left" />
+                    <Col width="1.3em" layoutType="itemSecondary" bindingId="Spacer" align="left" />
+                    <Col height="1.5em" width="2em" layoutType="itemSecondary" bindingId="PrioLabel" />
+                    <Col width="0.1em" layoutType="itemSecondary" bindingId="Spacer" />
+                    <Col layoutType="itemSecondary" bindingId="Priority" align="left" />
+                  </Row>
+                  <Row>
+                    <Col width="1.3em" layoutType="Image" bindingId="ResponsibleImage" align="left" />
+                    <Col width="8em" layoutType="itemSecondary" bindingId="ResponsibleName" align="left" />
+                    <Col width="1.3em" layoutType="Image" bindingId="OwnerImage" align="left" />
+                    <Col layoutType="itemSecondary" bindingId="OwnerName" align="left" />
+                  </Row>
+                </Col>
+              </Default>
+            </ItemListLayout>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::ContextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                  <Binding type="Visible" target="Visible" binding=".actionVisible" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected" resetMultiAreas="true">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="tabName" value="View::currentTabName" />
+              </Params>
+            </ItemSelectedEvent>
+            <ContextOpeningEvent event="contextMenuOpening">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="issuePhase" value=".issuePhase" />
+                <Param name="responsiblePKey" value=".responsiblePKey" />
+                <Param name="initiatorPKey" value=".initiatorPKey" />
+                <Param name="isPrivate" value=".isPrivate" />
+                <Param name="wfeWorkflowPKey" value=".wfeWorkflowPKey" />
+                <Param name="actualStatePKey" value=".actualStatePKey" />
+                <Param name="isActive" value=".isActive" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="contextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="issuePhase" value=".issuePhase" />
+              </Params>
+            </ContextSelectedEvent>
+          </Events>
+          <SearchAttributes>
+            <SearchAttribute name="Text" />
+            <SearchAttribute name="ResponsibleName" />
+            <SearchAttribute name="issuePhase" />
+          </SearchAttributes>
+        </GroupedList>
+      </Area>
+    </Section>
+    <Section sectionName="detailSection" sectionPattern="TabbedViewAreaSection" currentTab="View::currentTabName">
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="Main">
+              <Bindings>
+                <Resource target="image" type="Image" id="MainGrey24" defaultImage="MainGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="MainId" defaultLabel="Main" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="tabSelected" storeTabNameIn="currentTabName" />
+          </Events>
+        </TabSelector>
+      </Area>
+      <Area areaPattern="MultiArea" areaName="Main">
+        <Area areaName="Main" areaPattern="GroupedElementsArea">
+          <MenuItems>
+            <MenuItem directlyVisible="true" itemId="ReleaseToDo">
+              <Bindings>
+                <Binding type="Visible" target="Visible" call="ProcessContext::TodoDetail.checkButtonVisibility">
+                  <Parameters>
+                    <Input name="mode" type="Literal" value="release" />
+                  </Parameters>
+                </Binding>
+                <Resource target="Text" type="Label" id="ReleaseToDo" defaultLabel="Release" />
+                <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="releaseToDo" />
+              </Events>
+            </MenuItem>
+            <MenuItem directlyVisible="true" itemId="CompleteToDo">
+              <Bindings>
+                <Binding type="Visible" target="Visible" call="ProcessContext::TodoDetail.checkButtonVisibility">
+                  <Parameters>
+                    <Input name="stateType" type="Literal" value="complete" />
+                  </Parameters>
+                </Binding>
+                <Resource target="Text" type="Label" id="CompleteToDoId" defaultLabel="Complete" />
+                <Resource target="Icon" type="Image" id="Complete_PB" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="completeToDo" />
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <GroupElement name="IdentificationGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="IdentificationTitle" defaultLabel="Identification" />
+            </Bindings>
+            <InputArea name="Description">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Description" defaultLabel="Description" />
+                <Binding target="Value" binding="ProcessContext::TodoDetail.text" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <SelectionBox name="Classification">
+              <Bindings>
+                <Resource target="Label" type="Label" id="ClassificationId" defaultLabel="Classification" />
+                <Binding target="DataSource" toggleId="TaskType" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::TodoDetail.classification" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <Merger name="CreationDueDate" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Creation / Due Date" id="CreationDueDateId" />
+              </Bindings>
+              <DatePickerField name="CreationDate" editable="false">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="CreationDateId" defaultLabel="Creation Date" />
+                  <Binding target="Value" binding="ProcessContext::TodoDetail.initiationDate" bindingMode="ONE_WAY" />
+                </Bindings>
+              </DatePickerField>
+              <DatePickerField name="DueDate">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="DueDateId" defaultLabel="Due Date" />
+                  <Binding target="Value" binding="ProcessContext::TodoDetail.dueDate" bindingMode="TWO_WAY" />
+                </Bindings>
+              </DatePickerField>
+            </Merger>
+            <SelectionBox name="Priority">
+              <Bindings>
+                <Resource target="Label" type="Label" id="PriorityId" defaultLabel="Priority" />
+                <Binding target="DataSource" toggleId="ABC" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::TodoDetail.priority" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <InputArea name="Type" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="IssueType" defaultLabel="Type" />
+                <Binding target="Value" binding="ProcessContext::TodoDetail.boSvcRequestMeta.issueTypeText" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </GroupElement>
+          <GroupElement name="StatusGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="StatusTitle" defaultLabel="Current Status" />
+            </Bindings>
+            <InputArea name="Status" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Status" defaultLabel="Status" />
+                <Binding target="Value" binding="ProcessContext::TodoDetail.issuePhase.text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="Initiator" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Initiator" defaultLabel="Initiator" />
+                <Binding target="Value" binding="ProcessContext::TodoDetail.luInitiator.name" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="Owner" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Owner" defaultLabel="Owner" />
+                <Binding target="Value" binding="ProcessContext::TodoDetail.luOwner.name" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="Responsible" editable="false">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Responsible" defaultLabel="Responsible" />
+                <Binding target="Value" binding="ProcessContext::TodoDetail.luResponsible.name" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </GroupElement>
+          <GroupElement name="ToDoMessageText">
+            <Bindings>
+              <Resource target="title" type="Label" id="ToDoTextId" defaultLabel="Todo" />
+            </Bindings>
+            <InputAreaMultiLine name="Message" editable="true" noOfRows="8">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::TodoDetail.boTodoNote.text" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputAreaMultiLine>
+          </GroupElement>
+        </Area>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

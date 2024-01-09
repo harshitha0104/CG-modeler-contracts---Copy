@@ -1,0 +1,113 @@
+<Process name="Todo::CopyFlyoutProcess" defaultAction="ShowCopyWizard_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="ValidationBo" type="BoWizardCreateNewTodo" />
+        <Declaration name="OwnerPKey" type="DomPKey" />
+        <Declaration name="Name" type="String" />
+        <Declaration name="CopiedTodoDetail" type="BoTodo" />
+      </Declarations>
+      <Parameters>
+        <Input name="TodoDetail" type="BoTodo" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateWizardBo" actionType="CREATE" type="BoWizardCreateNewTodo">
+        <Parameters>
+          <Input name="svcRequestMetaPKey" value="ProcessContext::TodoDetail.SvcRequestMetaPKey" />
+          <Input name="copy" value="true" type="Literal" />
+          <Input name="originalObject" value="ProcessContext::TodoDetail" />
+          <Input name="userPKey" value="ApplicationContext::User.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::ValidationBo" />
+      </Action>
+      <Action name="setOwnerPKey" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="ProcessContext::ValidationBo.luUser.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::OwnerPKey" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowCopyWizard_Decision" actionType="DECISION" parameter="ProcessContext::TodoDetail.boSvcRequestMeta.isPrivate">
+        <Case value="1" action="CopyToDo" />
+        <Case value="0" action="ShowView" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <!-- Copy Todo without Wizard -->
+      <Action name="CopyToDo" actionType="LOGIC" call="ProcessContext::TodoDetail.copyAsync">
+        <Parameters>
+          <Input name="originalObject" value="ProcessContext::TodoDetail" />
+          <Input name="ownerPKey" value="ProcessContext::OwnerPKey" />
+        </Parameters>
+        <Return name="ProcessContext::CopiedTodoDetail" />
+        <TransitionTo action="EndCopyTodo" />
+      </Action>
+      <!-- Show Copy Wizard -->
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Todo::CopyFlyoutUI</UIDescription>
+        <Events>
+          <Event name="FinishWizard" action="setDirty" />
+          <Event name="userLookup" action="OpenTeamLookup" />
+        </Events>
+      </Action>
+      <Action actionType="PROCESS" name="OpenTeamLookup" process="User::TeamLookupProcess">
+        <Parameters>
+          <Input name="Mode" value="AccountableMandatory" type="Literal" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::OwnerPKey" value="userPKey" />
+          <Return name="ProcessContext::Name" value="name" />
+        </ReturnValues>
+        <TransitionTo action="SetSelectedName" />
+      </Action>
+      <Action actionType="LOGIC" name="SetSelectedName" call="ProcessContext::ValidationBo.setText">
+        <Parameters>
+          <Input name="text" value="ProcessContext::Name" />
+        </Parameters>
+        <TransitionTo action="LoadUserLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadUserLookup" type="LuUser">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::OwnerPKey" />
+        </Parameters>
+        <Return name="ProcessContext::ValidationBo.luUser" />
+        <TransitionTo action="setNew" />
+      </Action>
+      <!-- Validation actions -->
+      <Action actionType="VALIDATION" name="WizardValidations">
+        <Validations>
+          <Validation name="ProcessContext::ValidationBo.validateNotEmpty" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="CopyToDo" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <!-- Set validation business object dirty on clicking done button-->
+      <Action actionType="LOGIC" name="setDirty" call="ProcessContext::ValidationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="5" />
+        </Parameters>
+        <TransitionTo action="WizardValidations" />
+      </Action>
+      <!-- Set validation business object to new if not the done button has been clicked-->
+      <Action actionType="LOGIC" name="setNew" call="ProcessContext::ValidationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="2" />
+        </Parameters>
+      </Action>
+      <Action actionType="END" name="EndCopyTodo">
+        <ReturnValues>
+          <Return name="copiedTodo" value="ProcessContext::CopiedTodoDetail" />
+          <Return name="buttonPressed" type="Literal" value="copy" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndCancel" />
+    </Actions>
+  </Body>
+</Process>

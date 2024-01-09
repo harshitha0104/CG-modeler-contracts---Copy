@@ -1,0 +1,34 @@
+<BusinessObject name="BoWizardCreateNewTodo" schemaVersion="1.1" generateLoadMethod="false" generateCreateMethod="true">
+  <DataSource name="DsBoWizardCreateNewTodo"/>
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey"/>
+    <SimpleProperty name="userPKey" type="DomPKey"/>
+    <SimpleProperty name="svcRequestMetaPKey" type="DomPKey"/>
+    <SimpleProperty name="text" type="DomText"/>
+    <SimpleProperty name="dueDate" type="DomDate"/>
+  </SimpleProperties>
+  <NestedObjects/>
+  <ObjectLookups>
+    <ObjectLookup name="luUser" objectClass="LuUser" dataSourceProperty="userPKey" lookupProperty="pKey" loadMode="LoadImmediate"/>
+    <ObjectLookup name="luSvcRequestMeta" objectClass="LuSvcRequestMeta" dataSourceProperty="svcRequestMetaPKey" lookupProperty="pKey" loadMode="LoadImmediate"/>
+  </ObjectLookups>
+  <ListObjects/>
+  <Methods>
+    <Method name="beforeSaveAsync"/>
+    <Method name="afterSaveAsync"/>
+    <Method name="beforeLoadAsync"/>
+    <Method name="afterLoadAsync"/>
+    <Method name="beforeInitialize"/>
+    <Method name="afterInitialize"/>
+    <Method name="beforeDoValidateAsync"/>
+    <Method name="afterDoValidateAsync"/>
+    <Method name="beforeCreateAsync"/>
+    <Method name="afterCreateAsync"/>
+    <Method name="setEARights"/>
+    <Method name="initializeUserAccountableForProcess"/>
+  </Methods>
+  <Validations>
+    <Validation name="validateNotEmpty"/>
+    <Validation name="validateDueDate"/>
+  </Validations>
+</BusinessObject>

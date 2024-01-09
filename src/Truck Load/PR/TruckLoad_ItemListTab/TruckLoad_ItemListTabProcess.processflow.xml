@@ -1,0 +1,302 @@
+<Process name="TruckLoad::ItemListTabProcess" defaultAction="ShowTruckLoadList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="TruckLoadList" type="LoTruckLoadItems" />
+        <Declaration name="AddProduct_PrdMainPKey" type="DomPKey" />
+        <Declaration name="AddProduct_SdoItemMetaPKey" type="String" />
+        <Declaration name="AddProduct_ButtonPressed" type="String" />
+        <Declaration name="ScanProduct_Success" type="String" />
+        <Declaration name="AddProductResult" type="Object" />
+        <Declaration name="SetItemType_OrderItemMetaPKey" type="DomPKey" />
+        <Declaration name="SetItemType_ScanIncrementQuantity" type="DomInteger" />
+        <Declaration name="SetItemType_ButtonPressed" type="String" />
+        <Declaration name="AddProduct_UoM" type="DomPrdLogisticUnit" />
+        <Declaration name="boItemSettings" type="BoItemSettings" />
+        <Declaration name="tempBoItemSettings" type="BoItemSettings" />
+        <Declaration name="ScanProcessCompleted" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoTruckLoad" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="SetScanProcess_IncrementQuantity" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="ProcessContext::MainBO.addProduct_ItemMeta.scanIncrementQuantity" />
+        </Parameters>
+        <Return name="ProcessContext::MainBO.addProduct_ScanIncrementQuantity" />
+      </Action>
+      <Action name="LoadSettings" actionType="CREATE" type="BoItemSettings">
+        <Parameters>
+          <Input name="currentItemMeta" value="ProcessContext::MainBO.addProduct_ItemMeta.pKey" />
+          <Input name="currentScanIncrementQuantity" value="ProcessContext::MainBO.addProduct_ScanIncrementQuantity" />
+          <Input name="barcodeScanBehavior" value="ProcessContext::MainBO.boOrderMeta.barcodeScanBehavior" />
+          <Input name="scanBehavior" value="ProcessContext::MainBO.addProduct_ItemMeta.uoMScanBehavior" />
+          <Input name="defaultUnit" value="ProcessContext::MainBO.addProduct_ItemMeta.uoMScanDefaultUnit" />
+        </Parameters>
+        <Return name="ProcessContext::boItemSettings" />
+      </Action>
+      <Action actionType="LOGIC" name="SetScanProcess_Initial" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::ScanProcessCompleted" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowTruckLoadList" actionType="VIEW">
+        <UIDescription>TruckLoad::ItemListTabUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="SelectItemByPKey" />
+          <Event name="addProductViaLookup" action="AddProductViaLookup" />
+          <Event name="addProductViaScanner" action="AddProductViaScanner" />
+          <Event name="setItemType" action="SetItemTypeProcess" />
+          <Event name="calculate" action="Calculate" />
+        </Events>
+      </Action>
+      <Action name="LoadTruckDetails" actionType="MASTER_DETAIL_HANDLER">
+        <MasterList name="ProcessContext::TruckLoadList">
+          <ItemUnselected type="RELOAD" />
+        </MasterList>
+        <DetailObject name="ProcessContext::MainBO.loItems" objectClass="BoTruckLoad">
+          <Save type="DIRTY" confirmation="FALSE" validate="TRUE" />
+        </DetailObject>
+      </Action>
+      <Action name="SelectItemByPKey" actionType="LOGIC" call="ProcessContext::MainBO.setCurrentItem">
+        <TransitionTo action="SetItemEARights" />
+        <Parameters>
+          <Input name="itemPKey" value="Event.pKey" />
+          <Input name="itemPKeys" value="Event.pKeys" />
+          <Input name="startIndex" value="Event.startIndex" />
+        </Parameters>
+      </Action>
+      <Action name="SetItemEARights" actionType="LOGIC" call="ProcessContext::MainBO.loItems.setEARights">
+        <Parameters>
+          <Input name="documentType" value="ProcessContext::MainBO.documentType" />
+          <Input name="computePrice" value="ProcessContext::MainBO.BoOrderMeta.computePrice" />
+        </Parameters>
+      </Action>
+      <Action name="AddProductViaLookup" actionType="PROCESS" process="TruckLoad::AddProductWizardProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::MainBO" />
+          <Input name="AddProduct_ItemTemplate" value="ProcessContext::MainBO.addProduct_ItemMeta" />
+        </Parameters>
+        <TransitionTo action="AddProductViaLookupWizard_Result_Decision" />
+        <ReturnValues>
+          <Return name="ProcessContext::AddProduct_PrdMainPKey" value="ProductPKey" />
+          <Return name="ProcessContext::AddProduct_UoM" value="UoM" />
+          <Return name="ProcessContext::AddProduct_SdoItemMetaPKey" value="SdoItemMetaPKey" />
+          <Return name="ProcessContext::AddProduct_ButtonPressed" value="buttonPressed" />
+        </ReturnValues>
+      </Action>
+      <Action name="AddProductViaLookupWizard_Result_Decision" actionType="DECISION" parameter="ProcessContext::AddProduct_ButtonPressed">
+        <Case value="addProduct" action="AddProductViaLookupWizard_LoadItemTemplate_Decision" />
+        <CaseElse action="ShowTruckLoadList" />
+      </Action>
+      <Action name="AddProductViaLookupWizard_LoadItemTemplate_Decision" actionType="DECISION" parameter="ProcessContext::AddProduct_SdoItemMetaPKey">
+        <Case value=" " action="SetItemFilterToAll" />
+        <CaseElse action="SetSelectedItemTemplateForAdd" />
+        <CaseEmpty action="SetItemFilterToAll" />
+      </Action>
+      <Action name="SetSelectedItemTemplateForAdd" actionType="LOGIC" call="ProcessContext::MainBO.boOrderMeta.loOrderItemMetas.getItemTemplateByPKey">
+        <Return name="ProcessContext::MainBO.addProduct_ItemMeta" />
+        <TransitionTo action="SetItemFilterToAll" />
+        <Parameters>
+          <Input name="PKey" value="ProcessContext::AddProduct_SdoItemMetaPKey" />
+        </Parameters>
+      </Action>
+      <Action name="SetItemFilterToAll" actionType="LOGIC" call="ProcessContext::MainBO.resetCurrentItemFilter">
+        <TransitionTo action="AddSelectedProductsToItemList" />
+      </Action>
+      <Action name="AddSelectedProductsToItemList" actionType="LOGIC" call="ProcessContext::MainBO.loItems.addItem">
+        <Return name="ProcessContext::AddProductResult" />
+        <TransitionTo action="SelectItemAfterAdd" />
+        <Parameters>
+          <Input name="ProductPKey" value="ProcessContext::AddProduct_PrdMainPKey" />
+          <Input name="SdoMainPKey" value="ProcessContext::MainBO.pKey" />
+          <Input name="itemTemplate" value="ProcessContext::MainBO.addProduct_ItemMeta" />
+          <Input name="barcodeScanBehavior" value="ProcessContext::MainBO.boOrderMeta.barcodeScanBehavior" />
+          <Input name="scanIncrementQuantity" value="ProcessContext::MainBO.addProduct_ScanIncrementQuantity" />
+          <Input name="mode" value="ProcessContext::AddProduct_ButtonPressed" />
+          <Input name="uoM" value="ProcessContext::AddProduct_UoM" />
+          <Input name="documentTemplate" value="ProcessContext::MainBO.boOrderMeta" />
+          <Input name="documentType" value="ProcessContext::MainBO.documentType" />
+          <Input name="phase" value="ProcessContext::MainBO.phase" />
+        </Parameters>
+      </Action>
+      <Action name="SelectItemAfterAdd" actionType="LOGIC" call="ProcessContext::MainBO.selectItemAfterAdd">
+        <Parameters>
+          <Input name="addProductResult" value="ProcessContext::AddProductResult" />
+          <Input name="barcodeScanBehavior" value="ProcessContext::MainBO.boOrderMeta.barcodeScanBehavior" />
+          <Input name="mode" value="ProcessContext::AddProduct_ButtonPressed" />
+        </Parameters>
+      </Action>
+      <Action name="End" actionType="END"></Action>
+      <Action name="AddProductViaScanner_External_StatusDecision" actionType="DECISION" parameter="ProcessContext::ScanProcessCompleted">
+        <Case value="1" action="SetScanProcess_InProgress" />
+        <CaseElse action="ResetScanProcess_Initial" />
+      </Action>
+      <Action actionType="LOGIC" name="ResetScanProcess_Initial" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::ScanProcessCompleted" />
+      </Action>
+      <Action actionType="LOGIC" name="SetScanProcess_InProgress" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="0" />
+        </Parameters>
+        <Return name="ProcessContext::ScanProcessCompleted" />
+        <TransitionTo action="AddProductViaScanner_External" />
+      </Action>
+      <Action name="AddProductViaScanner_External" actionType="PROCESS" process="Product::ScanProductProcess">
+        <Parameters>
+          <Input name="fieldStateFilter" value="ProcessContext::MainBO.boOrderMeta.considerFieldStatus" />
+          <Input name="allowForeignProducts" value="ProcessContext::MainBO.boOrderMeta.allowForeignProducts" />
+          <Input name="uoMScanBehavior" value="ProcessContext::boItemSettings.uoMScanBehavior" />
+          <Input name="externalEAN" value="event.code" />
+          <Input name="uoMScanDefaultUnit" value="ProcessContext::boItemSettings.uoMScanDefaultUnit" />
+          <Input name="processType" type="Literal" value="TruckLoad" />
+        </Parameters>
+        <TransitionTo action="SetScanProcess_Completed" />
+        <ReturnValues>
+          <Return name="ProcessContext::AddProduct_PrdMainPKey" value="ProductPKey" />
+          <Return name="ProcessContext::AddProduct_UoM" value="ProductUoM" />
+          <Return name="ProcessContext::ScanProduct_Success" value="Success" />
+          <Return name="ProcessContext::AddProduct_ButtonPressed" value="addScannedProduct" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="LOGIC" name="SetScanProcess_Completed" call="Utils.identity">
+        <Parameters>
+          <Input name="value" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::ScanProcessCompleted" />
+        <TransitionTo action="ScanProduct_Result_Decision" />
+      </Action>
+      <Action name="AddProductViaScanner" actionType="PROCESS" process="Product::ScanProductProcess">
+        <Parameters>
+          <Input name="fieldStateFilter" value="ProcessContext::MainBO.boOrderMeta.considerFieldStatus" />
+          <Input name="allowForeignProducts" value="ProcessContext::MainBO.boOrderMeta.allowForeignProducts" />
+          <Input name="uoMScanBehavior" value="ProcessContext::boItemSettings.uoMScanBehavior" />
+          <Input name="uoMScanDefaultUnit" value="ProcessContext::boItemSettings.uoMScanDefaultUnit" />
+          <Input name="processType" type="Literal" value="TruckLoad" />
+        </Parameters>
+        <TransitionTo action="ScanProduct_Result_Decision" />
+        <ReturnValues>
+          <Return name="ProcessContext::AddProduct_PrdMainPKey" value="ProductPKey" />
+          <Return name="ProcessContext::AddProduct_UoM" value="ProductUoM" />
+          <Return name="ProcessContext::ScanProduct_Success" value="Success" />
+          <Return name="ProcessContext::AddProduct_ButtonPressed" value="addScannedProduct" />
+        </ReturnValues>
+      </Action>
+      <Action name="ScanProduct_Result_Decision" actionType="DECISION" parameter="ProcessContext::ScanProduct_Success">
+        <Case value="1" action="GetUoMListForScannedProduct" />
+        <CaseElse action="ShowTruckLoadList" />
+      </Action>
+      <Action name="GetUoMListForScannedProduct" actionType="LOGIC" call="ProcessContext::MainBO.getAvailableUoMForProduct">
+        <Return name="ProcessContext::ProductAddUoMList" />
+        <TransitionTo action="DetermineLogisticUnit" />
+        <Parameters>
+          <Input name="itemPKey" value="ProcessContext::AddProduct_PrdMainPKey" />
+          <Input name="itemTemplate" value="ProcessContext::MainBO.addProduct_ItemMeta" />
+        </Parameters>
+      </Action>
+      <Action name="DetermineLogisticUnit" actionType="DECISION" parameter="ProcessContext::boItemSettings.uoMScanBehavior">
+        <Case value="Standard" action="GetDefaultUoMForScannedProduct" />
+        <Case value="Barcode" action="GetUoMFromScannedProduct" />
+        <Case value="Current" action="GetUoMFromTemplate" />
+        <CaseElse action="GetDefaultUoMForScannedProduct" />
+      </Action>
+      <Action name="GetDefaultUoMForScannedProduct" actionType="LOGIC" call="ProcessContext::MainBO.getDefaultUoMForProduct">
+        <Return name="ProcessContext::AddProduct_UoM" />
+        <TransitionTo action="ScanProduct_ValidateProduct" />
+        <Parameters>
+          <Input name="availableUnits" value="ProcessContext::ProductAddUoMList" />
+          <Input name="itemTemplate" value="ProcessContext::MainBO.addProduct_ItemMeta" />
+        </Parameters>
+      </Action>
+      <Action name="GetUoMFromTemplate" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::AddProduct_UoM" />
+        <TransitionTo action="ScanProduct_ValidateProduct" />
+        <Parameters>
+          <Input name="value" value="ProcessContext::boItemSettings.uoMScanDefaultUnit" />
+        </Parameters>
+      </Action>
+      <Action name="GetUoMFromScannedProduct" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::AddProduct_UoM" />
+        <TransitionTo action="ScanProduct_ValidateProduct" />
+        <Parameters>
+          <Input name="value" value="ProcessContext::AddProduct_UoM" />
+        </Parameters>
+      </Action>
+      <Action name="ScanProduct_ValidateProduct" actionType="LOGIC" call="ProcessContext::MainBO.validateScannedProduct">
+        <Return name="ProcessContext::ScanProduct_IsValid" />
+        <TransitionTo action="ScanProduct_ValidateProduct_Decision" />
+        <Parameters>
+          <Input name="PrdMainPKey" value="ProcessContext::AddProduct_PrdMainPKey" />
+          <Input name="CurrentUoM" value="ProcessContext::AddProduct_UoM" />
+          <Input name="AvailableUoM" value="ProcessContext::ProductAddUoMList" />
+        </Parameters>
+      </Action>
+      <Action name="ScanProduct_ValidateProduct_Decision" actionType="DECISION" parameter="ProcessContext::ScanProduct_IsValid">
+        <Case value="valid" action="ScanProduct_SetButtonPressed_ForAddProduct" />
+        <CaseElse action="ShowTruckLoadList" />
+      </Action>
+      <Action name="ScanProduct_SetButtonPressed_ForAddProduct" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::AddProduct_ButtonPressed" />
+        <TransitionTo action="AddSelectedProductsToItemList" />
+        <Parameters>
+          <Input name="value" value="addScannedProduct" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="SetItemTypeProcess" actionType="PROCESS" process="Order::SetItemTypeProcess">
+        <Parameters>
+          <Input name="OrderItemMetaList" value="ProcessContext::MainBO.boOrderMeta.loOrderItemMetas" />
+          <Input name="CurrentItemMeta" value="ProcessContext::MainBO.addProduct_ItemMeta" />
+          <Input name="scanSettings" value="ProcessContext::boItemSettings" />
+        </Parameters>
+        <TransitionTo action="SetItemType_Type_Increment_Result_Decision" />
+        <ReturnValues>
+          <Return name="ProcessContext::SetItemType_OrderItemMetaPKey" value="orderItemMetaPKey" />
+          <Return name="ProcessContext::tempBoItemSettings" value="scanSettings" />
+          <Return name="ProcessContext::SetItemType_ButtonPressed" value="buttonPressed" />
+        </ReturnValues>
+      </Action>
+      <Action name="SetItemType_Type_Increment_Result_Decision" actionType="DECISION" parameter="ProcessContext::SetItemType_ButtonPressed">
+        <Case value="done" action="copyItemSetting" />
+        <CaseElse action="ShowTruckLoadList" />
+      </Action>
+      <Action name="copyItemSetting" actionType="CREATE" type="BoItemSettings">
+        <Parameters>
+          <Input name="currentItemMeta" value="ProcessContext::SetItemType_OrderItemMetaPKey" />
+          <Input name="currentScanIncrementQuantity" value="ProcessContext::tempBoItemSettings.currentScanIncrementQuantity" />
+          <Input name="barcodeScanBehavior" value="ProcessContext::tempBoItemSettings.barcodeScanBehavior" />
+          <Input name="scanBehavior" value="ProcessContext::tempBoItemSettings.uoMScanBehavior" />
+          <Input name="defaultUnit" value="ProcessContext::tempBoItemSettings.uoMScanDefaultUnit" />
+        </Parameters>
+        <Return name="ProcessContext::boItemSettings" />
+        <TransitionTo action="SetCurrentScanIncrementQuantity" />
+      </Action>
+      <Action name="SetCurrentScanIncrementQuantity" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::MainBO.addProduct_ScanIncrementQuantity" />
+        <TransitionTo action="ReloadItemTemplateForAdd" />
+        <Parameters>
+          <Input name="value" value="ProcessContext::boItemSettings.currentScanIncrementQuantity" />
+        </Parameters>
+      </Action>
+      <Action name="ReloadItemTemplateForAdd" actionType="LOGIC" call="ProcessContext::MainBO.boOrderMeta.loOrderItemMetas.getItemTemplateByPKey">
+        <Return name="ProcessContext::MainBO.addProduct_ItemMeta" />
+        <Parameters>
+          <Input name="PKey" value="ProcessContext::SetItemType_OrderItemMetaPKey" />
+        </Parameters>
+      </Action>
+      <Action name="Calculate" actionType="LOGIC" call="ProcessContext::MainBO.cpCalculate"></Action>
+    </Actions>
+  </Body>
+  <ExternalEvents>
+    <Event name="barcodeEvent" action="AddProductViaScanner_External_StatusDecision" />
+  </ExternalEvents>
+</Process>

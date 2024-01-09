@@ -1,0 +1,665 @@
+<Datasource name="DsLoAgendaOverview" backendSystem="sf" objectClass="LoAgendaOverview" businessObjectClass="LoAgendaOverview" readOnly="true" external="true" editableEntity="Visit" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Visit" column="Id" />
+    <Attribute name="dateFrom" table="Visit" column="PlannedVisitStartTime" />
+    <Attribute name="timeFrom" table="Visit" column="PlannedVisitStartTime" />
+    <Attribute name="dateThru" table="Visit" column="PlannedVisitEndTime" />
+    <Attribute name="timeThru" table="Visit" column="PlannedVisitEndTime" />
+    <Attribute name="allDay" table="Visit" column="IsAllDayEvent__c" />
+    <Attribute name="name" table="Account" column="Name" />
+    <Attribute name="bpaMainPKey" table="Account" column="Id" />
+    <Attribute name="responsiblePKey" table="Visit" column="Responsible__c" />
+    <Attribute name="clbMetaType" table="Visit_Template__c" column="Meta_Type__c" />
+    <Attribute name="subject" table="Visit" column="Subject__c" />
+    <Attribute name="clbStatus" table="Visit" column="Status" />
+    <Attribute name="clbTypeStatus" table="Visit" column="Status" />
+    <Attribute name="clbTypeStatusColored" table="Event" column="Type" />
+    <Attribute name="latitude" table="Account" column="ShippingLatitude" />
+    <Attribute name="longitude" table="Account" column="ShippingLongitude" />
+    <Attribute name="address" table="Account" column="ShippingCity" />
+    <Attribute name="deleteAllowed" table="Visit_Template__c" column="Delete_Allowed__c" />
+    <Attribute name="color" table="Visit_Template__c" column="Mobility_Color__c" />
+    <Attribute name="companyRequired" table="Visit_Template__c" column="Company_Required__c" />
+    <Attribute name="clbMetaPKey" table="Visit_Template__c" column="Id" />
+    <Attribute name="creationMode" table="Visit" column="Creation_Mode__c" />
+    <Attribute name="initiatorPKey" table="Visit" column="CreatedById" />
+    <DerivedAttribute name="responsibleName" value="User.Name" />
+    <DerivedAttribute name="customerOnDevice" value="'1'" />
+    <DerivedAttribute name="tourContextId" value="''" />
+    <DerivedAttribute name="toolTipText" value="''" />
+    <DerivedAttribute name="mapPinId" value="''" />
+    <DerivedAttribute name="mapPinImage" value="''" />
+    <DerivedAttribute name="hasOrder" value="'0'" />
+    <DerivedAttribute name="clbStatusCount" value="0" />
+    <DerivedAttribute name="mainAddress" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="Visit" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+      
+      var clbMainPKey;
+      var clbStatus;
+      var dateFromStart;
+      var dateFromEnd;
+      var responsibleUserPKey;
+      var tmgMainPKey = "";
+      var cardMode;
+      var currentLongitude = 0; 
+      var currentLatitude = 0;
+      var followUpCardMode;
+      var callCustomer;
+
+      if(Utils.isDefined(jsonQuery.pKey)){
+		clbMainPKey = Utils.convertForDBParam(jsonQuery.pKey, "DomPKey");
+	  }
+      if(Utils.isDefined(jsonQuery.responsibleUserPKey)){
+		responsibleUserPKey = Utils.convertForDBParam(jsonQuery.responsibleUserPKey, "DomPKey");
+	  }      
+	  if(Utils.isDefined(jsonQuery.cardMode)){
+		cardMode = jsonQuery.cardMode;
+	  }
+      if(Utils.isDefined(jsonQuery.followUpCardMode)){
+        followUpCardMode = jsonQuery.followUpCardMode;
+      }
+      if(Utils.isDefined(jsonQuery.callCustomer)){
+        callCustomer = jsonQuery.callCustomer;
+      }
+      if(Utils.isDefined(jsonQuery.dateFromStart)){
+		if (jsonQuery.dateFromStart === "setDateForStartup") {
+          dateFromStart = Utils.convertForDBParam(Utils.createAnsiDateTimeToday() ,'DomDate');
+		} else if(Utils.isDefined(followUpCardMode)) {
+          dateFromStart = Utils.convertForDBParam(jsonQuery.dateFromStart, "DomDateTime");
+        } else {
+          dateFromStart = Utils.convertForDBParam(Utils.convertFullDate2Ansi(Utils.convertAnsiDate2Date(Utils.convertDate2Ansi(jsonQuery.dateFromStart))),'DomDate');
+        }
+      }
+	  if(Utils.isDefined(jsonQuery.dateFromEnd)){
+		dateFromEnd = Utils.convertForDBParam(Utils.convertFullDate2Ansi(Utils.convertAnsiDate2Date(Utils.convertDate2Ansi(jsonQuery.dateFromEnd))),'DomDate');
+	  }
+      if(Utils.isDefined(jsonQuery.ClbStatus)){
+		clbStatus = jsonQuery.ClbStatus;
+	  }
+	  if(Utils.isDefined(clbStatus)){
+	    //check if clbStatus hold several values and prepare for db
+	    var clbStatusArr = clbStatus.split(",");
+	    var clbStatusArrConvertedForDB = [];
+	    clbStatusArr.forEach(function(x){clbStatusArrConvertedForDB.push(Utils.convertForDB(x, "DomVisitStatus"))})
+	    clbStatus = clbStatusArrConvertedForDB.join(",");
+		clbStatus = Utils.getListParams(clbStatus);
+	  }
+
+	  //get Tour from Context
+	  if (Utils.isDefined(ApplicationContext.get('currentTourPKey'))){
+	     tmgMainPKey = ApplicationContext.get('currentTourPKey');
+      }
+      var usrMainPKey = responsibleUserPKey;
+      if (Utils.isEmptyString(usrMainPKey)) {
+          usrMainPKey = ApplicationContext.get('user').getPKey();
+      }
+
+      if (ApplicationContext.get('user').hasRole('TourUser') && Utils.isEmptyString(tmgMainPKey)){
+	     tmgMainPKey = 'NoTourSelected';
+      }   
+     
+      if(Utils.isDefined(jsonQuery.currentLatitude)) {
+         currentLatitude = Utils.convertForDBParam(jsonQuery.currentLatitude, "DomDecimal");
+      }
+      if(Utils.isDefined(jsonQuery.currentLongitude)) {         
+         currentLongitude = Utils.convertForDBParam(jsonQuery.currentLongitude, "DomDecimal");
+      }
+
+      var sqlParams1 = {tmgMainPKey, usrMainPKey, clbMainPKey, callCustomer, currentLatitude, currentLongitude};
+	  var sqlParams2 = {tmgMainPKey, dateFromStart, dateFromEnd, usrMainPKey, clbMainPKey, currentLatitude, currentLongitude};
+
+      var sqlStmt1 = "";
+      var sqlStmt2 = "";
+      var sqlStmt3 = "";
+
+      //###########################
+      //###  Card - Visit Rate  ###
+      //###########################
+      if (Utils.isDefined(cardMode) && cardMode === "VisitRate") {
+        sqlStmt1 += "SELECT ClbStatus AS clbStatus, Count(PKey) AS clbStatusCount from( ";
+      }
+
+	  /*********************************
+	  ** Read customer related calls  **
+	  **********************************/
+       sqlStmt1 += "SELECT Visit.Id AS pKey ";
+       sqlStmt1 += ",Visit.PlannedVisitStartTime AS sortDateTime ";
+       /*################################################################################################################
+       ###  Conversion for dateFrom/dateThru                                                                         ####
+       ###  e.g.                                                                                                     ####
+       ###  Created call 30.03.  00:00 --> while DB save conversion in UTC  29.03. 22:00                             ####
+       ###  While reading the DateTime field from DB we have to shift to local time again because dateFrom/dateThru  ####
+       ###  are DomDate for which no automatic time shifting to local happens.                                       ####
+       ###  Additionally conversion to unixepoch  because FW needs integer value for conversion to DomDate           ####
+       ###  --> shift to local:  30.03.  00:00                                                                       ####
+       ###  --> after that FW converts to DomDate and removes the time                                               ####
+       ###  --> 30.03                                                                                                ####
+       #################################################################################################################*/
+       sqlStmt1 += ",#dateAsUnixepochLocaltime('Visit.PlannedVisitStartTime')# AS dateFrom ";
+       sqlStmt1 += ",Visit.PlannedVisitStartTime AS timeFrom ";
+       sqlStmt1 += ",#dateAsUnixepochLocaltime('Visit.PlannedVisitEndTime')# AS dateThru ";
+       sqlStmt1 += ",Visit.PlannedVisitEndTime AS timeThru ";
+       sqlStmt1 += ",Visit.IsAllDayEvent__c AS allDay "; 
+       sqlStmt1 += ",CASE ";
+       sqlStmt1 += "WHEN Account.Id IS NULL ";
+       sqlStmt1 += "THEN Visit.Subject__c ";
+       sqlStmt1 += "ELSE Account.Name ";
+       sqlStmt1 += "END AS name ";
+       sqlStmt1 += ",CASE ";
+       sqlStmt1 += "WHEN Account.Id IS NULL ";
+       sqlStmt1 += "THEN ' ' ";
+       sqlStmt1 += "ELSE Account.Id ";
+       sqlStmt1 += "END AS bpaMainPKey ";
+       sqlStmt1 += ",Visit.Responsible__c AS responsiblePKey ";
+       sqlStmt1 += ",User.Name AS responsibleName ";
+       sqlStmt1 += ",CASE ";
+       sqlStmt1 += "WHEN Account.Id IS NULL ";
+       sqlStmt1 += "AND Visit.AccountId <> ' ' ";
+       sqlStmt1 += "THEN '0' ";
+       sqlStmt1 += "ELSE '1' ";
+       sqlStmt1 += "END AS customerOnDevice ";
+       sqlStmt1 += ",Visit_Template__c.Meta_Type__c AS clbMetaType ";
+       sqlStmt1 += ",Visit_Template__c.Delete_Allowed__c AS deleteAllowed ";
+       sqlStmt1 += ",Visit_Template__c.Mobility_Color__c AS color ";
+       sqlStmt1 += ",Visit.Subject__c AS subject ";
+       sqlStmt1 += ",Visit.Status AS clbStatus ";
+       sqlStmt1 += ",'ClbTypeStatus_' || Visit_Template__c.Meta_Type__c || '_' || Visit.Status AS clbTypeStatus ";
+       sqlStmt1 += ",'ClbTypeStatus_' || Visit_Template__c.Meta_Type__c || '_' || Visit.Status || '_' || Visit_Template__c.Mobility_Color__c AS clbTypeStatusColored ";
+       sqlStmt1 += ",trim(Account.ShippingStreet) || ', ' || Account.ShippingCity AS address ";
+       sqlStmt1 += ",Account.ShippingStreet || ', ' || Account.ShippingPostalCode || ' ' || Account.ShippingCity || ', ' || Account.ShippingState as mainAddress ";
+       sqlStmt1 += ",Account.ShippingLatitude AS latitude ";
+       sqlStmt1 += ",Account.ShippingLongitude AS longitude ";
+       sqlStmt1 += ",Visit_Template__c.Company_Required__c AS companyRequired "; 
+       sqlStmt1 += ",Visit_Template__c.Id AS clbMetaPKey "; 
+	   sqlStmt1 += ",Visit.Creation_Mode__c AS creationMode "; 
+	   sqlStmt1 += ",Visit.CreatedById AS initiatorPKey ";
+
+	   if (!Utils.isEmptyString(tmgMainPKey)){
+          sqlStmt1 += ",( SELECT T.Name FROM Tour__c T WHERE T.Id = #tmgMainPKey# ) AS tourContextId ";
+       } else {
+	      sqlStmt1 += ",'' AS tourContextId ";
+       }
+
+       if (Utils.isDefined(cardMode)) {
+         if(cardMode === 'UnsuccessfulVisits')sqlStmt1 += ", CASE WHEN Order__c.Id IS NULL THEN '0' ELSE '1' END AS hasOrder ";
+       }else{
+         sqlStmt1 += ",  ' ' AS hasOrder ";
+       }
+
+       sqlStmt1 += "FROM Visit, User ";
+       sqlStmt1 += "JOIN Visit_Template__c ON Visit.Visit_Template__c = Visit_Template__c.Id ";
+       sqlStmt1 += "LEFT OUTER JOIN Account ON (Visit.AccountId = Account.Id) ";
+
+	   if (Utils.isDefined(cardMode)) {
+	     if(cardMode === 'UnsuccessfulVisits'){
+           sqlStmt1 += "LEFT OUTER JOIN Order__c ON(Visit.Id = Order__c.Visit__c AND Order__c.Phase__c = 'Released') ";
+         }
+	   }
+
+       sqlStmt1 += "WHERE Visit.Status <> 'Unscheduled' ";
+       sqlStmt1 += "AND Visit.Responsible__c = User.Id ";
+	   sqlStmt1 += "AND Visit.IsDeleted = '0' ";
+
+      if(!Utils.isDefined(followUpCardMode)) {
+        sqlStmt1 += "AND Visit.Responsible__c = #usrMainPKey# ";
+      }
+
+      if (Utils.isDefined(clbMainPKey)) {
+          sqlStmt1 += "AND Visit.Id = #clbMainPKey# ";
+      }
+
+      if(Utils.isDefined(callCustomer)) {
+        //load current call customer visits for follow up visits card
+        sqlStmt1 += "AND Visit.AccountId = #callCustomer# ";
+      }
+
+      if (Utils.isDefined(clbStatus)) {
+          sqlStmt1 += "AND Visit.Status IN( ";
+ 		  //clbStatus
+		  sqlStmt2 += ") ";
+      }
+
+	  if (Utils.isDefined(cardMode)) {
+	    //if card mode is set what means Unsuccessfil Visits or Visit rate customer has to be filled
+	    sqlStmt2 += "AND Visit.AccountId <> ' ' ";
+
+	    //for unsuccessful visit report only consider calls for which it is possible to create orders
+	    if(cardMode === 'UnsuccessfulVisits'){
+	      if (!Utils.isEmptyString(tmgMainPKey))sqlStmt2 += "AND Visit_Template__c.Mobility_User_Guidance__c = 'Delivery' ";
+	      else sqlStmt2 += "AND Visit_Template__c.Mobility_User_Guidance__c = 'Sales' ";
+	    }
+	  }
+
+      if (!Utils.isEmptyString(tmgMainPKey)) {
+    	sqlStmt2 += "AND Visit.Tour__c = #tmgMainPKey# ";
+      }
+
+      if (Utils.isDefined(dateFromStart) && Utils.isEmptyString(tmgMainPKey)) {
+        if(Utils.isDefined(followUpCardMode)){
+          //Note: Here we need no compareAsDate Macro because in followUpCardMode the date is already converted to DB format (UTC milliseconds) and DB value is stored in UTC milliseconds too
+          sqlStmt2 += "AND Visit.PlannedVisitStartTime > #dateFromStart# ";
+        } else {
+          sqlStmt2 += "AND (( #compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','>=' ,#dateFromStart#, 'Date')# ";
+          sqlStmt2 += "AND #compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','<=' ,#dateFromEnd#, 'Date')#) ";
+          sqlStmt2 += "OR (";
+          sqlStmt2 += "#compareAsDate(#dateFromStart#, 'Date','>=' ,'Visit.PlannedVisitStartTime', 'DateTime')# ";
+          sqlStmt2 += "AND #compareAsDate(#dateFromStart#, 'Date','<=' ,'Visit.PlannedVisitEndTime', 'DateTime')#)) "; 
+        }
+      } 
+
+      if(Utils.isDefined(followUpCardMode)){
+        //sort follow up visits by call start time ascending order
+        sqlStmt2 += " ORDER BY Visit.PlannedVisitStartTime ASC ";
+	  }
+
+    //below queries are not needed for follow up visits card since these are related to substitution and non-customer calls
+    if(!Utils.isDefined(followUpCardMode)){
+  
+      sqlStmt2 += "UNION ";
+  
+      /**********************************************************
+      ** Read customer related calls in case of a substitution **
+      ***********************************************************/
+      sqlStmt2 += "SELECT Visit.Id AS pKey ";
+      sqlStmt2 += ",Visit.PlannedVisitStartTime AS sortDateTime ";
+      /*################################################################################################################
+      ###  Conversion for dateFrom/dateThru                                                                         ####
+      ###  e.g.                                                                                                     ####
+      ###  Created call 30.03.  00:00 --> while DB save conversion in UTC  29.03. 22:00                             ####
+      ###  While reading the DateTime field from DB we have to shift to local time again because dateFrom/dateThru  ####
+      ###  are DomDate for which no automatic time shifting to local happens.                                       ####
+      ###  Additionally conversion to unixepoch  because FW needs integer value for conversion to DomDate           ####
+      ###  --> shift to local:  30.03.  00:00                                                                       ####
+      ###  --> after that FW converts to DomDate and removes the time                                               ####
+      ###  --> 30.03                                                                                                ####
+      #################################################################################################################*/
+      sqlStmt2 += ",#dateAsUnixepochLocaltime('Visit.PlannedVisitStartTime')# AS dateFrom ";
+      sqlStmt2 += ",Visit.PlannedVisitStartTime AS timeFrom ";
+      sqlStmt2 += ",#dateAsUnixepochLocaltime('Visit.PlannedVisitEndTime')# AS dateThru ";
+      sqlStmt2 += ",Visit.PlannedVisitEndTime AS timeThru ";
+      sqlStmt2 += ",Visit.IsAllDayEvent__c AS allDay ";
+      sqlStmt2 += ",CASE ";
+      sqlStmt2 += "WHEN Account.Id IS NULL ";
+      sqlStmt2 += "THEN Visit.Subject__c ";
+      sqlStmt2 += "ELSE Account.Name ";
+      sqlStmt2 += "END AS name ";
+      sqlStmt2 += ",CASE ";
+      sqlStmt2 += "WHEN Account.Id IS NULL ";
+      sqlStmt2 += "THEN ' ' ";
+      sqlStmt2 += "ELSE Account.Id ";
+      sqlStmt2 += "END AS bpaMainPKey ";
+      sqlStmt2 += ",Visit.Responsible__c AS responsiblePKey "; 
+      sqlStmt2 += ",'' AS responsibleName ";
+      sqlStmt2 += ",CASE ";
+      sqlStmt2 += "WHEN Account.Id IS NULL ";
+      sqlStmt2 += "AND Visit.AccountId <> ' ' ";
+      sqlStmt2 += "THEN '0' ";
+      sqlStmt2 += "ELSE '1' ";
+      sqlStmt2 += "END AS customerOnDevice ";
+      sqlStmt2 += ",Visit_Template__c.Meta_Type__c AS clbMetaType ";
+      sqlStmt2 += ",Visit_Template__c.Delete_Allowed__c AS deleteAllowed ";
+      sqlStmt2 += ",Visit_Template__c.Mobility_Color__c AS color ";
+      sqlStmt2 += ",Visit.Subject__c AS subject ";
+      sqlStmt2 += ",Visit.Status AS clbStatus ";
+      sqlStmt2 += ",'ClbTypeStatus_' || Visit_Template__c.Meta_Type__c || '_' || Visit.Status AS clbTypeStatus ";
+      sqlStmt2 += ",'ClbTypeStatus_' || Visit_Template__c.Meta_Type__c || '_' || Visit.Status || '_' || Visit_Template__c.Mobility_Color__c AS clbTypeStatusColored ";
+      sqlStmt2 += ",trim(Account.ShippingStreet) || ', ' || Account.ShippingCity AS address ";
+      sqlStmt2 += ",Account.ShippingStreet || ', ' || Account.ShippingPostalCode || ' ' || Account.ShippingCity || ', ' || Account.ShippingState as mainAddress ";
+      sqlStmt2 += ",Account.ShippingLatitude AS latitude ";
+      sqlStmt2 += ",Account.ShippingLongitude AS longitude ";
+      sqlStmt2 += ",Visit_Template__c.Company_Required__c AS companyRequired ";
+      sqlStmt2 += ",Visit_Template__c.Id AS clbMetaPKey "; 
+  	sqlStmt2 += ",Visit.Creation_Mode__c AS creationMode "; 
+  	sqlStmt2 += ",Visit.CreatedById AS initiatorPKey ";
+  
+      if (!Utils.isEmptyString(tmgMainPKey))
+      {
+          sqlStmt2 += ",( SELECT T.Name FROM Tour__c T WHERE T.Id = #tmgMainPKey# ) AS tourContextId ";
+      }
+      else
+      {
+          sqlStmt2 += ",'' AS tourContextId ";
+      }
+  
+      if (Utils.isDefined(cardMode))
+      {
+          if (cardMode === 'UnsuccessfulVisits') sqlStmt2 += ", CASE WHEN Order__c.Id IS NULL THEN '0' ELSE '1' END AS hasOrder ";
+      }
+      else
+      {
+          sqlStmt2 += ",  ' ' AS hasOrder ";
+      }
+  
+      sqlStmt2 += "FROM Visit ";
+      sqlStmt2 += "JOIN Visit_Template__c ON Visit.Visit_Template__c = Visit_Template__c.Id ";
+      sqlStmt2 += "LEFT OUTER JOIN Account ON (Visit.AccountId = Account.Id) ";
+      sqlStmt2 += "INNER JOIN Substitution__c SubBpaRel ";
+      sqlStmt2 += "ON Visit.AccountId = SubBpaRel.Account__c ";
+      sqlStmt2 += "AND SubBpaRel.Substitute__c = #usrMainPKey# ";
+      sqlStmt2 += "AND SubBpaRel.Active__c = '1' ";
+      sqlStmt2 += "INNER JOIN Substitution__c SubMain ";
+      sqlStmt2 += "ON SubMain.Id = SubBpaRel.Substitution__c ";
+      sqlStmt2 += "AND SubMain.Active__c = '1' ";
+      sqlStmt2 += "AND SubMain.Sales_Org__c = '#SALESORG#' ";
+      sqlStmt2 += "AND SubMain.Substituted__c = Visit.Responsible__c ";
+  
+      if (Utils.isDefined(cardMode))
+      {
+          if (cardMode === 'UnsuccessfulVisits') sqlStmt2 += "LEFT OUTER JOIN Order__c ON(Visit.Id = Order__c.Visit__c AND Order__c.Phase__c = 'Released') ";
+      }
+  
+      sqlStmt2 += "WHERE Visit.Status <> 'Unscheduled' ";
+      sqlStmt2 += "AND Visit.IsDeleted = '0' ";
+  
+      if (Utils.isDefined(clbMainPKey))
+      {
+          sqlStmt2 += "AND Visit.Id = #clbMainPKey# ";
+      }
+  
+      if (Utils.isDefined(clbStatus))
+      {
+          sqlStmt2 += "AND Visit.Status IN( ";
+   		//clbStatus
+          sqlStmt3 += ") ";
+      }
+  
+      if (Utils.isDefined(cardMode))
+      {
+          //if card mode is set what means Unsuccessfil Visits or Visit rate customer has to be filled
+          sqlStmt3 += "AND Visit.AccountId <> ' ' ";
+  
+          //for unsuccessful visit report only consider calls for which it is possible to create orders
+          if (cardMode === 'UnsuccessfulVisits'){
+              if (!Utils.isEmptyString(tmgMainPKey)){
+                  sqlStmt3 += "AND Visit_Template__c.Mobility_User_Guidance__c = 'Delivery' ";
+              }
+              else{
+                  sqlStmt3 += "AND Visit_Template__c.Mobility_User_Guidance__c = 'Sales' ";
+              }
+          }
+      }
+  
+      if (!Utils.isEmptyString(tmgMainPKey)){
+          sqlStmt3 += "AND Visit.Tour__c = #tmgMainPKey# ";
+      }
+  
+      if (Utils.isDefined(dateFromStart)){
+  		sqlStmt3 += "AND SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #TodayAsDate# ";
+          sqlStmt3 += "AND SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #TodayAsDate# ";
+          sqlStmt3 += "AND SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #dateFromEnd# ";
+          sqlStmt3 += "AND SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #dateFromStart# ";
+          sqlStmt3 += "AND #compareAsDate('SubMain.Valid_From__c', 'Date', '<=', 'Visit.PlannedVisitStartTime', 'DateTime')# ";
+          sqlStmt3 += "AND #compareAsDate('SubMain.Valid_Thru__c', 'Date', '>=', 'Visit.PlannedVisitStartTime', 'DateTime')# ";        
+  		sqlStmt3 += "AND SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #TodayAsDate# ";
+          sqlStmt3 += "AND SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #TodayAsDate# ";
+          sqlStmt3 += "AND SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #dateFromEnd# ";
+          sqlStmt3 += "AND SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #dateFromStart# ";
+  		sqlStmt3 += "AND #compareAsDate('SubBpaRel.Valid_From__c', 'Date','<=' ,'Visit.PlannedVisitStartTime', 'DateTime')# ";
+  		sqlStmt3 += "AND #compareAsDate('SubBpaRel.Valid_Thru__c', 'Date','>=' ,'Visit.PlannedVisitStartTime', 'DateTime')# ";
+  
+          if (Utils.isEmptyString(tmgMainPKey))
+          {
+              sqlStmt3 += "AND (( #compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','>=' ,#dateFromStart#, 'Date')# ";
+              sqlStmt3 += "AND #compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','<=' ,#dateFromEnd#, 'Date')#) ";
+              sqlStmt3 += "OR (";
+              sqlStmt3 += "#compareAsDate(#dateFromStart#, 'Date','>=' ,'Visit.PlannedVisitStartTime', 'DateTime')# ";
+              sqlStmt3 += "AND #compareAsDate(#dateFromStart#, 'Date','<=' ,'Visit.PlannedVisitEndTime', 'DateTime')#)) ";
+          }
+      }
+  
+  	  sqlStmt3 += "UNION ";
+  	  
+  	  /*************************************
+  	  ** Read non-customer related calls  **
+  	  **************************************/
+  	  sqlStmt3 += "SELECT Event.Id AS pKey ";
+  	  sqlStmt3 += ",Event.StartDateTime AS sortDateTime ";
+        sqlStmt3 += ",#dateAsUnixepochLocaltime('Event.StartDateTime')# AS dateFrom ";
+        sqlStmt3 += ",Event.StartDateTime AS timeFrom ";
+        sqlStmt3 += ",#dateAsUnixepochLocaltime('Event.EndDateTime')# AS dateThru ";
+        sqlStmt3 += ",Event.EndDateTime AS timeThru ";
+  	  sqlStmt3 += ",Event.IsAllDayEvent AS allDay ";
+  	  sqlStmt3 += ",Event.Subject AS name ";
+  	  sqlStmt3 += ",' ' AS bpaMainPKey ";
+  	  sqlStmt3 += ",Event.OwnerId AS responsiblePKey ";
+      sqlStmt3 += ",'' AS responsibleName ";
+  	  sqlStmt3 += ",'1' AS customerOnDevice ";                         
+        sqlStmt3 += ",Event.Type AS clbMetaType ";
+        sqlStmt3 += ",Visit_Template__c.Delete_Allowed__c AS deleteAllowed ";
+        sqlStmt3 += ",Visit_Template__c.Mobility_Color__c AS color ";
+        sqlStmt3 += ",Event.Subject AS subject ";
+        sqlStmt3 += ",'Planned' AS clbStatus ";                           
+        sqlStmt3 += ",'ClbTypeStatus_' || Event.Type || '_' || 'Planned' AS clbTypeStatus ";
+        sqlStmt3 += ",'ClbTypeStatus_' || Event.Type || '_' || 'Planned' || '_' || Visit_Template__c.Mobility_Color__c AS clbTypeStatusColored ";
+        sqlStmt3 += ",' ' AS address ";
+        sqlStmt3 += ",' ' AS mainAddress ";
+        sqlStmt3 += ",0 AS latitude ";
+        sqlStmt3 += ",0 AS longitude ";
+        sqlStmt3 += ",Visit_Template__c.Company_Required__c AS companyRequired "; 
+        sqlStmt3 += ",Visit_Template__c.Id AS clbMetaPKey "; 
+  	  sqlStmt3 += ",' ' AS creationMode "; 
+  	  sqlStmt3 += ",Event.CreatedById AS initiatorPKey ";
+  
+  	  if (!Utils.isEmptyString(tmgMainPKey))
+        {
+          sqlStmt3 += ",( SELECT T.Name FROM Tour__c T WHERE T.Id = #tmgMainPKey# ) AS tourContextId ";
+        }
+  	  else
+        {
+  	    sqlStmt3 += ",'' AS tourContextId ";
+        }
+  
+  	  if (Utils.isDefined(cardMode)) 
+        {
+  	    if(cardMode === 'UnsuccessfulVisits')sqlStmt3 += ", CASE WHEN Order__c.Id IS NULL THEN '0' ELSE '1' END AS hasOrder ";
+  	  }
+  	  else
+        {
+  	    sqlStmt3 += ",  ' ' AS hasOrder ";
+  	  }
+  
+        sqlStmt3 += "FROM Event ";
+        sqlStmt3 += "JOIN Visit_Template__c ON Event.Type = Visit_Template__c.Name ";
+  	  sqlStmt3 += "AND Event.OwnerId = #usrMainPKey# ";
+        if (Utils.isDefined(clbMainPKey)) {
+            sqlStmt3 += "AND Event.Id = #clbMainPKey# ";
+        }
+  
+        if (Utils.isDefined(dateFromStart)) {
+            sqlStmt3 += "AND (( #compareAsDate('Event.StartDateTime', 'DateTime','>=' ,#dateFromStart#, 'Date')# ";
+            sqlStmt3 += "AND #compareAsDate('Event.StartDateTime', 'DateTime','<=' ,#dateFromEnd#, 'Date')#)";
+            sqlStmt3 += "OR (";
+            sqlStmt3 += "#compareAsDate(#dateFromStart#, 'Date','>=' ,'Event.StartDateTime', 'DateTime')# ";
+            sqlStmt3 += "AND #compareAsDate(#dateFromStart# , 'Date','<=' ,'Event.EndDateTime', 'DateTime')#))";                     
+        } 
+  
+        sqlStmt3 += " AND Event.AccountId = ' ' AND Event.WhatId = ' ' ";
+  	  sqlStmt3 += " AND Event.IsDeleted = '0' ";
+  
+        if (Utils.isDefined(cardMode)) {
+          if(cardMode === 'UnsuccessfulVisits')sqlStmt3 += "LEFT OUTER JOIN Order__c ON(Event.Id = Order__c.Visit__c AND Order__c.Phase__c = 'Released') ";
+        }
+  
+  	  sqlStmt3 += "WHERE (1=1) ";
+  	  
+  	  if (Utils.isDefined(cardMode)) {
+  	    //if card mode is set what means Unsuccessfil Visits or Visit rate customer has to be filled
+  	    sqlStmt3 += "AND Event.AccountId <> ' ' ";
+  	  
+  	    //for unsuccessful visit report only consider calls for which it is possible to create orders
+  	    if(cardMode === 'UnsuccessfulVisits'){
+  	      if (!Utils.isEmptyString(tmgMainPKey))
+            {
+              sqlStmt3 += "AND Visit_Template__c.Mobility_User_Guidance__c = 'Delivery' ";
+            }
+  	      else 
+            {
+              sqlStmt3 += "AND Visit_Template__c.Mobility_User_Guidance__c = 'Sales' ";
+            }
+  	    }
+  	  }
+  
+      sqlStmt3 += "UNION ";
+  
+      /***************************************************************
+      ** Read non-customer related calls in case of a substitution  **
+      ****************************************************************/
+      sqlStmt3 += "SELECT Event.Id AS pKey ";
+      sqlStmt3 += ",Event.StartDateTime AS sortDateTime ";
+      sqlStmt3 += ",#dateAsUnixepochLocaltime('Event.StartDateTime')# AS dateFrom ";
+      sqlStmt3 += ",Event.StartDateTime AS timeFrom ";
+      sqlStmt3 += ",#dateAsUnixepochLocaltime('Event.EndDateTime')# AS dateThru ";
+      sqlStmt3 += ",Event.EndDateTime AS timeThru ";
+      sqlStmt3 += ",Event.IsAllDayEvent AS allDay ";
+      sqlStmt3 += ",Event.Subject AS name ";Event.AccountId
+      sqlStmt3 += ",' ' AS bpaMainPKey ";
+      sqlStmt3 += ",Event.OwnerId AS responsiblePKey ";
+      sqlStmt3 += ",'' AS responsibleName ";
+      sqlStmt3 += ",'1' AS customerOnDevice ";
+      sqlStmt3 += ",Event.Type AS clbMetaType ";
+      sqlStmt3 += ",Visit_Template__c.Delete_Allowed__c AS deleteAllowed ";
+      sqlStmt3 += ",Visit_Template__c.Mobility_Color__c AS color ";
+      sqlStmt3 += ",Event.Subject AS subject ";
+      sqlStmt3 += ",'Planned' AS clbStatus ";
+      sqlStmt3 += ",'ClbTypeStatus_' || Event.Type || '_' || 'Planned' AS clbTypeStatus ";
+      sqlStmt3 += ",'ClbTypeStatus_' || Event.Type || '_' || 'Planned' || '_' || Visit_Template__c.Mobility_Color__c AS clbTypeStatusColored ";
+      sqlStmt3 += ",' ' AS address ";
+      sqlStmt3 += ",' ' AS mainAddress ";
+      sqlStmt3 += ",0 AS latitude ";
+      sqlStmt3 += ",0 AS longitude ";
+      sqlStmt3 += ",Visit_Template__c.Company_Required__c AS companyRequired ";
+      sqlStmt3 += ",Visit_Template__c.Id AS clbMetaPKey "; 
+  	sqlStmt3 += ",' ' AS creationMode "; 
+  	sqlStmt3 += ",Event.CreatedById AS initiatorPKey ";
+  
+      if (!Utils.isEmptyString(tmgMainPKey))
+      {
+        sqlStmt3 += ",( SELECT T.Name FROM Tour__c T WHERE T.Id = #tmgMainPKey# ) AS tourContextId ";
+      }
+      else
+      {
+        sqlStmt3 += ",'' AS tourContextId ";
+      }
+  
+      if (Utils.isDefined(cardMode)) 
+      {
+        if (cardMode === 'UnsuccessfulVisits') sqlStmt3 += ", CASE WHEN Order__c.Id IS NULL THEN '0' ELSE '1' END AS hasOrder ";
+      }
+      else
+      {
+        sqlStmt3 += ",  ' ' AS hasOrder ";
+      }
+  
+      sqlStmt3 += "FROM Event ";
+      sqlStmt3 += "JOIN Visit_Template__c ON Event.Type = Visit_Template__c.Name ";
+      if (Utils.isDefined(clbMainPKey))
+      {
+        sqlStmt3 += "AND Event.Id = #clbMainPKey# ";
+      }
+  
+      if (Utils.isDefined(dateFromStart))
+      {
+        sqlStmt3 += "AND (( #compareAsDate('Event.StartDateTime', 'DateTime','>=' ,#dateFromStart#, 'Date')# ";
+        sqlStmt3 += "AND #compareAsDate('Event.StartDateTime', 'DateTime','<=' ,#dateFromEnd#, 'Date')#)";
+        sqlStmt3 += "OR (";
+        sqlStmt3 += "#compareAsDate(#dateFromStart#, 'Date','>=' ,'Event.StartDateTime', 'DateTime')# ";
+        sqlStmt3 += "AND #compareAsDate(#dateFromStart#, 'Date','<=' ,'Event.EndDateTime', 'DateTime')#))";
+      }
+  
+      sqlStmt3 += " AND Event.AccountId = ' ' AND Event.WhatId = ' ' ";
+      sqlStmt3 += " AND Event.IsDeleted = '0' ";
+  
+      if (Utils.isDefined(cardMode))
+      {
+        if (cardMode === 'UnsuccessfulVisits') sqlStmt3 += "LEFT OUTER JOIN Order__c ON(Event.Id = Order__c.Visit__c AND Order__c.Phase__c = 'Released') ";
+      }
+  
+      sqlStmt3 += "INNER JOIN Substitution__c SubBpaRel ";
+      sqlStmt3 += "ON Event.AccountId = SubBpaRel.Account__c ";
+      sqlStmt3 += "AND SubBpaRel.Substitute__c = #usrMainPKey# ";
+      sqlStmt3 += "INNER JOIN Substitution__c SubMain ";
+      sqlStmt3 += "ON SubMain.Id = SubBpaRel.Substitution__c ";
+      sqlStmt3 += "AND SubMain.Active__c = '1' ";
+      sqlStmt3 += "AND SubBpaRel.Active__c = '1' ";
+      sqlStmt3 += "AND SubMain.Sales_Org__c = '#SALESORG#' ";
+      sqlStmt3 += "AND SubMain.Substituted__c = Event.OwnerId ";
+      sqlStmt3 += "AND SubMain.Sales_Org__c = '#SALESORG#' ";
+  
+      sqlStmt3 += "WHERE (1=1) ";
+  
+      if (Utils.isDefined(cardMode))
+      {
+        //if card mode is set what means Unsuccessfil Visits or Visit rate customer has to be filled
+        sqlStmt3 += "AND Event.AccountId <> ' ' ";
+  
+        //for unsuccessful visit report only consider calls for which it is possible to create orders
+        if (cardMode === 'UnsuccessfulVisits')
+        {
+          if (!Utils.isEmptyString(tmgMainPKey))
+          {
+            sqlStmt3 += "AND Visit_Template__c.Mobility_User_Guidance__c = 'Delivery' ";
+          }
+          else 
+          {
+            sqlStmt3 += "AND Visit_Template__c.Mobility_User_Guidance__c = 'Sales' ";
+          }
+        }
+      }
+  
+      if (Utils.isDefined(dateFromStart))
+      {
+  	  sqlStmt3 += "AND SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #TodayAsDate# ";
+        sqlStmt3 += "AND SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #TodayAsDate# ";
+        sqlStmt3 += "AND SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #dateFromEnd# ";
+        sqlStmt3 += "AND SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #dateFromStart# "
+        sqlStmt3 += "AND #compareAsDate('SubMain.Valid_From__c', 'Date', '<=', 'Event.StartDateTime', 'DateTime')# ";
+        sqlStmt3 += "AND #compareAsDate('SubMain.Valid_Thru__c', 'Date', '>=', 'Event.StartDateTime', 'DateTime')# ";      
+  	  sqlStmt3 += "AND SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #TodayAsDate# ";
+        sqlStmt3 += "AND SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #TodayAsDate# ";
+        sqlStmt3 += "AND SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #dateFromEnd# ";
+        sqlStmt3 += "AND SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #dateFromStart# "
+        sqlStmt3 += "AND #compareAsDate('SubBpaRel.Valid_From__c', 'Date', '<=', 'Event.StartDateTime', 'DateTime')# ";
+        sqlStmt3 += "AND #compareAsDate('SubBpaRel.Valid_Thru__c', 'Date', '>=', 'Event.StartDateTime', 'DateTime')# ";
+      }
+  
+  	  //###########################
+  	  //###  Card - Visit Rate  ###
+  	  //###########################
+  	  if (!Utils.isDefined(cardMode) || cardMode !== "VisitRate") {
+  	    sqlStmt3 += " ORDER BY Event.StartDateTime ASC ";
+  	  }
+  	  
+  	  if (Utils.isDefined(cardMode) && cardMode === "VisitRate") {
+  	    sqlStmt3 += ") GROUP BY ClbStatus";
+  	  }
+	}
+      var sqlStmt1Result = Utils.replaceMacrosParam(sqlStmt1, sqlParams1);
+      var sqlStmt2Result = Utils.replaceMacrosParam(sqlStmt2, sqlParams2);
+      var sqlStmt3Result = Utils.replaceMacrosParam(sqlStmt3, sqlParams2);
+
+      if (Utils.isDefined(clbStatus) && !Utils.isDefined(followUpCardMode)) {
+        var finalSql = sqlStmt1Result.sql + clbStatus.sql + sqlStmt2Result.sql + clbStatus.sql + sqlStmt3Result.sql;
+        var finalParams = sqlStmt1Result.params.concat(clbStatus.params).concat(sqlStmt2Result.params).concat(clbStatus.params).concat(sqlStmt3Result.params);
+      }
+      else if(Utils.isDefined(followUpCardMode)) {
+        var finalSql = sqlStmt1Result.sql + clbStatus.sql + sqlStmt2Result.sql;
+        var finalParams = sqlStmt1Result.params.concat(clbStatus.params).concat(sqlStmt2Result.params);
+	  }
+      else {
+        var finalSql = sqlStmt1Result.sql + sqlStmt2Result.sql + sqlStmt3Result.sql;
+        var finalParams = sqlStmt1Result.params.concat(sqlStmt2Result.params).concat(sqlStmt3Result.params);
+      }
+
+      return {sql: finalSql, params: finalParams};
+
+		]]></Load>
+    <Update><![CDATA[
+     return undefined;
+		]]></Update>
+  </Database>
+</Datasource>

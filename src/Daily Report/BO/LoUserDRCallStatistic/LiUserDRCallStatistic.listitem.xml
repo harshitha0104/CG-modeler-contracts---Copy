@@ -1,0 +1,13 @@
+<ListItem name="LiUserDRCallStatistic" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="duration" type="DomText" dataSourceProperty="duration" />
+    <SimpleProperty name="hours" type="DomText" dataSourceProperty="hours" />
+    <SimpleProperty name="minutes" type="DomText" dataSourceProperty="minutes" />
+    <SimpleProperty name="allDay" type="DomBool" dataSourceProperty="allDay" />
+    <SimpleProperty name="clbMetaPKey" type="DomPKey" dataSourceProperty="clbMetaPKey" />
+    <SimpleProperty name="clbText" type="DomText" dataSourceProperty="clbText" />
+    <SimpleProperty name="callType" type="DomClbMetaType" dataSourceProperty="callType" />
+    <SimpleProperty name="hasCalls" type="DomBool" dataSourceProperty="hasCalls" />
+  </SimpleProperties>
+</ListItem>

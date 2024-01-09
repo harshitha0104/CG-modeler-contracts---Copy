@@ -1,0 +1,9 @@
+<ListItem name="LiBpaHistSurveyProduct"  >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="bpaCustomerPKey" type="DomPKey" dataSourceProperty="bpaCustomerPKey" />
+    <SimpleProperty name="bpaPOSPKey" type="DomPKey" dataSourceProperty="bpaPOSPKey" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="clbMetaPKey" type="DomPKey" dataSourceProperty="clbMetaPKey" />
+  </SimpleProperties>
+</ListItem>

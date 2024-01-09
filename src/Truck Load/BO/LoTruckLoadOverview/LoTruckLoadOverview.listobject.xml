@@ -1,0 +1,22 @@
+<ListObject name="LoTruckLoadOverview" generateLoadMethod="false" schemaVersion="1.1">
+  <DataSource name="DsLoTruckLoadOverview" />
+  <Item objectClass="LiTruckLoadOverview" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="getButtonVisibility" />
+    <Method name="getInitialDocPKeyByDocType" />
+    <Method name="getProductCheckOutItems" />
+    <Method name="releaseAllCheckOut" />
+    <Method name="isCheckOutDocAvailable" />
+    <Method name="getTruckLoadDocumentByPhaseAndUsage" />
+    <Method name="isMultipleCheckoutTemplateAvailable" />
+    <Method name="isMultipleCheckinTemplateAvailable" />
+  </Methods>
+</ListObject>

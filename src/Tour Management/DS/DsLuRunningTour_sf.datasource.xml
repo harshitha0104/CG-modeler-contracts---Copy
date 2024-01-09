@@ -1,0 +1,37 @@
+<DataSource name="DsLuRunningTour" backendSystem="sf" businessObjectClass="LuRunningTour" external="false" editableEntity="Tour__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Tour__c" column="Id" />
+    <DateTimeAttribute dateName="dateFrom" timeName="timeFrom" table="Tour__c" column="Start_Date_Time__c" />
+    <DateTimeAttribute dateName="dateThru" timeName="timeThru" table="Tour__c" column="End_Date_Time__c" />
+    <Attribute name="id" table="Tour__c" column="Name" />
+    <Attribute name="tmgMetaPKey" table="Tour__c" column="Tour_Template__c" />
+    <Attribute name="considerMultipleWarehouses" table="Tour_Template__c" column="Consider_Multiple_Warehouses__c" />
+    <Attribute name="startEtpWarehousePKey" table="Tour__c" column="Start_Warehouse__c" />
+    <Attribute name="etpVehicleTruckPKey" table="Tour__c" column="Truck__c" />
+    <DerivedAttribute name="defaultEtpVehicleTruckPKey" value="Tour__c.Truck__c" />
+    <Attribute name="text" table="Tour__c" column="Description_#Language#__c" />
+    <DerivedAttribute name="driverName" value="User.LastName || ', ' || User.FirstName" />
+  </Attributes>
+  <Entities>
+    <Entity name="Tour__c" alias="" idAttribute="Id" />
+    <Entity name="Tour_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Tour__c.Tour_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="Tour_Template__c.Id"></Condition>
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="User" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Tour__c.Default_Driver__c" comparator="eq" rightSideType="Attribute" rightSideValue="User.Id"></Condition>
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+    Tour__c.Default_Driver__c = '#UserPKey#' AND Tour__c.Status__c = 'Running'
+  ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters></Parameters>
+</DataSource>

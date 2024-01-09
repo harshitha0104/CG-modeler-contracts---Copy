@@ -1,0 +1,198 @@
+<DataSource name="DsLoActivityPerformance" backendSystem="sf" businessObjectClass="LoActivityPerformance" readOnly="true" external="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Job_Definition_List__c" column="Id" />
+    <Attribute name="activityDescription" table="Job_Definition_List__c" column="Description_#Language#__c" />
+    <Attribute name="activityScore" table="Job_Definition_List__c" column="Activity_Score__c" />
+    <Attribute name="thresholdFulfilled" table="Job_Definition_List__c" column="Threshold_Fulfilled__c" />
+    <Attribute name="thresholdPartiallyFulfilled" table="Job_Definition_List__c" column="Threshold_Partially_Fulfilled__c" />
+    <Attribute name="activityValidFrom" table="Job_Definition_List__c" column="Valid_From__c" />
+    <Attribute name="activityValidThru" table="Job_Definition_List__c" column="Valid_Thru__c" />
+    <Attribute name="activityTemplateDescription" table="Job_Definition_List_Template__c" column="Description_#Language#__c" />
+    <Attribute name="promotionId" table="Job_Definition_List__c" column="Promotion__c" />
+    <Attribute name="promotionDescription" table="Promotion__c" column="Slogan_#Language#__c" />
+    <Attribute name="promotionDateFrom" table="Promotion__c" column="Date_From__c" />
+    <Attribute name="promotionDateThru" table="Promotion__c" column="Date_Thru__c" />
+    <DerivedAttribute name="mediaPath" value="' '" />
+    <DerivedAttribute name="usage" value="' '" />
+    <DerivedAttribute name="fileType" value="' '" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+var validFrom = "";   
+var validThru = ""; 
+var ownerPKey = "";   
+var clbMainPKey = ""; 
+var bpaMainPKey = "";   
+var clbMetaPKey = ""; 
+
+if (Utils.isDefined(jsonQuery.validFrom)) {
+validFrom = Utils.convertForDBParam(jsonQuery.validFrom, 'DomDate');
+}
+if (Utils.isDefined(jsonQuery.validThru)) {
+validThru = Utils.convertForDBParam(jsonQuery.validThru, 'DomDate');
+}
+if (Utils.isDefined(jsonQuery.ownerPKey)) {
+ownerPKey = Utils.convertForDBParam(jsonQuery.ownerPKey, 'DomPKey');
+}
+if (Utils.isDefined(jsonQuery.clbMainPKey)) {
+clbMainPKey = Utils.convertForDBParam(jsonQuery.clbMainPKey, 'DomPKey');
+}
+if (Utils.isDefined(jsonQuery.bpaMainPKey)) {
+bpaMainPKey = Utils.convertForDBParam(jsonQuery.bpaMainPKey, 'DomPKey');
+}
+if (Utils.isDefined(jsonQuery.clbMetaPKey)) {
+clbMetaPKey = Utils.convertForDBParam(jsonQuery.clbMetaPKey, 'DomPKey');
+}
+var sqlParams = {validFrom, validThru, ownerPKey, clbMainPKey, bpaMainPKey, clbMetaPKey};
+
+var sqlStmt = "";
+
+sqlStmt += " SELECT pKey, ";
+sqlStmt += " activityDescription, ";
+sqlStmt += " activityScore, ";
+sqlStmt += " thresholdFulfilled, ";
+sqlStmt += " thresholdPartiallyFulfilled, ";
+sqlStmt += " activityValidFrom, ";
+sqlStmt += " activityValidThru,";
+sqlStmt += " activityTemplateDescription, ";
+sqlStmt += " promotionId, ";
+sqlStmt += " promotionDescription, ";
+sqlStmt += " promotionDateFrom, ";
+sqlStmt += " promotionDateThru, ";
+sqlStmt += " usage, ";
+sqlStmt += " fileType, ";
+sqlStmt += " mediaPath ";
+sqlStmt += " FROM ";
+
+sqlStmt += " (SELECT Job_Definition_List__c.Id as pKey, ";
+sqlStmt += " Job_Definition_List__c.Description_#Language#__c as activityDescription, ";
+sqlStmt += " Job_Definition_List__c.Activity_Score__c as activityScore, ";
+sqlStmt += " Job_Definition_List__c.Threshold_Fulfilled__c as thresholdFulfilled, ";
+sqlStmt += " Job_Definition_List__c.Threshold_Partially_Fulfilled__c as thresholdPartiallyFulfilled, ";
+sqlStmt += " Job_Definition_List__c.Valid_From__c as activityValidFrom, ";
+sqlStmt += " Job_Definition_List__c.Valid_Thru__c as activityValidThru, ";
+sqlStmt += " Job_Definition_List_Template__c.Description_#Language#__c as activityTemplateDescription, ";
+sqlStmt += " Job_Definition_List__c.Promotion__c as promotionId, ";
+sqlStmt += " Promotion__c.Slogan_#Language#__c as promotionDescription, ";
+sqlStmt += " Promotion__c.Date_From__c as promotionDateFrom, ";
+sqlStmt += " Promotion__c.Date_Thru__c as promotionDateThru, ";
+sqlStmt += " SF_File.Usage__c as usage, ";
+sqlStmt += " SF_FileLink.ParentId as parentid, ";
+sqlStmt += " SF_File.PathOnClient as fileName, ";
+sqlStmt += " replace(SF_File.PathOnClient, rtrim(SF_File.PathOnClient,replace(SF_File.PathOnClient, '.', '')),'') as fileType, ";
+sqlStmt += " CASE SF_File.Usage__c WHEN 'InitialBadge' THEN SF_File.VersionData WHEN 'FulfilledBadge' THEN SF_File.VersionData ELSE ' ' END as mediaPath ";
+sqlStmt += " FROM Job_Definition_List__c ";
+sqlStmt += " INNER JOIN Job_Definition_List_Template__c ON Job_Definition_List__c.Job_Definition_List_Template__c = Job_Definition_List_Template__c.Id ";
+sqlStmt += " AND Job_Definition_List_Template__c.IsDeleted <> '1' ";
+sqlStmt += " LEFT OUTER JOIN Promotion__c ON  Job_Definition_List__c.Promotion__c = Promotion__c.Id ";
+sqlStmt += " AND Promotion__c.Active__c = '1' ";
+sqlStmt += " AND Promotion__c.Phase__c = 'Committed' ";
+sqlStmt += " AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #validFrom# , 'Date')# ";  
+sqlStmt += " AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #validThru# , 'Date')# ";
+sqlStmt += " LEFT OUTER JOIN SF_FileLink ON SF_FileLink.ParentId = Job_Definition_List__c.Id ";
+sqlStmt += " AND SF_FileLink.IsDeleted <> '1' ";
+sqlStmt += " LEFT OUTER JOIN SF_File ON SF_FileLink.FileId = SF_File.Id ";
+sqlStmt += " AND SF_File.Usage__c IN ('InitialBadge', 'FulfilledBadge') ";
+sqlStmt += " AND SF_File.IsDeleted <> '1' ";
+sqlStmt += " WHERE 1=1 ";
+sqlStmt += " AND Job_Definition_List__c.Id IN ( ";
+
+/* Select activities relevant to the current customer and call */
+
+sqlStmt += " SELECT Job_Definition_List__c.Id ";
+sqlStmt += " FROM Job_Definition_List__c ";
+sqlStmt += " LEFT OUTER JOIN Job_Definition_List_Account__c ON Job_Definition_List__c.Id = Job_Definition_List_Account__c.Job_Definition_List__c AND Job_Definition_List_Account__c.Account__c = #bpaMainPKey# ";
+sqlStmt += " LEFT OUTER JOIN Job_Definition_List_Account_Set__c ON Job_Definition_List__c.Id = Job_Definition_List_Account_Set__c.Job_Definition_List__c ";
+sqlStmt += " LEFT OUTER JOIN Account_Set_Account__c ON Job_Definition_List_Account_Set__c.Account_set__c = Account_Set_Account__c.Account_set__c AND Account_Set_Account__c.Account_Set_Account__c = #bpaMainPKey# ";
+sqlStmt += " INNER JOIN Job_DL_Job_Definition_Template__c  ON Job_Definition_List__c.Id = Job_DL_Job_Definition_Template__c.Job_Definition_List__c ";
+sqlStmt += " AND Job_DL_Job_Definition_Template__c.Excluded__c = '0' ";
+sqlStmt += " LEFT JOIN Job_Definition_Template__c ON Job_DL_Job_Definition_Template__c.Job_Definition_Template__c = Job_Definition_Template__c.Id AND Job_Definition_Template__c.Active__c = '1' ";
+sqlStmt += " LEFT JOIN Job_Template__c ON Job_Definition_Template__c.Job_Template__c = Job_Template__c.Id ";
+sqlStmt+= " WHERE (1 = 1) ";
+sqlStmt+= " AND Job_Definition_List__c.Active__c = '1' ";
+sqlStmt+= " AND Job_Definition_List__c.Approval_State__c <> 'Canceled' ";
+sqlStmt+= " AND ( ";
+sqlStmt+= "		Job_Template__c.Name = 'Question' ";
+sqlStmt+= "		OR Job_Template__c.Name = 'Survey' ";
+sqlStmt+= "		) ";
+sqlStmt+= "	AND Job_Definition_List__c.Standard_Jobs__c = '1' ";
+sqlStmt+= "	AND #compareAsDate('Job_Definition_List__c.Valid_From__c', 'Date','<=' , #validFrom# , 'Date')# ";
+sqlStmt+= "	AND #compareAsDate('Job_Definition_List__c.Valid_Thru__c', 'Date','>=' , #validThru# , 'Date')# ";
+sqlStmt+= "	AND (Job_Definition_List__c.Consider_Account__c ='1'  ";
+sqlStmt+= "	AND ((Job_Definition_List_Account__c.Account__c IS NOT NULL AND (Job_Definition_List_Account__c.Excluded__c = '0' AND Job_Definition_List_Account__c.isDeleted = '0')) ";
+sqlStmt+= "	OR (Job_Definition_List_Account_Set__c.Account_Set__c IS NOT NULL  ";
+sqlStmt+= "     AND (Job_Definition_List_Account__c.Account__c IS NULL ";
+sqlStmt+= "           OR (Job_Definition_List_Account__c.Account__c IS NOT NULL  ";
+sqlStmt+= "                AND (Job_Definition_List_Account__c.Excluded__c = '0' OR Job_Definition_List_Account__c.isDeleted = '1')))))) ";
+sqlStmt+= "	AND Job_Definition_List__c.Visit_Template__c = #clbMetaPKey# ";
+sqlStmt+= " AND ((Job_Definition_List_Account__c.Account__c = #bpaMainPKey# AND Job_Definition_List_Account__c.Account__c IS NOT NULL) ";
+sqlStmt+= "	OR (Account_Set_Account__c.Account_Set_Account__c = #bpaMainPKey# AND Account_Set_Account__c.Account_Set_Account__c IS NOT NULL)) ";
+sqlStmt+= " ";
+
+
+sqlStmt+= "UNION ALL ";
+
+
+sqlStmt+= " SELECT Job_Definition_List__c.Id ";
+sqlStmt+= " FROM Job_Definition_List__c ";
+sqlStmt+= " INNER JOIN Job_DL_Job_Definition_Template__c ON Job_Definition_List__c.Id = Job_DL_Job_Definition_Template__c.Job_Definition_List__c ";
+sqlStmt+= " AND Job_DL_Job_Definition_Template__c.Excluded__c = '0' ";
+sqlStmt+= " LEFT JOIN Job_Definition_Template__c ON Job_DL_Job_Definition_Template__c.Job_Definition_Template__c = Job_Definition_Template__c.Id AND Job_Definition_Template__c.Active__c = '1' ";
+sqlStmt+= " LEFT JOIN Job_Template__c ON Job_Definition_Template__c.Job_Template__c = Job_Template__c.Id ";
+sqlStmt+= " WHERE ";
+sqlStmt+= "  (1 = 1) ";
+sqlStmt+= " AND Job_Definition_List__c.Active__c = '1' ";
+sqlStmt+= " AND Job_Definition_List__c.Approval_State__c <> 'Canceled' ";
+sqlStmt+= "  AND ( ";
+sqlStmt+= "    Job_Template__c.Name = 'Question' ";
+sqlStmt+= "    OR Job_Template__c.Name = 'Survey' ";
+sqlStmt+= "  ) ";
+sqlStmt+= " AND Job_Definition_List__c.Standard_Jobs__c = '1' ";
+sqlStmt+= "	AND #compareAsDate('Job_Definition_List__c.Valid_From__c', 'Date','<=' , #validFrom# , 'Date')# ";
+sqlStmt+= "	AND #compareAsDate('Job_Definition_List__c.Valid_Thru__c', 'Date','>=' , #validThru# , 'Date')# ";
+sqlStmt+= " AND Job_Definition_List__c.Consider_Account__c = '0' ";
+sqlStmt+= "	AND Job_Definition_List__c.Visit_Template__c = #clbMetaPKey# ";
+sqlStmt+= " ";
+
+
+sqlStmt+= "UNION ALL ";
+
+
+sqlStmt+= " ";
+sqlStmt+= " SELECT Job_Definition_List__c.Id ";
+sqlStmt+= " FROM Job_List__c ";
+sqlStmt+= " LEFT JOIN Job_Definition_List__c ON Job_List__c.Job_Definition_List__c = Job_Definition_List__c.Id ";
+sqlStmt+= " INNER JOIN Job_DL_Job_Definition_Template__c ON Job_Definition_List__c.Id = Job_DL_Job_Definition_Template__c.Job_Definition_List__c ";
+sqlStmt+= " AND Job_DL_Job_Definition_Template__c.Excluded__c = '0' ";
+sqlStmt+= " LEFT JOIN Job_Definition_Template__c ON Job_DL_Job_Definition_Template__c.Job_Definition_Template__c = Job_Definition_Template__c.Id AND Job_Definition_Template__c.Active__c = '1' ";
+sqlStmt+= " LEFT JOIN Job_Template__c ON Job_Definition_Template__c.Job_Template__c = Job_Template__c.Id ";
+sqlStmt+= " WHERE (1 = 1) ";
+sqlStmt+= " AND Job_Definition_List__c.Active__c = '1' ";
+sqlStmt+= " AND Job_Definition_List__c.Approval_State__c <> 'Canceled' ";
+sqlStmt+= " AND ( ";
+sqlStmt+= "		Job_Template__c.Name = 'Survey' ";
+sqlStmt+= "		OR Job_Template__c.Name = 'Question' ";
+sqlStmt+= "		) ";
+sqlStmt+= "AND Job_List__c.Manager__c = #ownerPKey# ";
+sqlStmt+= "AND #compareAsDate('Job_List__c.Valid_From__c', 'Date','<=' , #validFrom# , 'Date')# ";
+sqlStmt+= "AND #compareAsDate('Job_List__c.Valid_Thru__c', 'Date','>=' , #validThru# , 'Date')# ";
+sqlStmt+= "AND ( ";
+sqlStmt+= "		Job_List__c.Visit__c = #clbMainPKey# ";
+sqlStmt+= "		OR Job_List__c.Visit__c  = ' ' ";
+sqlStmt+= "		OR Job_List__c.Visit__c  is NULL ";
+sqlStmt+= "		) ";
+sqlStmt+= "	AND Job_List__c.Account__c = #bpaMainPKey# ";
+sqlStmt+= "	AND Job_Definition_List__c.Visit_Template__c = #clbMetaPKey# ";
+sqlStmt+= " ) ";
+
+
+sqlStmt += " AND Job_Definition_List__c.Consider_Score__c = 'Yes' ";
+sqlStmt += " ORDER BY Job_Definition_List__c.Id AND SF_File.Usage__c IN ('InitialBadge', 'FulfilledBadge') ASC) ";
+sqlStmt += " ORDER BY activityValidFrom ASC, ";
+sqlStmt += " UPPER(activityDescription) ASC ";
+
+return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+  ]]></Load>
+  </Database>
+</DataSource>

@@ -1,0 +1,8 @@
+<LookupObject name="LuSubstitutionExists">
+  <DataSource name="DsLuSubstitutionExists" />
+  <SimpleProperties>
+    <SimpleProperty name="count" type="DomInteger" dataSourceProperty="count" />
+    <SimpleProperty name="validThru" type="DomDate" dataSourceProperty="validThru" />
+  </SimpleProperties>
+  <Methods />
+</LookupObject>

@@ -1,0 +1,13 @@
+<LookupObject name="LuWfeState" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuWfeState" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="stateType" type="DomWfeStateType" dataSourceProperty="stateType" />
+    <SimpleProperty name="text" type="DomPKey" dataSourceProperty="text" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

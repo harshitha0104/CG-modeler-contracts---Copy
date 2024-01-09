@@ -1,0 +1,30 @@
+<ListObject name="LoUsrDailyReportOverview" generateLoadMethod="true" filter="InDatabase" paging="true" schemaVersion="1.1">
+  <DataSource name="DsLoUsrDailyReportOverview" />
+  <Item objectClass="LiUsrDailyReportOverview" />
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="approveAll" />
+    <Method name="beforeLoadAsync" />
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="addItem" />
+    <Method name="getValidPhasesForAdvSearch" />
+    <Method name="determineOver100Reports" />
+    <Method name="determinePageSizeUsage" />
+    <Method name="determineMaxPagingSizeUsed" />
+    <Method name="setCustomPageSize" />
+    <Method name="checkAddButtonVisibility" />
+    <Method name="checkApproveAllButtonVisibility" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoDailyReport">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="DailyReport_Type" property="type" dataSource="DsLoUserDocMeta" type="Selection" editable="true" />
+        <AdvancedSearchAttribute label="DailyReport_Phase" property="phase" type="Selection" call="@process.dailyReportList.getValidPhasesForAdvSearch" editable="true" />
+        <AdvancedSearchAttribute label="DailyReport_Date" property="dateFrom" type="Date" />
+        <AdvancedSearchAttribute label="DailyReport_User" property="responsiblePKey" defaultValue="#UserPKey#" lookupProcess="User::LookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="DailyReport_Owner" property="ownerPKey" lookupProcess="User::LookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

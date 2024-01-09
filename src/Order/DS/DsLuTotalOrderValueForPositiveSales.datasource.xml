@@ -1,0 +1,55 @@
+<DataSource name="DsLuTotalOrderValueForPositiveSales" backendSystem="cas" businessObjectClass="LuTotalOrderValueForPositiveSales" external="false" editableEntity="SdoItem" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="totalValue" value="SUM(SdoItem.GrossValue)" />
+  </Attributes>
+  <Entities>
+    <Entity name="SdoItem" alias="" idAttribute="PKey" />
+    <Entity name="SdoMain" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoItem.SdoMainPKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoMain.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="SdoItemMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoItem.SdoItemMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoItemMeta.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="SdoMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoMain.SdoMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoMeta.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="TmgTour" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoMain.TmgMainPKey" comparator="eq" rightSideType="Attribute" rightSideValue="TmgTour.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="TmgRoute" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="TmgTour.TmgRoutePKey" comparator="eq" rightSideType="Attribute" rightSideValue="TmgRoute.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+    SdoItem.SdoMainPKey = #SdoMainPKey#
+    AND SdoItemMeta.PriceEffect = '1'
+    AND TmgRoute.DefaultUsrPKey = '#UserPKey#'
+    AND SdoMeta.SdoSubType IN ('OrderEntry', 'Delivery') AND SdoMeta.MetaType = 'OrderEntry'
+    AND SdoMain.ClbMainPKey <> ' '
+    AND SdoMain.TmgMainPKey <> ' '
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="SdoMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

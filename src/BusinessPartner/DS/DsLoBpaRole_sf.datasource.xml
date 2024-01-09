@@ -1,0 +1,95 @@
+<DataSource name="DsLoBpaRole" businessObjectClass="LoBpaRole" backendSystem="sf" external="false" editableEntity="Account_Extension__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Extension__c" column="Id" />
+    <DerivedAttribute name="customerPKey" value="''" />
+    <DerivedAttribute name="validThru" value="''" />
+    <DerivedAttribute name="validFrom" value="''" />
+    <DerivedAttribute name="salesOrg" value="''" />
+    <DerivedAttribute name="bpaRoleMetaPKey" value="''" />
+    <DerivedAttribute name="category" value="''" />
+    <PivotItems>
+      <!-- Delivery Recipient Role-->
+      <PivotItem id="deliveryrecipient">
+        <Attribute name="customerPKey" table="Account_Extension__c" column="Account__c" />
+        <Attribute name="validThru" table="Account_Extension__c" column="Delivery_Role_Valid_Thru__c" />
+        <Attribute name="validFrom" table="Account_Extension__c" column="Delivery_Role_Valid_From__c" />
+        <PivotConstant name="salesOrg" value="'#SalesOrg#'" />
+        <PivotConstant name="bpaRoleMetaPKey" value="' '" />
+        <PivotDerivedAttribute name="category" pivotName="deliveryRoleCategory" value="CASE WHEN #compareAsDate('Delivery_Role_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')#  AND #compareAsDate('Delivery_Role_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'deliveryrecipient' ELSE ' ' END" />
+      </PivotItem>
+      <!-- Orderer Role-->
+      <PivotItem id="order">
+        <Attribute name="customerPKey" table="Account_Extension__c" column="Account__c" />
+        <Attribute name="validThru" table="Account_Extension__c" column="Order_Role_Valid_Thru__c" />
+        <Attribute name="validFrom" table="Account_Extension__c" column="Order_Role_Valid_From__c" />
+        <PivotConstant name="salesOrg" value="'#SalesOrg#'" />
+        <PivotConstant name="bpaRoleMetaPKey" value="' '" />
+        <PivotDerivedAttribute name="category" pivotName="orderRoleCategory" value="CASE WHEN #compareAsDate('Order_Role_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')# AND #compareAsDate('Order_Role_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'order' ELSE ' ' END" />
+      </PivotItem>
+      <!-- Customer Role-->
+      <PivotItem id="customer">
+        <Attribute name="customerPKey" table="Account_Extension__c" column="Account__c" />
+        <Attribute name="validThru" table="Account_Extension__c" column="Customer_Role_Valid_Thru__c" />
+        <Attribute name="validFrom" table="Account_Extension__c" column="Customer_Role_Valid_From__c" />
+        <PivotConstant name="salesOrg" value="'#SalesOrg#'" />
+        <PivotConstant name="bpaRoleMetaPKey" value="' '" />
+        <PivotDerivedAttribute name="category" pivotName="customerRoleCategory" value="CASE WHEN #compareAsDate('Customer_Role_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')# AND #compareAsDate('Customer_Role_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'customer' ELSE ' ' END" />
+      </PivotItem>
+      <!-- Wholesaler Role-->
+      <PivotItem id="broker">
+        <Attribute name="customerPKey" table="Account_Extension__c" column="Account__c" />
+        <Attribute name="validThru" table="Account_Extension__c" column="Broker_Role_Valid_Thru__c" />
+        <Attribute name="validFrom" table="Account_Extension__c" column="Broker_Role_Valid_From__c" />
+        <PivotConstant name="salesOrg" value="'#SalesOrg#'" />
+        <PivotConstant name="bpaRoleMetaPKey" value="' '" />
+        <PivotDerivedAttribute name="category" pivotName="brokerRoleCategory" value="CASE WHEN #compareAsDate('Broker_Role_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')# AND #compareAsDate('Broker_Role_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'broker' ELSE ' ' END" />
+      </PivotItem>
+      <!-- Payer Role-->
+      <PivotItem id="payer">
+        <Attribute name="customerPKey" table="Account_Extension__c" column="Account__c" />
+        <Attribute name="validThru" table="Account_Extension__c" column="Payer_Role_Valid_Thru__c" />
+        <Attribute name="validFrom" table="Account_Extension__c" column="Payer_Role_Valid_From__c" />
+        <PivotConstant name="salesOrg" value="'#SalesOrg#'" />
+        <PivotConstant name="bpaRoleMetaPKey" value="' '" />
+        <PivotDerivedAttribute name="category" pivotName="payerRoleCategory" value="CASE WHEN #compareAsDate('Payer_Role_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')# AND #compareAsDate('Payer_Role_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'payer' ELSE ' ' END" />
+      </PivotItem>
+      <!-- Bill-to Role-->
+      <PivotItem id="billto">
+        <Attribute name="customerPKey" table="Account_Extension__c" column="Account__c" />
+        <Attribute name="validThru" table="Account_Extension__c" column="Bill_To_Role_Valid_Thru__c" />
+        <Attribute name="validFrom" table="Account_Extension__c" column="Bill_To_Role_Valid_From__c" />
+        <PivotConstant name="salesOrg" value="'#SalesOrg#'" />
+        <PivotConstant name="bpaRoleMetaPKey" value="' '" />
+        <PivotDerivedAttribute name="category" pivotName="billtoRoleCategory" value="CASE WHEN #compareAsDate('Bill_To_Role_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')# AND #compareAsDate('Bill_To_Role_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'billto' ELSE ' ' END" />
+      </PivotItem>
+      <!-- Promotion Role-->
+      <PivotItem id="promotion">
+        <Attribute name="customerPKey" table="Account_Extension__c" column="Account__c" />
+        <Attribute name="validThru" table="Account_Extension__c" column="Promotion_Valid_Thru__c" />
+        <Attribute name="validFrom" table="Account_Extension__c" column="Promotion_Valid_From__c" />
+        <PivotConstant name="salesOrg" value="'#SalesOrg#'" />
+        <PivotConstant name="bpaRoleMetaPKey" value="' '" />
+        <PivotDerivedAttribute name="category" pivotName="promotionRoleCategory" value="CASE WHEN #compareAsDate('Promotion_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')#  AND #compareAsDate('Promotion_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'promotion' ELSE ' ' END" />
+      </PivotItem>
+      <!-- Store Role-->
+      <PivotItem id="store">
+        <Attribute name="customerPKey" table="Account_Extension__c" column="Account__c" />
+        <Attribute name="validThru" table="Account_Extension__c" column="Store_Role_Valid_Thru__c" />
+        <Attribute name="validFrom" table="Account_Extension__c" column="Store_Role_Valid_From__c" />
+        <PivotConstant name="salesOrg" value="'#SalesOrg#'" />
+        <PivotConstant name="bpaRoleMetaPKey" value="' '" />
+        <PivotDerivedAttribute name="category" pivotName="storeRoleCategory" value="CASE WHEN #compareAsDate('Store_Role_Valid_From__c', 'Date','le',#TodayAsDate#, 'Date')#  AND #compareAsDate('Store_Role_Valid_Thru__c', 'Date','ge',#TodayAsDate#, 'Date')# THEN 'store' ELSE ' ' END" />
+      </PivotItem>
+    </PivotItems>
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Extension__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+       Account_Extension__c.Account__c = #customerPKey#
+            ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="customerPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

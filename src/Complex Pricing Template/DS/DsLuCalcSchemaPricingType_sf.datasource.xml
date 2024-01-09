@@ -1,0 +1,25 @@
+<DataSource name="DsLuCalcSchemaPricingType" backendSystem="sf" businessObjectClass="LuCalcSchemaPricingType" external="false" editableEntity="CP_Calculation_Schema_Determination__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="CP_Calculation_Schema_Determination__c" column="Id" />
+    <Attribute name="cndCpCalculationSchemaPKey" table="CP_Calculation_Schema_Determination__c" column="Calculation_Schema__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="CP_Calculation_Schema_Determination__c" alias="" idAttribute="Id" />
+    <Entity name="Account_Extension__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="CP_Calculation_Schema_Determination__c.Account_Price_Type__c" comparator="eq" rightSideType="Attribute" rightSideValue="Account_Extension__c.Pricing_Type__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Account_Extension__c.Account__c = #OrdererPKey#
+        AND CP_Calculation_Schema_Determination__c.Order_Price_Type__c = #CpPricingType#
+       ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="OrdererPKey" type="TEXT" />
+    <Parameter name="CpPricingType" type="TEXT" />
+  </Parameters>
+</DataSource>

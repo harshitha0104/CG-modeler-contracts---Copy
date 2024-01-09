@@ -1,0 +1,248 @@
+<DataSource name="DsLoIssueOverview" backendSystem="sf" objectClass="LoIssueOverview" readOnly="true" external="true" editableEntity="Account_Task__c" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[ 
+
+			const secondsPerDay = 24 * 60 * 60;
+			var newParams = jsonQuery;
+			var currentDate = Utils.isDefined(newParams.cardDate) ? newParams.cardDate : Utils.convertForDBParam(Utils.convertDate2Ansi(Utils.createDateToday()), 'DomDate');
+
+			var addCondSearch = "";
+			var addCondOrderBy = "";
+			var cardDate = "";
+			var loadLoCustomerOverviewParams = [];
+			var minDate = "";
+			var currentUsrMainPKey = "";
+			var dateTimeToday = "";
+			var subIsLeadFollowUpTime = "";
+			var loadLoCustomerOverview = "";
+			var cond = "";
+
+			var text = "";
+			var svcMetaPKey = "";
+			var priority = "";
+			var classification = "";
+			var initiationDate = "";
+			var dueDate = "";
+			var issuePhase = "";
+			var initiatorPKey = "";
+			var ownerPKey = "";
+			var responsiblePKey = "";
+			var ownerBpaMainPKey = "";
+
+			if(Utils.isDefined(jsonQuery.loadLoCustomerOverview)){
+				loadLoCustomerOverview = jsonQuery.loadLoCustomerOverview;
+			}
+			if(Utils.isDefined(jsonQuery.cond)){
+				cond = jsonQuery.cond;
+			}
+			if(Utils.isDefined(newParams.cardDate)){
+				cardDate = newParams.cardDate;
+			}
+			if(Utils.isDefined(newParams.loadLoCustomerOverviewParams)){
+				loadLoCustomerOverviewParams = newParams.loadLoCustomerOverviewParams;
+			}
+			if(Utils.isDefined(newParams.minDate)){
+				minDate = newParams.minDate;
+			}
+			if(Utils.isDefined(newParams.currentUsrMainPKey)){
+				currentUsrMainPKey = newParams.currentUsrMainPKey;
+			}
+			if(Utils.isDefined(newParams.dateTimeToday)){
+				dateTimeToday = newParams.dateTimeToday;
+			}
+			if(Utils.isDefined(newParams.subIsLeadFollowUpTime)){
+				subIsLeadFollowUpTime = newParams.subIsLeadFollowUpTime;
+			}
+
+			if (Utils.isDefined(newParams.customerTask) && newParams.customerTask == "customerTask"){
+              addCondOrderBy = "Account_Task__c.Due_Date__c DESC,";
+              addCondOrderBy += "Account_Task__c.Priority__c ASC ";
+			}
+			else{
+              addCondOrderBy = "Account_Task__c.Creation_Date__c DESC, ";
+              addCondOrderBy += "Account_Task__c.LastModifiedDate DESC ";
+			}
+
+			//############################
+			//## Advanced Search Paging ##
+			//############################
+
+			/**  Issue Text  */
+			if (Utils.isDefined(newParams.text)){
+              text = Utils.convertForDBParam(newParams.text, "DomText");
+              addCondSearch += " AND Account_Task__c.Description_#Language#__c " + Utils.replaceOperator(newParams.textComp) + "#text# ";        
+			} 
+
+			/**  svcMetaPKey */
+			if (Utils.isDefined(newParams.svcMetaPKey)){
+              svcMetaPKey = Utils.convertForDBParam(newParams.svcMetaPKey, "DomPKey");
+              addCondSearch += " AND Account_Task__c.Account_Task_Template__c " + Utils.replaceOperator(newParams.svcMetaPKeyComp) + "#svcMetaPKey# ";        
+			}
+
+			/**  priority  */
+			if (Utils.isDefined(newParams.priority)){
+              priority = Utils.convertForDBParam(newParams.priority, "DomABC");
+              addCondSearch += " AND Account_Task__c.Priority__c " + Utils.replaceOperator(newParams.priorityComp) + "#priority# ";
+			}
+
+			/**  classification  */
+			if (Utils.isDefined(newParams.classification)){
+              classification = Utils.convertForDBParam(newParams.classification, "DomSvcClassification");
+              addCondSearch += " AND Account_Task__c.Classification__c " + Utils.replaceOperator(newParams.classificationComp) + "#classification# ";
+			}
+
+			/**  initiationDate  */
+			if (Utils.isDefined(newParams.initiationDate)){
+              initiationDate = Utils.convertForDBParam(newParams.initiationDate, "DomDate");
+              addCondSearch += " AND #compareAsDate('Account_Task__c.Creation_Date__c', 'Date','"+ Utils.replaceOperator(newParams.initiationDateComp) +"',#initiationDate#, 'Date')# "; 
+			} 
+
+			/**  dueDate  */
+			if (Utils.isDefined(newParams.dueDate)){
+              dueDate = Utils.convertForDBParam(newParams.dueDate, "DomDate");
+              addCondSearch += " AND #compareAsDate('Account_Task__c.Due_Date__c', 'Date','"+ Utils.replaceOperator(newParams.dueDateComp) +"',#dueDate#, 'Date')# ";
+			} 
+
+			/**  issuePhase  */
+			if (Utils.isDefined(newParams.issuePhase)){
+              issuePhase = Utils.convertForDBParam(newParams.issuePhase, "DomSvcIssuePhase");
+              addCondSearch += " AND lower(Account_Task__c.Phase__c) " + Utils.replaceOperator(newParams.issuePhaseComp) + " lower(#issuePhase#) ";
+			}
+
+			/**  initiatorPKey  */
+			if (Utils.isDefined(newParams.initiatorPKey)){
+              initiatorPKey = Utils.convertForDBParam(newParams.initiatorPKey, "DomPKey");
+              addCondSearch += " AND Account_Task__c.CreatedById " + Utils.replaceOperator(newParams.initiatorPKeyComp) + "#initiatorPKey# ";
+			}
+
+			/**  ownerPKey  */
+			if (Utils.isDefined(newParams.ownerPKey)){
+              ownerPKey = Utils.convertForDBParam(newParams.ownerPKey, "DomPKey");
+              addCondSearch += " AND Account_Task__c.Accountable__c " + Utils.replaceOperator(newParams.ownerPKeyComp) + "#ownerPKey# ";
+			}
+
+			/**  responsiblePKey  */
+			if (Utils.isDefined(newParams.responsiblePKey)){
+              responsiblePKey = Utils.convertForDBParam(newParams.responsiblePKey, "DomPKey");
+              addCondSearch += " AND Account_Task__c.Responsible__c " + Utils.replaceOperator(newParams.responsiblePKeyComp) + "#responsiblePKey# ";
+			}
+
+			/**  ownerBpaMainPKey  */
+			if (Utils.isDefined(newParams.ownerBpaMainPKey)){
+              ownerBpaMainPKey = Utils.convertForDBParam(newParams.ownerBpaMainPKey, "DomPKey");
+              addCondSearch += " AND Account_Task__c.Account__c " + Utils.replaceOperator(newParams.ownerBpaMainPKeyComp) + "#ownerBpaMainPKey# ";
+			}
+
+			var sqlParams1 = {currentDate, secondsPerDay};
+			var sqlParams2 = {text, svcMetaPKey, priority, classification, initiationDate, dueDate, issuePhase, initiatorPKey, ownerPKey, responsiblePKey, ownerBpaMainPKey, cond, cardDate, minDate, currentUsrMainPKey, dateTimeToday, subIsLeadFollowUpTime}
+
+			var sqlStmt1 = "SELECT ";
+			sqlStmt1 += "Account_Task__c.Id as pKey, ";
+			sqlStmt1 += "Account_Task__c.Description_#Language#__c as text, ";
+			sqlStmt1 += "Account_Task__c.Due_Date__c as dueDate, ";
+			sqlStmt1 += "Account_Task__c.Creation_Date__c as initiationDate, ";
+			sqlStmt1 += "Account_Task__c.Priority__c as priority, ";
+			sqlStmt1 += "#toggleMapping('Account_Task__c', 'Phase__c')# as issuePhase, ";
+			sqlStmt1 += "Account_Task__c.Classification__c as classification, ";
+			sqlStmt1 += "Account_Task__c.CreatedById as initiatorPKey, ";
+			sqlStmt1 += "Account_Task__c.Accountable__c as ownerPKey, ";
+			sqlStmt1 += "Account_Task__c.Responsible__c as responsiblePKey, ";
+			sqlStmt1 += "Account_Task__c.Account__c as ownerBpaMainPKey, ";
+			sqlStmt1 += "Account_Task__c.LastModifiedDate as businessModified, ";
+			sqlStmt1 += "Account_Task__c.Account_Task_Template__c as svcMetaPKey, ";
+			sqlStmt1 += "'0' as isPrivate, ";
+			sqlStmt1 += "Account_Task_Template__c.Active__c as isActive, ";
+			sqlStmt1 += "UsrResp.LastName || ', ' || UsrResp.FirstName as responsibleName, ";
+			sqlStmt1 += "UsrOwner.LastName || ', ' || UsrOwner.FirstName as ownerName, ";
+			sqlStmt1 += "Account.Name as customerName, ";
+			sqlStmt1 += "Account_Task_Template__c.Workflow__c as wfeWorkflowPKey, ";
+			sqlStmt1 += "#toggleMapping('Account_Task__c', 'Phase__c')# as actualStatePKey, ";
+
+			sqlStmt1 += "CASE WHEN ((lower(Account_Task__c.Phase__c) IN ('released', 'initial')) ";
+			sqlStmt1 += " AND ((Account_Task__c.Responsible__c = '#UserSfId#') ";
+			sqlStmt1 += " OR (Sub.SubBpaRelUsrMainPKey = '#UserSfId#' AND Sub.SubIsLeadFollowUpTime = '0'))) ";
+			sqlStmt1 += "THEN '1' ELSE '0' END as filterOpen, ";
+			sqlStmt1 += "CASE WHEN Sub.SubBpaRelUsrMainPKey IS '#UserSfId#' THEN 'UserSubstitute24' ";
+			sqlStmt1 += "ELSE CASE WHEN Sub.SubMainUsrMainPKey IS '#UserSfId#' THEN 'UserSubstituted24' ";
+			sqlStmt1 += "ELSE 'UserArrowDarkGrey16' END END as responsibleIcon, ";
+			sqlStmt1 += "CASE WHEN Sub.SubBpaRelUsrMainPKey IS '#UserSfId#' THEN CASE WHEN Sub.SubIsLeadFollowUpTime IS '1' THEN 'Inactive_Substitute' ELSE 'Active_Substitute' END ";
+			sqlStmt1 += "ELSE CASE WHEN Sub.SubMainUsrMainPKey IS '#UserSfId#' THEN CASE WHEN Sub.SubIsLeadFollowUpTime IS '1' THEN 'Active_Substituted' ELSE 'Inactive_Substituted' END ";
+			sqlStmt1 += "ELSE ' ' END END as substitutionStatus, ";	  
+			sqlStmt1 += "CASE WHEN Sub.SubBpaRelUsrMainPKey IS NULL THEN ' ' ELSE Sub.SubBpaRelUsrMainPKey END as substituteUsrPKey, ";
+
+			sqlStmt1 += "'TaskClassification_' || Account_Task__c.Classification__c As  classificationImage, ";
+			sqlStmt1 += "'TaskPriority_' || Account_Task__c.Priority__c As  priorityImage ";
+			sqlStmt1 += "FROM ";
+			sqlStmt1 += "Account_Task__c ";
+			sqlStmt1 += "JOIN User as UsrResp ON ";
+			sqlStmt1 += "UsrResp.Id=Account_Task__c.Responsible__c ";
+			sqlStmt1 += "JOIN User as UsrOwner ON ";
+			sqlStmt1 += "UsrOwner.Id=Account_Task__c.Accountable__c ";
+			sqlStmt1 += "JOIN Account ON ";
+			sqlStmt1 += "Account.Id=Account_Task__c.Account__c ";
+			sqlStmt1 += "JOIN Account_Task_Template__c ON ";
+			sqlStmt1 += "Account_Task__c.Account_Task_Template__c=Account_Task_Template__c.Id ";
+
+			sqlStmt1 += "LEFT OUTER JOIN (";
+			sqlStmt1 += "SELECT ";
+			sqlStmt1 += "SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * #secondsPerDay# AS subBpaRelValidFromWithLeadTime, ";
+			sqlStmt1 += "SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * #secondsPerDay# AS subBpaRelValidThruWithFollowUpTime, ";
+			sqlStmt1 += "SubMain.Valid_From__c - SubMain.Lead_Time__c * #secondsPerDay# AS subMainValidFromWithLeadTime, ";
+			sqlStmt1 += "SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * #secondsPerDay# AS subMainValidThruWithFollowUpTime, ";
+			sqlStmt1 += "SubBpaRel.Substitute__c AS SubBpaRelUsrMainPKey, ";
+			sqlStmt1 += "SubBpaRel.Account__c AS SubBpaRelBpaMainPKey, ";
+			sqlStmt1 += "SubMain.Substituted__c AS SubMainUsrMainPKey, ";
+			sqlStmt1 += "CASE WHEN (SubBpaRel.Valid_From__c > #currentDate# OR SubBpaRel.Valid_Thru__c < #currentDate#) THEN '1' ELSE '0' END AS SubIsLeadFollowUpTime ";    
+			sqlStmt1 += "FROM Substitution__c AS SubMain, Substitution__c AS SubBpaRel ";
+			sqlStmt1 += "WHERE SubMain.Id = SubBpaRel.Substitution__c ";
+			sqlStmt1 += "AND SubMain.Active__c = '1' ";
+			sqlStmt1 += "AND SubBpaRel.Active__c = '1' ";
+			sqlStmt1 += "AND SubMain.Sales_Org__c = '#SalesOrg#' ";
+			sqlStmt1 += "AND #compareAsDate('subBpaRelValidFromWithLeadTime', 'Date', '<=',#currentDate#, 'Date')# ";
+			sqlStmt1 += "AND #compareAsDate('subBpaRelValidThruWithFollowUpTime', 'Date', '>=',#currentDate#, 'Date')# ";
+			sqlStmt1 += "AND #compareAsDate('subMainValidFromWithLeadTime', 'Date', '<=',#currentDate#, 'Date')# ";
+			sqlStmt1 += "AND #compareAsDate('subMainValidThruWithFollowUpTime', 'Date', '>=',#currentDate#, 'Date')# ";
+			sqlStmt1 += "GROUP BY SubBpaRel.Substitute__c, SubBpaRel.Account__c, SubMain.Substituted__c ";        
+			sqlStmt1 += ") Sub ON ";
+			sqlStmt1 += "Account_Task__c.Account__c = Sub.SubBpaRelBpaMainPKey AND Account_Task__c.Responsible__c = Sub.SubMainUsrMainPKey ";
+			sqlStmt1 += "AND (Account_Task__c.Phase__c <> 'initial' ";
+			sqlStmt1 += "OR (Account_Task__c.Phase__c = 'initial'  AND Account_Task__c.CreatedById <> '#UserSfId#') OR (Account_Task__c.CreatedById = '#UserSfId#')) ";
+
+			sqlStmt1 += "WHERE 1=1 ";
+			sqlStmt1 += "AND Account_Task__c.Account__c IN (";
+
+			//loadLoCustomerOverview
+
+			var sqlStmt2 = " ) AND Account_Task__c.Sales_Org__c = '#SALESORG#' ";
+			sqlStmt2 += "AND Account_Task__c.IsDeleted <> 1 ";
+			sqlStmt2 += "AND Account_Task_Template__c.Sales_Org__c = '#SALESORG#' ";
+
+			sqlStmt2 += addCondSearch;
+			sqlStmt2 += cond;
+			sqlStmt2 += "ORDER BY ";
+			sqlStmt2 += addCondOrderBy;
+
+
+			var sqlStmt1Result = Utils.replaceMacrosParam(sqlStmt1, sqlParams1);
+			var sqlStmt2Result = Utils.replaceMacrosParam(sqlStmt2, sqlParams2);
+
+
+			var finalSql = sqlStmt1Result.sql + loadLoCustomerOverview + sqlStmt2Result.sql;
+			var finalParams = sqlStmt1Result.params.concat(loadLoCustomerOverviewParams).concat(sqlStmt2Result.params);
+
+			return {sql: finalSql, params: finalParams};
+		]]></Load>
+    <Update><![CDATA[ 
+			// Intended to be empty     
+			return undefined;     
+		]]></Update>
+    <Insert><![CDATA[     
+			// Intended to be empty     
+			return undefined;     
+		]]></Insert>
+    <Delete><![CDATA[      
+			// Intended to be empty     
+			return undefined;     
+		]]></Delete>
+  </Database>
+</DataSource>

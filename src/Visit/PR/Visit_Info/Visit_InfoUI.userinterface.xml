@@ -1,0 +1,89 @@
+<UIDescription name="Visit::InfoUI" schemaVersion="0.0.0.5" simpleEditorOnly="true">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="VisiInfoId" defaultLabel="Visit Information" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="VisitInformation">
+          <Bindings>
+            <Resource target="Title" type="Label" id="VisitInfo" defaultLabel="Visit Information" />
+          </Bindings>
+          <InputArea name="RetailStore" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Customer" id="RetailStoreId" />
+              <Binding target="Value" type="Text" binding="ProcessContext::RetailStoreDetail.name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="VisitStatus" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Visit Status" id="VisitStatusId" />
+              <Binding target="Value" type="Text" binding="ProcessContext::VisitBo.status.text" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <Merger name="Time Merger" pattern="twoInputControls" labelHandling="Combined" leftRatio="5" rightRatio="5">
+            <TimePickerField name="TimeFrom" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Time From/Thru" id="VisitPlannedTimeId" />
+                <Binding target="Value" binding="ProcessContext::visitBo.plannedStartTime" bindingMode="ONE_WAY" />
+              </Bindings>
+            </TimePickerField>
+            <TimePickerField name="TimeThru" disabled="true">
+              <Bindings>
+                <Binding target="Value" binding="ProcessContext::visitBo.plannedEndTime" bindingMode="ONE_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </Merger>
+        </GroupElement>
+        <GroupElement name="Address">
+          <Bindings>
+            <Resource target="Title" type="Label" id="AddressId" defaultLabel="Address" />
+          </Bindings>
+          <InputArea name="MainAddress" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Main Address" id="MainAddressId" />
+              <Binding target="Value" type="Text" binding="ProcessContext::RetailStoreAddress.street" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="Zip City" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="ZipCity" defaultLabel="Zip City" />
+              <Binding target="Value" binding="ProcessContext::RetailStoreAddress.zipCodeAndCity" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="State" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="StateId" defaultLabel="State" />
+              <Binding target="Value" binding="ProcessContext::RetailStoreAddress.state" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+        <GroupElement name="Task">
+          <Bindings>
+            <Resource target="Title" type="Label" id="TaskId" defaultLabel="Task" />
+          </Bindings>
+          <InputAreaMultiLine name="Completed" disabled="true" noOfRows="2">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Completed" id="CompletedTasksId" />
+              <Binding target="Value" type="Text" binding="ProcessContext::CompletedTasks" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+          <InputAreaMultiLine name="InProgress" disabled="true" noOfRows="2">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="InProgress" id="InProgressId" />
+              <Binding target="Value" type="Text" binding="ProcessContext::InProgressTasks" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+          <InputAreaMultiLine name="NotStarted" disabled="true" noOfRows="3">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="NotStarted" id="NotStartedTasksId" />
+              <Binding target="Value" type="Text" binding="ProcessContext::NotStartedTasks" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

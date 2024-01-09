@@ -1,0 +1,39 @@
+<DataSource name="DsLoPrmTactics" businessObjectClass="LoPrmTactics" external="false" distinct="false" readonly="false" editableEntity="PrmTactic" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="PrmTactic" column="PKey" />
+    <Attribute name="active" table="PrmTactic" column="Active" />
+    <Attribute name="costAmount" table="PrmTactic" column="CostAmount" />
+    <Attribute name="dateFrom" table="PrmTactic" column="DateFrom" />
+    <Attribute name="dateThru" table="PrmTactic" column="DateThru" />
+    <Attribute name="tacticParentPKey" table="PrmTactic" column="TacticParentPKey" />
+    <Attribute name="tacticMetaName" table="PrmMetaText" column="Text" />
+    <Attribute name="prmMetaPKey" table="PrmTactic" column="PrmMetaPKey" />
+    <Attribute name="compensationMetaText" table="PrmCompensationMetaText" column="Text" />
+  </Attributes>
+  <Entities>
+    <Entity name="PrmTactic" alias="" idAttribute="PKey" />
+    <Entity name="PrmMetaText" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="PrmTactic.PrmMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="PrmMetaText.PrmMetaPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="PrmCompensationMetaText" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="PrmTactic.PrmCompensationMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="PrmCompensationMetaText.PrmCompensationMetaPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+   PrmTactic.TacticParentPKey = #tacticParentPKey#		
+   AND PrmTactic.Active = '1'
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="tacticParentPKey" type="TEXT" />
+  </Parameters>
+  <ConditionalParameters></ConditionalParameters>
+</DataSource>

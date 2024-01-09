@@ -1,0 +1,28 @@
+<ListItem name="LiTruckLoadOverview">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="phase" type="DomSdoPhase" storable="true" dataSourceProperty="phase" />
+    <SimpleProperty name="documentType" type="DomSdoSubType" storable="true" dataSourceProperty="documentType" />
+    <SimpleProperty name="commitDate" type="DomDate" storable="true" dataSourceProperty="commitDate" />
+    <SimpleProperty name="releaseTime" type="DomDateTime" storable="true" dataSourceProperty="releaseTime" />
+    <SimpleProperty name="documentId" type="DomId" storable="true" dataSourceProperty="documentId" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="initiatorPKey" type="DomPKey" dataSourceProperty="initiatorPKey" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="actualStatePKey" type="DomPKey" dataSourceProperty="actualStatePKey" />
+    <SimpleProperty name="sdoMetaPKey" type="DomPKey" dataSourceProperty="sdoMetaPKey" />
+    <SimpleProperty name="sortOrder" type="DomInteger" storable="true" dataSourceProperty="sortOrder" />
+    <SimpleProperty name="sortReleaseTime" type="DomDateTime" storable="true" dataSourceProperty="sortReleaseTime" />
+    <SimpleProperty name="usedForStartOfDay" type="DomBool" storable="true" dataSourceProperty="usedForStartOfDay" />
+    <SimpleProperty name="usedForEndOfDay" type="DomBool" storable="true" dataSourceProperty="usedForEndOfDay" />
+    <SimpleProperty name="usage" type="DomTmgUsage" storable="true" dataSourceProperty="usage" />
+    <SimpleProperty name="metaText" type="DomText" storable="true" dataSourceProperty="metaText" />
+    <SimpleProperty name="grossTotalValueReceipt" type="DomMoney" storable="true" dataSourceProperty="grossTotalValueReceipt" />
+    <SimpleProperty name="releaseTime1" type="DomString" />
+    <SimpleProperty name="currency" type="DomCurrency" storable="true" dataSourceProperty="currency" />
+    <SimpleProperty name="senderPKey" type="DomPKey" storable="true" dataSourceProperty="senderPKey" />
+    <SimpleProperty name="recipientPKey" type="DomPKey" storable="true" dataSourceProperty="recipientPKey" />
+    <SimpleProperty name="inwardTransferDocumentPKey" type="DomPKey" storable="true" dataSourceProperty="inwardTransferDocumentPKey" />
+    <SimpleProperty name="tmgMainPKey" type="DomPKey" storable="true" dataSourceProperty="tmgMainPKey" />
+  </SimpleProperties>
+</ListItem>

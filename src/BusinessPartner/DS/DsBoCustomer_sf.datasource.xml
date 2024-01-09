@@ -1,0 +1,49 @@
+<DataSource name="DsBoCustomer" backendSystem="sf" businessObjectClass="BoCustomer" external="false" editableEntity="Account" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account" column="Id" />
+    <Attribute name="name" table="Account" column="Name" />
+    <Attribute name="name2" table="Account" column="Name_2__c" />
+    <Attribute name="matchcode" table="Account_Extension__c" column="Match_Code__c" />
+    <Attribute name="customerId" table="Account" column="Account_Number__c" />
+    <Attribute name="phone1" table="Account" column="Phone" />
+    <Attribute name="email1" table="Account" column="Account_Email__c" />
+    <Attribute name="fax1" table="Account" column="Fax" />
+    <Attribute name="priority" table="Account_Extension__c" column="Priority__c" />
+    <Attribute name="classOfTrade" table="Account_Extension__c" column="Class_Of_Trade__c" />
+    <Attribute name="companyType" table="Account_Extension__c" column="Company_Type__c" />
+    <Attribute name="orgLevel" table="Account_Extension__c" column="Org_Level__c" />
+    <Attribute name="phase" table="Account_Extension__c" column="Phase__c" />
+    <Attribute name="salesRelevant" table="Account_Extension__c" column="Sales_Relevant__c" />
+    <Attribute name="state" table="Account_Extension__c" column="State__c" />
+    <Attribute name="bpaMetaPKey" table="Account" column="Account_Template__c" />
+    <Attribute name="dateClosure" table="Account_Extension__c" column="Date_Closure__c" />
+    <DerivedAttribute name="deleted" value="'0'" />
+    <Attribute name="accountExtensionId" table="Account_Extension__c" column="Id" />
+    <DerivedAttribute name="totalDebit" value="0" />
+    <DerivedAttribute name="totalCredit" value="0" />
+    <DerivedAttribute name="totalDebitCredit" value="0" />
+    <Attribute name="considerModules" table="Account_Extension__c" column="Consider_Modules__c" />
+    <DerivedAttribute name="priorityImage" value="CASE Account_Extension__c.Priority__c WHEN 'A' THEN 'GoldMedal' WHEN 'B' THEN 'SilverMedal' ELSE 'BronzeMedal' END" />
+    <Attribute name="accountDi" table="Account_Extension__c" column="Distribution_Issue__c" />
+    <Attribute name="accountOi" table="Account_Extension__c" column="OOS_Issue__c" />
+    <Attribute name="operatingHoursId" table="Account" column="OperatingHoursId" />
+    <DerivedAttribute name="emailEditable" value="'0'" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account" alias="" idAttribute="Id" />
+    <Entity name="Account_Extension__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Account_Extension__c.Account__c" comparator="eq" rightSideType="Attribute" rightSideValue="Account.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+   Account.Id = #pKey#
+          ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

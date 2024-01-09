@@ -1,0 +1,16 @@
+<ListObject name="LoTargetFulFillment" generateLoadMethod="false" schemaVersion="1.1">
+  <DataSource name="DsLoTargetFulFillment" />
+  <Item objectClass="LiTargetFulFillment" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="calculateActualTargets" />
+    <Method name="getActualTargetByPeriod" />
+  </Methods>
+</ListObject>

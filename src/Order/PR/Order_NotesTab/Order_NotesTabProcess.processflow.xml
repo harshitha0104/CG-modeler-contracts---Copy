@@ -1,0 +1,56 @@
+<Process name="Order::NotesTabProcess" defaultAction="ShowNotes_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="MainBO" type="BoOrder" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="SetCurrentToInvoice" actionType="LOGIC" call="ProcessContext::MainBO.loNotes.selectNote">
+        <Parameters>
+          <Input name="type" type="Literal" value="Invoice" />
+          <Input name="sdoMainPKey" type="DomPKey" value="ProcessContext::MainBO.PKey" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowNotes_Decision" actionType="DECISION" parameter="ProcessContext::MainBO.boOrderMeta.sdoSubType">
+        <Case value="Delivery" action="ShowDeliveryNotes" />
+        <CaseElse action="ShowNotes_ReplenishmentDecision" />
+      </Action>
+      <Action name="ShowNotes_ReplenishmentDecision" actionType="DECISION" parameter="ProcessContext::MainBO.documentType">
+        <Case value="Replenishment" action="ShowReplenishmentNotesTab" />
+        <CaseElse action="ShowNotes" />
+      </Action>
+      <Action actionType="View" name="ShowNotes">
+        <UIDescription>Order::NotesTab</UIDescription>
+        <Events>
+          <Event name="showInvoiceNote" action="SelectNote" />
+          <Event name="showDeliveryNote" action="SelectNote" />
+        </Events>
+      </Action>
+      <Action actionType="View" name="ShowReplenishmentNotesTab">
+        <UIDescription>Order::ReplenishmentNotesTabUI</UIDescription>
+        <Events>
+          <Event name="showInvoiceNote" action="SelectNote" />
+          <Event name="showDeliveryNote" action="SelectNote" />
+        </Events>
+      </Action>
+      <Action actionType="View" name="ShowDeliveryNotes">
+        <UIDescription>Order::DeliveryNotesTabUI</UIDescription>
+        <Events>
+          <Event name="showInvoiceNote" action="SelectNote" />
+          <Event name="showDeliveryNote" action="SelectNote" />
+        </Events>
+      </Action>
+      <Action name="SelectNote" actionType="LOGIC" call="ProcessContext::MainBO.loNotes.selectNote">
+        <Parameters>
+          <Input name="type" type="DomSdoVouch" value="Event.type" />
+          <Input name="sdoMainPKey" type="DomPKey" value="ProcessContext::MainBO.PKey" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

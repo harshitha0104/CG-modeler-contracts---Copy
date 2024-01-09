@@ -1,0 +1,14 @@
+ <!--Account Harmonization: obsolete:  OperatingHours (LoTimeSlot) is used instead of Account_Opening_Hours__c -->
+<ListObject name="LoCustomerOpeningTime" generateLoadMethod="false" >
+  <DataSource name="DsLoCustomerOpeningTime" />
+  <Item objectClass="LiCustomerOpeningTime" />
+  <Methods>
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="addItem" />
+    <Method name="deleteItem" />
+    <Method name="setOpenDays" />
+    <Method name="setOpenDaysForItem" />
+    <Method name="cancel" />
+  </Methods>
+</ListObject>

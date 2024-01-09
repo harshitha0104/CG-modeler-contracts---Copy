@@ -1,0 +1,18 @@
+<DataSource name="DsLoTourRelatedCalls" backendSystem="sf" businessObjectClass="LoTourRelatedCalls" external="false" editableEntity="Visit" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Visit" column="Id" />
+    <Attribute name="tmgMainPKey" table="Visit" column="Tour__c" />
+    <DateTimeAttribute dateName="dateFrom" timeName="timeFrom" table="Visit" column="PlannedVisitStartTime" />
+    <DateTimeAttribute dateName="dateThru" timeName="timeThru" table="Visit" column="PlannedVisitEndTime" />
+  </Attributes>
+  <Entities>
+    <Entity name="Visit" alias="Visit" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+(Visit.Tour__c = #tmgMainPKey# AND Visit.Status='Planned')
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="tmgMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

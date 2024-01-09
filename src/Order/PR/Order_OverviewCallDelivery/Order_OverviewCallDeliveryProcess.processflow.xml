@@ -1,0 +1,142 @@
+<Process name="Order::OverviewCallDeliveryProcess" defaultAction="GetOverviewList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="DelOverviewList" type="LoDeliveryOverview" />
+        <Declaration name="CallCustomerPKey" type="DomPKey" />
+        <Declaration name="CallPKey" type="DomPKey" />
+        <Declaration name="CallOutOfStockProducts" type="String" />
+        <Declaration name="CreateNew_OrderMetaPKey" type="DomPKey" />
+        <Declaration name="ContextMenuList" type="LoOrderOverviewContextMenu" />
+        <Declaration name="DelRole" type="BoDeliveryRole" />
+      </Declarations>
+      <Parameters>
+        <Input name="CallCustomerPKey" type="DomPKey" />
+        <Input name="CallPKey" type="DomPKey" />
+        <Input name="CallOutOfStockProducts" type="String" />
+        <Input name="UIPosition" type="String" />
+        <Input name="TmgTourPKey" type="String" />
+        <Input name="ClbBO" type="BoCall" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="GetOverviewList" actionType="LOAD" type="LoDeliveryOverview">
+        <Parameters>
+          <Input name="CallCustomerPKey" value="ProcessContext::CallCustomerPKey" />
+          <Input name="UIPosition" value="ProcessContext::UIPosition" />
+          <Input name="CallPKey" value="ProcessContext::CallPKey" />
+        </Parameters>
+        <Return name="ProcessContext::DelOverviewList" />
+        <TransitionTo action="GetCustomerDeliveryRole" />
+      </Action>
+      <Action name="GetCustomerDeliveryRole" actionType="LOAD" type="BoDeliveryRole">
+        <Parameters>
+          <Input name="CustomerPKey" value="ProcessContext::CallCustomerPKey" />
+        </Parameters>
+        <Return name="ProcessContext::DelRole" />
+        <TransitionTo action="ShowOverviewList" />
+      </Action>
+      <!-- PRIMARY OVERVIEW ACTIONS -->
+      <Action name="ShowOverviewList" actionType="VIEW">
+        <UIDescription>Order::OverviewCallDeliveryUI</UIDescription>
+        <Events>
+          <!-- Grouped list events -->
+          <Event name="itemSelected" action="LoadBo" />
+          <!-- Menu item events -->
+          <Event name="createNewDelivery" action="CreateNewWizardOrder" />
+          <Event name="showAllDocuments" action="ResetDeliveryListFilter" />
+          <Event name="showOpenDocuments" action="SetDeliveryListFilter_Open" />
+          <!-- Context menu events -->
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="ContextMenu_Result_Decision" />
+        </Events>
+      </Action>
+      <!-- FILTER ACTIONS -->
+      <!-- Set filter to show only open (with phase 'Initial') orders -->
+      <Action name="SetDeliveryListFilter_Open" actionType="LOGIC" call="ProcessContext::DelOverviewList.setOpenOnlyFilter"></Action>
+      <!-- Reset order list filters -->
+      <Action name="ResetDeliveryListFilter" actionType="LOGIC" call="ProcessContext::DelOverviewList.resetAllFilters"></Action>
+      <!-- Actions for handling the CONTEXT MENUE -->
+      <Action actionType="LOAD" name="GetContextMenu" type="LoOrderOverviewContextMenu">
+        <Parameters>
+          <Input name="deletionAllowed" value="Event.deletionAllowed" />
+          <Input name="phase" value="Event.phase" />
+          <Input name="mobilityRelevant" value="Event.mobilityRelevant" />
+          <Input name="sdoSubType" value="Event.sdoSubType" />
+          <Input name="clbMainPKey" value="Event.clbMainPKey" />
+          <Input name="CallPKey" value="ProcessContext::CallPKey" />
+          <Input name="clbStatus" value="ProcessContext::ClbBO.clbStatus" />
+          <Input name="responsiblePKey" value="Event.responsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::ContextMenuList" />
+      </Action>
+      <Action name="ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Execute" action="LoadBo" />
+        <Case value="Cancel" action="CancelOrder" />
+        <Case value="Delete" action="DeleteOrder" />
+        <CaseElse action="ShowOverviewList" />
+      </Action>
+      <!-- ACTIONS NECESSARY FOR DETAIL -->
+      <!-- LOAD -->
+      <Action name="LoadBo" actionType="PROCESS" process="Order::LoadProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+          <Input name="ClbMainPKey" value="ProcessContext::CallPKey" />
+          <Input name="CallInContext_clbMainPKey" value="ProcessContext::CallPKey" />
+          <Input name="CallOutOfStockProducts" value="ProcessContext::CallOutOfStockProducts" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <!-- WIZARD -->
+      <Action name="CreateNewWizardOrder" actionType="PROCESS" process="Order::CreateNewAdhocWizardProcess">
+        <Parameters>
+          <Input name="OrdererPKey" value="ProcessContext::CallCustomerPKey" />
+          <Input name="TmgTourPKey" value="ProcessContext::TmgTourPKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CreateNew_OrderMetaPKey" value="orderMetaPKey" />
+        </ReturnValues>
+        <TransitionTo action="CreateNewWizard_Result_Decision" />
+      </Action>
+      <!-- DESICIONS AFTER CREATE WIZARD -->
+      <Action name="CreateNewWizard_Result_Decision" actionType="DECISION" parameter="ProcessContext::CreateNew_OrderMetaPKey">
+        <CaseEmpty action="ShowOverviewList" />
+        <CaseElse action="CreateOrderFromCallNavigation" />
+      </Action>
+      <!-- CREATE -->
+      <Action actionType="PROCESS" name="CreateOrderFromCallNavigation" process="Order::CreateNewProcess">
+        <Parameters>
+          <Input name="SdoMetaPKey" value="ProcessContext::CreateNew_OrderMetaPKey" />
+          <Input name="OrdererPKey" value="ProcessContext::CallCustomerPKey" />
+          <Input name="ClbMainPKey" value="ProcessContext::CallPKey" />
+          <Input name="CallInContext_clbMainPKey" value="ProcessContext::CallPKey" />
+          <Input name="CallOutOfStockProducts" value="ProcessContext::CallOutOfStockProducts" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <!-- CANCEL -->
+      <Action name="CancelOrder" actionType="PROCESS" process="Order::CancelWizardProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+          <Input name="ClbMainPKey" value="ProcessContext::CallPKey" />
+          <Input name="CallInContext_clbMainPKey" value="ProcessContext::CallPKey" />
+          <Input name="CallOutOfStockProducts" value="ProcessContext::CallOutOfStockProducts" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+      <!-- DELETE -->
+      <Action name="DeleteOrder" actionType="PROCESS" process="Order::DeleteWizardProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+          <Input name="ClbMainPKey" value="ProcessContext::CallPKey" />
+          <Input name="CallInContext_clbMainPKey" value="ProcessContext::CallPKey" />
+          <Input name="CallOutOfStockProducts" value="ProcessContext::CallOutOfStockProducts" />
+        </Parameters>
+        <TransitionTo action="GetOverviewList" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

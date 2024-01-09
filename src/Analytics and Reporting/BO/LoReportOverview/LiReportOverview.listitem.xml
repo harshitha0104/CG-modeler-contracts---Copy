@@ -1,0 +1,9 @@
+<ListItem name="LiReportOverview">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="reportName" type="DomText" storable="false" dataSourceProperty="reportName" />
+    <SimpleProperty name="reportId" type="DomText" storable="false" dataSourceProperty="reportId" />
+    <SimpleProperty name="grouping" type="DomText" storable="false" dataSourceProperty="grouping" />
+    <SimpleProperty name="groupSort" type="DomInteger" storable="false" dataSourceProperty="groupSort" />
+  </SimpleProperties>
+</ListItem>

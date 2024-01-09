@@ -1,0 +1,4 @@
+<ValidationMessages name="BoRewardProductValidationMessages" businessObject="BoRewardProductValidation" schemaVersion="">
+  <ValidationMessage name="CasSdoFreeProductMaxValueExceeded" defaultMessage="You have exceeded the max quantity #maxQuantityValue# allowed for #productName#." comment="The number of free products added from a reward must be lower" />
+  <ValidationMessage name="CasSdoFreeProductTotalMaxValueExceeded" defaultMessage="You have exceeded the max quantity allowed for the reward." comment="The total number of free items added from areward must be lower" />
+</ValidationMessages>

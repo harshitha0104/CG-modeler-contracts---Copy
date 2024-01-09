@@ -1,0 +1,235 @@
+<UIDescription name="TourManagement::OverviewUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionPage" cachable="false">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TmgOverviewId" defaultLabel="Tour Overview" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="createNewTour">
+          <Bindings>
+            <Resource target="Text" type="Label" id="createNewTourId" defaultLabel="Create New Tour" />
+            <Resource target="Icon" type="Image" id="PlusDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="createNewTour" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="AllTours">
+          <Bindings>
+            <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+            <Resource target="Text" type="Label" id="AllTours" defaultLabel="All Tours" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showAllTours" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="AllOpen">
+          <Bindings>
+            <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+            <Resource target="Text" type="Label" id="AllOpen" defaultLabel="All Open" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showOpenTours" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <!-- [. AREA .] Main -->
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="TourList" searchable="true" dataSource="ProcessContext::OverviewList.Items[]">
+          <SearchAttributes>
+            <SearchAttribute name="Text" />
+          </SearchAttributes>
+          <Items name="Items" itemPattern="TourOverviewItem">
+            <ItemListLayout>
+              <Default>
+                <Col width="13em">
+                  <Row>
+                    <Col width="3em" height="1.4em" layoutType="Image" bindingId="Sign" align="left" />
+                    <Col width="11em">
+                      <Row layoutType="itemImportantValue" bindingId="Id" />
+                      <Row layoutType="itemImportantValue" bindingId="Description" />
+                    </Col>
+                  </Row>
+                </Col>
+                <Col width="13em">
+                  <Row>
+                    <Col height="1.2em" layoutType="itemSecondary" bindingId="DateFrom" />
+                    <Col width="1em" height="1.2em" layoutType="itemSecondary" bindingId="Hyphen" />
+                    <Col height="1.2em" layoutType="itemSecondary" bindingId="DateThru" />
+                  </Row>
+                </Col>
+                <Col width="6em">
+                  <Row></Row>
+                  <Row>
+                    <Col layoutType="itemValueSmall" bindingId="NoOfVisits" />
+                    <Col layoutType="itemValueSmall" bindingId="VisitCount" />
+                  </Row>
+                </Col>
+                <Col width="6em">
+                  <Row>
+                    <Col layoutType="itemImportantValue" bindingId="TmgStatusText" />
+                  </Row>
+                </Col>
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="13em">
+                    <Row>
+                      <Col width="3em" height="1.4em" layoutType="Image" bindingId="Sign" align="left" />
+                      <Col width="12em">
+                        <Row layoutType="itemIdentifier" bindingId="Id" />
+                        <Row layoutType="itemSecondary" bindingId="Description" />
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col width="13em">
+                    <Row>
+                      <Col width="5.5em" height="1.2em" layoutType="itemSecondary" bindingId="DateFrom" />
+                      <Col width="2em" height="1.2em" layoutType="itemSecondary" bindingId="Hyphen" />
+                      <Col width="5.5em" height="1.2em" layoutType="itemSecondary" bindingId="DateThru" />
+                    </Row>
+                  </Col>
+                  <Col width="6em">
+                    <Row></Row>
+                    <Row>
+                      <Col layoutType="itemValueSmall" bindingId="NoOfVisits" />
+                      <Col layoutType="itemValueSmall" bindingId="VisitCount" />
+                    </Row>
+                  </Col>
+                  <Col width="6em">
+                    <Row>
+                      <Col layoutType="itemImportantValue" bindingId="TmgStatusText" />
+                    </Row>
+                  </Col>
+                </Default>
+                <Apple>
+                  <Col width="13em">
+                    <Row>
+                      <Col width="3em" height="1.4em" layoutType="Image" bindingId="Sign" align="left" />
+                      <Col width="11em">
+                        <Row layoutType="itemImportantValue" bindingId="Id" />
+                        <Row layoutType="itemImportantValue" bindingId="Description" />
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col width="13em">
+                    <Row>
+                      <Col height="1.2em" layoutType="itemSecondary" bindingId="DateFrom" />
+                      <Col width="1em" height="1.2em" layoutType="itemSecondary" bindingId="Hyphen" />
+                      <Col height="1.2em" layoutType="itemSecondary" bindingId="DateThru" />
+                    </Row>
+                  </Col>
+                  <Col width="6em">
+                    <Row></Row>
+                    <Row>
+                      <Col layoutType="itemValueSmall" bindingId="NoOfVisits" />
+                      <Col layoutType="itemValueSmall" bindingId="VisitCount" />
+                    </Row>
+                  </Col>
+                  <Col width="6em">
+                    <Row>
+                      <Col layoutType="itemImportantValue" bindingId="TmgStatusText" />
+                    </Row>
+                  </Col>
+                </Apple>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col width="1em" height="3em" layoutType="Image" bindingId="Sign" />
+                  <Col width="16em">
+                    <Row layoutType="itemIdentifierSmall" bindingId="Id" />
+                    <Row layoutType="itemSecondary" bindingId="Description" />
+                    <Row>
+                      <Col width="11em">
+                        <Row>
+                          <Col width="5em" layoutType="itemSecondary" bindingId="DateFrom" />
+                          <Col width="1em" layoutType="itemSecondary" bindingId="Hyphen" />
+                          <Col width="5em" layoutType="itemSecondary" bindingId="DateThru" />
+                        </Row>
+                      </Col>
+                      <Col width="5em">
+                        <Row>
+                          <Col layoutType="itemSecondary" bindingId="NoOfVisits" />
+                          <Col layoutType="itemSecondary" bindingId="VisitCount" />
+                        </Row>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Default>
+                <Apple>
+                  <Col>
+                    <Row>
+                      <Col width="2em" height="1.4em" layoutType="Image" bindingId="Sign" align="left" />
+                      <Col width="9em">
+                        <Row layoutType="itemImportantValue" bindingId="Id" />
+                        <Row layoutType="itemImportantValue" bindingId="Description" />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col height="1.2em" layoutType="itemSecondary" bindingId="TmgStatusText" />
+                    </Row>
+                    <Row>
+                      <Col height="1.2em" flex="1" layoutType="itemSecondary" bindingId="DateFrom" />
+                      <Col width="2em" layoutType="itemSecondary" bindingId="EmptyLabel" />
+                      <Col height="1.2em" flex="1" layoutType="itemSecondary" bindingId="Hyphen" />
+                      <Col height="1.2em" flex="1" layoutType="itemSecondary" bindingId="DateThru" />
+                    </Row>
+                    <Row>
+                      <Col layoutType="itemValueSmall" bindingId="NoOfVisits" />
+                      <Col layoutType="itemValueSmall" bindingId="VisitCount" />
+                    </Row>
+                  </Col>
+                </Apple>
+              </Phone>
+            </ItemListLayout>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::ContextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                  <Binding type="Visible" target="Visible" binding=".actionVisible" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+            <Bindings>
+              <Binding target="Id" type="Text" binding=".id" bindingMode="ONE_WAY" />
+              <Binding target="Description" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              <Binding target="TmgStatusText" type="Text" binding=".tmgStatus.text" bindingMode="ONE_WAY" />
+              <Binding target="DateFrom" type="Date" binding=".dateFrom" bindingMode="ONE_WAY" />
+              <Binding target="DateThru" type="Date" binding=".dateThru" bindingMode="ONE_WAY" />
+              <Binding target="VisitCount" type="Text" binding=".visitCount" bindingMode="ONE_WAY" />
+              <Resource target="NoOfVisits" type="Label" id="NoOfVisitsId" defaultLabel="#Visits: " />
+              <Resource target="EmptyLabel" type="Label" id="emptyLabelId" defaultLabel=" " />
+              <Resource target="Hyphen" type="Label" id="noId" defaultLabel="-" />
+              <Binding target="Sign" type="Image" binding=".tmgStatus" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+            <ContextOpeningEvent event="contextMenuOpening">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="tmgStatus" value=".tmgStatus" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="contextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

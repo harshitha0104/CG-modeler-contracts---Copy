@@ -1,0 +1,20 @@
+<DataSource name="DsLuParentOrgUnit" backendSystem="sf" businessObjectClass="LuParentOrgUnit" external="false" readOnly="true" editableEntity="Org_Unit_Hierarchy__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Org_Unit_Hierarchy__c" column="Id" />
+    <Attribute name="childPKey" table="Org_Unit_Hierarchy__c" column="Child_Org_Unit__c" />
+    <Attribute name="parentPKey" table="Org_Unit_Hierarchy__c" column="Parent_Org_Unit__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Org_Unit_Hierarchy__c" alias="" idAttribute="Id" />
+  </Entities>
+  <!-- SF/CASDIF: in SF the StructureType is always 'Sales' and the RelationType is always 'Hierarchy' -->
+  <QueryCondition><![CDATA[
+        Org_Unit_Hierarchy__c.Child_Org_Unit__c = #childPKey#
+        AND #compareAsDate('Org_Unit_Hierarchy__c.Valid_From__c', 'Date','<=',#TodayAsDate#, 'Date')#
+        AND #compareAsDate('Org_Unit_Hierarchy__c.Valid_Thru__c', 'Date','>=',#TodayAsDate#, 'Date')#
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="childPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,40 @@
+<BusinessObject name="BoHurdleEvaluationHelper" schemaVersion="1.1">
+  <DataSource name="DsBoHurdleEvaluationHelper" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="rewardsAndHurdlesTitle" type="DomString" />
+    <SimpleProperty name="orderCache" type="Object" id="false" />
+    <SimpleProperty name="simplePricingCalculator" type="Object" />
+    <SimpleProperty name="rewardsButtonCounter" type="DomString" />
+  </SimpleProperties>
+  <NestedObjects />
+  <ListObjects>
+    <ListObject name="loHurdles" objectClass="LoHurdles" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loRewards" objectClass="LoRewards" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loRewardProducts" objectClass="LoRewardProducts" dataSourceProperty="empty" listProperty="empty" />
+    <ListObject name="loRewardGroups" objectClass="LoRewardGroups" dataSourceProperty="empty" listProperty="empty" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="saveAsync" />
+    <Method name="evaluateHurdles" />
+    <Method name="loadRelevantRewardProducts" />
+    <Method name="onRewardChanged" />
+    <Method name="onRewardProductChanged" />
+    <Method name="userExitForSpecialReward" />
+    <Method name="determineSatisfiedRewardGroups" />
+    <Method name="handleRewardSelection" />
+    <Method name="filterRewardSpecificHurdle" />
+    <Method name="getHurdleValue" />
+    <Method name="onRewardSelectionChanged" />
+  </Methods>
+</BusinessObject>

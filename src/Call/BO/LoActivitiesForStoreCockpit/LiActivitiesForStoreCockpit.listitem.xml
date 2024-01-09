@@ -1,0 +1,8 @@
+<ListItem name="LiActivitiesForStoreCockpit" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="id" type="DomId" storable="false" />
+    <SimpleProperty name="text" type="DomText" storable="false" />
+    <SimpleProperty name="image" type="DomString" storable="true" />
+  </SimpleProperties>
+</ListItem>

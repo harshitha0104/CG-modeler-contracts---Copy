@@ -1,0 +1,14 @@
+<ListItem name="LiProductSurvey">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" storable="false" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="posId" type="DomPKey" storable="false" dataSourceProperty="posId" />
+    <SimpleProperty name="productName" type="DomText" storable="false" dataSourceProperty="productName" />
+    <SimpleProperty name="listed" type="DomBool" storable="false" dataSourceProperty="listed" />
+    <SimpleProperty name="planned" type="DomBool" storable="false" dataSourceProperty="planned" />
+    <SimpleProperty name="jobDefinitionMeta1" type="DomText" storable="false" dataSourceProperty="jobDefinitionMeta1" />
+    <SimpleProperty name="jobDefinition1value" type="DomText" storable="false" dataSourceProperty="jobDefinition1value" />
+    <SimpleProperty name="type" type="DomRpsDataType" storable="false" dataSourceProperty="type" />
+    <SimpleProperty name="surveysInitialized" type="DomBool" storable="false" dataSourceProperty="surveysInitialized" />
+  </SimpleProperties>
+</ListItem>

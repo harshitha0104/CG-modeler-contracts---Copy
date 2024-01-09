@@ -1,0 +1,23 @@
+<ListItem name="LiAutomaticPlanning">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="clbMetaPKey" type="DomPKey" storable="false" dataSourceProperty="clbMetaPKey" />
+    <SimpleProperty name="validFrom" type="DomDate" dataSourceProperty="validFrom" />
+    <SimpleProperty name="frequency" type="DomInteger" storable="false" dataSourceProperty="frequency" />
+    <SimpleProperty name="startWeek" type="DomInteger" storable="false" dataSourceProperty="startWeek" />
+    <SimpleProperty name="timeOfDay" type="DomTime" storable="false" dataSourceProperty="timeOfDay" />
+    <SimpleProperty name="dayOfWeek" type="DomText" storable="false" dataSourceProperty="dayOfWeek" />
+    <SimpleProperty name="duration" type="DomInteger" storable="false" dataSourceProperty="duration" />
+    <SimpleProperty name="substitutedUsrPKey" type="DomPKey" dataSourceProperty="substitutedUsrPKey" />
+    <SimpleProperty name="substituted" type="DomBool" dataSourceProperty="isSubstituted" />
+    <SimpleProperty name="managed" type="DomBool" dataSourceProperty="managed" />
+    <SimpleProperty name="planningMode" type="DomText" storable="false" dataSourceProperty="planningMode" />
+    <SimpleProperty name="WorksOnMonday" type="DomBool" storable="false" dataSourceProperty="WorksOnMonday" />
+    <SimpleProperty name="WorksOnTuesday" type="DomBool" storable="false" dataSourceProperty="WorksOnTuesday" />
+    <SimpleProperty name="WorksOnWednesday" type="DomBool" storable="false" dataSourceProperty="WorksOnWednesday" />
+    <SimpleProperty name="WorksOnThursday" type="DomBool" storable="false" dataSourceProperty="WorksOnThursday" />
+    <SimpleProperty name="WorksOnFriday" type="DomBool" storable="false" dataSourceProperty="WorksOnFriday" />
+    <SimpleProperty name="WorksOnSaturday" type="DomBool" storable="false" dataSourceProperty="WorksOnSaturday" />
+    <SimpleProperty name="WorksOnSunday" type="DomBool" storable="false" dataSourceProperty="WorksOnSunday" />
+  </SimpleProperties>
+</ListItem>

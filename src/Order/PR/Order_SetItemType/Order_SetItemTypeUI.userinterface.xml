@@ -1,0 +1,75 @@
+<UIDescription name="Order::SetItemTypeUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="SetItemTypeId" defaultLabel="Settings" bindingMode="ONE_TIME" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem itemId="done" directlyVisible="true">
+          <Bindings>
+            <Resource target="Text" type="Label" id="doneId" defaultLabel="Done" />
+            <Resource target="Icon" type="Image" id="Check_PB" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="done">
+              <Params>
+                <Param name="buttonPressed" value="done" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="ItemMeta">
+          <Lookup name="ItemMeta">
+            <Bindings>
+              <Resource target="Label" type="Label" id="ItemTypeId" defaultLabel="Item Type" />
+              <Binding target="Value" binding="ProcessContext::boItemSettings.luOrderItemMeta.text" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="itemMetaLookup" />
+            </Events>
+          </Lookup>
+        </GroupElement>
+        <GroupElement name="ScanIncrementQuantity">
+          <Stepper name="ScanIncrementQuantity" minValue="0" maxValue="999">
+            <!-- visible="false" -->
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Scan Increment" id="ScanningIncrementQuantityId" />
+              <Binding target="Value" type="Integer" binding="ProcessContext::boItemSettings.currentScanIncrementQuantity" bindingMode="TWO_WAY" formatV2="3.0" />
+              <Binding target="StepSize" value="1" />
+            </Bindings>
+          </Stepper>
+          <SelectionBox name="UoMScanBehavior">
+            <Bindings>
+              <Resource target="Label" type="Label" id="UoMScanBehaviorId" defaultLabel="Scan Behavior" />
+              <Binding target="DataSource" toggleId="SdoUoMScanBehavior" bindingMode="ONE_WAY" />
+              <Binding target="Value" binding="ProcessContext::boItemSettings.uoMScanBehavior" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <SelectionBox name="UoMScanDefaultUnit">
+            <Bindings>
+              <Resource target="Label" type="Label" id="UoMScanDefaultUnitId" defaultLabel="Scan UoM" />
+              <Binding target="DataSource" toggleId="PrdLogisticUnit" bindingMode="ONE_WAY" />
+              <Binding target="Value" binding="ProcessContext::boItemSettings.uoMScanDefaultUnit" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

@@ -1,0 +1,23 @@
+<DataSource name="DsLuTimeEntryDurationByActivityType" businessObjectClass="LuTimeEntryDurationByActivityType" external="false" editableEntity="UsrTimeEntry" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="duration" value="ifnull(sum(round(CASE WHEN julianday(EffectiveUTCTimeThru) >= julianday(EffectiveUTCTimeFrom) THEN ((julianday(EffectiveUTCTimeThru) - julianday(EffectiveUTCTimeFrom)) * 24* 60)ELSE ((julianday('now') - julianday(EffectiveUTCTimeFrom) ) * 24* 60) END)),0)" />
+  </Attributes>
+  <Entities>
+    <Entity name="UsrTimeEntry" />
+    <Entity name="UsrTimeEntryMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="UsrTimeEntryMeta.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="UsrTimeEntry.UsrTimeEntryMetaPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+       UsrTimeEntryMeta.ActivityType=#activityType# AND UsrTimeEntry.UsrDailyReportPKey= #timeCardPKey#
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="activityType" type="TEXT" />
+    <Parameter name="timeCardPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

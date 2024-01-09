@@ -1,0 +1,97 @@
+<DataSource name="DsLoUsrDailyReportOverview" backendSystem="sf" businessObjectClass="LoUsrDailyReportOverview" external="false" editableEntity="User_Document__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="User_Document__c" column="Id" />
+    <Attribute name="reportId" table="User_Document__c" column="Id" />
+    <Attribute name="usrDocMetaPKey" table="User_Document__c" column="User_Document_Template__c" />
+    <Attribute name="type" table="User_Document__c" column="Template_Description__c" />
+    <Attribute name="phase" table="User_Document__c" column="Phase__c" />
+    <Attribute name="dateFrom" table="User_Document__c" column="Date__c" />
+    <Attribute name="initiationDate" table="User_Document__c" column="Creation_Date__c" />
+    <Attribute name="responsiblePKey" table="User_Document__c" column="Responsible__c" />
+    <DerivedAttribute name="actualStatePKey" value="' '" />
+    <Attribute name="ownerPKey" table="User_Document__c" column="Accountable__c" />
+    <Attribute name="mobilityRelevant" table="User_Document_Template__c" column="Mobility_Relevant__c" />
+    <DerivedAttribute name="uiGroup" value="' '" />
+    <DerivedAttribute name="ownerName" value="Owner.LastName|| ', ' ||  Owner.FirstName" />
+    <DerivedAttribute name="responsibleName" value="Responsible.LastName || ', ' ||  Responsible.FirstName" />
+    <DerivedAttribute name="approvable" value="'1'" />
+    <DerivedAttribute name="hours" value="CASE WHEN (Select CAST(SUM(Duration__c)/60 as int)  from User_Document_Activity__c  WHERE User_Document__c = User_Document__c.Id) is NULL then '0' Else  (Select CAST(CAST(SUM(Duration__c)/60 as int) as text) from User_Document_Activity__c WHERE User_Document__c = User_Document__c.Id) END" />
+    <DerivedAttribute name="minutes" value="CASE WHEN (Select CAST(SUM(Duration__c)%60 as int)  from User_Document_Activity__c  WHERE User_Document__c = User_Document__c.Id) is NULL then '0' Else  (Select CAST(CAST(SUM(Duration__c)%60 as int) as text) from User_Document_Activity__c WHERE User_Document__c = User_Document__c.Id) END" />
+  </Attributes>
+  <Entities>
+    <Entity name="User_Document__c" alias="" idAttribute="Id" />
+    <Entity name="User_Document_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="User_Document__c.User_Document_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="User_Document_Template__c.Id" />
+          <Condition leftSideValue="User_Document_Template__c.Mobility_Relevant__c" comparator="eq" rightSideType="Literal" rightSideValue="'1'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="User" alias="Owner">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="User_Document__c.Accountable__c" comparator="eq" rightSideType="Attribute" rightSideValue="Owner.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="User" alias="Responsible">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="User_Document__c.Responsible__c" comparator="eq" rightSideType="Attribute" rightSideValue="Responsible.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[      
+       (User_Document__c.Responsible__c = '#UserPKey#' OR User_Document__c.Accountable__c = '#UserPKey#' OR (User_Document__c.Accountable__c IN (#teamList#) AND User_Document__c.Phase__c <> 'Initial'))
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="teamList" type="LIST" />
+    <Parameter name="typeComp" type="TEXT" />
+    <Parameter name="type" type="TEXT" />
+    <Parameter name="phaseComp" type="TEXT" />
+    <Parameter name="phase" type="TEXT" />
+    <Parameter name="dateFromComp" type="TEXT" />
+    <Parameter name="dateFrom" type="INTEGER" />
+    <Parameter name="responsiblePKeyComp" type="TEXT" />
+    <Parameter name="responsiblePKey" type="TEXT" />
+    <Parameter name="ownerPKeyComp" type="TEXT" />
+    <Parameter name="ownerPKey" type="TEXT" />
+  </Parameters>
+  <QuickSearchParameters>
+    <QuickSearchParameter name="User_Document__c.Template_Description__c" />
+    <QuickSearchParameter name="User_Document__c.Phase__c" />
+    <QuickSearchParameter name="User_Document__c.Creation_Date__c" />
+    <QuickSearchParameter name="responsibleName" />
+    <QuickSearchParameter name="ownerName" />
+  </QuickSearchParameters>
+  <ConditionalParameters>
+    <ConditionalParameter name="type">
+      <SimpleConditions>
+        <Condition leftSideValue="User_Document__c.User_Document_Template__c" comparator="#typeComp#" rightSideType="Attribute" rightSideValue="'#type#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="phase">
+      <SimpleConditions>
+        <Condition leftSideValue="User_Document__c.Phase__c" comparator="#phaseComp#" rightSideType="Attribute" rightSideValue="'#phase#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="dateFrom">
+      <SimpleConditions>
+        <Condition leftSideValue="User_Document__c.Date__c" comparator="#dateFromComp#" rightSideType="Attribute" rightSideValue="'#dateFrom#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="responsiblePKey">
+      <SimpleConditions>
+        <Condition leftSideValue="User_Document__c.Responsible__c" comparator="#responsiblePKeyComp#" rightSideType="Attribute" rightSideValue="'#responsiblePKey#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="ownerPKey">
+      <SimpleConditions>
+        <Condition leftSideValue="User_Document__c.Accountable__c" comparator="#ownerPKeyComp#" rightSideType="Attribute" rightSideValue="'#ownerPKey#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+  </ConditionalParameters>
+</DataSource>

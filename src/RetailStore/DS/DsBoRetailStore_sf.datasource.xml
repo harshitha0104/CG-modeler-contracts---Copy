@@ -1,0 +1,66 @@
+<DataSource name="DsBoRetailStore" backendSystem="sf" businessObjectClass="BoRetailStore" external="true" editableEntity="RetailStore" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="RetailStore" column="Id" />
+    <Attribute name="name" table="RetailStore" column="Name" />
+    <Attribute name="priority" table="RetailStore" column="Priority" />
+    <Attribute name="deliveryMethod" table="RetailStore" column="DeliveryMethod" />
+    <Attribute name="primaryContactId" table="RetailStore" column="PrimaryContactId" />
+    <Attribute name="deliveryFrequencyType" table="RetailStore" column="DeliveryFrequencyType" />
+    <Attribute name="city" table="RetailStore" column="City" />
+    <Attribute name="state" table="RetailStore" column="State" />
+    <Attribute name="street" table="RetailStore" column="Street" />
+    <Attribute name="country" table="RetailStore" column="Country" />
+    <Attribute name="postalCode" table="RetailStore" column="PostalCode" />
+    <Attribute name="locationId" table="RetailStore" column="LocationId" />
+    <Attribute name="latitude" table="RetailStore" column="Latitude" />
+    <Attribute name="longitude" table="RetailStore" column="Longitude" />
+    <Attribute name="preferredVisitHoursId" table="RetailStore" column="PreferredVisitHoursId" />
+    <Attribute name="operatingHoursId" table="RetailStore" column="OperatingHoursId" />
+    <Attribute name="accountId" table="RetailStore" column="AccountId" />
+    <DerivedAttribute name="priorityImage" value="' '" />
+    <DerivedAttribute name="mediaPath" value="' '" />
+    <DerivedAttribute name="fileType" value="' '" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+     var pKey = "";
+
+    if(Utils.isDefined(jsonQuery.pKey)){
+     pKey =  Utils.convertForDBParam(jsonQuery.pKey, "DomPKey");
+    }
+
+   var sqlParams = {pKey};
+   var sqlStmt = "";
+   sqlStmt += "SELECT RetailStore.Id as pKey ";
+   sqlStmt += ",RetailStore.Name as name ";
+   sqlStmt += ",RetailStore.Priority as priority";
+   sqlStmt += ",RetailStore.DeliveryMethod as deliveryMethod ";
+   sqlStmt += ",RetailStore.PrimaryContactId as primaryContactId ";
+   sqlStmt += ",RetailStore.DeliveryFrequencyType as deliveryFrequencyType ";
+   sqlStmt += ",RetailStore.City as city ";
+   sqlStmt += ",RetailStore.State as state ";
+   sqlStmt += ",RetailStore.Street as street";
+   sqlStmt += ",RetailStore.Country as country ";
+   sqlStmt += ",RetailStore.PostalCode as postalCode ";
+   sqlStmt += ",RetailStore.LocationId as locationId ";
+   sqlStmt += ",RetailStore.Latitude as latitude ";
+   sqlStmt += ",RetailStore.Longitude as longitude ";
+   sqlStmt += ",RetailStore.PreferredVisitHoursId as preferredVisitHoursId";
+   sqlStmt += ",RetailStore.OperatingHoursId as operatingHoursId ";
+   sqlStmt += ",RetailStore.AccountId as accountId ";
+   sqlStmt += ",CASE RetailStore.Priority WHEN 'High' THEN 'GoldMedal' WHEN 'Medium' THEN 'SilverMedal' WHEN 'Low' THEN 'BronzeMedal' ELSE 'EmptyImage' END as priorityImage";
+   sqlStmt += ",replace( SF_File.PathOnClient, rtrim(SF_File.PathOnClient,replace(SF_File.PathOnClient, '.', '')),'') as fileType ";
+   sqlStmt += ",CASE SF_File.Usage__c WHEN 'Icon' THEN SF_File.VersionData ELSE ' ' END as mediaPath ";
+   sqlStmt += "FROM RetailStore ";
+   sqlStmt += "LEFT OUTER JOIN SF_FileLink ON SF_FileLink.ParentId = RetailStore.Id ";
+   sqlStmt += "AND SF_FileLink.IsDeleted <> '1' ";
+   sqlStmt += "LEFT OUTER JOIN SF_File ON SF_FileLink.FileId = SF_File.Id ";
+   sqlStmt += "AND SF_File.Usage__c = 'Icon' ";
+   sqlStmt += "AND SF_File.IsDeleted <> '1' ";
+   sqlStmt += "WHERE 1=1 ";
+   sqlStmt += "AND RetailStore.Id = #pKey# ";
+   sqlStmt += "AND RetailStore.IsDeleted <> '1' ";
+   return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+  ]]></Load>
+  </Database>
+</DataSource>

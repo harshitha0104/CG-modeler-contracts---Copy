@@ -1,0 +1,59 @@
+<Process name="Call::NotesTabProcess" defaultAction="NotesInitialized" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Parameters>
+        <Input name="MainBO" type="BoCall" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="NotesInitialized" actionType="DECISION" parameter="ProcessContext::MainBO.noteInitialized">
+        <Case value="0" action="loadCallNotes" />
+        <Case value="1" action="ShowNotes" />
+        <CaseElse action="loadCallNotes" />
+      </Action>
+      <Action actionType="LOAD" name="loadCallNotes" type="LoCallNotes">
+        <Parameters>
+          <Input name="clbMainPKey" value="ProcessContext::MainBO.pKey" />
+          <Input name="bpaMainPKey" value="ProcessContext::MainBO.bpaMainPKey" />
+          <Input name="dateFrom" value="ProcessContext::MainBO.dateFrom" />
+          <Input name="timeFrom" value="ProcessContext::MainBO.timeFrom" />
+        </Parameters>
+        <TransitionTo action="beforeSetNotesInitialized" />
+      </Action>
+      <!-- Freeze BoCall to keep it clean (will not be set dirty by the setter in next step) -->
+      <Action actionType="LOGIC" name="beforeSetNotesInitialized" call="ProcessContext::MainBO.setObjectStatusFrozen">
+        <Parameters>
+          <Input name="setFrozen" type="Literal" value="true" />
+        </Parameters>
+        <TransitionTo action="setNotesInitialized" />
+      </Action>
+      <Action actionType="LOGIC" name="setNotesInitialized" call="ProcessContext::MainBO.setNoteInitialized">
+        <Parameters>
+          <Input name="noteInitialized" type="Literal" value="1" />
+        </Parameters>
+        <TransitionTo action="afterSetNotesInitialized" />
+      </Action>
+      <!-- Un-Freeze BoCall -->
+      <Action actionType="LOGIC" name="afterSetNotesInitialized" call="ProcessContext::MainBO.setObjectStatusFrozen">
+        <Parameters>
+          <Input name="setFrozen" type="Literal" value="false" />
+        </Parameters>
+        <TransitionTo action="ShowNotes" />
+      </Action>
+      <Action actionType="View" name="ShowNotes">
+        <UIDescription>Call::NotesTabUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="SetDetailItem" />
+        </Events>
+      </Action>
+      <Action name="SetDetailItem" actionType="LOGIC" call="ProcessContext::MainBO.loNotes.setCurrentByPKey">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

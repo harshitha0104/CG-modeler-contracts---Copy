@@ -1,0 +1,19 @@
+<LookupObject name="LuProductInformation">
+  <DataSource name="DsLuProductInformation" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="taxClassification" type="DomTaxClassification" storable="false" dataSourceProperty="taxClassification" />
+    <SimpleProperty name="basePrice" type="DomMoney" storable="false" dataSourceProperty="basePrice" />
+    <SimpleProperty name="eAN" type="DomPrdNumber" storable="false" dataSourceProperty="eAN" />
+    <SimpleProperty name="piecesPerSmallestUnitForBasePrice" type="DomDecimal" storable="false" dataSourceProperty="piecesPerSmallestUnitForBasePrice" />
+    <SimpleProperty name="orderQuantityLogisticUnit" type="DomPrdLogisticUnit" storable="false" dataSourceProperty="orderQuantityLogisticUnit" />
+    <SimpleProperty name="orderPiecesPerSmallestUnit" type="DomDecimal" storable="false" dataSourceProperty="orderPiecesPerSmallestUnit" />
+    <SimpleProperty name="consumerQuantityLogisticUnit" type="DomPrdLogisticUnit" storable="false" dataSourceProperty="consumerQuantityLogisticUnit" />
+    <SimpleProperty name="consumerPiecesPerSmallestUnit" type="DomDecimal" storable="false" dataSourceProperty="consumerPiecesPerSmallestUnit" />
+    <SimpleProperty name="priceQuantityLogisticUnit" type="DomPrdLogisticUnit" storable="false" dataSourceProperty="priceQuantityLogisticUnit" />
+    <SimpleProperty name="pricePiecesPerSmallestUnit" type="DomDecimal" storable="false" dataSourceProperty="pricePiecesPerSmallestUnit" />
+    <SimpleProperty name="groupText" type="DomString" storable="false" dataSourceProperty="groupText" />
+    <SimpleProperty name="groupId" type="DomId" storable="false" dataSourceProperty="groupId" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>

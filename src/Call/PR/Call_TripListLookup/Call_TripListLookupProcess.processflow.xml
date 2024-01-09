@@ -1,0 +1,54 @@
+<Process name="Call::TripListLookupProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="loTripList" type="LoTripList" />
+      </Declarations>
+      <Parameters>
+        <Input name="referenceDateFrom" type="String" />
+        <Input name="referenceDateThru" type="String" />
+        <Input name="responsiblePKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetTripList" actionType="LOAD" type="LoTripList">
+        <Parameters>
+          <Input name="referenceDateFrom" value="ProcessContext::referenceDateFrom" />
+          <Input name="referenceDateThru" value="ProcessContext::referenceDateThru" />
+          <Input name="responsiblePKey" value="ProcessContext::responsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::loTripList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Call::TripListLookupUI</UIDescription>
+        <Events>
+          <Event name="TripListItemSelected" action="LoadSelectedTripListDetail" />
+        </Events>
+      </Action>
+      <Action name="LoadSelectedTripListDetail" actionType="LOGIC" call="ProcessContext::loTripList.getItemByPKey">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::SelectedTripList" />
+        <TransitionTo action="EndWithReturnValues" />
+      </Action>
+      <Action actionType="END" name="EndWithReturnValues">
+        <ReturnValues>
+          <Return name="tripListPKey" value="Event.pKey" />
+          <Return name="tripListType" value="Event.metaType" />
+          <Return name="tripListId" value="Event.id" />
+          <Return name="selectedTripList" value="ProcessContext::SelectedTripList" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="tripListPKey" value="ProcessContext::TripListPKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

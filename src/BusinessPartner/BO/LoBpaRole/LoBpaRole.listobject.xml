@@ -1,0 +1,17 @@
+<ListObject name="LoBpaRole" generateLoadMethod="true" >
+  <DataSource name="DsLoBpaRole" />
+  <Item objectClass="LiBpaRole" />
+  <Methods>
+    <Method name="saveAsync" />
+    <Method name="getHasRoleOfCategory" />
+    <Method name="getHasDeliveryRole" />
+    <Method name="getHasOrderRole" />
+    <Method name="getHasCustomerRole" />
+    <Method name="getHasBrokerRole" />
+    <Method name="getHasPayerRole" />
+    <Method name="getHasBillToRole" />
+    <Method name="getHasPromotionRole" />
+    <Method name="getHasStoreRole" />
+    <Method name="addItem" />
+  </Methods>
+</ListObject>

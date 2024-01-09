@@ -1,0 +1,82 @@
+<BusinessObject name="BoItemTabManager" generateLoadMethod="false" generateCreateMethod="false" schemaVersion="1.1">
+  <DataSource name="DsBoItemTabManager" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <!-- Static data - filled by instantiation - gets the information from order -->
+    <SimpleProperty name="criterionAttribute_Level1" type="DomString" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="criterionAttribute_Level2" type="DomString" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="rootLabel" type="DomString" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="addProduct_CriterionAttribute" type="DomString" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="numberOfLevels" type="DomInteger" storable="false" dataSourceProperty="none" />
+    <!-- Dynamic data -->
+    <SimpleProperty name="loadedLevels" type="Object" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="isSkuLevel" type="DomBool" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="isShowCategoriesBasketMode" type="DomBool" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="addProductResult" type="Object" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="addProduct_ItemMeta" type="Object" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="addProduct_ScanIncrementQuantity" type="DomInteger" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="stockUnit" type="DomPrdLogisticUnit" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="stockUnitText" type="DomString" storable="false" dataSourceProperty="empty" />
+    <!-- currentFilterId is used for category selection -->
+    <SimpleProperty name="currentFilterId" type="DomString" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="isAllItemsLoaded" type="DomBool" storable="false" dataSourceProperty="none" />
+    <!-- CurrentItemFilterId refers to the image selector below the item list which is also available for flat list -->
+    <SimpleProperty name="currentItemFilterId" type="DomString" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="resetCurrentItemFilterOnShowProducts" type="DomBool" storable="false" dataSourceProperty="none" />
+    <!-- Binding data -->
+    <SimpleProperty name="addProduct_HierarchyInformation" type="Object" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="isShowCategories" type="DomBool" storable="false" dataSourceProperty="none" />
+    <!-- Order BO for internal method calls - set during creation of ItemTabManager -->
+    <SimpleProperty name="boOrder" type="Object" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="loLogisticUnit" type="Object" storable="false" dataSourceProperty="empty" />
+    <SimpleProperty name="loLogisticUnitSelectionBox" type="Object" storable="false" dataSourceProperty="empty" />
+    <SimpleProperty name="lastDisplayedHierarchyLevel" type="Object" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="defaultItemFilter" type="Object" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="currentSelectedOrderItem" type="Object" storable="false" dataSourceProperty="none" />
+    <SimpleProperty name="loModReasonSelectionBox" type="Object" storable="false" dataSourceProperty="empty" />
+    <SimpleProperty name="modReasonDict" type="Object" storable="false" dataSourceProperty="empty" />
+    <SimpleProperty name="boCallCache" type="Object" storable="false" dataSourceProperty="empty" />
+    <SimpleProperty name="sloganOfSelectablePromotion" type="Object" storable="false" dataSourceProperty="empty" />
+  </SimpleProperties>
+  <ListObjects>
+    <!-- These list objects are loaded on demand if the order is configured with ItemListOption="Hierarchy" -->
+    <ListObject name="loBreadCrumbLevel1" objectClass="LoBreadCrumbLevel1" dataSourceProperty="empty" listProperty="empty" loadMode="LoadOnDemand" />
+    <ListObject name="loBreadCrumbLevel2" objectClass="LoBreadCrumbLevel2" dataSourceProperty="empty" listProperty="empty" loadMode="LoadOnDemand" />
+    <!-- These list objects are loaded on demand by the item tab process for the currently selected item -->
+    <ListObject name="loPromotionsForCurrentProduct" objectClass="LoPromotionsForProduct" dataSourceProperty="empty" listProperty="empty" loadMode="LoadOnDemand" />
+    <ListObject name="loUnitOfMeasure" objectClass="LoOrderItems" dataSourceProperty="empty" listProperty="empty" loadMode="LoadOnDemand" />
+  </ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadBreadCrumbLevel2" />
+    <Method name="showCategories" />
+    <Method name="showAllItems" />
+    <Method name="selectItemAfterAdd" />
+    <Method name="selectItemByPKey" />
+    <Method name="isLevelLoaded" />
+    <Method name="showProductsOfLevel" />
+    <Method name="updateLastDisplayedHierarchyLevel" />
+    <Method name="navigateToLastHierarchyLevel" />
+    <Method name="navigateToAddHierarchyLevel" />
+    <Method name="onItemTabEntered" />
+    <Method name="onItemFilterSelected" />
+    <Method name="onHierarchyBack" />
+    <Method name="onHierarchySelected" />
+    <Method name="simulateItemChangedEvent" />
+    <Method name="getAvailableUoMForProduct" />
+    <Method name="getDefaultUoMForProduct" />
+    <Method name="getAvailableUoMSelectionBox" />
+    <Method name="getReasonCodesForItemMeta" />
+    <Method name="filterSelectablePromotionItems" />
+    <Method name="updateShowInBasket" />
+  </Methods>
+</BusinessObject>

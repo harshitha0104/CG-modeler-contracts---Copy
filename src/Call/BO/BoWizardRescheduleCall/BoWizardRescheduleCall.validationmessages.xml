@@ -1,0 +1,5 @@
+<ValidationMessages name="BoWizardRescheduleCallMessages" businessObject="BoWizardRescheduleCall" schemaVersion="0.0.0.5">
+  <ValidationMessage name="CasClbCannotRescheduleSubstitutedCall" defaultMessage="A call of a substituted customer cannot be rescheduled to a date outside of the substitution time frame." comment="Substitute is not allowed to reschedule a call to date outside the substitution time frame" />
+  <ValidationMessage name="CasClbCannotRescheduleCallWhileSubstituted" defaultMessage="A call cannot be rescheduled to a date on which the call customer is substituted." comment="User cannot reschedule a call to a date where the call customer is substituted" />
+  <ValidationMessage name="CasClbCannotRescheduleInvalidManagementRelation" defaultMessage="The management relation of the customer is not valid for the date of the call." comment="The management relation of the customer needs to be valid." />
+</ValidationMessages>

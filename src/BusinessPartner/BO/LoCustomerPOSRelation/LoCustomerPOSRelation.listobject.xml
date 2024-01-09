@@ -1,0 +1,10 @@
+<ListObject name="LoCustomerPOSRelation" generateLoadMethod="true" >
+  <DataSource name="DsLoCustomerPOSRelation" />
+  <Item objectClass="LiCustomerPOSRelation" />
+  <Methods>
+    <Method name="saveAsync" />
+    <Method name="addItem" />
+    <Method name="deleteItem" />
+    <Method name="discontinue" />
+  </Methods>
+</ListObject>

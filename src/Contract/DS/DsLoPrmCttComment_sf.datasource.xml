@@ -1,0 +1,19 @@
+<DataSource name="DsLoPrmCttComment" backendSystem="sf" businessObjectClass="LoPrmCttComment" external="false" distinct="false" readonly="false" editableEntity="Contract__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Contract__c" column="Id" />
+    <Attribute name="text" table="Contract__c" column="Note__c" />
+    <DerivedAttribute name="usage" value="'Comment'" />
+    <DerivedAttribute name="prmContractPKey" value="Contract__c.Id" />
+    <DerivedAttribute name="language" value="'#Language#'" />
+  </Attributes>
+  <Entities>
+    <Entity name="Contract__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   Contract__c.Id = #prmContractPKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="prmContractPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

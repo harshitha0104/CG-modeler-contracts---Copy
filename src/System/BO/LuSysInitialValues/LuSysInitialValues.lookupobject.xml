@@ -1,0 +1,11 @@
+<LookupObject name="LuSysInitialValues" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuSysInitialValues" />
+  <SimpleProperties>
+    <SimpleProperty name="defaultSalesOrg" type="String" dataSourceProperty="defaultSalesOrg" />
+    <SimpleProperty name="defaultLanguage" type="String" dataSourceProperty="defaultLanguage" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

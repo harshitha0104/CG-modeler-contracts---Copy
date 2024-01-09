@@ -1,0 +1,30 @@
+<LookupObject name="LuCallMeta">
+  <DataSource name="DsLuCallMeta" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="metaType" type="DomClbMetaType" dataSourceProperty="metaType" />
+    <SimpleProperty name="id" type="DomId" dataSourceProperty="id" />
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+    <SimpleProperty name="deleteAllowed" type="DomBool" dataSourceProperty="deleteAllowed" />
+    <SimpleProperty name="cancelReasonRequired" type="DomBool" dataSourceProperty="cancelReasonRequired" />
+    <SimpleProperty name="locCaptureDuringCancel" type="DomBool" dataSourceProperty="locCaptureDuringCancel" />
+    <SimpleProperty name="locCaptureDuringComplete" type="DomBool" dataSourceProperty="locCaptureDuringComplete" />
+    <SimpleProperty name="captureProceedingTime" type="DomBool" dataSourceProperty="captureProceedingTime" />
+    <SimpleProperty name="defaultDuration" type="DomDurationUnit" dataSourceProperty="defaultDuration" />
+    <SimpleProperty name="considerPOSCheck" type="DomBool" dataSourceProperty="considerPOSCheck" />
+    <SimpleProperty name="considerTargetValues" type="DomBool" dataSourceProperty="considerTargetValues" />
+    <SimpleProperty name="mobilityRelevant" type="DomBool" dataSourceProperty="mobilityRelevant" />
+    <SimpleProperty name="companyRequired" type="DomClbCompanyRequired" dataSourceProperty="companyRequired" />
+    <SimpleProperty name="syncOptions" type="DomClbSyncOptions" dataSourceProperty="syncOptions" />
+    <SimpleProperty name="prmFindingLeadTime" type="DomInteger" dataSourceProperty="prmFindingLeadTime" />
+    <SimpleProperty name="updatePlannedTimes" type="DomBool" dataSourceProperty="updatePlannedTimes" />
+    <SimpleProperty name="historicalProducts" type="DomClbMetaHistorical" dataSourceProperty="historicalProducts" />
+    <SimpleProperty name="tagMediaDateTime" type="DomBool" dataSourceProperty="tagMediaDateTime" />
+    <SimpleProperty name="tagMediaGeoLocation" type="DomBool" dataSourceProperty="tagMediaGeoLocation" />
+    <SimpleProperty name="deviationThreshold" type="DomDecimal" dataSourceProperty="deviationThreshold" />
+    <SimpleProperty name="maxPictures" type="DomSmallInteger" dataSourceProperty="maxPictures" />
+    <SimpleProperty name="usrTimeEntryMetaPKey" type="DomPKey" dataSourceProperty="usrTimeEntryMetaPKey" />
+    <SimpleProperty name="mobilityUserGuidance" type="DomClbMobilityUserGuidance" dataSourceProperty="mobilityUserGuidance" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>

@@ -1,0 +1,18 @@
+<ListItem name="LiCallPromotionProducts" >
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="groupFlag" type="DomText" dataSourceProperty="groupFlag" />
+    <!-- PrdDecription-->
+    <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+    <SimpleProperty name="groupText" type="DomText" dataSourceProperty="groupText" />
+    <!-- PrmProduct -->
+    <SimpleProperty name="prmMainPKey" type="DomPKey" dataSourceProperty="prmMainPKey" />
+    <SimpleProperty name="discount" type="DomText" dataSourceProperty="discount" />
+    <SimpleProperty name="quantity" type="DomText" dataSourceProperty="quantity" />
+    <SimpleProperty name="price" type="DomText" dataSourceProperty="price" />
+    <!-- PrdGroup -->
+    <SimpleProperty name="groupId" type="DomId" dataSourceProperty="groupId" />
+    <!-- PrdProduct -->
+    <SimpleProperty name="productId" type="DomId" dataSourceProperty="productId" />
+  </SimpleProperties>
+</ListItem>

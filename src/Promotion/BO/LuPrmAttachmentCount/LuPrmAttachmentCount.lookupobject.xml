@@ -1,0 +1,11 @@
+<LookupObject name="LuPrmAttachmentCount" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuPrmAttachmentCount" />
+  <SimpleProperties>
+    <SimpleProperty name="count" type="DomInteger" dataSourceProperty="count" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

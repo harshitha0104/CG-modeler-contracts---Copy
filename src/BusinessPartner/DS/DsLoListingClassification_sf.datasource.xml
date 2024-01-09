@@ -1,0 +1,29 @@
+<DataSource name="DsLoListingClassification" backendSystem="sf" businessObjectClass="LoListingClassification" external="false" readOnly="false" editableEntity="Listing_Classification__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Sync_Mobile_App_PL_Repo__c" column="Id" />
+    <Attribute name="listingClassificationPKey" table="Listing_Classification__c" column="Id" />
+    <Attribute name="customerPKey" table="Listing_Classification__c" column="Account__c" />
+    <Attribute name="listingModuleName" table="Listing_Classification__c" column="Listing_Module_Name__c" />
+    <Attribute name="productCategory" table="Listing_Classification__c" column="Product_Category__c" />
+    <Attribute name="text" table="Sync_Mobile_App_PL_Repo__c" column="Text_#Language#__c" />
+    <Attribute name="value" table="Sync_Mobile_App_PL_Repo__c" column="Picklist_Value__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Sync_Mobile_App_PL_Repo__c" alias="" />
+    <Entity name="Listing_Classification__c" alias="" idAttribute="Id">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="Sync_Mobile_App_PL_Repo__c.Picklist_Value__c" comparator="eq" rightSideType="Attribute" rightSideValue="Listing_Classification__c.Product_Category__c" />
+          <Condition leftSideValue="Listing_Classification__c.Account__c" comparator="eq" rightSideType="Parameter" rightSideValue="#bpaMainPKey#" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Sync_Mobile_App_PL_Repo__c.Mobile_App_Domain__c = 'DomPrdCategory'
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="bpaMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

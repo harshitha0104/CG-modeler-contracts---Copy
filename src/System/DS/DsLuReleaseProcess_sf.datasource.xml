@@ -1,0 +1,30 @@
+<DataSource name="DsLuReleaseProcess" backendSystem="sf" businessObjectClass="LuReleaseProcess" external="true" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+var pKey = "";
+if (Utils.isDefined(jsonQuery.pKey)){
+	pKey = Utils.convertForDBParam(jsonQuery.pKey, "DomPKey");
+}
+var sqlParams = {pKey};
+
+var sqlStmt = "SELECT #pKey# AS pKey ";
+
+return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+
+   ]]></Load>
+    <Update><![CDATA[
+      // Intended to be empty!
+      return undefined;
+   ]]></Update>
+    <Insert><![CDATA[
+      // Intended to be empty!
+      return undefined;
+   ]]></Insert>
+    <Delete><![CDATA[
+      // Intended to be empty!
+      return undefined;
+   ]]></Delete>
+  </Database>
+</DataSource>

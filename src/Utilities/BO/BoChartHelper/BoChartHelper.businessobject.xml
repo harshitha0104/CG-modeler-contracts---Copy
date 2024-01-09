@@ -1,0 +1,34 @@
+<BusinessObject name="BoChartHelper" schemaVersion="1.1">
+  <DataSource name="DsBoChartHelper" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="empty" />
+    <SimpleProperty name="chartDict" type="Object" storable="false" dataSourceProperty="empty" />
+  </SimpleProperties>
+  <ObjectLookups />
+  <NestedObjects />
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <!-- Chart Helper methods -->
+    <Method name="getUIContainer" />
+    <Method name="addChartContainers" />
+    <Method name="setChartTitle" />
+    <Method name="computeContainerSize" />
+    <Method name="addChartToStorage" />
+    <Method name="getChartFromStorage" />
+    <Method name="getStyledTooltipFunction" />
+    <Method name="hideChartToolTip" />
+    <Method name="setAxisDefaultColor" />
+    <Method name="setChartBackgroundDefaultColor" />
+  </Methods>
+  <Validations />
+</BusinessObject>

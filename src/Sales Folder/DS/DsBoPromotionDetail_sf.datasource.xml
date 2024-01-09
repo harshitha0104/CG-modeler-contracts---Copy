@@ -1,0 +1,19 @@
+<DataSource name="DsBoPromotionDetail" backendSystem="sf" businessObjectClass="BoPromotionDetail" external="false" editableEntity="Sell_Sheet__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Sell_Sheet__c" column="Id" />
+    <DerivedAttribute name="dateFrom" value="' '" />
+    <DerivedAttribute name="dateThru" value="' '" />
+    <Attribute name="sloganText" table="Sell_Sheet__c" column="Description_#Language#__c" />
+    <DerivedAttribute name="groupText" value="' '" />
+    <Attribute name="annotationText" table="Sell_Sheet__c" column="Note__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Sell_Sheet__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+  Sell_Sheet__c.Id = #pKey#
+  ]]></QueryCondition>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

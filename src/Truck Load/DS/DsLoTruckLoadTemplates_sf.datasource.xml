@@ -1,0 +1,37 @@
+<DataSource name="DsLoTruckLoadTemplates" backendSystem="sf" businessObjectClass="LoTruckLoadTemplates" external="false" editableEntity="Order_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Order_Template__c" column="Id" />
+    <Attribute name="text" table="Order_Template__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order_Template__c" alias="" idAttribute="Id" />
+    <Entity name="Tour_Object_Reference__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Order_Template__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Tour_Object_Reference__c.Order_Template__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+   Tour_Object_Reference__c.Usage__c IN (#tmgTourObjectRelUsage#)
+   AND Order_Template__c.Active__c='1' 
+   AND Tour_Object_Reference__c.Tour__c= #tmgMainPKey#
+   AND Order_Template__c.Valid_From__c <= '#TodayAsDate#'
+   AND Order_Template__c.Valid_Thru__c >= '#TodayAsDate#'
+   AND Order_Template__c.Creation_Platform__c IN ('Both', 'Mobility')
+   #additionalCondition#
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Order_Template__c" attribute="Sort__c = '0'" direction="ASC" />
+    <OrderCriterion entity="Order_Template__c" attribute="Sort__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="tmgTourObjectRelUsage" type="LIST" />
+    <Parameter name="tmgMainPKey" type="TEXT" />
+    <Parameter name="additionalCondition" treatAs="sqlSnippet" />
+    <Parameter name="prdCheckInPolicy" type="TEXT" />
+    <Parameter name="used" type="TEXT" />
+    <Parameter name="notUsed" type="TEXT" />
+  </Parameters>
+</DataSource>

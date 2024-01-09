@@ -1,0 +1,15 @@
+<LookupObject name="LuTourOpenDocuments" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuTourOpenDocuments" />
+  <SimpleProperties>
+    <SimpleProperty name="openRelatedDocuments" type="DomInteger" storable="false" dataSourceProperty="openRelatedDocuments" />
+    <SimpleProperty name="doneCashCheckInDocuments" type="DomInteger" storable="false" dataSourceProperty="doneCashCheckInDocuments" />
+    <SimpleProperty name="doneProductCheckIns" type="DomInteger" storable="false" dataSourceProperty="doneProductCheckIns" />
+    <SimpleProperty name="openFakeInwardDocuments" type="DomInteger" storable="false" dataSourceProperty="openFakeInwardDocuments" />
+    <SimpleProperty name="openFakeRejectedDocuments" type="DomInteger" storable="false" dataSourceProperty="openFakeRejectedDocuments" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

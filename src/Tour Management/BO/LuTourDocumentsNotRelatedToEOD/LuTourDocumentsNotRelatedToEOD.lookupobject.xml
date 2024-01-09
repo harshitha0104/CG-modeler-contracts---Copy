@@ -1,0 +1,11 @@
+<LookupObject name="LuTourDocumentsNotRelatedToEOD" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuTourDocumentsNotRelatedToEOD" />
+  <SimpleProperties>
+    <SimpleProperty name="openInventoryDocumentsCount" type="DomInteger" storable="true" dataSourceProperty="openInventoryDocumentsCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

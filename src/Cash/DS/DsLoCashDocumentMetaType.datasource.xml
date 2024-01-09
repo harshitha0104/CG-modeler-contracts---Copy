@@ -1,0 +1,44 @@
+<DataSource name="DsLoCashDocumentMetaType" businessObjectClass="LoCashDocumentMetaType" external="false" editableEntity="SdoMeta" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="SdoMeta" column="PKey" />
+    <Attribute name="text" table="SdoText" column="Text" />
+  </Attributes>
+  <Entities>
+    <Entity name="SdoMeta" alias="" idAttribute="PKey" />
+    <Entity name="SdoText" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoText.AppPKey" comparator="eq" rightSideType="Attribute" rightSideValue="SdoMeta.PKey" />
+          <Condition leftSideValue="SdoText.Language" comparator="eq" rightSideType="Parameter" rightSideValue="'#Language#'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="TmgTourObjectRel" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SdoMeta.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="TmgTourObjectRel.ObjectMetaPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+		TmgTourObjectRel.Usage IN (#tmgTourObjectRelUsage#)
+        AND SdoMeta.Active='1'
+ 		AND SdoMeta.MetaType =  'CashDocument'
+        AND TmgTourObjectRel.TmgTourPKey = #tmgMainPKey#
+        AND SdoMeta.ValidFrom <= '#Today#'
+        AND SdoMeta.ValidThru >= '#Today#'
+        AND SdoMeta.CreationPlatform IN ('Both', 'Mobility')
+        #additionalCondition#
+		]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="SdoMeta" attribute="Sort" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="tmgTourObjectRelUsage" type="LIST" />
+    <Parameter name="tmgMainPKey" type="TEXT" />
+    <Parameter name="additionalCondition" treatAs="sqlSnippet" />
+    <Parameter name="used" type="TEXT" />
+    <Parameter name="notUsed" type="TEXT" />
+  </Parameters>
+</DataSource>

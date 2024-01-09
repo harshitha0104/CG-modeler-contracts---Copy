@@ -1,0 +1,188 @@
+<Process name="PromotionApproval::OverviewProcess" defaultAction="LoadList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="PromotionList" type="LoApprovablePromotion" />
+        <Declaration name="PromotionBO" type="BoPromotion" />
+        <Declaration name="WfeWorkflowPKey" type="String" />
+        <Declaration name="ActualStatePKey" type="String" />
+        <Declaration name="NextStateTypes" type="String" />
+        <Declaration name="SelectedNextStatePKey" type="String" />
+        <Declaration name="SelectedNextStateType" type="String" />
+        <Declaration name="ContextMenuList" type="LoApprovablePromotionContextMenu" />
+        <Declaration name="IsEqual" type="DomBool" />
+        <Declaration name="IsRejectable" type="String" />
+      </Declarations>
+      <Parameters></Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="LoadTeamOfUser" call="ApplicationContext::User.loadTeamOfUser">
+        <Parameters>
+          <Input name="includeCurrentUser" type="Literal" value="1" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="LOAD" name="LoadList" type="LoApprovablePromotion">
+        <Parameters>
+          <Input name="asoName" value="AsoApprovePromotion" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::PromotionList" />
+        <TransitionTo action="ShowPromotionList" />
+      </Action>
+      <Action actionType="VIEW" name="ShowPromotionList">
+        <UIDescription>PromotionApproval::OverviewUI</UIDescription>
+        <Events>
+          <Event name="listItemSelected" action="OverviewListMasterDetail" />
+          <Event name="rejectPromotion" action="RejectPromotion" />
+          <Event name="approvePromotion" action="ApprovePromotion" />
+          <Event name="forApprovalPromotion" action="ForApprovalPromotion" />
+          <Event name="contextMenuOpening" action="GetContextMenu" />
+          <Event name="contextMenuItemSelected" action="PKeyCompareBeforeSelect" />
+          <Event name="sortListByDate" action="SortListByDate" />
+          <Event name="sortListByAnchor" action="SortListByAnchor" />
+        </Events>
+      </Action>
+      <!-- START ListSorting -->
+      <Action actionType="LOGIC" name="SortListByDate" call="ProcessContext::PromotionList.setSortOrder">
+        <Parameters>
+          <Input name="orderBy" type="Literal" value="Date" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="SortListByAnchor" call="ProcessContext::PromotionList.setSortOrder">
+        <Parameters>
+          <Input name="orderBy" type="Literal" value="Anchor" />
+        </Parameters>
+      </Action>
+      <!-- END ListSorting -->
+      <!-- START Overview ContextMenu-->
+      <Action actionType="LOAD" name="GetContextMenu" type="LoApprovablePromotionContextMenu">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="phase" value="Event.phase" />
+          <Input name="responsiblePKey" value="Event.responsiblePKey" />
+          <Input name="customerPKey" value="Event.customerPKey" />
+          <Input name="wfeWorkflowPKey" value="Event.wfeWorkflowPKey" />
+          <Input name="actualStatePKey" value="Event.actualStatePKey" />
+        </Parameters>
+        <Return name="ProcessContext::ContextMenuList" />
+      </Action>
+      <!--Check if correct DetailedBO is already loaded after User clicks ContextMenuItem-->
+      <Action name="PKeyCompareBeforeSelect" actionType="LOGIC" call="Utils.startsWith">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="pkey2" value="ProcessContext::PromotionBO.PKey" />
+        </Parameters>
+        <Return name="ProcessContext::IsEqual" />
+        <TransitionTo action="CheckIfNotEqualLoadedBOBeforeSelect" />
+      </Action>
+      <Action name="CheckIfNotEqualLoadedBOBeforeSelect" actionType="DECISION" parameter="ProcessContext::IsEqual">
+        <Case value="false" action="LoadFocusedBoBeforeSelect" />
+        <Case value="true" action="OverviewContextMenu_Result_Decision" />
+        <CaseElse action="LoadFocusedBoBeforeSelect" />
+      </Action>
+      <Action name="LoadFocusedBoBeforeSelect" actionType="LOAD" type="BoPromotion">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::PromotionBO" />
+        <TransitionTo action="OverviewContextMenu_Result_Decision" />
+      </Action>
+      <Action name="OverviewContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Open" action="OverviewListMasterDetail" />
+        <Case value="Approve" action="ApprovePromotion" />
+        <Case value="Reject" action="RejectPromotion" />
+        <Case value="ForApproval" action="ForApprovalPromotion" />
+        <CaseElse action="ShowPromotionList" />
+      </Action>
+      <!-- END Overview ContextMenu-->
+      <!-- START Master Detail Handler -->
+      <Action name="OverviewListMasterDetail" actionType="MASTER_DETAIL_HANDLER">
+        <MasterList name="ProcessContext::PromotionList">
+          <ItemUnselected type="RELOAD" />
+        </MasterList>
+        <DetailObject name="ProcessContext::PromotionBO" objectClass="BoPromotion">
+          <Save type="DIRTY" confirmation="FALSE" validate="FALSE" />
+        </DetailObject>
+      </Action>
+      <!-- END Master Detail Handler -->
+      <!-- START StateTransitions -->
+      <Action name="ApprovePromotion" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="Committed" />
+        </Parameters>
+        <Return name="ProcessContext::NextStateTypes" />
+        <TransitionTo action="ValidatePromotionBeforeFlyOut" />
+      </Action>
+      <Action name="ForApprovalPromotion" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="ForApproval" />
+        </Parameters>
+        <Return name="ProcessContext::NextStateTypes" />
+        <TransitionTo action="ValidatePromotionBeforeFlyOut" />
+      </Action>
+      <Action name="RejectPromotion" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="stateType" type="Literal" value="initial,Rejected" />
+        </Parameters>
+        <Return name="ProcessContext::NextStateTypes" />
+        <TransitionTo action="ValidatePromotionBeforeFlyOut" />
+      </Action>
+      <Action name="ValidatePromotionBeforeFlyOut" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::PromotionBO.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateDiscard" action="LoadList" />
+        <CaseEmpty action="SavePromotionBeforeLookup" />
+        <CaseElse action="SavePromotionBeforeLookup" />
+      </Action>
+      <Action name="SavePromotionBeforeLookup" actionType="SAVE">
+        <TransitionTo action="AssignActualStatePKey" />
+      </Action>
+      <Action name="AssignActualStatePKey" actionType="LOGIC" call="ProcessContext::PromotionBO.getActualStatePKey">
+        <Return name="ProcessContext::ActualStatePKey" />
+        <TransitionTo action="AssignWorkflowBOPKey" />
+      </Action>
+      <Action name="AssignWorkflowBOPKey" actionType="LOGIC" call="ProcessContext::PromotionBO.getWfeWorkflowPKey">
+        <Return name="ProcessContext::WfeWorkflowPKey" />
+        <TransitionTo action="NextStateLookup" />
+      </Action>
+      <Action name="NextStateLookup" actionType="PROCESS" process="Workflow::NextStateByTypeFlyoutProcess">
+        <Parameters>
+          <Input name="NextStateTypes" value="ProcessContext::NextStateTypes" />
+          <Input name="ActualStatePKey" value="ProcessContext::ActualStatePKey" />
+          <Input name="WfeWorkflowPKey" value="ProcessContext::WfeWorkflowPKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::SelectedNextStatePKey" value="nextStatePKey" />
+          <Return name="ProcessContext::SelectedNextStateType" value="nextStateType" />
+        </ReturnValues>
+        <TransitionTo action="PromotionStateTransition" />
+      </Action>
+      <Action name="PromotionStateTransition" actionType="LOGIC" call="ProcessContext::PromotionBO.stateTransition">
+        <Parameters>
+          <Input name="nextStateType" value="ProcessContext::SelectedNextStateType" />
+          <Input name="nextStatePKey" value="ProcessContext::SelectedNextStatePKey" />
+        </Parameters>
+        <TransitionTo action="SavePromotion" />
+      </Action>
+      <!-- END StateTransitions -->
+      <!-- START Save and Refresh -->
+      <Action name="SavePromotion" actionType="SAVE">
+        <TransitionTo action="refreshEARights" />
+      </Action>
+      <Action name="refreshEARights" actionType="LOGIC" call="BindingUtils.refreshEARights">
+        <Parameters>
+          <Input name="includeLists" type="Literal" value="1" />
+        </Parameters>
+        <TransitionTo action="LoadList" />
+      </Action>
+      <!-- END Save and Refresh -->
+    </Actions>
+  </Body>
+</Process>

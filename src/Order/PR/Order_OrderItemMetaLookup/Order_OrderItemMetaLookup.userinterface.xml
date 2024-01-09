@@ -1,0 +1,30 @@
+<UIDescription name="Order::OrderItemMetaLookup" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="OrderItemMetaLookupId" defaultLabel="Item Types" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="OrderItemMetaList" dataSource="ProcessContext::OrderItemMetaList.Items[]">
+          <Items name="Items" itemPattern="OrderItemMetaItem">
+            <ItemListLayout>
+              <Col layoutType="itemTitle" bindingId="Text" />
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="Text" type="Text" binding=".text" bindingMode="ONE_TIME" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

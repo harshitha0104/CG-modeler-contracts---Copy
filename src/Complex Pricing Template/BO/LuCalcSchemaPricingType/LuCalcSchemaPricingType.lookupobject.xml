@@ -1,0 +1,12 @@
+<LookupObject name="LuCalcSchemaPricingType" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuCalcSchemaPricingType" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty id="false" name="cndCpCalculationSchemaPKey" type="DomPKey" dataSourceProperty="cndCpCalculationSchemaPKey" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

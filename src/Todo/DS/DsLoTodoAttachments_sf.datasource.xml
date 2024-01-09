@@ -1,0 +1,19 @@
+<DataSource name="DsLoTodoAttachments" backendSystem="sf" objectClass="LoTodoAttachments" businessObjectClass="LoTodoAttachments" external="true" distinct="false" readOnly="false" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="pKey" value="' '" />
+    <DerivedAttribute name="svcTodoPKey" value="''" />
+    <DerivedAttribute name="creationDate" value="' '" />
+    <DerivedAttribute name="fileName" value="''" />
+    <DerivedAttribute name="mediaPath" value="' '" />
+    <DerivedAttribute name="description" value="''" />
+    <DerivedAttribute name="type" value="' '" />
+    <DerivedAttribute name="attachmentTextPKey" value="''" />
+    <DerivedAttribute name="attachmentBlobPKey" value="''" />
+  </Attributes>
+  
+  <Database platform="SQLite">
+    <Load><![CDATA[
+return undefined; 
+ ]]></Load>
+  </Database>
+</DataSource>

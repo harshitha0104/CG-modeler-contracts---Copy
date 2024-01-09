@@ -1,0 +1,9 @@
+<ListObject name="LoMagnetizedJobList" generateLoadMethod="true" lightWeight="only">
+  <DataSource name="DsLoMagnetizedJobList" />
+  <Item objectClass="LiMagnetizedJobList" />
+  <Methods>
+    <Method name="demagnetizeAll" />
+    <Method name="resetMagnetizationFlag" />
+    <Method name="updateJobInfo" />
+  </Methods>
+</ListObject>

@@ -1,0 +1,56 @@
+<UIDescription name="Customer::AssignNewPOSWizardUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="AssingNewPOSTitleId" defaultLabel="Assign New POS" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="AssignNewPOS">
+          <Bindings>
+            <Resource target="Text" type="Label" id="createNewPosId" defaultLabel="Finish" />
+            <Resource target="Icon" type="Image" id="CheckGrey24" defaultImage="CheckGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="createPOS">
+              <Params>
+                <Param name="buttonPressed" value="createPOS" />
+              </Params>
+            </ButtonPressedEvent>
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="NewPOS">
+          <InputArea name="Name">
+            <Bindings>
+              <Resource target="Label" type="Label" id="Name" defaultLabel="Name" />
+              <Binding target="Value" binding="ProcessContext::PosName" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <SelectionBox name="POSMetaTypes">
+            <Bindings>
+              <Binding target="Value" binding="ProcessContext::PosMetaPKey" bindingMode="TWO_WAY" />
+              <Binding target="DataSource" binding="ProcessContext::CustomerPosMetaTypeList" bindingMode="TWO_WAY" />
+              <Resource target="Label" type="Label" id="POSMetaTypesId" defaultLabel="Type" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".pKey" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+            <Events>
+              <ItemSelectedEvent event="POSMetaTypeSelected">
+                <Params>
+                  <Param name="pKey" value=".pKey" />
+                </Params>
+              </ItemSelectedEvent>
+            </Events>
+          </SelectionBox>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

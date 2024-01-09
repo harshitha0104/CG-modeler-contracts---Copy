@@ -1,0 +1,283 @@
+<UIDescription name="Order::OverviewCall" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" binding="ProcessContext::MainBO.luCustomer.name" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="createNewOrder">
+          <Bindings>
+            <Resource target="Text" type="Label" id="createNewOrderId" defaultLabel="Take New Order" />
+            <Resource target="Icon" type="Image" id="Plus_PB" />
+            <Binding type="Visible" target="Visible" call="ProcessContext::MainBO.getButtonVisibility">
+              <Parameters>
+                <Input name="token" type="Literal" value="btnTakeNewOrder" />
+              </Parameters>
+            </Binding>
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="createNewOrder" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="showAllOrders">
+          <Bindings>
+            <Resource target="Text" type="Label" id="showAllOrdersId" defaultLabel="All Orders" />
+            <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showAllOrders" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="showOpenOrders">
+          <Bindings>
+            <Resource target="Text" type="Label" id="OnlyshowOpenOrdersId" defaultLabel="Only Open" />
+            <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showOpenOrders" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <!-- [.. MASTER SECTION ..] -->
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <!-- [. AREA .] Main -->
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="OrderList" searchable="true" onItemDisclosure="true" dataSource="ProcessContext::OverviewList.Items[]">
+          <SearchAttributes>
+            <SearchAttribute name="customerName" />
+            <SearchAttribute name="id" />
+            <SearchAttribute name="commitDate" />
+            <SearchAttribute name="deliveryDate" />
+          </SearchAttributes>
+          <Items name="Items" itemPattern="OrderOverviewCallItem">
+            <ItemListLayout>
+              <Default>
+                <Col width="1.7em" height="1.4em" layoutType="Image" bindingId="Phase" />
+                <Col width="7.4em">
+                  <Row layoutType="itemIdentifierSmall itemPaddingRight" bindingId="Id" />
+                  <Row layoutType="itemSecondary itemPaddingRight" bindingId="Responsible" />
+                </Col>
+                <Col width="1.3em">
+                  <Row layoutType="itemLabel" bindingId="OrderDateLabel" />
+                  <Row layoutType="itemLabel" bindingId="DeliveryDateLabel" />
+                </Col>
+                <Col width="6em">
+                  <Row layoutType="itemValueSmall" bindingId="OrderDate" />
+                  <Row layoutType="itemValueSmall" bindingId="DeliveryDate" />
+                </Col>
+                <Col layoutType="itemRight">
+                  <!-- class="itemRight column" -->
+                  <Row layoutType="itemRight itemImportantValueSmall" bindingId="GrossTotalValue" />
+                </Col>
+                <Col width="6em">
+                  <Row layoutType="itemValue" bindingId="PaymentMethod" />
+                  <Row layoutType="itemImportantValue" bindingId="PaidAmount" />
+                </Col>
+                <Col width="1.5em" height="1em" layoutType="Image" bindingId="SyncStatusIcon" />
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="Phase" />
+                  <Col width="9em">
+                    <Row layoutType="itemIdentifier" bindingId="Id" />
+                    <Row layoutType="itemSecondary" bindingId="Responsible" />
+                  </Col>
+                  <Col width="5em">
+                    <Row layoutType="itemLabel" bindingId="OrderDateLabel" />
+                    <Row layoutType="itemLabel" bindingId="DeliveryDateLabel" />
+                  </Col>
+                  <Col width="6em">
+                    <Row layoutType="itemValue" bindingId="OrderDate" />
+                    <Row layoutType="itemValue" bindingId="DeliveryDate" />
+                  </Col>
+                  <Col width="6em">
+                    <Row layoutType="itemValue" bindingId="OrderType" />
+                    <Row layoutType="itemImportantValue" bindingId="GrossTotalValue" />
+                  </Col>
+                  <Col width="6em">
+                    <Row layoutType="itemValue" bindingId="PaymentMethod" />
+                    <Row layoutType="itemImportantValue" bindingId="PaidAmount" />
+                  </Col>
+                  <Col width="1.5em" height="1em" layoutType="Image" bindingId="SyncStatusIcon" />
+                </Default>
+                <Apple>
+                  <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="Phase" />
+                  <Col width="9em">
+                    <Row layoutType="itemIdentifier" bindingId="Id" />
+                    <Row layoutType="itemSecondary" bindingId="Responsible" />
+                  </Col>
+                  <Col width="4em">
+                    <Row layoutType="itemLabel" bindingId="OrderDateLabel" />
+                    <Row layoutType="itemLabel" bindingId="DeliveryDateLabel" />
+                  </Col>
+                  <Col width="5em">
+                    <Row layoutType="itemValue" bindingId="OrderDate" />
+                    <Row layoutType="itemValue" bindingId="DeliveryDate" />
+                  </Col>
+                  <Col width="6em">
+                    <Row layoutType="itemValue" bindingId="OrderType" />
+                    <Row layoutType="itemImportantValue" bindingId="GrossTotalValue" />
+                  </Col>
+                  <Col width="6em">
+                    <Row layoutType="itemValue" bindingId="PaymentMethod" />
+                    <Row layoutType="itemImportantValue" bindingId="PaidAmount" />
+                  </Col>
+                  <Col width="1.5em" height="1em" layoutType="Image" bindingId="SyncStatusIcon" />
+                </Apple>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col width="6.8em">
+                    <Row layoutType="itemIdentifier" bindingId="Id" />
+                    <Row layoutType="itemSecondary" bindingId="PhaseText" />
+                    <Row layoutType="itemValue" bindingId="Responsible" />
+                  </Col>
+                  <Col width="5.5em">
+                    <Row>
+                      <Col width="1.2em">
+                        <Row layoutType="itemValueVerySmall" bindingId="EmptyLabel" />
+                      </Col>
+                      <Col width="4.3em">
+                        <Row layoutType="itemValue" bindingId="OrderDate" />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col width="1.2em">
+                        <Row layoutType="Image" bindingId="TruckIcon" />
+                      </Col>
+                      <Col width="4.3em">
+                        <Row layoutType="itemValue" bindingId="DeliveryDate" />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col width="1.4em">
+                        <Row layoutType="itemValueVerySmall" bindingId="EmptyLabel" />
+                      </Col>
+                      <Col width="1.5em" height="1em" layoutType="Image" bindingId="SyncStatusIcon" />
+                    </Row>
+                  </Col>
+                  <Col width="3.5em">
+                    <Row>
+                      <Col layoutType="itemValue itemLeft" bindingId="OrderType" />
+                    </Row>
+                    <Row>
+                      <Col layoutType="itemImportantValue itemLeft" bindingId="GrossTotalValue" />
+                    </Row>
+                    <Row>
+                      <Col layoutType="itemValue itemLeft" bindingId="PaymentMethod" />
+                    </Row>
+                    <Row>
+                      <Col layoutType="itemImportantValue itemLeft" bindingId="PaidAmount" />
+                    </Row>
+                  </Col>
+                </Default>
+                <Apple>
+                  <Col width="6.8em">
+                    <Row layoutType="itemIdentifier" bindingId="Id" />
+                    <Row layoutType="itemSecondary" bindingId="PhaseText" />
+                    <Row layoutType="itemValue" bindingId="Responsible" />
+                  </Col>
+                  <Col width="5.5em">
+                    <Row>
+                      <Col width="1.2em">
+                        <Row layoutType="itemValueVerySmall" bindingId="EmptyLabel" />
+                      </Col>
+                      <Col width="4.3em">
+                        <Row layoutType="itemValue" bindingId="OrderDate" />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col width="1.2em">
+                        <Row layoutType="Image" bindingId="TruckIcon" />
+                      </Col>
+                      <Col width="4.3em">
+                        <Row layoutType="itemValue" bindingId="DeliveryDate" />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col width="1.4em">
+                        <Row layoutType="itemValueVerySmall" bindingId="EmptyLabel" />
+                      </Col>
+                      <Col width="1.5em" height="1em" layoutType="Image" bindingId="SyncStatusIcon" />
+                    </Row>
+                  </Col>
+                  <Col width="3.5em">
+                    <Row>
+                      <Col layoutType="itemValue itemLeft" bindingId="OrderType" />
+                    </Row>
+                    <Row>
+                      <Col layoutType="itemImportantValue itemLeft" bindingId="GrossTotalValue" />
+                    </Row>
+                    <Row>
+                      <Col layoutType="itemValue itemLeft" bindingId="PaymentMethod" />
+                    </Row>
+                    <Row>
+                      <Col layoutType="itemImportantValue itemLeft" bindingId="PaidAmount" />
+                    </Row>
+                  </Col>
+                </Apple>
+              </Phone>
+            </ItemListLayout>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::ContextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+            <Bindings>
+              <Binding target="Id" type="Text" binding=".id" bindingMode="ONE_WAY" />
+              <Binding target="Phase" type="Image" binding=".phase.imageId" bindingMode="ONE_WAY" />
+              <Binding target="PhaseText" type="Text" binding=".phase.text" bindingMode="ONE_WAY" />
+              <Binding target="OrderDate" type="Date" binding=".commitDate" bindingMode="ONE_WAY" />
+              <Binding target="DeliveryDate" type="Date" binding=".deliveryDate" bindingMode="ONE_WAY" />
+              <Binding target="Responsible" type="Text" binding=".responsibleName" bindingMode="ONE_WAY" />
+              <Binding target="GrossTotalValue" type="Decimal" formatV2="10.2" binding=".grossTotalValue" bindingMode="ONE_WAY" />
+              <Binding target="CustomerName" type="Text" binding=".customerName" bindingMode="ONE_WAY" />
+              <Binding target="SyncStatusIcon" type="Image" imageType=".svg" binding=".syncStatusIcon" bindingMode="ONE_WAY" />
+              <Resource target="OrderDateLabel" type="Label" id="orderDateId" defaultLabel="Order Date" />
+              <Resource target="DeliveryDateLabel" type="Label" id="deliveryDateId" defaultLabel="Delivery Date" />
+              <Binding target="OrderType" type="Text" binding=".orderType" bindingMode="ONE_WAY" />
+              <Binding target="PaymentMethod" type="Text" binding=".paymentMethodText" bindingMode="ONE_WAY" />
+              <Binding target="PaidAmount" type="Text" binding=".paidAmountText" bindingMode="ONE_WAY" />
+              <Resource target="TruckIcon" type="Image" id="TruckGrey16" defaultImage="TruckGrey16" />
+              <Resource target="EmptyLabel" type="Label" id="emptyLabelId" defaultLabel=" " />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="customerPKey" value=".customerPKey" />
+              </Params>
+            </ItemSelectedEvent>
+            <ContextOpeningEvent event="contextMenuOpening">
+              <Params>
+                <Param name="deletionAllowed" value=".deletionAllowed" />
+                <Param name="phase" value=".phase" />
+                <Param name="mobilityRelevant" value=".mobilityRelevant" />
+                <Param name="sdoSubType" value=".sdoSubType" />
+                <Param name="clbMainPKey" value=".clbMainPKey" />
+                <Param name="responsiblePKey" value=".responsiblePKey" />
+                <Param name="pKey" value=".pKey" />
+                <Param name="syncStatus" value=".syncStatus" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="contextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="customerPKey" value=".customerPKey" />
+              </Params>
+            </ContextSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

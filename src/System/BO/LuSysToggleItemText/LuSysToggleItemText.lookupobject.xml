@@ -1,0 +1,12 @@
+<LookupObject name="LuSysToggleItemText" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuSysToggleItemText" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+     <SimpleProperty name="text" type="DomText" dataSourceProperty="text" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

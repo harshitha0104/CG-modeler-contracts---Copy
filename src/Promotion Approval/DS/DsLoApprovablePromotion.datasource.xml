@@ -1,0 +1,143 @@
+<Datasource name="DsLoApprovablePromotion" objectClass="LoApprovablePromotion" businessObjectClass="LoApprovablePromotion" external="true" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="PrmPromotion" column="PKey" />
+    <Attribute name="customerName" table="PrmAnchor" column="Text" />
+    <Attribute name="customerPKey" table="PrmPromotion" column="BpaCustomerPKey" />
+    <Attribute name="responsibleUserName" table="UsrUser" column="LastName" />
+    <Attribute name="responsiblePKey" table="UsrUser" column="PKey" />
+    <Attribute name="ownerPKey" table="PrmPromotion" column="OwnerPKey" />
+    <Attribute name="dateFrom" table="PrmPromotion" column="DateFrom" />
+    <Attribute name="dateThru" table="PrmPromotion" column="DateThru" />
+    <Attribute name="phase" table="PrmPromotion" column="Phase" />
+    <Attribute name="prmText" table="PrmSlogan" column="Text" />
+    <Attribute name="metaText" table="PrmMetaText" column="Text" />
+    <Attribute name="wfeWorkflowPKey" table="PrmPromotion" column="WfeWorkflowPKey" />
+    <Attribute name="actualStatePKey" table="PrmPromotion" column="ActualStatePKey" />
+  </Attributes>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+	   var addCondSearch = "";
+
+	   var prmText = "";
+	   var customerName = "";
+	   var customerPKey = "";
+	   var phase = "";
+	   var dateFrom = "";
+	   var dateThru = "";
+	   var ownerPKey = "";
+	   var responsiblePKey = "";
+       
+	    //############################
+        //## Advanced Search Paging ##
+        //############################
+		
+        /**  Slogan  */
+        if (Utils.isDefined(jsonQuery.prmText)){
+          prmText = Utils.convertForDBParam(jsonQuery.prmText, "DomText");
+          addCondSearch += " AND PrmSlogan.Text " + Utils.replaceOperator(jsonQuery.prmTextComp) + "#prmText# ";
+        } 
+        
+        /**  CustomerName  */
+        if (Utils.isDefined(jsonQuery.customerName)){
+          customerName = Utils.convertForDBParam(jsonQuery.customerName, "DomBpaName");
+          addCondSearch += " AND customers.Name " + Utils.replaceOperator(jsonQuery.customerNameComp) + "#customerName# ";
+        }
+
+        /**  CustomerPKey  */
+        if (Utils.isDefined(jsonQuery.customerPKey)){
+          customerPKey = Utils.convertForDBParam(jsonQuery.customerPKey, "DomPKey");
+          addCondSearch += " AND PrmPromotion.BpaCustomerPKey " + Utils.replaceOperator(jsonQuery.customerPKeyComp) + "#customerPKey# ";
+        }
+
+        /**  Phase  */
+        if (Utils.isDefined(jsonQuery.phase)){
+		  phase = Utils.convertForDBParam(jsonQuery.phase, "DomPrmPhase");
+		  addCondSearch += " AND PrmPromotion.Phase " + Utils.replaceOperator(jsonQuery.phaseComp) + "#phase# "; 
+        }
+
+        /**  DateFrom  */
+        if (Utils.isDefined(jsonQuery.dateFrom)){
+          dateFrom = Utils.convertForDBParam(jsonQuery.dateFrom, "DomDate");
+		  addCondSearch += " AND PrmPromotion.DateFrom " + Utils.replaceOperator(jsonQuery.dateFromComp) + "#dateFrom# ";
+        }
+
+        /**  DateThru  */
+        if (Utils.isDefined(jsonQuery.dateThru)){
+          dateThru = Utils.convertForDBParam(jsonQuery.dateThru, "DomDate");
+          addCondSearch += " AND PrmPromotion.DateThru " + Utils.replaceOperator(jsonQuery.dateThruComp) + "#dateThru# ";
+        }
+
+        /**  Owner  */
+        if (Utils.isDefined(jsonQuery.ownerPKey)){
+          ownerPKey = Utils.convertForDBParam(jsonQuery.ownerPKey, "DomPKey");
+          addCondSearch += " AND PrmPromotion.OwnerPKey " + Utils.replaceOperator(jsonQuery.ownerPKeyComp) + "#ownerPKey# ";
+        }
+
+        /**  Responsible  */
+        if (Utils.isDefined(jsonQuery.responsiblePKey)){
+          responsiblePKey = Utils.convertForDBParam(jsonQuery.responsiblePKey, "DomPKey");
+          addCondSearch += " AND ResponsibleUser.PKey " + Utils.replaceOperator(jsonQuery.responsiblePKeyComp) + "#responsiblePKey# ";
+        }
+	   
+	    var sqlParams = {prmText, customerName, customerPKey, phase, dateFrom, dateThru, ownerPKey, responsiblePKey};
+    
+		var sqlStmt = "SELECT DISTINCT PrmPromotion.PKey as pKey, ";
+		sqlStmt += "        PrmPromotion.DateFrom as dateFrom, ";
+		sqlStmt += "        PrmPromotion.DateThru as dateThru, ";
+		sqlStmt += "        PrmPromotion.Phase as phase, ";
+		sqlStmt += "        PrmPromotion.OwnerPKey as ownerPKey, ";
+		sqlStmt += "        PrmPromotion.WfeWorkflowPKey as wfeWorkflowPKey, ";
+		sqlStmt += "        PrmPromotion.ActualStatePKey as actualStatePKey, ";
+		sqlStmt += "        PrmMetaText.Text as metaText, ";
+		sqlStmt += "        PrmSlogan.Text as prmText, ";
+		sqlStmt += "        PrmAnchor.Text as customerName, ";
+		sqlStmt += "        PrmPromotion.BpaCustomerPKey as customerPKey, ";
+		sqlStmt += "        ResponsibleUser.PKey as responsiblePKey, ";
+		sqlStmt += "        ResponsibleUser.LastName || ', ' || ResponsibleUser.FirstName  as responsibleUserName ";
+		sqlStmt += "  FROM PrmPromotion  ";
+		sqlStmt += "  JOIN PrmSlogan ON PrmPromotion.PKey=PrmSlogan.PrmPromotionPKey  ";
+		sqlStmt += "  JOIN PrmMeta ON PrmPromotion.PrmMetaPKey=PrmMeta.PKey ";
+		sqlStmt += "  JOIN PrmMetaText ON PrmMeta.PKey=PrmMetaText.PrmMetaPKey ";
+		sqlStmt += "  JOIN PrmAnchor ON PrmPromotion.PKey = PrmAnchor.PrmPromotionPKey ";
+
+		sqlStmt += "  JOIN WfeState AS CurrentState ON PrmPromotion.ActualStatePKey = CurrentState.PKey ";
+		sqlStmt += "  JOIN WfeStateTransition ON CurrentState.PKey = WfeStateTransition.FromStatePKey ";
+		sqlStmt += "  JOIN WfeState AS NextState ON WfeStateTransition.ToStatePKey = NextState.PKey AND NextState.StateType IN ('initial', 'Rejected', 'Committed', 'ForApproval') ";
+		sqlStmt += " LEFT JOIN UsrUser AS ResponsibleUser ON PrmPromotion.ResponsiblePKey = ResponsibleUser.PKey ";
+		sqlStmt += " LEFT JOIN UsrUser AS OwnerUser ON PrmPromotion.OwnerPKey = OwnerUser.PKey ";
+		sqlStmt += "  WHERE 1=1 ";
+		sqlStmt += "  AND PrmMeta.MetaType<>'CustomerContract'  ";
+		sqlStmt += "  AND PrmMeta.MetaType<>'LongTermAgreement'  ";
+		sqlStmt += "  AND PrmMeta.MetaType<>'Accrual'  ";
+		sqlStmt += "  AND PrmPromotion.SalesOrg = '#SALESORG#' ";
+		sqlStmt += "  AND PrmSlogan.Language = '#LANGUAGE#' ";
+		sqlStmt += "  AND PrmSlogan.SalesOrg = '#SALESORG#' ";
+		sqlStmt += "  AND PrmMeta.SalesOrg = '#SALESORG#' ";
+		sqlStmt += "  AND PrmPromotion.Phase<>'Cancelled'";
+		sqlStmt += "  AND PrmPromotion.ResponsiblePKey='#UserPKey#'";
+
+		//#########################
+        //## Quick Search Paging ##
+        //#########################
+        addCondSearch +=    jsonQuery.__fullTextSearchString ? " AND " + jsonQuery.__fullTextSearchString : "";
+
+		sqlStmt += addCondSearch;
+		
+		return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+        ]]></Load>
+    <Update><![CDATA[
+            // Intended to be empty
+            return undefined;
+                    ]]></Update>
+    <Insert><![CDATA[   
+            // Intended to be empty     
+            return undefined;           
+                    ]]></Insert>
+    <Delete><![CDATA[
+              // Intended to be empty
+              return undefined;  
+                    ]]></Delete>
+  </Database>
+</Datasource>

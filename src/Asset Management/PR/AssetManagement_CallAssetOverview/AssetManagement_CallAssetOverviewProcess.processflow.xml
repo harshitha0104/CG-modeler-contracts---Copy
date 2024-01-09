@@ -1,0 +1,200 @@
+<Process name="AssetManagement::CallAssetOverviewProcess" defaultAction="ShowAssetsList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="AssetAttachments" type="LoAstAttachments" />
+        <Declaration name="PreviousSurvey" type="LuPreviousSurvey" />
+        <Declaration name="currentTabPage" type="String" />
+        <Declaration name="SerialNumber" type="String" />
+        <Declaration name="RegisterAsset" type="String" />
+        <Declaration name="SerialNumberDefined" type="DomBool" />
+        <Declaration name="EAN" type="String" />
+        <Declaration name="AssetScanned" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="ClbBO" type="BoCall" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="GetAssetSurveyList" actionType="LOGIC" call="ProcessContext::ClbBO.loadOnDemand">
+        <Parameters>
+          <Input name="object" value="Assets" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="LoadPreviousSurvey" actionType="LOAD" type="LuPreviousSurvey">
+        <Return name="ProcessContext::PreviousSurvey" />
+        <Parameters>
+          <Input name="bpaPKey" value="ProcessContext::ClbBO.bpaMainPKey" />
+          <Input name="clbPKey" value="ProcessContext::ClbBO.pKey" />
+          <Input name="astPKey" value="ProcessContext::ClbBO.loCallAssetOverview.Current.assetPKey" />
+          <Input name="clbDate" value="ProcessContext::ClbBO.dateFrom" />
+        </Parameters>
+      </Action>
+      <Action name="PrepareAssetSurveyItem_Logic" actionType="LOGIC" call="ProcessContext::ClbBO.loCallAssetOverview.prepareAstSurveyItem">
+        <Parameters>
+          <Input name="bpaCustomerPKey" value="ProcessContext::ClbBO.bpaMainPKey" type="String" />
+          <Input name="clbMainPKey" value="ProcessContext::ClbBO.pKey" type="String" />
+          <Input name="previousSurvey" value="ProcessContext::PreviousSurvey" type="LuPreviousSurvey" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowAssetsList" actionType="VIEW">
+        <UIDescription>AssetManagement::CallAssetOverviewUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="getPreviousSurvey" />
+          <Event name="tabSelected" action="setCurrentTabName_Decision" />
+          <Event name="showAllAssets" action="actShowAllAssets_Logic" />
+          <Event name="showNotSightedAssets" action="actShowNotSightedAssets_Logic" />
+          <Event name="showSightedAssets" action="actShowSightedAssets_Logic" />
+          <Event name="registerNewAsset" action="actRegisterNewAsset_Process" />
+          <Event name="startBarcodeScanning" action="actStartBarcodeScanning_Logic" />
+        </Events>
+      </Action>
+      <Action name="setCurrentTabName_Decision" actionType="DECISION" parameter="Event.tabName">
+        <Case value="Main" action="setCurrentTabName_Main" />
+        <Case value="Attachments" action="setCurrentTabName_Attachments" />
+        <CaseElse action="setCurrentTabName_Main" />
+      </Action>
+      <!-- Prepare Asset Survey Item -->
+      <Action actionType="LOAD" name="getPreviousSurvey" type="LuPreviousSurvey">
+        <Parameters>
+          <Input name="bpaPKey" value="ProcessContext::ClbBO.bpaMainPKey" />
+          <Input name="clbPKey" value="ProcessContext::ClbBO.pKey" />
+          <Input name="astPKey" value="ProcessContext::ClbBO.loCallAssetOverview.Current.assetPKey" />
+          <Input name="clbDate" value="ProcessContext::ClbBO.dateFrom" />
+        </Parameters>
+        <Return name="ProcessContext::PreviousSurvey" />
+        <TransitionTo action="actPrepareAssetSurveyItem_Logic" />
+      </Action>
+      <Action name="actPrepareAssetSurveyItem_Logic" actionType="LOGIC" call="ProcessContext::ClbBO.loCallAssetOverview.prepareAstSurveyItem">
+        <Parameters>
+          <Input name="bpaCustomerPKey" type="String" value="ProcessContext::ClbBO.bpaMainPKey" />
+          <Input name="clbMainPKey" type="String" value="ProcessContext::ClbBO.pKey" />
+          <Input name="previousSurvey" type="LuPreviousSurvey" value="ProcessContext::PreviousSurvey" />
+        </Parameters>
+        <TransitionTo action="actDependendFromTabName_Decision" />
+      </Action>
+      <Action name="actDependendFromTabName_Decision" actionType="DECISION" parameter="ProcessContext::currentTabPage">
+        <Case value="Attachments" action="LoadAttachments" />
+        <CaseElse action="setCurrentTabName_Main" />
+        <CaseEmpty action="setCurrentTabName_Main" />
+      </Action>
+      <Action name="actShowNotSightedAssets_Logic" actionType="LOGIC" call="ProcessContext::ClbBO.loCallAssetOverview.setAssetFilter">
+        <Parameters>
+          <Input name="mode" value="unSighted" type="Literal" />
+        </Parameters>
+        <TransitionTo action="ShowAssetsList" />
+      </Action>
+      <Action name="actShowSightedAssets_Logic" actionType="LOGIC" call="ProcessContext::ClbBO.loCallAssetOverview.setAssetFilter">
+        <TransitionTo action="ShowAssetsList" />
+        <Parameters>
+          <Input name="mode" value="sighted" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="actShowAllAssets_Logic" actionType="LOGIC" call="ProcessContext::ClbBO.loCallAssetOverview.setAssetFilter">
+        <Parameters>
+          <Input name="mode" value="reset" type="Literal" />
+        </Parameters>
+        <TransitionTo action="ShowAssetsList" />
+      </Action>
+      <Action name="actRegisterNewAsset_Process" actionType="PROCESS" process="AssetManagement::RegisterUnknownAssetProcess">
+        <Parameters>
+          <Input name="CallPKey" value="Event.pKey" />
+          <Input name="EAN" value="ProcessContext::EAN" />
+          <Input name="loCallAssetOverview" value="ProcessContext::ClbBO.loCallAssetOverview" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::SerialNumber" value="serialNumber" />
+          <Return name="ProcessContext::RegisterAsset" value="registerAsset" />
+          <Return name="ProcessContext::AssetScanned" value="scanned" />
+        </ReturnValues>
+        <TransitionTo action="clearScannedEAN_Logic" />
+      </Action>
+      <Action name="externalBarcodeScanning" actionType="LOGIC" call="ProcessContext::ClbBO.loCallAssetOverview.trimBarcode">
+        <Return name="ProcessContext::EAN" />
+        <TransitionTo action="ScanBarcode_Decision" />
+        <Parameters>
+          <Input name="value" value="event.code" />
+        </Parameters>
+      </Action>
+      <Action name="actStartBarcodeScanning_Logic" actionType="LOGIC" call="ProcessContext::ClbBO.loCallAssetOverview.scanBarcode">
+        <Return name="ProcessContext::EAN" />
+        <TransitionTo action="ScanBarcode_Decision" />
+      </Action>
+      <Action name="ScanBarcode_Decision" actionType="DECISION" parameter="ProcessContext::EAN">
+        <Case value="cancelled" action="clearAssetScanned_Logic" />
+        <CaseElse action="actRegisterNewAsset_Process" />
+      </Action>
+      <Action name="unknownAsset_Decision" actionType="DECISION" parameter="ProcessContext::RegisterAsset">
+        <Case value="yes" action="prepareUnknownAsset_Logic" />
+        <CaseElse action="ShowAssetsList" />
+      </Action>
+      <Action name="clearScannedEAN_Logic" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::EAN" />
+        <TransitionTo action="unknownAsset_Decision" />
+        <Parameters>
+          <Input name="value" value=" " type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="prepareUnknownAsset_Logic" actionType="LOGIC" call="ProcessContext::ClbBO.loCallAssetOverview.handleRegisterUnknownAsset">
+        <Parameters>
+          <Input name="serialNumber" value="ProcessContext::SerialNumber" type="String" />
+          <Input name="assetScanned" value="ProcessContext::AssetScanned" type="Bool" />
+        </Parameters>
+        <TransitionTo action="refreshEARights" />
+      </Action>
+      <Action name="refreshEARights" actionType="LOGIC" call="BindingUtils.refreshEARights">
+        <Parameters>
+          <Input name="includeLists" value="1" type="Literal" />
+        </Parameters>
+        <TransitionTo action="clearAssetScanned_Logic" />
+      </Action>
+      <Action name="clearAssetScanned_Logic" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::AssetScanned" />
+        <TransitionTo action="clearEAN_Logic" />
+        <Parameters>
+          <Input name="value" value="0" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="clearEAN_Logic" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::EAN" />
+        <TransitionTo action="clearSerialNumber_Logic" />
+        <Parameters>
+          <Input name="value" value=" " type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="clearSerialNumber_Logic" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::SerialNumber" />
+        <TransitionTo action="getPreviousSurvey" />
+        <Parameters>
+          <Input name="value" value=" " type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="setCurrentTabName_Main" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::currentTabPage" />
+        <Parameters>
+          <Input name="value" value="Main" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="setCurrentTabName_Attachments" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::currentTabPage" />
+        <TransitionTo action="LoadAttachments" />
+        <Parameters>
+          <Input name="value" value="Attachments" type="Literal" />
+        </Parameters>
+      </Action>
+      <Action name="LoadAttachments" actionType="LOAD" type="LoAstAttachments">
+        <Parameters>
+          <Input name="astAssetPKey" value="ProcessContext::ClbBO.loCallAssetOverview.Current.assetPKey" />
+        </Parameters>
+        <Return name="ProcessContext::AssetAttachments" />
+      </Action>
+    </Actions>
+  </Body>
+  <ExternalEvents>
+    <Event name="barcodeEvent" action="externalBarcodeScanning" />
+  </ExternalEvents>
+</Process>

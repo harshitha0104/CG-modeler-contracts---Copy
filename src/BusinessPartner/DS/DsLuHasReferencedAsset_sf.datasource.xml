@@ -1,0 +1,14 @@
+<DataSource name="DsLuHasReferencedAsset" backendSystem="sf" businessObjectClass="LuHasReferencedAsset" external="false" editableEntity="Asset" schemaVersion="2.0">
+  <Attributes>
+    <DerivedAttribute name="referencedAssetCount" value="Count(*)" />
+  </Attributes>
+  <Entities>
+    <Entity name="Asset" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   Asset.POS__c = #posPKey#
+  ]]></QueryCondition>
+  <Parameters>
+    <Parameter name="posPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

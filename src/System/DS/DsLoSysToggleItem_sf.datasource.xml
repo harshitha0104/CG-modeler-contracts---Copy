@@ -1,0 +1,18 @@
+<DataSource name="DsLoSysToggleItem" backendSystem="sf" businessObjectClass="LoSysToggleItem" external="false" editableEntity="Sync_Mobile_App_PL_Repo__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Sync_Mobile_App_PL_Repo__c" column="Id" />
+    <Attribute name="code" table="Sync_Mobile_App_PL_Repo__c" column="Code__c" />
+    <Attribute name="validationCode" table="Sync_Mobile_App_PL_Repo__c" column="ValidationCode__c" />
+    <Attribute name="text" table="Sync_Mobile_App_PL_Repo__c" column="Text_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Sync_Mobile_App_PL_Repo__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+  	Sync_Mobile_App_PL_Repo__c.Mobile_App_Domain__c = #id#
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="id" type="TEXT" />
+  </Parameters>
+</DataSource>

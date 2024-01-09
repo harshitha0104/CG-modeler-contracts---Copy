@@ -1,0 +1,401 @@
+<UIDescription name="TruckLoad::HeaderTabUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TruckHeaderTabId" defaultLabel="Inventory" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <MenuItems>
+          <MenuItem directlyVisible="true" itemId="release">
+            <Bindings>
+              <Resource target="Text" type="Label" id="release" defaultLabel="Release" />
+              <Resource target="Icon" type="Image" id="CompleteGrey24" />
+              <Binding type="Editable" target="Editable" call="ProcessContext::MainBO.releaseButtonActive" />
+              <Binding type="Visible" target="Visible" call="ProcessContext::MainBO.getButtonVisibility">
+                <Parameters>
+                  <Input name="mode" type="Literal" value="ProductCheckOutRelease" />
+                </Parameters>
+              </Binding>
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="release" />
+            </Events>
+          </MenuItem>
+          <MenuItem itemId="Approve" directlyVisible="true">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::MainBO.getButtonVisibility">
+                <Parameters>
+                  <Input name="mode" type="Literal" value="Approve" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="Approve" defaultLabel="Approve" />
+              <Resource target="Icon" type="Image" id="AcceptMenu24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="approve" />
+            </Events>
+          </MenuItem>
+          <MenuItem itemId="Reject" directlyVisible="true">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::MainBO.getButtonVisibility">
+                <Parameters>
+                  <Input name="mode" type="Literal" value="Reject" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="Reject" defaultLabel="Reject" />
+              <Resource target="Icon" type="Image" id="RejectMenu24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="reject" />
+            </Events>
+          </MenuItem>
+          <MenuItem itemId="Confirm" directlyVisible="true">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::MainBO.getButtonVisibility">
+                <Parameters>
+                  <Input name="mode" type="Literal" value="Confirm" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="Confirm" defaultLabel="Confirm" />
+              <Resource target="Icon" type="Image" id="AcceptMenu24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="confirm" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="reviewReleaseInformation">
+            <Bindings>
+              <Resource target="Text" type="Label" id="reviewRelease" defaultLabel="Release Info" />
+              <Resource target="Icon" type="Image" id="CompleteDarkGrey24" />
+              <Binding type="Visible" target="Visible" call="ProcessContext::MainBO.isReleaseInformationVisible" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="reviewReleaseInformation" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <GroupElement name="IdentificationGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="IdentificationId" defaultLabel="Identification" />
+          </Bindings>
+          <!-- Id -->
+          <InputArea name="Id" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Id" id="IdId" />
+              <Binding target="Value" binding="ProcessContext::MainBO.id" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <!-- Type -->
+          <InputArea name="Type" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Type" id="TypeId" />
+              <Binding target="Value" binding="ProcessContext::MainBO.boOrderMeta.text" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <!-- Date -->
+          <DatePickerField name="CommitDate" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Date" id="CommitDateId" />
+              <Binding target="Value" binding="ProcessContext::MainBO.commitDate" bindingMode="ONE_WAY" />
+            </Bindings>
+          </DatePickerField>
+          <!-- TourId -->
+          <InputArea name="Tour" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Tour" id="TourId" />
+              <Binding target="Value" binding="ProcessContext::MainBO.luTourInformation.id" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <!-- Warehouse -->
+          <InputArea name="WarehouseId" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Warehouse" id="WarehouseId" />
+              <Binding target="Value" binding="ProcessContext::MainBO.luEtpWarehouse.text" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="DriverId" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Sender" id="DriverId" />
+              <Binding target="Value" binding="ProcessContext::MainBO.luSender.name" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <!-- RecipientDriver-->
+          <Lookup name="RecipientDriver">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Recipient" id="RecipientDriverId" />
+              <Binding target="Value" binding="ProcessContext::MainBO.luRecipientDriver.name" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Events>
+              <LookupEvent event="recipientDriverLookup" />
+            </Events>
+          </Lookup>
+          <!-- ReasonCode-->
+          <SelectionBox name="ReasonCodeStart" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="ReasonCodeStartId" defaultLabel="Reason Code" />
+              <Binding target="DataSource" toggleId="SdoCancelReason" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::MainBO.cancelReason" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+        </GroupElement>
+        <GroupElement name="ValueGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="ValueId" defaultLabel="Total Value" />
+          </Bindings>
+          <!-- Book Inventory -->
+          <Merger name="BookInventory" pattern="twoInputControls" labelHandling="Own" leftRatio="3" rightRatio="2" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Book Inventory" id="BookInventory" />
+            </Bindings>
+            <InputArea name="BookInventory" disabled="true">
+              <Bindings>
+                <Binding target="Value" type="Decimal" formatV2="10.2" binding="ProcessContext::MainBO.bookInventoryValue" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <SelectionBox name="Currency" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CurrencyId" defaultLabel="Currency" />
+                <Binding target="DataSource" toggleId="Currency" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::MainBO.currency" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </Merger>
+          <!-- Actual Value -->
+          <Merger name="ActualValue" pattern="twoInputControls" labelHandling="Own" leftRatio="3" rightRatio="2" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Actual Value" id="ActualValue" />
+            </Bindings>
+            <InputArea name="ActualValue" disabled="true">
+              <Bindings>
+                <Binding target="Value" type="Decimal" formatV2="10.2" binding="ProcessContext::MainBO.grossTotalValueReceipt" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <SelectionBox name="Currency" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CurrencyId" defaultLabel="Currency" />
+                <Binding target="DataSource" toggleId="Currency" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::MainBO.actualValueCurrency" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </Merger>
+          <!-- Difference -->
+          <Merger name="Difference" pattern="twoInputControls" labelHandling="Own" leftRatio="3" rightRatio="2" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Difference" id="Difference" />
+            </Bindings>
+            <InputArea name="Difference" disabled="true">
+              <Bindings>
+                <Binding target="Value" type="Decimal" formatV2="10.2" binding="ProcessContext::MainBO.amountDifference" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <SelectionBox name="Currency" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CurrencyId" defaultLabel="Currency" />
+                <Binding target="DataSource" toggleId="Currency" bindingMode="ONE_WAY" />
+                <Binding target="Value" binding="ProcessContext::MainBO.currency" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </Merger>
+        </GroupElement>
+        <EmbeddedList name="QuantitySums" dataSource="ProcessContext::MainBO.loQuantitySums.Items[]">
+          <Bindings>
+            <Resource target="Title" type="Label" id="QuantitySumsTitle" defaultLabel="Totals" />
+          </Bindings>
+          <Items name="Items" itemPattern="QuantitySumsList">
+            <Bindings>
+              <Binding target="Difference" type="Decimal" binding=".qtyDifference" bindingMode="ONE_WAY" />
+              <Binding target="Quantity" type="Decimal" binding=".quantity" bindingMode="ONE_WAY" />
+              <Binding target="TargetQty" type="Decimal" binding=".targetQuantity" bindingMode="ONE_WAY" />
+              <Binding target="UoM" type="Text" binding=".quantityLogisticUnit.text" bindingMode="ONE_WAY" />
+              <Binding target="DifferenceExist" type="Image" binding=".differenceExist" bindingMode="ONE_WAY" />
+              <Binding target="ItemMetaText" type="Text" binding=".itemMetaText" bindingMode="ONE_WAY" />
+              <Resource target="UnitLabel" type="Label" id="UnitLabel" defaultLabel="Unit" />
+              <Resource target="QuantityLable" type="Label" id="QuantityLable" defaultLabel="a.Qty" />
+              <Resource target="TargetQuantityLable" type="Label" id="TargetQuantityLable" defaultLabel="o.Qty" />
+              <Resource target="DifferenceLabel" type="Label" id="DifferenceLabel" defaultLabel="Diff." />
+              <Resource target="Empty" type="Image" id="Empty" defaultLabel="" bindingMode="ONE_WAY" />
+              <Resource target="ItemMetaTextLabel" type="Label" id="ItemMetaTextLabel" defaultLabel="Type" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Header>
+                  <Col bindingId="Empty" align="left" />
+                  <Col bindingId="ItemMetaTextLabel" align="left" />
+                  <Col bindingId="UnitLabel" align="left" />
+                  <Col bindingId="TargetQuantityLable" align="left" />
+                  <Col bindingId="QuantityLable" align="left" />
+                  <Col bindingId="DifferenceLabel" align="left" />
+                </Header>
+                <Col width="1em" height="1.7em" layoutType="Image" bindingId="DifferenceExist" />
+                <Col width="6.5em" layoutType="itemSecondary" bindingId="ItemMetaText" />
+                <Col width="6.5em" layoutType="itemSecondary" bindingId="UoM" />
+                <Col width="4em" layoutType="itemSecondary" bindingId="TargetQty" />
+                <Col width="4em" layoutType="itemSecondary" bindingId="Quantity" />
+                <Col width="5.5em" layoutType="itemSecondary" bindingId="Difference" />
+              </Default>
+              <Tablet>
+                <Default>
+                  <Header>
+                    <Col bindingId="Empty" align="left" />
+                    <Col bindingId="ItemMetaTextLabel" align="left" />
+                    <Col bindingId="UnitLabel" align="left" />
+                    <Col bindingId="TargetQuantityLable" align="left" />
+                    <Col bindingId="QuantityLable" align="left" />
+                    <Col bindingId="DifferenceLabel" align="left" />
+                  </Header>
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="DifferenceExist" />
+                  <Col width="6.5em" layoutType="itemSecondary" bindingId="ItemMetaText" />
+                  <Col width="6.5em" layoutType="itemSecondary" bindingId="UoM" />
+                  <Col width="4em" layoutType="itemSecondary" bindingId="TargetQty" />
+                  <Col width="4em" layoutType="itemSecondary" bindingId="Quantity" />
+                  <Col width="5.5em" layoutType="itemSecondary" bindingId="Difference" />
+                </Default>
+                <Android>
+                  <Header>
+                    <Col bindingId="Empty" align="left" />
+                    <Col bindingId="ItemMetaTextLabel" align="left" />
+                    <Col bindingId="UnitLabel" align="left" />
+                    <Col bindingId="TargetQuantityLable" align="left" />
+                    <Col bindingId="QuantityLable" align="left" />
+                    <Col bindingId="DifferenceLabel" align="left" />
+                  </Header>
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="DifferenceExist" />
+                  <Col width="8em" layoutType="itemSecondary " bindingId="ItemMetaText" />
+                  <Col width="6em" layoutType="itemSecondary" bindingId="UoM" />
+                  <Col width="4em" layoutType="itemSecondary" bindingId="TargetQty" />
+                  <Col width="4em" layoutType="itemSecondary" bindingId="Quantity" />
+                  <Col width="5em" layoutType="itemSecondary" bindingId="Difference" />
+                </Android>
+                <Apple>
+                  <Header>
+                    <Col bindingId="Empty" align="left" />
+                    <Col bindingId="ItemMetaTextLabel" align="left" />
+                    <Col bindingId="UnitLabel" align="left" />
+                    <Col bindingId="TargetQuantityLable" align="left" />
+                    <Col bindingId="QuantityLable" align="left" />
+                    <Col bindingId="DifferenceLabel" align="left" />
+                  </Header>
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="DifferenceExist" />
+                  <Col width="7.5em" layoutType="itemSecondary" bindingId="ItemMetaText" />
+                  <Col width="5em" layoutType="itemSecondary" bindingId="UoM" />
+                  <Col width="4em" layoutType="itemSecondary" bindingId="TargetQty" />
+                  <Col width="4em" layoutType="itemSecondary" bindingId="Quantity" />
+                  <Col width="4em" layoutType="itemSecondary" bindingId="Difference" />
+                </Apple>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Header>
+                    <Col bindingId="Empty" align="left" />
+                    <Col bindingId="ItemMetaTextLabel" align="left" />
+                    <Col bindingId="UnitLabel" align="left" />
+                    <Col bindingId="TargetQuantityLable" align="left" />
+                    <Col bindingId="QuantityLable" align="left" />
+                    <Col bindingId="DifferenceLabel" align="left" />
+                  </Header>
+                  <Col width="1em" height="1.7em" layoutType="Image" bindingId="DifferenceExist" />
+                  <Col width="4.5em" layoutType="itemSecondary itemLeft" bindingId="ItemMetaText" />
+                  <Col width="4.5em" layoutType="itemSecondary itemLeft" bindingId="UoM" />
+                  <Col width="3em" layoutType="itemSecondary" bindingId="TargetQty" />
+                  <Col width="3em" layoutType="itemSecondary" bindingId="Quantity" />
+                  <Col width="3em" layoutType="itemSecondary" bindingId="Difference" />
+                </Default>
+                <Apple>
+                  <Header>
+                    <Col bindingId="Empty" align="left" />
+                    <Col bindingId="ItemMetaTextLabel" align="left" />
+                    <Col bindingId="UnitLabel" align="left" />
+                    <Col bindingId="TargetQuantityLable" align="left" />
+                    <Col bindingId="QuantityLable" align="left" />
+                    <Col bindingId="DifferenceLabel" align="left" />
+                  </Header>
+                  <Col width=".5em" height="1.7em" layoutType="Image" bindingId="DifferenceExist" />
+                  <Col width="4.2em" layoutType="itemSecondary itemLeft" bindingId="ItemMetaText" />
+                  <Col width="4em" layoutType="itemSecondary itemLeft" bindingId="UoM" />
+                  <Col width="2.5em" layoutType="itemSecondary" bindingId="TargetQty" />
+                  <Col width="2.5em" layoutType="itemSecondary" bindingId="Quantity" />
+                  <Col width="2.5em" layoutType="itemSecondary" bindingId="Difference" />
+                </Apple>
+                <Android>
+                  <Header>
+                    <Col bindingId="Empty" align="left" />
+                    <Col bindingId="ItemMetaTextLabel" align="left" />
+                    <Col bindingId="UnitLabel" align="left" />
+                    <Col bindingId="TargetQuantityLable" align="left" />
+                    <Col bindingId="QuantityLable" align="left" />
+                    <Col bindingId="DifferenceLabel" align="left" />
+                  </Header>
+                  <Col width=".5em" height="1.7em" layoutType="Image" bindingId="DifferenceExist" />
+                  <Col width="4.2em" layoutType="itemSecondary" bindingId="ItemMetaText" />
+                  <Col width="4.2em" layoutType="itemSecondary" bindingId="UoM" />
+                  <Col width="2.7em" layoutType="itemSecondary" bindingId="TargetQty" />
+                  <Col width="2.7em" layoutType="itemSecondary" bindingId="Quantity" />
+                  <Col width="2.7em" layoutType="itemSecondary" bindingId="Difference" />
+                </Android>
+              </Phone>
+            </ItemListLayout>
+          </Items>
+        </EmbeddedList>
+        <GroupElement name="StatusGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="StatusId" defaultLabel="Status" />
+          </Bindings>
+          <!-- Phase -->
+          <SelectionBox name="Phase" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="Phase" defaultLabel="Phase" />
+              <Binding target="DataSource" toggleId="SdoPhase" bindingMode="ONE_WAY" />
+              <Binding target="Value" binding="ProcessContext::MainBO.phase" bindingMode="ONE_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <!-- Owner-->
+          <InputArea name="Owner" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Owner" id="OwnerId" />
+              <Binding target="Value" binding="ProcessContext::MainBO.luOwner.name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <!-- Responsible -->
+          <Lookup name="Responsible" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Responsible" id="ResponsibleId" />
+              <Binding target="Value" binding="ProcessContext::MainBO.luResponsible.name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Lookup>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

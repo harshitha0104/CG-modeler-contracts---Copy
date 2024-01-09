@@ -1,0 +1,21 @@
+<ListItem name="LiCashOverview">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="id" type="DomId" storable="true" dataSourceProperty="id" />
+    <SimpleProperty name="phase" type="DomSdoPhase" storable="true" dataSourceProperty="phase" />
+    <SimpleProperty name="paidAmount" type="DomMoney" storable="true" dataSourceProperty="paidAmount" />
+    <SimpleProperty name="currency" type="DomCurrency" storable="true" dataSourceProperty="currency" />
+    <SimpleProperty name="debitCredit" type="DomBpaDebitCredit" storable="true" dataSourceProperty="debitCredit" />
+    <SimpleProperty name="initiationDate" type="DomDate" storable="true" dataSourceProperty="initiationDate" />
+    <SimpleProperty name="documentType" type="DomSdoSubType" storable="true" dataSourceProperty="documentType" />
+    <SimpleProperty name="sdoMetaPKey" type="DomPKey" storable="true" dataSourceProperty="sdoMetaPKey" />
+    <SimpleProperty name="sort1" type="DomInteger" storable="true" dataSourceProperty="sort1" />
+    <SimpleProperty name="releaseTime" type="DomDateTime" storable="true" dataSourceProperty="releaseTime" />
+    <SimpleProperty name="usedForStartOfDay" type="DomBool" storable="true" dataSourceProperty="usedForStartOfDay" />
+    <SimpleProperty name="usedForEndOfDay" type="DomBool" storable="true" dataSourceProperty="usedForEndOfDay" />
+    <SimpleProperty name="usage" type="DomTmgUsage" storable="true" dataSourceProperty="usage" />
+    <SimpleProperty name="metaText" type="DomString" storable="false" dataSourceProperty="metaText" />
+    <SimpleProperty name="relTime" type="DomString" />
+    <SimpleProperty name="sortReleaseTime" type="DomDateTime" storable="true" dataSourceProperty="sortReleaseTime" />
+  </SimpleProperties>
+</ListItem>

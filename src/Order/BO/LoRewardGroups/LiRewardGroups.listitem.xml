@@ -1,0 +1,12 @@
+<ListItem name="LiRewardGroups">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="multiplicity" type="DomString" dataSourceProperty="multiplicity" />
+    <SimpleProperty name="promotionPKey" type="DomPKey" dataSourceProperty="promotionPKey" />
+    <SimpleProperty name="rewardGroupTitle" type="DomText" dataSourceProperty="rewardGroupTitle" />
+    <SimpleProperty name="sort" type="DomSort" dataSourceProperty="sort" />
+    <SimpleProperty name="rewardGroupDescription" type="DomString" dataSourceProperty="rewardGroupDescription" />
+    <SimpleProperty name="rewardSectionText" type="DomString" />
+    <SimpleProperty name="headerBackgroundColor" type="DomString" />
+  </SimpleProperties>
+</ListItem>

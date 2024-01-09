@@ -1,0 +1,79 @@
+<Datasource name="DsLuCallCountByDate" objectClass="LuCallCountByDate" backendSystem="sf" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var currentDate = Utils.convertForDBParam(Utils.convertDate2Ansi(Utils.createDateToday()), 'DomDate');
+			var tmgMainPKey = "";
+			var sqlStmt_calls = "";
+
+			if (Utils.isDefined(jsonQuery.cardDate)){
+				currentDate = Utils.convertForDBParam(jsonQuery.cardDate, 'DomDate');
+			}
+			if (Utils.isDefined(ApplicationContext.get('currentTourPKey'))){
+				tmgMainPKey = ApplicationContext.get('currentTourPKey');
+			}
+			if (ApplicationContext.get('user').hasRole('TourUser') && Utils.isEmptyString(tmgMainPKey)){
+				tmgMainPKey = 'NoTourSelected';
+			}
+
+			var sqlParams = {tmgMainPKey, currentDate};
+
+			if (ApplicationContext.get('user').hasRole('TourUser')){
+              sqlStmt_calls +=    "Select Count(*) AS callCount ";
+              sqlStmt_calls +=    "from Visit ";
+              sqlStmt_calls +=    "JOIN Visit_Template__c ON Visit.Visit_Template__c = Visit_Template__c.Id ";
+              sqlStmt_calls +=    "where Visit.Status = 'Planned' ";
+              sqlStmt_calls +=    "AND Visit.IsDeleted = '0' ";
+              sqlStmt_calls +=    "AND Visit.Tour__c = #tmgMainPKey#";
+			}
+			else{
+              sqlStmt_calls +=    "Select ( ";
+              sqlStmt_calls +=    "Select Count(*) from Visit ";
+              sqlStmt_calls +=    "JOIN Visit_Template__c ON Visit.Visit_Template__c = Visit_Template__c.Id ";
+              sqlStmt_calls +=    "where Visit.Status = 'Planned' ";
+              sqlStmt_calls +=    "AND #compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','<=',#currentDate#, 'Date')# ";
+              sqlStmt_calls +=    "AND #compareAsDate('Visit.PlannedVisitEndTime', 'DateTime','>=',#currentDate#, 'Date')# ";    
+              sqlStmt_calls +=    "AND Visit.Responsible__c = '#UserPKey#' ";
+              sqlStmt_calls +=    "AND Visit.IsDeleted = '0') ";
+              sqlStmt_calls +=    "+ ( ";
+              sqlStmt_calls +=    "Select Count(*) from Event ";
+              sqlStmt_calls +=    "INNER JOIN Visit_Template__c ON Event.Type = Visit_Template__c.Name ";
+              sqlStmt_calls +=    "where ";
+              sqlStmt_calls +=    "#compareAsDate('Event.StartDateTime', 'DateTime','<=',#currentDate#, 'Date')# ";
+              sqlStmt_calls +=    "AND #compareAsDate('Event.EndDateTime', 'DateTime','>=',#currentDate#, 'Date')# ";   
+              sqlStmt_calls +=    "AND Event.OwnerId = '#UserPKey#' ";
+              sqlStmt_calls +=    "AND Event.IsDeleted = '0' ";
+              sqlStmt_calls +=    "AND Event.WhatId = ' ' ";
+              sqlStmt_calls +=    "AND Event.AccountId = ' ') AS callCount";
+			}
+
+			var sqlStmt_sub_calls = "SELECT COUNT(*) AS callCount FROM Visit ";
+            sqlStmt_sub_calls += "JOIN Visit_Template__c ON Visit.Visit_Template__c = Visit_Template__c.Id, ";
+            sqlStmt_sub_calls += "Substitution__c SubMain, Substitution__c SubBpaRel ";
+			sqlStmt_sub_calls += "WHERE SubMain.Id = SubBpaRel.Substitution__c ";
+			sqlStmt_sub_calls += "AND SubMain.Active__c = '1' ";
+			sqlStmt_sub_calls += "AND SubBpaRel.Active__c = '1' ";
+			sqlStmt_sub_calls += "AND SubBpaRel.Account__c = Visit.AccountId ";
+			sqlStmt_sub_calls += "AND SubBpaRel.Substitute__c = '#UserPKey#' ";
+			sqlStmt_sub_calls += "AND SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #currentDate# ";
+			sqlStmt_sub_calls += "AND SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #currentDate# ";
+			sqlStmt_sub_calls += "AND SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #currentDate# ";
+			sqlStmt_sub_calls += "AND SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #currentDate# ";
+			sqlStmt_sub_calls += "AND SubMain.Substituted__c = Visit.Responsible__c ";
+            sqlStmt_sub_calls += "AND #compareAsDate('SubMain.Valid_From__c', 'Date', '<=', 'Visit.PlannedVisitStartTime', 'DateTime')# ";
+            sqlStmt_sub_calls += "AND #compareAsDate('SubMain.Valid_Thru__c', 'Date', '>=', 'Visit.PlannedVisitStartTime', 'DateTime')# "; 
+            sqlStmt_sub_calls += "AND #compareAsDate('SubBpaRel.Valid_From__c', 'Date','<=' ,'Visit.PlannedVisitStartTime', 'DateTime')# ";
+            sqlStmt_sub_calls += "AND #compareAsDate('SubBpaRel.Valid_Thru__c', 'Date','>=' ,'Visit.PlannedVisitStartTime', 'DateTime')# ";
+			sqlStmt_sub_calls += "AND Visit.Status = 'Planned' ";
+
+			if (Utils.isEmptyString(tmgMainPKey)){
+              sqlStmt_sub_calls += "AND #compareAsDate('Visit.PlannedVisitStartTime', 'DateTime','<=',#currentDate#, 'Date')# ";
+              sqlStmt_sub_calls += "AND #compareAsDate('Visit.PlannedVisitEndTime', 'DateTime','>=',#currentDate#, 'Date')# "; 
+			}
+
+			var sqlStmt = "SELECT SUM(callCount) AS callCount FROM (" + sqlStmt_calls + " UNION ALL " + sqlStmt_sub_calls + ")";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+  </Database>
+</Datasource>

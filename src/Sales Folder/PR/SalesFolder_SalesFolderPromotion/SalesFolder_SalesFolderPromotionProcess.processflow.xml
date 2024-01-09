@@ -1,0 +1,85 @@
+<Process name="SalesFolder::SalesFolderPromotionProcess" defaultAction="ShowSalesFolderPromotionList" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="SalesFolderPromotionList" type="LoSalesFolderPromotion" />
+        <Declaration name="PromotionIcons" type="LoPrmIconAttachment" />
+        <Declaration name="Columns" type="String" />
+        <Declaration name="IsPhone" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainPKey" type="String" />
+        <Input name="SloganText" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadSalesFolderPromotionList" actionType="LOAD" type="LoSalesFolderPromotion">
+        <Return name="ProcessContext::SalesFolderPromotionList" />
+        <Parameters>
+          <Input name="prmSalesFolderPKey" value="ProcessContext::MainPKey" />
+        </Parameters>
+      </Action>
+      <Action name="LoadPromotionIcons" actionType="LOAD" type="LoPrmIconAttachment">
+        <Return name="ProcessContext::PromotionIcons" />
+        <Parameters>
+          <Input name="LoSalesFolderPromotions" value="ProcessContext::SalesFolderPromotionList" />
+        </Parameters>
+      </Action>
+      <Action name="InitColumns" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::Columns" />
+        <Parameters>
+          <Input name="value" value="3" />
+        </Parameters>
+      </Action>
+      <Action name="CheckIsPhone" actionType="LOGIC" call="Utils.isPhone">
+        <Return name="ProcessContext::IsPhone" />
+      </Action>
+      <Action name="LoadPromotionList" actionType="LOAD" type="LoPromotionForSalesFolder">
+        <Parameters>
+          <Input name="salesFolderPKey" type="DomPKey" value="ProcessContext::MainPKey" />
+        </Parameters>
+        <Return name="ProcessContext::PromotionList" />
+      </Action>
+      <Action name="CheckSalesFolderDataAvailable" actionType="LOGIC" call="ProcessContext::SalesFolderPromotionList.checkSalesFolderDataAvailable">
+        <Return name="ProcessContext::dataAvailable" />
+        <Parameters>
+          <Input name="promotionList" value="ProcessContext::PromotionList" />
+        </Parameters>
+      </Action>
+      <Action name="Set_PromotionTitle" actionType="LOGIC" call="ProcessContext::SalesFolderPromotionList.setPromotionTitle">
+        <Parameters>
+          <Input name="sloganText" value="ProcessContext::SloganText" />
+        </Parameters>
+        <Return name="ProcessContext::SloganTextValue" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowSalesFolderPromotionList" actionType="VIEW">
+        <UIDescription>SalesFolder::SalesFolderPromotionUI</UIDescription>
+        <Events>
+          <Event name="openDetail" action="LoadPromotion" />
+          <Event name="loadPromotionsForSalesFolder" action="LoadPromotionsForSalesFolder" />
+        </Events>
+      </Action>
+      <Action name="LoadPromotion" actionType="PROCESS" process="SalesFolder::PromotionDetailProcess">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+          <Input name="SloganText" value="Event.sloganText" />
+          <Input name="Images" value="ProcessContext::PromotionIcons" />
+          <Input name="DateFrom" value="Event.dateFrom" />
+          <Input name="DateThru" value="Event.dateThru" />
+          <Input name="GroupText" value="Event.groupText" />
+          <Input name="AnnotationText" value="Event.annotationText" />
+          <Input name="SalesFolderSloganText" value="ProcessContext::SloganText" />
+        </Parameters>
+      </Action>
+      <Action name="LoadPromotionsForSalesFolder" actionType="PROCESS" process="SalesFolder::ReviewPromotionFlyoutProcess">
+        <Parameters>
+          <Input name="PromotionList" value="ProcessContext::PromotionList" />
+        </Parameters>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

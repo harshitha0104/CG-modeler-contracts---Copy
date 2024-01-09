@@ -1,0 +1,14 @@
+<ListObject name="LoPrmCttTactics" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoPrmCttTactics" />
+  <Item objectClass="LiPrmCttTactic" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="setDeleted" />
+  </Methods>
+</ListObject>

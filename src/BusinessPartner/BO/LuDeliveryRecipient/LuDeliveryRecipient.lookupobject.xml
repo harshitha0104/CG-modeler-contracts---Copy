@@ -1,0 +1,19 @@
+<LookupObject name="LuDeliveryRecipient" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuDeliveryRecipient" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="street" type="DomStreet" dataSourceProperty="street" />
+    <SimpleProperty name="houseNumber" type="DomHouseNumber" dataSourceProperty="houseNumber" />
+    <SimpleProperty name="zipCode" type="DomZipCode" dataSourceProperty="zipCode" />
+    <SimpleProperty name="city" type="DomCity" dataSourceProperty="city" />
+    <SimpleProperty name="countryState" type="DomText" dataSourceProperty="countryState" />
+    <SimpleProperty name="phone1" type="DomDial" dataSourceProperty="phone1" />
+    <SimpleProperty name="customerNumber" type="DomBpaCustomerNumber" dataSourceProperty="customerNumber" />
+    <SimpleProperty name="name" type="DomBpaName" dataSourceProperty="name" />
+    <SimpleProperty name="sdoModifyPresetQuantity" type="DomSdoModifyPresetQuantity" dataSourceProperty="sdoModifyPresetQuantity" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

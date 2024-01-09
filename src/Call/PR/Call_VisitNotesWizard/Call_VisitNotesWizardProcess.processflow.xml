@@ -1,0 +1,38 @@
+<Process name="Call::VisitNotesWizardProcess" defaultAction="ShowNoteInfo" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="WizardBO" type="BoWizardCreateEditVisitNote" />
+      </Declarations>
+      <Parameters>
+        <Input name="NoteDetail" type="LiCallNote" />
+        <Input name="clbMainPKey" type="DomPKey" />
+        <Input name="isReadOnly" type="DomBool" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateWizardBO" actionType="CREATE" type="BoWizardCreateEditVisitNote">
+        <Parameters>
+          <Input name="clbMainPKey" value="ProcessContext::clbMainPKey" />
+          <Input name="pKey" value="ProcessContext::NoteDetail.pKey" />
+          <Input name="note" value="ProcessContext::NoteDetail.text" />
+          <Input name="isReadOnly" value="ProcessContext::isReadOnly" />
+        </Parameters>
+        <Return name="ProcessContext::WizardBO" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowNoteInfo">
+        <UIDescription>Call::VisitNotesWizardUI</UIDescription>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="noteText" value="ProcessContext::WizardBO.note" />
+          <Return name="isCurrentNote" value="ProcessContext::WizardBO.isCurrentNote" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

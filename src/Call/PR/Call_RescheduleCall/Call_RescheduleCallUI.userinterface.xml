@@ -1,0 +1,53 @@
+<UIDescription name="Call::RescheduleCallUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="RescheduleCallTitleId" defaultLabel="Reschedule" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="rescheduleCall">
+          <Bindings>
+            <Resource target="Text" type="Label" id="rescheduleCallId" defaultLabel="Done" />
+            <Resource target="Icon" type="Image" id="CheckGrey24" defaultImage="light/done_24.png" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="rescheduleCall" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementsArea">
+        <GroupElement name="CallInfoGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="CallInformation" defaultLabel=" " />
+          </Bindings>
+          <DatePickerField name="VisitDate">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Visit Date" id="VisitDate" />
+              <Binding target="Value" binding="ProcessContext::RescheduleCallBo.dateFrom" bindingMode="TWO_WAY" />
+            </Bindings>
+          </DatePickerField>
+          <TimePickerField name="TimeFrom">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Time From" id="TimeFrom" />
+              <Binding target="Value" binding="ProcessContext::RescheduleCallBo.timeFrom" bindingMode="TWO_WAY" />
+            </Bindings>
+          </TimePickerField>
+          <TimePickerField name="TimeThru">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Time Thru" id="TimeThru" />
+              <Binding target="Value" binding="ProcessContext::RescheduleCallBo.timeThru" bindingMode="TWO_WAY" />
+            </Bindings>
+          </TimePickerField>
+          <InputArea name="Duration" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Duration" id="Duration" />
+              <Binding target="Value" binding="ProcessContext::RescheduleCallBo.duration" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

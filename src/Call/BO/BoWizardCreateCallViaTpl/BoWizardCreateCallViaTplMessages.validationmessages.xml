@@ -1,0 +1,4 @@
+<ValidationMessages name="BoWizardCreateCallViaTplMessages" businessObject="BoWizardCreateCallViaTpl" schemaVersion="1.1">
+  <ValidationMessage name="CasClbFillInAllValues" defaultMessage="Please fill in all values." comment="All fields need to be filled with values." />
+  <ValidationMessage name="CasClbTripListDateNotValid" defaultMessage="Selected Triplist is not valid for the day." comment="All fields need to be filled with values." />
+</ValidationMessages>

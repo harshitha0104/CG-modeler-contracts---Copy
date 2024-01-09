@@ -1,0 +1,8 @@
+<ListItem name="LiOrderNote" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="type" type="DomSdoVouch" storable="true" dataSourceProperty="type" />
+    <SimpleProperty name="text" type="DomText" storable="true" dataSourceProperty="text" />
+    <SimpleProperty name="sdoMainPKey" type="DomPKey" storable="true" dataSourceProperty="sdoMainPKey" />
+  </SimpleProperties>
+</ListItem>

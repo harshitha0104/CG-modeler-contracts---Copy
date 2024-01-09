@@ -1,0 +1,19 @@
+<ListObject name="LoCashOverview" generateLoadMethod="true" filter="InDatabase" paging="false" schemaVersion="1.1">
+  <DataSource name="DsLoCashOverview" />
+  <Item objectClass="LiCashOverview" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="getCreateCashButtonVisibility" />
+    <Method name="getOpenCheckOutDocument" />
+    <Method name="getOpenCheckInDocument" />
+    <Method name="isMultipleCheckoutTemplateAvailable" />
+    <Method name="isMultipleCheckinTemplateAvailable" />    
+  </Methods>
+</ListObject>

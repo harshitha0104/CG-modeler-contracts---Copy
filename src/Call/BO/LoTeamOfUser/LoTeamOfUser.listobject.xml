@@ -1,0 +1,7 @@
+<ListObject name="LoTeamOfUser" generateLoadMethod="false">
+  <DataSource name="DsLoTeamOfUser" />
+  <Item objectClass="LiTeamOfUser" />
+  <Methods>
+    <Method name="loadAsync" />
+  </Methods>
+</ListObject>

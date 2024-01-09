@@ -1,0 +1,70 @@
+<Datasource name="DsLoCustomerSalesRevenueForCard" backendSystem="sf" objectClass="LoCustomerSalesRevenueForCard" businessObjectClass="LoCustomerSalesRevenueForCard" readOnly="false" external="true" editableEntity="Account_Sales_Data__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Sales_Data__c" column="Id" />
+    <Attribute name="netSales" table="Account_Sales_Data__c" column="Sales_Volume__c" />
+    <Attribute name="year" table="Account_Sales_Data__c" column="Year__c" />
+    <Attribute name="month" table="Account_Sales_Data__c" column="Month__c" />
+    <DerivedAttribute name="searchKeys" value="''" />
+    <DerivedAttribute name="key" value="''" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Sales_Data__c" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var user = "";
+			var date = "";
+			var keys = [];
+
+			if(Utils.isDefined(jsonQuery.user)){
+				user = Utils.convertForDBParam(jsonQuery.user, "DomPKey");
+			}
+			if(Utils.isDefined(jsonQuery.date)){
+				date = Utils.convertForDBParam(jsonQuery.date, "DomDate");
+			}
+			if(Utils.isDefined(jsonQuery.keys)){
+				keys = jsonQuery.keys;
+			}
+
+			var sqlParams1 = {user, date};
+			var sqlParams2 = {};
+
+            var sql1 = "SELECT ";
+            sql1 +=          "cast(Month__c as int) || '_' || cast(Year__c as int) as pKey, ";
+            sql1 +=          "ROUND(SUM(Sales_Volume__c),0) as netSales, ";
+            sql1 +=          "Year__c as year, ";
+            sql1 +=          "Month__c as month,";
+            sql1 +=          "cast(Month__c as int) || '_' || cast(Year__c as int)   as searchKeys ";
+            sql1 +=        "FROM Account_Sales_Data__c ";
+            sql1 +=        "WHERE ";
+            sql1 +=          "Account__c IN (";
+            sql1 +=            "SELECT DISTINCT (Account__c) ";
+            sql1 +=            "FROM Account_Manager__c "
+            sql1 +=            "WHERE "
+            sql1 +=              "User__c = #user# "
+            sql1 +=              "AND #compareAsDate('Account_Manager__c.Valid_From__c', 'Date','<=' ,#date#, 'Date')# "
+            sql1 +=              "AND #compareAsDate('Account_Manager__c.Valid_Thru__c', 'Date','>=' ,#date#, 'Date')#) ";
+            sql1 +=          "AND searchKeys IN (";
+
+ 			//keys
+			keys = Utils.getListParams(keys);
+
+            var sql2 =     ") GROUP BY Year__c, Month__c ";
+            sql2 +=        "ORDER BY Year__c, Month__c DESC";
+
+            var sqlStmt1Result = Utils.replaceMacrosParam(sql1, sqlParams1);
+			var sqlStmt2Result = Utils.replaceMacrosParam(sql2, sqlParams2);
+
+			
+            var finalSql = sqlStmt1Result.sql + keys.sql + sqlStmt2Result.sql;
+            var finalParams = sqlStmt1Result.params.concat(keys.params).concat(sqlStmt2Result.params);
+
+			return {sql: finalSql, params: finalParams};
+
+  ]]></Load>
+    <Update><![CDATA[
+     return undefined;
+  ]]></Update>
+  </Database>
+</Datasource>

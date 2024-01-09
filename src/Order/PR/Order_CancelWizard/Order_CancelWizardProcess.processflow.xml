@@ -1,0 +1,70 @@
+<Process name="Order::CancelWizardProcess" defaultAction="Display_UI_Desicion" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CancelReasons" type="LoOrderMetaCancelReason" />
+        <Declaration name="OrderBo" type="BoOrder" />
+        <Declaration name="ClbMainPKey" type="DomPKey" />
+        <Declaration name="CallInContext_clbMainPKey" type="DomPKey" />
+        <Declaration name="CallOutOfStockProducts" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainPKey" type="DomPKey" />
+        <Input name="ClbMainPKey" type="DomPKey" />
+        <Input name="CallInContext_clbMainPKey" type="DomPKey" />
+        <Input name="CallOutOfStockProducts" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadBo" actionType="LOAD" type="BoOrder">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainPKey" />
+          <Input name="ClbMainPKey" value="ProcessContext::ClbMainPKey" />
+          <Input name="CallInContext_clbMainPKey" value="ProcessContext::CallInContext_clbMainPKey" />
+          <Input name="CallOutOfStockProducts" value="ProcessContext::CallOutOfStockProducts" />
+          <Input name="isCanceling" type="Literal" value="true" />
+        </Parameters>
+        <Return name="ProcessContext::OrderBo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="Display_UI_Desicion" actionType="DECISION" parameter="ProcessContext::OrderBo.boOrderMeta.cancelReasonRequired">
+        <Case value="0" action="ConfirmCancel" />
+        <Case value="1" action="LoadCancelReasons" />
+        <CaseElse action="LoadCancelReasons" />
+      </Action>
+      <Action name="LoadCancelReasons" actionType="LOAD" type="LoOrderMetaCancelReason">
+        <Parameters>
+          <Input name="sdoMetaPKey" value="ProcessContext::OrderBo.sdoMetaPKey" />
+        </Parameters>
+        <Return name="ProcessContext::CancelReasons" />
+        <TransitionTo action="ShowCancelReasonSelectionView" />
+      </Action>
+      <Action actionType="View" name="ShowCancelReasonSelectionView">
+        <UIDescription>Order::CancelWizard</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="CancelOrderWithReason" />
+        </Events>
+      </Action>
+      <Action actionType="CONFIRM" confirmType="YesNoCancel" name="ConfirmCancel">
+        <Message messageId="CasConfirmCancelMsg"></Message>
+        <Cases>
+          <Case value="Yes" action="CancelOrder" />
+          <Case value="No" action="End" />
+        </Cases>
+      </Action>
+      <Action name="CancelOrder" actionType="LOGIC" call="ProcessContext::OrderBo.cancel">
+        <TransitionTo action="End" />
+      </Action>
+      <Action name="CancelOrderWithReason" actionType="LOGIC" call="ProcessContext::OrderBo.cancel">
+        <Parameters>
+          <Input name="reasonCode" value="Event.reasonCode" />
+        </Parameters>
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="END" name="End"></Action>
+    </Actions>
+  </Body>
+</Process>

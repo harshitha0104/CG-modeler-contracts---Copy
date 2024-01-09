@@ -1,0 +1,99 @@
+<BusinessObject name="BoUserDailyReport"  generateLoadMethod="false" generateCreateMethod="false" OERReference="UsrDailyReport" schemaVersion="1.1">
+  <DataSource name="DsBoUserDailyReport" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" storable="true" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="id" type="DomId" storable="true" dataSourceProperty="id" />
+    <SimpleProperty name="usrDocMetaPKey" type="DomPKey" storable="true" dataSourceProperty="usrDocMetaPKey" />
+    <SimpleProperty name="wfeWorkflowPKey" type="DomPKey" storable="true" dataSourceProperty="wfeWorkflowPKey" />
+    <SimpleProperty name="phase" type="DomUsrDocPhase" storable="true" dataSourceProperty="phase" />
+    <SimpleProperty name="initiationDate" type="DomDate" storable="true" dataSourceProperty="initiationDate" />
+    <SimpleProperty name="dateFrom" type="DomDate" storable="true" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="ownerUsrMainPKey" type="DomPKey" storable="true" dataSourceProperty="ownerUsrMainPKey" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" storable="true" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="type" type="DomText" dataSourceProperty="type" />
+    <SimpleProperty name="workTimeFrom" type="DomTime" storable="true" dataSourceProperty="workTimeFrom" />
+    <SimpleProperty name="workTimeThru" type="DomTime" storable="true" dataSourceProperty="workTimeThru" />
+    <SimpleProperty name="actualStatePKey" type="DomPKey" storable="true" dataSourceProperty="actualStatePKey" />
+    <SimpleProperty name="nextStatePKey" type="DomPKey" storable="true" dataSourceProperty="nextStatePKey" />
+    <SimpleProperty name="tourId" type="DomString" storable="true" dataSourceProperty="tourId" />
+    <SimpleProperty name="totalWorkingTime" type="DomString" storable="true" dataSourceProperty="totalWorkingTime" />
+    <SimpleProperty name="nonProductiveTime" type="DomString" storable="true" dataSourceProperty="nonProductiveTime" />
+    <SimpleProperty name="productiveTime" type="DomString" storable="true" dataSourceProperty="productiveTime" />
+    <!-- UsrDocMetaPKey -->
+    <SimpleProperty name="user" type="DomText" dataSourceProperty="user" />
+    <SimpleProperty name="responsible" type="DomText" dataSourceProperty="responsible" />
+    <!-- For Total Line of Activities -->
+    <SimpleProperty name="totalHours" type="DomInteger" dataSourceProperty="totalHours" />
+    <SimpleProperty name="totalMinutes" type="DomInteger" dataSourceProperty="totalMinutes" />
+    <SimpleProperty name="totalLineString" type="DomText" dataSourceProperty="totalLineString" />
+    <!-- releaseProcessActive is used for showingcorrect validation message text (Release or Save) -->
+    <SimpleProperty name="releaseProcessActive" type="DomBool" dataSourceProperty="releaseProcessActive" />
+  </SimpleProperties>
+  <NestedObjects>
+    <!--    <NestedObject name="boUserExpense" objectClass="BoUserExpense" dataSourceProperty="pKey" nestingProperty="usrDocPKey" loadMode="LoadImmediate" /> -->
+    <NestedObject name="boUserDRAnnotation" objectClass="BoUserDRAnnotation" dataSourceProperty="pKey" nestingProperty="referencePKey" loadMode="LoadImmediate" />
+    <NestedObject name="boWorkflow" objectClass="BoWorkflow" dataSourceProperty="wfeWorkflowPKey" nestingProperty="pKey" loadMode="LoadImmediate" />
+    <NestedObject name="boUserDocMeta" objectClass="BoUserDocMeta" dataSourceProperty="usrDocMetaPKey" nestingProperty="pKey" loadMode="OnDemand" />
+  </NestedObjects>
+  <ObjectLookups>
+    <ObjectLookup name="luUser" objectClass="LuUser" dataSourceProperty="responsiblePKey" lookupProperty="pKey" loadMode="OnDemand" />
+  </ObjectLookups>
+  <ListObjects>
+    <ListObject name="loUsrDRActivity" objectClass="LoUsrDRActivity" dataSourceProperty="pKey" listProperty="usrDocPKey" loadMode="LoadImmediate">
+      <Events>
+        <Event name="listItemChanged" eventHandler="onDRActivityItemChanged" />
+      </Events>
+    </ListObject>
+    <ListObject name="loUsrTimeEntryByVisitType" objectClass="LoUsrTimeEntryByVisitType" dataSourceProperty="pKey" listProperty="UsrDailyReportPKey" loadMode="LoadImmediate" />
+    <ListObject name="loUsrTimeEntry" objectClass="LoUsrTimeEntry" dataSourceProperty="pKey" listProperty="UsrDailyReportPKey" loadMode="LoadImmediate" />
+    <ListObject name="loUserDRCallStatistic" objectClass="LoUserDRCallStatistic" dataSourceProperty="usrDocMetaPKey" listProperty="clbMetaPKey" loadMode="OnDemand" />
+    <ListObject name="loUserDRRecentState" objectClass="LoUserDRRecentState" dataSourceProperty="pKey" listProperty="usrDailyReportPKey" loadMode="LoadImmediate" />
+  </ListObjects>
+  <Methods>
+    <!-- Default methods -->
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <!--  <Method name="afterInitialize" />
+    <Method name="beforeInitialize" />-->
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="beforeCreateAsync" />
+    <!--  Delete/ApproveAll -->
+    <Method name="doDelete" />
+    <!-- Update activities -->
+    <Method name="updateActivities" />
+    <Method name="calculateTotalActivityDuration" />
+    <!-- Workflow -->
+    <Method name="setNextWorkflowState" />
+    <!-- EA-Rights -->
+    <Method name="setEARights" />
+    <!-- UI related operations -->
+    <Method name="checkButtonVisibility" />
+    <Method name="getValidStepperValue" />
+    <Method name="checkTimeEntryTabVisibility" />
+    <Method name="checkNewTimeEntryButtonVisibility" />
+    <!-- Event handler -->
+    <Method name="onDRActivityItemChanged" />
+    <Method name="onUsrTimeEntryItemChanged" />
+    <!--Time Card related operations -->
+    <Method name="createTimeEntry" />
+    <Method name="closeTimeEntry" />
+    <Method name="checkTimeEntryOverlap" />
+    <Method name="executeBreak" />
+    <Method name="validateNoOpenTimeCard" />
+    <Method name="refreshDurationsAndWorkingTime" />
+    <Method name="setUpdatedTimeEntry" />
+  </Methods>
+  <Validations>
+    <Validation name="validateReportWorkTime" />
+    <Validation name="validatePostDating" />
+    <Validation name="validateUniquePerDay" />
+    <Validation name="validateTotalActivityDuration" />
+    <Validation name="validateTimeEntries" />
+    <Validation name="validateTimeEdit" />
+  </Validations>
+</BusinessObject>

@@ -1,0 +1,101 @@
+<ListObject name="LoIssueOverview" generateLoadMethod="false" schemaVersion="1.1" filter="InDatabase" paging="true">
+  <DataSource name="DsLoIssueOverview" />
+  <Item objectClass="LiIssueOverview" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="setOnlyRelevantFilter" />
+    <Method name="addItem" />
+    <Method name="fillListItemFromObjectMD" />
+    <Method name="setOnlyRelevantFilterAfterAction" />
+    <Method name="getInfoForCustomerTasksCard" />
+    <Method name="getCustomerTasksForCard" />
+    <Method name="getAllCustomerTasksForCard" />
+    <Method name="setFirstItemAsCurrent" />
+    <Method name="updateIssueStatus" />
+  </Methods>
+  <AdvancedSearchObjects>
+    <AdvancedSearchObject name="AsoIssue">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="AsoIssue_Text" property="text" type="Text" />
+        <AdvancedSearchAttribute label="AsoIssue_IssueType" property="svcMetaPKey" type="Lookup" lookupProcess="ServiceRequest::MetaLookupForASOProcess" lookupProcessReturnValue="svcRequestMetaPKey" lookupObject="LuSvcRequestMeta" lookupObjectDisplayValue="text">
+          <Parameters>
+            <Input name="metaType" value="Issue" type="Literal" />
+            <Input name="issueType" value="CustomerIssue" type="Literal" />
+          </Parameters>
+        </AdvancedSearchAttribute>
+        <AdvancedSearchAttribute label="AsoIssue_Priority" property="priority" type="Selection" toggleId="ABC" />
+        <AdvancedSearchAttribute label="AsoIssue_Classification" property="classification" type="Selection" toggleId="SvcClassification" />
+        <AdvancedSearchAttribute label="AsoIssue_InitiationDate" property="initiationDate" type="Date" />
+        <AdvancedSearchAttribute label="AsoIssue_DueDate" property="dueDate" type="Date" />
+        <AdvancedSearchAttribute label="AsoIssue_Phase" property="issuePhase" type="Selection" toggleId="SvcIssuePhase" />
+        <AdvancedSearchAttribute label="AsoIssue_UserInitiator" property="initiatorPKey" lookupProcess="User::UserAndSupervisorLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="AsoIssue_UserOwner" property="ownerPKey" lookupProcess="User::UserAndSupervisorLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="AsoIssue_UserResponsible" property="responsiblePKey" defaultValue="#UserPKey#" lookupProcess="User::UserAndSupervisorLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="AsoIssue_Customer" property="ownerBpaMainPKey" type="Lookup" lookupProcess="Customer::LookupProcess" lookupProcessReturnValue="customerPKey" lookupObject="LuCustomer" lookupObjectDisplayValue="name" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+    <AdvancedSearchObject name="AsoIssueSupervisor">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="AsoIssue_Text" property="text" type="Text" />
+        <AdvancedSearchAttribute label="AsoIssue_IssueType" property="svcMetaPKey" type="Lookup" lookupProcess="ServiceRequest::MetaLookupForASOProcess" lookupProcessReturnValue="svcRequestMetaPKey" lookupObject="LuSvcRequestMeta" lookupObjectDisplayValue="text">
+          <Parameters>
+            <Input name="metaType" value="Issue" type="Literal" />
+            <Input name="issueType" value="CustomerIssue" type="Literal" />
+          </Parameters>
+        </AdvancedSearchAttribute>
+        <AdvancedSearchAttribute label="AsoIssue_Priority" property="priority" type="Selection" toggleId="ABC" />
+        <AdvancedSearchAttribute label="AsoIssue_Classification" property="classification" type="Selection" toggleId="SvcClassification" />
+        <AdvancedSearchAttribute label="AsoIssue_InitiationDate" property="initiationDate" type="Date" />
+        <AdvancedSearchAttribute label="AsoIssue_DueDate" property="dueDate" type="Date" />
+        <AdvancedSearchAttribute label="AsoIssue_Phase" property="issuePhase" type="Selection" toggleId="SvcIssuePhase" />
+        <AdvancedSearchAttribute label="AsoIssue_UserInitiator" property="initiatorPKey" lookupProcess="User::TeamLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="AsoIssue_UserOwner" property="ownerPKey" lookupProcess="User::TeamLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="AsoIssue_UserResponsible" property="responsiblePKey" defaultValue="#UserPKey#" lookupProcess="User::TeamLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="AsoIssue_Customer" property="ownerBpaMainPKey" type="Lookup" lookupProcess="Customer::LookupProcess" lookupProcessReturnValue="customerPKey" lookupObject="LuCustomer" lookupObjectDisplayValue="name" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+    <AdvancedSearchObject name="AsoIssueCall">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="AsoIssue_Text" property="text" type="Text" />
+        <AdvancedSearchAttribute label="AsoIssue_IssueType" property="svcMetaPKey" type="Lookup" lookupProcess="ServiceRequest::MetaLookupForASOProcess" lookupProcessReturnValue="svcRequestMetaPKey" lookupObject="LuSvcRequestMeta" lookupObjectDisplayValue="text">
+          <Parameters>
+            <Input name="metaType" value="Issue" type="Literal" />
+            <Input name="issueType" value="CustomerIssue" type="Literal" />
+          </Parameters>
+        </AdvancedSearchAttribute>
+        <AdvancedSearchAttribute label="AsoIssue_Priority" property="priority" type="Selection" toggleId="ABC" />
+        <AdvancedSearchAttribute label="AsoIssue_Classification" property="classification" type="Selection" toggleId="SvcClassification" />
+        <AdvancedSearchAttribute label="AsoIssue_InitiationDate" property="initiationDate" type="Date" />
+        <AdvancedSearchAttribute label="AsoIssue_DueDate" property="dueDate" type="Date" />
+        <AdvancedSearchAttribute label="AsoIssue_Phase" property="issuePhase" type="Selection" toggleId="SvcIssuePhase" />
+        <AdvancedSearchAttribute label="AsoIssue_UserInitiator" property="initiatorPKey" lookupProcess="User::UserAndSupervisorLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="AsoIssue_UserOwner" property="ownerPKey" lookupProcess="User::UserAndSupervisorLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="AsoIssue_UserResponsible" property="responsiblePKey" lookupProcess="User::UserAndSupervisorLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+    <AdvancedSearchObject name="AsoIssueCallSupervisor">
+      <AdvancedSearchAttributes profileId="default">
+        <AdvancedSearchAttribute label="AsoIssue_Text" property="text" type="Text" />
+        <AdvancedSearchAttribute label="AsoIssue_IssueType" property="svcMetaPKey" type="Lookup" lookupProcess="ServiceRequest::MetaLookupForASOProcess" lookupProcessReturnValue="svcRequestMetaPKey" lookupObject="LuSvcRequestMeta" lookupObjectDisplayValue="text">
+          <Parameters>
+            <Input name="metaType" value="Issue" type="Literal" />
+            <Input name="issueType" value="CustomerIssue" type="Literal" />
+          </Parameters>
+        </AdvancedSearchAttribute>
+        <AdvancedSearchAttribute label="AsoIssue_Priority" property="priority" type="Selection" toggleId="ABC" />
+        <AdvancedSearchAttribute label="AsoIssue_Classification" property="classification" type="Selection" toggleId="SvcClassification" />
+        <AdvancedSearchAttribute label="AsoIssue_InitiationDate" property="initiationDate" type="Date" />
+        <AdvancedSearchAttribute label="AsoIssue_DueDate" property="dueDate" type="Date" />
+        <AdvancedSearchAttribute label="AsoIssue_Phase" property="issuePhase" type="Selection" toggleId="SvcIssuePhase" />
+        <AdvancedSearchAttribute label="AsoIssue_UserInitiator" property="initiatorPKey" lookupProcess="User::TeamLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="AsoIssue_UserOwner" property="ownerPKey" lookupProcess="User::TeamLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+        <AdvancedSearchAttribute label="AsoIssue_UserResponsible" property="responsiblePKey" lookupProcess="User::TeamLookupProcess" lookupProcessReturnValue="userPKey" lookupObject="LuUser" lookupObjectDisplayValue="name" type="Lookup" />
+      </AdvancedSearchAttributes>
+    </AdvancedSearchObject>
+  </AdvancedSearchObjects>
+</ListObject>

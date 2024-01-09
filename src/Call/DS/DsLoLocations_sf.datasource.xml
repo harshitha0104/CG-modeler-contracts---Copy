@@ -1,0 +1,13 @@
+<DataSource name="DsLoLocations" backendSystem="sf" businessObjectClass="LoLocations" external="false" editableEntity="" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Location" column="Id" />
+    <Attribute name="name" table="Location" column="Name" />
+    <Attribute name="visitorAddressId" table="Location" column="VisitorAddressId" />
+  </Attributes>
+  <Entities>
+    <Entity name="Location" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition />
+  <OrderCriteria />
+  <Parameters />
+</DataSource>

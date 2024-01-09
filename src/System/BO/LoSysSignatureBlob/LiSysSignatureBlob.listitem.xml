@@ -1,0 +1,18 @@
+<ListItem name="LiSysSignatureBlob">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="blobPKey" type="DomPKey" dataSourceProperty="blobPKey" />
+    <SimpleProperty name="signaturePKey" type="DomPKey" dataSourceProperty="signaturePKey" />
+    <SimpleProperty name="bpaCustomerPKey" type="DomPKey" dataSourceProperty="bpaCustomerPKey" />
+    <SimpleProperty name="name" type="DomString" dataSourceProperty="name" />
+    <SimpleProperty name="referencePKey" type="DomPKey" dataSourceProperty="referencePKey" />
+    <SimpleProperty name="referenceObjectPhase" type="DomString" dataSourceProperty="referenceObjectPhase" />
+    <SimpleProperty name="sysReleaseProcessStepPKey" type="DomPKey" dataSourceProperty="sysReleaseProcessStepPKey" />
+    <SimpleProperty name="usrUserPKey" type="DomPKey" dataSourceProperty="usrUserPKey" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" blobTable="SysSignatureBlob" blobPKeyField="pKey" />
+    <SimpleProperty name="type" type="DomString" />
+    <SimpleProperty name="sysReleaseStepText" type="DomString" dataSourceProperty="sysReleaseStepText" />
+    <SimpleProperty name="fileName" type="DomFileName" dataSourceProperty="fileName" />
+    <SimpleProperty name="sysSort" type="DomFileName" dataSourceProperty="sysSort" />
+  </SimpleProperties>
+</ListItem>

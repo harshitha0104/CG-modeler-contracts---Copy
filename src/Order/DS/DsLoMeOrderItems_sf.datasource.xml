@@ -1,0 +1,88 @@
+<DataSource name="DsLoMeOrderItems" backendSystem="sf" businessObjectClass="LoMeOrderItems" external="false" readOnly="true" editableEntity="Order_Item__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Order_Item__c" column="Id" />
+    <Attribute name="sdoMainPKey" table="Order_Item__c" column="Order__c" />
+    <Attribute name="sdoItemMetaPKey" table="Order_Item__c" column="Order_Item_Template__c" />
+    <Attribute name="sdoParentItemPKey" table="Order_Item__c" column="Parent_Order_Item__c" />
+    <Attribute name="parentType" table="Order_Item__c" column="Parent_Type__c" />
+    <Attribute name="quantity" table="Order_Item__c" column="Quantity__c" />
+    <Attribute name="discount" table="Order_Item__c" column="Discount__c" />
+    <Attribute name="prdMainPKey" table="Order_Item__c" column="Product__c" />
+    <Attribute name="quantityLogisticUnit" table="Order_Item__c" column="UoM__c" />
+    <Attribute name="piecesPerSmallestUnit" table="Unit_Of_Measure__c" column="Pieces_per_Smallest_Unit__c" />
+    <Attribute name="priceEffect" table="Order_Item_Template__c" column="Price_Effect__c" />
+    <Attribute name="saveZeroQuantity" table="Order_Item_Template__c" column="Save_Zero_Quantity__c" />
+    <Attribute name="shortType" table="Order_Item_Template__c" column="Short_Text__c" />
+    <Attribute name="type" table="Order_Item_Template__c" column="Description_#Language#__c" />
+    <Attribute name="listed" table="Order_Item__c" column="Listed__c" />
+    <Attribute name="promoted" table="Order_Item__c" column="Promoted__c" />
+    <Attribute name="history" table="Order_Item__c" column="History__c" />
+    <Attribute name="outOfStock" table="Order_Item__c" column="Out_Of_Stock__c" />
+    <Attribute name="calculationGroup" table="Order_Item_Template__c" column="Calculation_Group__c" />
+    <Attribute name="price" table="Order_Item__c" column="Price__c" />
+    <Attribute name="priceReceipt" table="Order_Item__c" column="Price_Receipt__c" />
+    <Attribute name="value" table="Order_Item__c" column="Value__c" />
+    <Attribute name="valueReceipt" table="Order_Item__c" column="Value_Receipt__c" />
+    <Attribute name="basePrice" table="Order_Item__c" column="Price__c" />
+    <Attribute name="basePriceReceipt" table="Order_Item__c" column="Base_Price__c" />
+    <!--Attribute name="grossValue" table="Order_Item__c" column="Gross_Value__c" /-->
+    <Attribute name="grossValueReceipt" table="Order_Item__c" column="Gross_Value_Receipt__c" />
+    <DerivedAttribute name="grossValue" value="'0'" />
+    <Attribute name="specialPrice" table="Order_Item__c" column="Special_Price__c" />
+    <Attribute name="specialPriceReceipt" table="Order_Item__c" column="Special_Price_Receipt__c" />
+    <Attribute name="erpId" table="Order_Item__c" column="Erp_Id__c" />
+    <Attribute name="suggestedQuantity" table="Order_Item__c" column="Suggested_Quantity__c" />
+    <Attribute name="freeItemCreationStep" table="Order_Item__c" column="Free_Item_Creation_Step__c" />
+    <DerivedAttribute name="refPKey" value="Order_Item__c.Product__c || Order_Item__c.Order_Item_Template__c || Order_Item__c.Promotion__c || Order_Item__c.Promotion_Reward__c" />
+    <Attribute name="isOrderUnit" table="Unit_Of_Measure__c" column="Is_Order_Unit__c" />
+    <Attribute name="sort" table="Unit_Of_Measure__c" column="Sort__c" />
+    <Attribute name="pricingInformation" table="Order_Item__c" column="Pricing_Information__c" />
+    <Attribute name="movementDirection" table="Order_Item_Template__c" column="Movement_Direction__c" />
+    <Attribute name="promotionPKey" table="Order_Item__c" column="Promotion__c" />
+    <Attribute name="rewardPKey" table="Order_Item__c" column="Promotion_Reward__c" />
+    <DerivedAttribute name="targetQuantity" value="''" />
+    <DerivedAttribute name="modReason" value="''" />
+    <DerivedAttribute name="isPersistedItem" value="'1'" />
+    <DerivedAttribute name="allowCriticalStock" value="''" />
+    <DerivedAttribute name="splittingGroup" value="''" />
+    <Attribute name="pricingInfo1" table="Order_Item__c" column="Pricing_Info_1__c" />
+    <Attribute name="pricingInfo2" table="Order_Item__c" column="Pricing_Info_2__c" />
+    <Attribute name="pricingInfo3" table="Order_Item__c" column="Pricing_Info_3__c" />
+    <Attribute name="pricingInfo4" table="Order_Item__c" column="Pricing_Info_4__c" />
+    <Attribute name="pricingInfo5" table="Order_Item__c" column="Pricing_Info_5__c" />
+    <Attribute name="pricingInfo6" table="Order_Item__c" column="Pricing_Info_6__c" />
+    <Attribute name="pricingInfo7" table="Order_Item__c" column="Pricing_Info_7__c" />
+    <Attribute name="pricingInfo8" table="Order_Item__c" column="Pricing_Info_8__c" />
+    <Attribute name="pricingInfo9" table="Order_Item__c" column="Pricing_Info_9__c" />
+    <Attribute name="pricingInfo10" table="Order_Item__c" column="Pricing_Info_10__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order_Item__c" alias="" idAttribute="Id" />
+    <Entity name="Order_Item_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Order_Item__c.Order_Item_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="Order_Item_Template__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Unit_Of_Measure__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Order_Item__c.Product__c" comparator="eq" rightSideType="Attribute" rightSideValue="Unit_Of_Measure__c.Product__c" />
+          <Condition leftSideValue="Order_Item__c.UoM__c" comparator="eq" rightSideType="Attribute" rightSideValue="Unit_Of_Measure__c.Unit_Type__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        Order_Item__c.Order__c = '#sdoMainPKey#'
+		#addCond#
+    ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Order_Item__c" attribute="Product__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="sdoMainPKey" type="TEXT" />
+    <Parameter name="addCond" treatAs="sqlSnippet" />
+  </Parameters>
+</DataSource>

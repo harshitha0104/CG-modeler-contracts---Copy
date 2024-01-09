@@ -1,0 +1,25 @@
+<DataSource name="DsBoSvcRequestMeta" backendSystem="sf" businessObjectClass="BoSvcRequestMeta" external="false" editableEntity="Account_Task_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Account_Task_Template__c" column="Id" />
+    <Attribute name="salesOrg" table="Account_Task_Template__c" column="Sales_Org__c" />
+    <Attribute name="id" table="Account_Task_Template__c" column="Name" />
+    <DerivedAttribute name="issueType" value="'CustomerIssue'" />
+    <DerivedAttribute name="sysNumberPKey" value="' '" />
+    <DerivedAttribute name="metaType" value="'Issue'" />
+    <Attribute name="wfeWorkflowPKey" table="Account_Task_Template__c" column="Workflow__c" />
+    <Attribute name="managementType" table="Account_Task_Template__c" column="Management_Type__c" />
+    <DerivedAttribute name="isPrivate" value="'0'" />
+    <Attribute name="active" table="Account_Task_Template__c" column="Active__c" />
+    <Attribute name="issueTypeText" table="Account_Task_Template__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Account_Task_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+      Account_Task_Template__c.Id= #pKey#
+       ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

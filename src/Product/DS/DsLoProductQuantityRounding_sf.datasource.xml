@@ -1,0 +1,22 @@
+<DataSource name="DsLoProductQuantityRounding" backendSystem="sf" businessObjectClass="LoProductQuantityRounding" external="false" editableEntity="Unit_of_Measure__c" readOnly="True" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Unit_of_Measure__c" column="Id" />
+    <Attribute name="piecesPerSmallestUnit" table="Unit_of_Measure__c" column="Pieces_per_Smallest_Unit__c" />
+    <Attribute name="unitType" table="Unit_of_Measure__c" column="Unit_Type__c" />
+    <Attribute name="orderAbility" table="Unit_of_Measure__c" column="Order_Ability__c" />
+    <Attribute name="roundingTarget" table="Unit_of_Measure__c" column="Rounding_Target__c" />
+    <Attribute name="roundingRule" table="Unit_of_Measure__c" column="Rounding_Rule__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Unit_of_Measure__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+	Unit_of_Measure__c.Product__c = #ProductPKey#
+   ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Unit_of_Measure__c" attribute="Pieces_per_Smallest_Unit__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="ProductPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,29 @@
+<DataSource name="DsLoOrderMetaCancelReason" backendSystem="sf" objectClass="LoOrderMetaCancelReason" businessObjectClass="LoOrderMetaCancelReason" external="true" readOnly="true" editableEntity="Order_Template__c" schemaVersion="2.0">
+  <Entities>
+    <Entity name="Order_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+			var sdoMetaPKey = "";
+
+			if(Utils.isDefined(jsonQuery.sdoMetaPKey)){
+				sdoMetaPKey = Utils.convertForDBParam(jsonQuery.sdoMetaPKey, "DomPKey");
+			}
+
+			var sqlParams = {sdoMetaPKey};
+
+			var sqlStmt = "WITH split(word, str, offsep) AS ( ";
+			sqlStmt += "SELECT '', Cancel_Reason__c ||';', 1 FROM Order_Template__c WHERE Order_Template__c.Id = #sdoMetaPKey#";
+			sqlStmt += "UNION ALL SELECT ";
+			sqlStmt += "substr(str, 0, case when instr(str, ';') > 0 then instr(str, ';') else str end), ";
+			sqlStmt += "ltrim(substr(str, instr(str, ';')), '; '), ";
+			sqlStmt += "instr(str, ';') ";
+			sqlStmt += "FROM split ";
+			sqlStmt += "WHERE offsep > 0 ";
+			sqlStmt += ") SELECT word as reasonCode FROM split WHERE trim(word) != '' ";
+
+			return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+		]]></Load>
+  </Database>
+</DataSource>

@@ -1,0 +1,77 @@
+<BusinessObject name="BoTourMeta" schemaVersion="1.1">
+  <DataSource name="DsBoTourMeta" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="businessModified" type="DomBusinessModified" dataSourceProperty="businessModified" />
+    <SimpleProperty name="salesOrg" type="DomSalesOrg" dataSourceProperty="salesOrg" />
+    <SimpleProperty name="uiGroup" type="DomId" dataSourceProperty="uiGroup" />
+    <SimpleProperty name="note" type="DomLongDescription" dataSourceProperty="note" />
+    <SimpleProperty name="id" type="DomId" dataSourceProperty="id" />
+    <SimpleProperty name="considerMileage" type="DomTmgConsiderMileage" dataSourceProperty="considerMileage" />
+    <SimpleProperty name="considerVehicle" type="DomTmgConsiderVehicle" dataSourceProperty="considerVehicle" />
+    <SimpleProperty name="considerVehicleStatus" type="DomTmgConsiderVehicleStatus" dataSourceProperty="considerVehicleStatus" />
+    <SimpleProperty name="considerSealCheck" type="DomTmgConsiderSealCheck" dataSourceProperty="considerSealCheck" />
+    <SimpleProperty name="active" type="DomBool" dataSourceProperty="active" />
+    <SimpleProperty name="cashHandlingRequired" type="DomBool" dataSourceProperty="cashHandlingRequired" />
+    <SimpleProperty name="expressCheckOutAllowed" type="DomBool" dataSourceProperty="expressCheckOutAllowed" />
+    <SimpleProperty name="palletCheckOutAllowed" type="DomBool" dataSourceProperty="palletCheckOutAllowed" />
+    <SimpleProperty name="countingGroupCheckOutAllowed" type="DomBool" dataSourceProperty="countingGroupCheckOutAllowed" />
+    <SimpleProperty name="deleteCallAllowed" type="DomBool" dataSourceProperty="deleteCallAllowed" />
+    <SimpleProperty name="reorgMode" type="DomRpsDataReorgMode" dataSourceProperty="reorgMode" />
+    <SimpleProperty name="reorgPeriodType" type="DomRpsReorgPeriodType" dataSourceProperty="reorgPeriodType" />
+    <SimpleProperty name="reorgOffset" type="DomInteger" dataSourceProperty="reorgOffset" />
+    <SimpleProperty name="sealCheckPresettingPolicy" type="DomTmgSealCheckPresettingPolicy" dataSourceProperty="sealCheckPresettingPolicy" />
+    <SimpleProperty name="displaySealWarning" type="DomBool" dataSourceProperty="displaySealWarning" />
+    <SimpleProperty name="deliveryListPreviewPrintout" type="DomBool" dataSourceProperty="deliveryListPreviewPrintout" />
+    <SimpleProperty name="printUIGroup" type="DomId" dataSourceProperty="printUIGroup" />
+    <SimpleProperty name="agendaScanBehavior" type="DomClbAgendaScanBehavior" dataSourceProperty="agendaScanBehavior" />
+    <SimpleProperty name="coDriverRequired" type="DomTmgCoDriverRequired" dataSourceProperty="coDriverRequired" />
+    <SimpleProperty name="cashCheckInRequired" type="DomRpsRequiredWithoutNone" dataSourceProperty="cashCheckInRequired" />
+    <SimpleProperty name="multipleCashCheckInAllowed" type="DomBool" dataSourceProperty="multipleCashCheckInAllowed" />
+    <SimpleProperty name="defaultCurrency" type="DomCurrency" dataSourceProperty="defaultCurrency" />
+    <SimpleProperty name="advancedUOMAllowed" type="DomBool" dataSourceProperty="advancedUOMAllowed" />
+    <SimpleProperty name="creationPlatform" type="DomCreationPlatform" dataSourceProperty="creationPlatform" />
+    <SimpleProperty name="userGuidance" type="DomTmgMainObjectBPW" dataSourceProperty="userGuidance" />
+    <SimpleProperty name="tSRLevelOfDetail" type="DomTmgTSRLevelOfDetail" dataSourceProperty="tSRLevelOfDetail" />
+    <SimpleProperty name="tSRShowTourInfo" type="DomBool" dataSourceProperty="tSRShowTourInfo" />
+    <SimpleProperty name="tSRShowVisitInfo" type="DomBool" dataSourceProperty="tSRShowVisitInfo" />
+    <SimpleProperty name="tSRShowInventoryInfo" type="DomBool" dataSourceProperty="tSRShowInventoryInfo" />
+    <SimpleProperty name="tSRShowDeliveryDocInfo" type="DomBool" dataSourceProperty="tSRShowDeliveryDocInfo" />
+    <SimpleProperty name="tSRShowSalesDocInfo" type="DomBool" dataSourceProperty="tSRShowSalesDocInfo" />
+    <SimpleProperty name="tSRShowCashInfo" type="DomBool" dataSourceProperty="tSRShowCashInfo" />
+    <SimpleProperty name="previewPrintout" type="DomBool" dataSourceProperty="previewPrintout" />
+    <SimpleProperty name="inclDSDActivities" type="DomBool" dataSourceProperty="inclDSDActivities" />
+    <SimpleProperty name="inclPreSalesActivities" type="DomBool" dataSourceProperty="inclPreSalesActivities" />
+    <SimpleProperty name="inclMerchActivities" type="DomBool" dataSourceProperty="inclMerchActivities" />
+    <SimpleProperty name="inclOffRouteActivities" type="DomBool" dataSourceProperty="inclOffRouteActivities" />
+    <SimpleProperty name="syncOptions" type="DomTmgSyncOptions" dataSourceProperty="syncOptions" />
+    <SimpleProperty name="considerMultipleWarehouses" type="DomBool" dataSourceProperty="considerMultipleWarehouses" />
+    <SimpleProperty name="considerDistributionOffset" type="DomBool" dataSourceProperty="considerDistributionOffset" />
+    <SimpleProperty name="distributionFromOffsetInternal" type="DomNatural" dataSourceProperty="distributionFromOffsetInternal" />
+    <SimpleProperty name="distributionThruOffsetInternal" type="DomNatural" dataSourceProperty="distributionThruOffsetInternal" />
+    <SimpleProperty name="distributionFromOffset" type="DomNatural" dataSourceProperty="distributionFromOffset" />
+    <SimpleProperty name="distributionThruOffset" type="DomNatural" dataSourceProperty="distributionThruOffset" />
+    <SimpleProperty name="usrDocMetaPKey" type="DomPKey" dataSourceProperty="usrDocMetaPKey" />
+    <SimpleProperty name="sysNumberPKey" type="DomPKey" storable="false" dataSourceProperty="sysNumberPKey" />
+    <SimpleProperty name="mobilityStartUserGuidance" type="DomTmgMobilityUserGuidance" storable="false" dataSourceProperty="mobilityStartUserGuidance" />
+    <SimpleProperty name="mobilityEndUserGuidance" type="DomTmgMobilityUserGuidance" storable="false" dataSourceProperty="mobilityEndUserGuidance" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="createAsync" />
+  </Methods>
+</BusinessObject>

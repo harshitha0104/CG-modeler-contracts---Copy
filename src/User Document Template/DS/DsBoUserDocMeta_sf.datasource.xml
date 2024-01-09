@@ -1,0 +1,25 @@
+<DataSource name="DsBoUserDocMeta" backendSystem="sf" businessObjectClass="BoUserDocMeta" external="false" editableEntity="User_Document_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="User_Document_Template__c" column="Id" />
+    <Attribute name="wfeWorkflowPKey" table="User_Document_Template__c" column="Workflow__c" />
+    <Attribute name="allowPostdating" table="User_Document_Template__c" column="Allow_Postdating__c" />
+    <DerivedAttribute name="uniquePerDay" value="'0'" />
+    <Attribute name="type" table="User_Document_Template__c" column="Description_#Language#__c" />
+    <Attribute name="mobilityRelevant" table="User_Document_Template__c" column="Mobility_Relevant__c" />
+    <Attribute name="usrDocType" table="User_Document_Template__c" column="Type__c" />
+    <DerivedAttribute name="uiGroup" value="' '" />
+    <DerivedAttribute name="breakUsrTimeEntryMetaPKey" value="' '" />
+    <DerivedAttribute name="breakUsrTimeEntryText" value="' '" />
+    <DerivedAttribute name="workUsrTimeEntryMetaPKey" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="User_Document_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        User_Document_Template__c.Id = #pKey#
+        ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

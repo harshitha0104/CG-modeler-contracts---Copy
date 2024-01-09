@@ -1,0 +1,52 @@
+<DataSource name="DsLoPromotionForSalesFolder" backendSystem="sf" businessObjectClass="LoPromotionForSalesFolder" external="false" editableEntity="Promotion__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Promotion__c" column="Id" />
+    <Attribute name="sloganText" table="Promotion__c" column="Slogan_#Language#__c" />
+    <Attribute name="dateFrom" table="Promotion__c" column="Date_From__c" />
+    <Attribute name="dateThru" table="Promotion__c" column="Date_Thru__c" />
+    <DerivedAttribute name="usage" value="max(SF_File.Usage__c )" />
+    <DerivedAttribute name="mediaPath" value="CASE SF_File.Usage__c WHEN 'Icon' THEN SF_File.VersionData ELSE ' ' END" />
+    <DerivedAttribute name="fileType" value="replace(SF_File.PathOnClient, rtrim(SF_File.PathOnClient, replace(SF_File.PathOnClient, '.', '')), '')" />
+  </Attributes>
+  <Entities>
+    <Entity name="Promotion__c" alias="" idAttribute="Id" />
+    <Entity name="Promotion_Sales_Folder__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Promotion_Sales_Folder__c.Promotion__c" comparator="eq" rightSideType="Attribute" rightSideValue="Promotion__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="SF_FileLink" alias="">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="SF_FileLink.ParentId" comparator="eq" rightSideType="Attribute" rightSideValue="Promotion__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="SF_File" alias="">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="SF_FileLink.FileId" comparator="eq" rightSideType="Attribute" rightSideValue="SF_File.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Promotion_Sales_Folder__c.Sales_Folder__c = #salesFolderPKey#
+  AND Promotion__c.Active__c = '1'
+  AND Promotion__c.Phase__c = 'Committed'
+  AND #compareAsDate('Promotion__c.Date_From__c', 'Date','<=' , #TodayAsDate# , 'Date')#
+  AND #compareAsDate('Promotion__c.Date_Thru__c', 'Date','>=' , #TodayAsDate# , 'Date')#
+  ]]></QueryCondition>
+  <Parameters>
+    <Parameter name="salesFolderPKey" type="TEXT" />
+  </Parameters>
+  <OrderCriteria>
+    <OrderCriterion entity="Promotion__c" attribute="Date_From__c" direction="ASC" />
+    <OrderCriterion entity="Promotion__c" attribute="Slogan_#Language#__c" direction="ASC" />
+  </OrderCriteria>
+  <GroupBy>
+    <GroupByCriterion entity="Promotion__c" attribute="Id" />
+  </GroupBy>
+</DataSource>

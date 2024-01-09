@@ -1,0 +1,12 @@
+<ListObject name="LoLogisticUnitMultipleItems" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoLogisticUnitMultipleItems" />
+  <Item objectClass="LiLogisticUnitMultipleItems" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+  </Methods>
+</ListObject>

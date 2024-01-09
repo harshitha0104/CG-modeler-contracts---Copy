@@ -1,0 +1,9 @@
+<ListItem name="LiPosProduct">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="productPKey" type="DomPKey" dataSourceProperty="productPKey" />
+    <SimpleProperty name="jobDefinitionMetaPKey" type="DomPKey" dataSourceProperty="jobDefinitionMetaPKey" />
+    <SimpleProperty name="targetValueColumn" type="DomInteger" dataSourceProperty="targetValueColumn" />
+    <SimpleProperty name="targetValue" type="DomVariant" dataSourceProperty="targetValue" />
+  </SimpleProperties>
+</ListItem>

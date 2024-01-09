@@ -1,0 +1,14 @@
+<ListObject name="LoAtmAttachment" generateLoadMethod="true" schemaVersion="1.1">
+  <Item objectClass="LiAtmAttachment" />
+  <DataSource name="DsLoAtmAttachment" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="addItem" />
+    <Method name="deleteItem" />
+  </Methods>
+</ListObject>

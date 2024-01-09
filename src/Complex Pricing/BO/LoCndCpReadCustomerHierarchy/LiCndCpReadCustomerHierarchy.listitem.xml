@@ -1,0 +1,11 @@
+<ListItem name="LiCndCpReadCustomerHierarchy">
+  <SimpleProperties>
+    <SimpleProperty name="PKey" type="DomPKey" storable="false" dataSourceProperty="PKey" />
+    <SimpleProperty name="BusinessModified" type="DomBusinessModified" storable="false" dataSourceProperty="BusinessModified" />
+    <SimpleProperty name="FromPKey" type="DomPKey" storable="false" dataSourceProperty="FromPKey" />
+    <SimpleProperty name="ToPKey" type="DomPKey" storable="false" dataSourceProperty="ToPKey" />
+    <SimpleProperty name="ValidFrom" type="DomDate" storable="false" dataSourceProperty="ValidFrom" />
+    <SimpleProperty name="ValidThru" type="DomValidThru" storable="false" dataSourceProperty="ValidThru" />
+    <SimpleProperty name="FromOrgLevel" type="DomDate" storable="false" dataSourceProperty="FromOrgLevel" />
+  </SimpleProperties>
+</ListItem>

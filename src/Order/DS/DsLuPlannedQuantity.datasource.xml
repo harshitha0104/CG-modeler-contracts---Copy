@@ -1,0 +1,69 @@
+<DataSource name="DsLuPlannedQuantity" objectClass="LuPlannedQuantity" businessObjectClass="LuPlannedQuantity" readOnly="true" external="true" editableEntity="SdoItem" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+
+var prdMainPKey = "";
+var tmgMainPKey = "";
+var documentType = "";
+var salesOrg = "";
+var movementDirection = "";
+
+if (!jsonQuery){jsonQuery={'params': []};}
+
+if (Utils.isDefined(jsonQuery)){
+var newParams = jsonQuery;
+  if (Utils.isOldParamsFormat(newParams)){
+   newParams = Utils.convertDsParamsOldToNew(newParams);
+ }
+}
+
+if(Utils.isDefined(newParams.prdMainPKey)){
+  prdMainPKey = Utils.convertForDBParam(newParams.prdMainPKey, 'DomPKey');
+}
+if(Utils.isDefined(newParams.tmgMainPKey)){
+  tmgMainPKey = Utils.convertForDBParam(newParams.tmgMainPKey, 'DomPKey');
+}
+if(Utils.isDefined(newParams.documentType)){
+  documentType = Utils.convertForDBParam(newParams.documentType, 'DomSdoSubType');
+}
+if(Utils.isDefined(newParams.salesOrg)){
+  salesOrg = Utils.convertForDBParam(newParams.salesOrg, 'DomSalesOrg');
+}
+if(Utils.isDefined(newParams.movementDirection)){
+  movementDirection = Utils.convertForDBParam(newParams.movementDirection, 'DomSdoItemMovementDirection');
+}
+
+var sqlParams = {prdMainPKey, tmgMainPKey, documentType, salesOrg, movementDirection};
+
+var sqlStmt = "SELECT ";
+sqlStmt += "(SUM(ITEM.TargetQuantity * (SELECT PiecesPerSmallestUnit FROM PrdLogistic WHERE ProductPKey = #prdMainPKey# AND UnitType = ITEM.QuantityLogisticUnit))) as targetQuantity ";
+sqlStmt += "FROM SdoItem as ITEM ";
+sqlStmt += "WHERE ITEM.SdoMainPKey IN ";
+sqlStmt += "(SELECT MAIN.PKey as pKey ";
+sqlStmt += "FROM SdoMain as MAIN ";
+sqlStmt += "WHERE MAIN.TmgMainPKey = #tmgMainPKey# ";
+sqlStmt += "AND MAIN.DocumentType = #documentType# ) ";
+sqlStmt += "AND ITEM.PrdMainPKey = #prdMainPKey# ";
+sqlStmt += "AND ITEM.SdoItemMetaPKey IN ";
+sqlStmt += "(SELECT ITEMMETA.PKey as pKey ";
+sqlStmt += "FROM SdoItemMeta as ITEMMETA ";
+sqlStmt += "WHERE ITEMMETA.SalesOrg = #salesOrg# ";
+sqlStmt += "AND ITEMMETA.MovementDirection = #movementDirection# ) ";
+
+return Utils.replaceMacrosParam(sqlStmt, sqlParams);
+
+]]></Load>
+    <Update><![CDATA[
+// Intended to be empty
+return undefined;
+]]></Update>
+    <Insert><![CDATA[   
+// Intended to be empty     
+return undefined;           
+]]></Insert>
+    <Delete><![CDATA[
+// Intended to be empty
+return undefined;  
+]]></Delete>
+  </Database>
+</DataSource>

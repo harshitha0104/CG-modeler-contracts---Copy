@@ -1,0 +1,13 @@
+<ListItem name="LiSalesFolderTactic">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="active" type="DomBool" dataSourceProperty="active" />
+    <SimpleProperty name="costAmount" type="DomDecimal" dataSourceProperty="costAmount" />
+    <SimpleProperty name="dateFrom" type="DomDate" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" dataSourceProperty="dateThru" />
+    <SimpleProperty name="tacticParentPKey" type="DomPKey" dataSourceProperty="tacticParentPKey" />
+    <SimpleProperty name="tacticMetaName" type="DomText" dataSourceProperty="tacticMetaName" />
+    <SimpleProperty name="prmMetaPKey" type="DomPKey" dataSourceProperty="prmMetaPKey" />
+    <SimpleProperty name="compensationMetaText" type="DomText" dataSourceProperty="compensationMetaText" />  
+  </SimpleProperties>
+</ListItem>

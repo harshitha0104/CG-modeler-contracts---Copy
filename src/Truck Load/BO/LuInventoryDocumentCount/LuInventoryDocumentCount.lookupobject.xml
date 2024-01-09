@@ -1,0 +1,11 @@
+<LookupObject name="LuInventoryDocumentCount" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuInventoryDocumentCount" />
+  <SimpleProperties>
+    <SimpleProperty name="inventoryDocumentCount" type="DomInteger" storable="true" dataSourceProperty="inventoryDocumentCount" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

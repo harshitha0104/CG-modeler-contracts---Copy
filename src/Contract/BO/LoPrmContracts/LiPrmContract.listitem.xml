@@ -1,0 +1,18 @@
+<ListItem name="LiPrmContract">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="customerName" type="DomBpaName" dataSourceProperty="customerName" />
+    <SimpleProperty name="customerPKey" type="DomPKey" dataSourceProperty="customerPKey" />
+    <SimpleProperty name="responsibleUserName" type="DomUsrName" dataSourceProperty="responsibleUserName" />
+    <SimpleProperty name="responsiblePKey" type="DomPKey" dataSourceProperty="responsiblePKey" />
+    <SimpleProperty name="ownerPKey" type="DomPKey" dataSourceProperty="ownerPKey" />
+    <SimpleProperty name="dateFrom" type="DomDate" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" dataSourceProperty="dateThru" />
+    <SimpleProperty name="phase" type="DomPrmContractPhase" dataSourceProperty="phase" />
+    <SimpleProperty name="prmText" type="DomText" dataSourceProperty="prmText" />
+    <SimpleProperty name="ownerUserName" type="DomUsrName" dataSourceProperty="ownerUserName" />
+    <SimpleProperty name="isSubstituted" type="DomBool" dataSourceProperty="isSubstituted" />
+    <SimpleProperty name="hasSubstitute" type="DomBool" dataSourceProperty="hasSubstitute" />
+    <SimpleProperty name="hasSubstituteSubBpaRelUsrPKey" type="DomPKey" dataSourceProperty="hasSubstituteSubBpaRelUsrPKey" />
+  </SimpleProperties>
+</ListItem>

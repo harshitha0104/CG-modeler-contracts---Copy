@@ -1,0 +1,213 @@
+<Process name="Call::CreateNewWizardProcess" defaultAction="AssignCompanyRequired_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CallMetaPKey" type="String" />
+        <Declaration name="CustomerPKey" type="String" />
+        <Declaration name="CallBO" type="BoCall" />
+        <Declaration name="WizardBO" type="BoWizardCreateNewCall" />
+        <Declaration name="SubstitutedUsrPKey" type="DomPKey" />
+        <Declaration name="SubValidFrom" type="DomDate" />
+        <Declaration name="SubValidThru" type="DomValidThru" />
+        <Declaration name="CompanyRequired" type="String" />
+        <Declaration name="IsManagedCustomer" type="DomBool" />
+        <Declaration name="IsSubstituted" type="DomBool" />
+        <Declaration name="ManagementRelationValidFrom" type="DomDate" />
+        <Declaration name="ManagementRelationValidThru" type="DomValidThru" />
+        <Declaration name="buttonPressed" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="DateFrom" type="String" />
+        <Input name="TimeFrom" type="String" />
+        <Input name="JobListPKey" type="String" />
+        <Input name="TripListPKey" type="String" />
+        <Input name="TripListName" type="String" />
+        <Input name="CustomerPKey" type="String" />
+        <Input name="CallMetaPKey" type="String" />
+        <Input name="AllDay" type="DomBool" />
+        <Input name="Mode" type="String" />
+        <Input name="ResponsiblePKey" type="DomPKey" />
+        <Input name="CreateCallViaMap" type="DomBool" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateWizardBO" actionType="CREATE" type="BoWizardCreateNewCall">
+        <Parameters>
+          <Input name="dateFrom" value="ProcessContext::DateFrom" />
+          <Input name="timeFrom" value="ProcessContext::TimeFrom" />
+          <Input name="jobListPKey" value="" type="Literal" />
+          <Input name="tripListName" value="ProcessContext::TripListName" />
+          <Input name="tripListPKey" value="ProcessContext::TripListPKey" />
+          <Input name="customerPKey" value="ProcessContext::CustomerPKey" />
+          <Input name="callMetaPKey" value="ProcessContext::CallMetaPKey" />
+          <Input name="allDay" value="ProcessContext::AllDay" />
+          <Input name="mode" value="ProcessContext::Mode" />
+          <Input name="responsiblePKey" value="ProcessContext::ResponsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::WizardBO" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="AssignCompanyRequired_Decision" actionType="DECISION" parameter="ProcessContext::Mode">
+        <Case value="CustomerPlanning" action="AssignCompanyRequiredOne" />
+        <Case value="FollowUp" action="AssignCompanyRequiredOne" />
+        <Case value="JobListPlanning" action="setDirty" />
+        <Case value="Scanning" action="setDirty" />
+        <CaseElse action="AssignCompanyRequiredZero" />
+        <CaseEmpty action="AssignCompanyRequiredZero" />
+      </Action>
+      <Action actionType="LOGIC" name="AssignCompanyRequiredZero" call="Utils.identity">
+        <Parameters>
+          <Input name="param1" type="Literal" value="0" />
+        </Parameters>
+        <Return name="ProcessContext::CompanyRequired" />
+        <TransitionTo action="IsCallCreatedViaMap" />
+      </Action>
+      <Action actionType="LOGIC" name="AssignCompanyRequiredOne" call="Utils.identity">
+        <Parameters>
+          <Input name="param1" type="Literal" value="1" />
+        </Parameters>
+        <Return name="ProcessContext::CompanyRequired" />
+        <TransitionTo action="ShowView" />
+      </Action>
+      <Action name="IsCallCreatedViaMap" actionType="DECISION" parameter="ProcessContext::CreateCallViaMap">
+        <Case value="1" action="assignButtonPressed" />
+        <CaseElse action="ShowView" />
+        <CaseEmpty action="ShowView" />
+      </Action>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Call::CreateNewWizardUI</UIDescription>
+        <Events>
+          <Event name="FinishWizard" action="setDirty" />
+          <Event name="OpenCallMetaLookup" action="OpenCallMetaLookup" />
+          <Event name="OpenCustomerNameLookup" action="OpenCustomerNameLookup" />
+          <Event name="AllDayChanged" action="RefreshEditAccessRights" />
+        </Events>
+      </Action>
+      <Action actionType="PROCESS" name="OpenCallMetaLookup" process="Call::MetaLookupProcess">
+        <Parameters>
+          <Input name="CompanyRequired" value="ProcessContext::CompanyRequired" />
+          <Input name="CallMetaPKey" value="ProcessContext::WizardBO.callMetaPKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CallMetaPKey" value="callMetaPKey" />
+        </ReturnValues>
+        <TransitionTo action="LoadCallMetaLookup" />
+      </Action>
+      <Action actionType="LOGIC" name="LoadCallMetaLookup" call="ProcessContext::WizardBO.loadCallMetaLookup">
+        <Parameters>
+          <Input name="callMetapKey" value="ProcessContext::CallMetaPKey" />
+        </Parameters>
+      </Action>
+      <Action actionType="PROCESS" name="OpenCustomerNameLookup" process="Customer::LookupProcess">
+        <Parameters>
+          <Input name="ReferenceUserPKey" value="ProcessContext::ResponsiblePKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::CustomerPKey" value="customerPKey" />
+          <Return name="ProcessContext::SubstitutedUsrPKey" value="substitutedUsrPKey" />
+          <Return name="ProcessContext::SubValidFrom" value="subValidFrom" />
+          <Return name="ProcessContext::SubValidThru" value="subValidThru" />
+          <Return name="ProcessContext::IsManagedCustomer" value="isManagedCustomer" />
+          <Return name="ProcessContext::ManagementRelationValidFrom" value="managementRelationValidFrom" />
+          <Return name="ProcessContext::ManagementRelationValidThru" value="managementRelationValidThru" />
+        </ReturnValues>
+        <TransitionTo action="SetSubstitutedUsrPKey" />
+      </Action>
+      <!-- Set properties of validation BO for validation of substitution time frame -->
+      <Action actionType="LOGIC" name="SetSubstitutedUsrPKey" call="ProcessContext::WizardBO.setSubstitutedUsrPKey">
+        <Parameters>
+          <Input name="substitutedUsrPKey" value="ProcessContext::SubstitutedUsrPKey" />
+        </Parameters>
+        <TransitionTo action="SetSubValidFrom" />
+      </Action>
+      <Action actionType="LOGIC" name="SetSubValidFrom" call="ProcessContext::WizardBO.setSubValidFrom">
+        <Parameters>
+          <Input name="subValidFrom" value="ProcessContext::SubValidFrom" />
+        </Parameters>
+        <TransitionTo action="SetSubValidThru" />
+      </Action>
+      <Action actionType="LOGIC" name="SetSubValidThru" call="ProcessContext::WizardBO.setSubValidThru">
+        <Parameters>
+          <Input name="subValidThru" value="ProcessContext::SubValidThru" />
+        </Parameters>
+        <TransitionTo action="SetManagementRelationValidFrom" />
+      </Action>
+      <Action actionType="LOGIC" name="SetManagementRelationValidFrom" call="ProcessContext::WizardBO.setManagementRelationValidFrom">
+        <Parameters>
+          <Input name="managementRelationValidFrom" value="ProcessContext::ManagementRelationValidFrom" />
+        </Parameters>
+        <TransitionTo action="SetManagementRelationValidThru" />
+      </Action>
+      <Action actionType="LOGIC" name="SetManagementRelationValidThru" call="ProcessContext::WizardBO.setManagementRelationValidThru">
+        <Parameters>
+          <Input name="managementRelationValidThru" value="ProcessContext::ManagementRelationValidThru" />
+        </Parameters>
+        <TransitionTo action="SetIsManagedCustomer" />
+      </Action>
+      <Action actionType="LOGIC" name="SetIsManagedCustomer" call="ProcessContext::WizardBO.setIsManagedCustomer">
+        <Parameters>
+          <Input name="subValidThru" value="ProcessContext::IsManagedCustomer" />
+        </Parameters>
+        <TransitionTo action="LoadCustomerLookup" />
+      </Action>
+      <Action actionType="LOGIC" name="LoadCustomerLookup" call="ProcessContext::WizardBO.loadCustomerLookup">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::CustomerPKey" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="setDirty" call="ProcessContext::WizardBO.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="5" />
+        </Parameters>
+        <TransitionTo action="updateTimeAllDay" />
+      </Action>
+      <Action actionType="LOGIC" name="updateTimeAllDay" call="ProcessContext::WizardBO.updateTimeAllDay">
+        <TransitionTo action="ReloadManagementInformation" />
+      </Action>
+      <Action actionType="LOGIC" name="ReloadManagementInformation" call="ProcessContext::WizardBO.reloadManagementInformation">
+        <TransitionTo action="WizardValidation" />
+      </Action>
+      <Action actionType="LOGIC" name="RefreshEditAccessRights" call="ProcessContext::WizardBO.setEARights"></Action>
+      <Action actionType="VALIDATION" name="WizardValidation">
+        <Validations>
+          <Validation name="ProcessContext::WizardBO.reloadManagementInformation" />
+          <Validation name="ProcessContext::WizardBO.validateNotEmpty" />
+          <Validation name="ProcessContext::WizardBO.validateCustomer" />
+          <Validation name="ProcessContext::WizardBO.validateSub" />
+          <Validation name="ProcessContext::WizardBO.validateTime" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="assignButtonPressed" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action actionType="LOGIC" name="assignButtonPressed" call="Utils.identity">
+        <Parameters>
+          <Input name="param" type="Literal" value="createCall" />
+        </Parameters>
+        <Return name="ProcessContext::buttonPressed" />
+        <TransitionTo action="EndCreateCall" />
+      </Action>
+      <Action actionType="END" name="EndCancel" />
+      <Action actionType="END" name="EndCreateCall">
+        <ReturnValues>
+          <Return name="callMetaPKey" value="ProcessContext::WizardBO.callMetaPKey" />
+          <Return name="customerPKey" value="ProcessContext::WizardBO.customerPKey" />
+          <Return name="dateFrom" value="ProcessContext::WizardBO.dateFrom" />
+          <Return name="timeFrom" value="ProcessContext::WizardBO.timeFrom" />
+          <Return name="allDay" value="ProcessContext::WizardBO.allDay" />
+          <Return name="substitutedUsrPKey" value="ProcessContext::WizardBO.substitutedUsrPKey" />
+          <Return name="buttonPressed" value="ProcessContext::buttonPressed" />
+          <Return name="isManagedCustomer" value="ProcessContext::WizardBO.isManagedCustomer" />
+          <Return name="isSubstituted" value="ProcessContext::WizardBO.isSubstituted" />
+          <Return name="tripListPKey" value="ProcessContext::TripListPKey" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

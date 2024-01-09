@@ -1,0 +1,19 @@
+<DataSource name="DsLoSysSignatureAttribute" backendSystem="sf" businessObjectClass="LoSysSignatureAttribute" external="false" editableEntity="Signature_Attribute__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Signature_Attribute__c" column="Id" />
+    <Attribute name="referencePKey" table="Signature_Attribute__c" column="Signature__c" />
+    <DerivedAttribute name="referenceObjectPhase" value="' '" />
+    <Attribute name="attribute" table="Signature_Attribute__c" column="Attribute__c" />
+    <Attribute name="value" table="Signature_Attribute__c" column="Value__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Signature_Attribute__c" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        Signature_Attribute__c.Signature__c IN ( #referencePKey# )
+       ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="referencePKey" type="LIST" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,22 @@
+<DataSource name="DsLoTimeEntryType" businessObjectClass="LoTimeEntryType" external="false" editableEntity="UsrTimeEntryMeta" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="UsrTimeEntryMeta" column="PKey" />
+    <Attribute name="id" table="UsrTimeEntryMeta" column="Id" />
+    <Attribute name="text" table="UsrTimeEntryMetaText" column="Text" />
+  </Attributes>
+  <Entities>
+    <Entity name="UsrTimeEntryMeta" alias="" idAttribute="PKey" />
+    <Entity name="UsrTimeEntryMetaText" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="UsrTimeEntryMeta.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="UsrTimeEntryMetaText.UsrTimeEntryMetaPKey"></Condition>
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+		UsrTimeEntryMeta.ManualAddAllowed='1' 
+		]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters />
+</DataSource>

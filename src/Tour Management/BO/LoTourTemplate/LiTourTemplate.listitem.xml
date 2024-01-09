@@ -1,0 +1,7 @@
+<ListItem name="LiTourTemplate">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="id" type="DomId" dataSourceProperty="id" />
+    <SimpleProperty name="text" type="DomString" dataSourceProperty="text" />
+  </SimpleProperties>
+</ListItem>

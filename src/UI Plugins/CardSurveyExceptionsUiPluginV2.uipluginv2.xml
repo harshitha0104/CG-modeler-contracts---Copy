@@ -1,0 +1,352 @@
+<UIPluginV2 name="CardSurveyExceptionsUiPluginV2">
+  <Interface>
+    <Property id="surveys" />
+    <Property id="maximizedMode" />
+  </Interface>
+  <Labels>
+    <Label id="CardSurveyExceptions_NoExceptions" />
+    <Label id="CardSurveyExceptions_Distributed" />
+    <Label id="CardSurveyExceptions_OutOfStock" />
+    <Label id="CardSurveyExceptions_Facings" />
+    <Label id="CardSurveyExceptions_Price" />
+  </Labels>
+  <Libraries>
+    <Library name="C3JS" />
+    <Library name="D3JS" />
+  </Libraries>
+  <UIComponentHTML name="UIComponentHTML"><![CDATA[
+    <div id="container_CallSummary" class="CallSummaryChart">
+        <div id="chart_CallSummary"  class="SurveyExceptionsChart"></div>
+    </div>
+    ]]></UIComponentHTML>
+  <UIComponentCSS name="UIComponentCSS"><![CDATA[
+    
+    .CallSummaryChart {
+		padding-top: 12px;
+        overflow: hidden;
+    }
+
+    /* SurveyExceptionsChart chart */
+	.SurveyExceptionsChart {
+	}
+
+    .SurveyExceptionsChart text {
+       font: 10px Regular; 
+    }
+
+    .SurveyExceptionsChart .c3-tooltip td, .SurveyExceptionsChart .c3-tooltip th {
+       font: 13px Regular; 
+    }
+    
+
+    /* ######################
+      ###     FONTS      ###
+      ###################### */
+
+    @font-face {
+      font-family: "Regular";
+	  font-weight: 400;
+      src: local("Arial");
+    }
+
+    @font-face {
+      font-family: "Light";
+	  font-weight: 300;
+      src: local("Arial");
+    }
+
+    @font-face {
+      font-family: "Medium";
+	  font-weight: 500;
+      src: local("Arial");
+    }
+
+    ]]></UIComponentCSS>
+  <UIComponentJS name="UIComponentJS"><![CDATA[
+const chartSelector = "#chart_CallSummary";
+const chartContainer = "#container_CallSummary";
+let chartReference;
+
+function connectCallback() {
+  renderChart();
+}
+
+function disconnectCallback() {
+  if (PluginManager.helpers.isDefined(chartReference)) {
+    chartReference.destroy();
+  }
+}
+
+function renderCallback() {
+  inputChanged();
+}
+
+function setAxisDefaultColor() {
+  // Set color of axis line
+  d3.select(".c3-axis-x")
+    .select("path")
+    .style("stroke", PluginManager.pluginConfiguration.Color8);
+  d3.select(".c3-axis-y")
+    .select("path")
+    .style("stroke", PluginManager.pluginConfiguration.Color8);
+  d3.select(".c3-axis-x").select("path").style("stroke-width", 1);
+
+  // Set color of tick lines
+  d3.select(".c3-axis-x")
+    .selectAll("line")
+    .style("stroke", PluginManager.pluginConfiguration.Color8);
+  d3.select(".c3-axis-y")
+    .selectAll("line")
+    .style("stroke", PluginManager.pluginConfiguration.Color8);
+
+  // Set color of axis labels
+  d3.select(".c3-axis-x")
+    .selectAll("text")
+    .style("fill", PluginManager.pluginConfiguration.Color8);
+  d3.select(".c3-axis-y")
+    .selectAll("text")
+    .style("fill", PluginManager.pluginConfiguration.Color8);
+}
+
+function getSize() {
+  var chartContainerWidth = d3.select(chartContainer)._groups[0][0].offsetWidth;
+  var calcWidth, calcHeight;
+
+  if (!isMaximizedMode()) {
+    calcWidth = chartContainerWidth * 0.75;
+    calcHeight = 133;
+  } else if (PluginManager.pluginConfiguration.isPortrait) {
+    calcWidth = chartContainerWidth * 0.9;
+    calcHeight = chartContainerWidth * 0.75;
+  } else {
+    calcWidth = chartContainerWidth * 0.75;
+    calcHeight = chartContainerWidth * 0.5;
+  }
+
+  var sizeJson = {
+    width: calcWidth,
+    height: calcHeight,
+  };
+  return sizeJson;
+}
+
+function inputChanged() {
+  var sizeJson = getSize();
+  chartReference.resize(sizeJson);
+
+  if (
+    PluginManager.helpers.isDefined(chartReference) &&
+    PluginManager.helpers.isDefined(chartReference.internal) &&
+    PluginManager.helpers.isDefined(chartReference.internal.cache)
+  ) {
+    var jsonData = PluginManager.surveys;
+
+    chartReference.load(jsonData.data);
+
+    if (jsonData.axisRange.max.y > 5) {
+      chartReference.axis.range(jsonData.axisRange);
+      chartReference.ygrids(jsonData.gridLines);
+    } else {
+      chartReference.axis.range({ max: { y: 6 } });
+      chartReference.ygrids([
+        { value: 1 },
+        { value: 2 },
+        { value: 3 },
+        { value: 4 },
+        { value: 5 },
+      ]);
+    }
+
+    setAxisDefaultColor();
+
+    d3.selectAll(".c3-ygrid-line")
+      .select("line")
+      .style("stroke", PluginManager.pluginConfiguration.Color11);
+  }
+}
+
+function tooltipFunction(d, defaultTitleFormat, defaultValueFormat, color) {
+  var $$ = this,
+    config = $$.config,
+    titleFormat = config.tooltip_format_title || defaultTitleFormat,
+    nameFormat =
+      config.tooltip_format_name ||
+      function (name) {
+        return name;
+      },
+    valueFormat = config.tooltip_format_value || defaultValueFormat,
+    text,
+    i,
+    title,
+    value,
+    name;
+  for (i = 0; i < d.length; i++) {
+    if (!(d[i] && (d[i].value || d[i].value === 0))) {
+      continue;
+    }
+
+    if (!text) {
+      title = titleFormat ? titleFormat(d[i].x) : d[i].x;
+      text =
+        "<table class='c3-tooltip'>" +
+        (title || title === 0
+          ? "<tr><th colspan='2' style='background-color: " +
+            PluginManager.pluginConfiguration.Color23 +
+            "'>" +
+            title +
+            "</th></tr>"
+          : "");
+    }
+
+    value = valueFormat(d[i].value, d[i].ratio, d[i].id, d[i].index);
+    if (value !== undefined) {
+      name = nameFormat(d[i].name, d[i].ratio, d[i].id, d[i].index);
+
+      text += "<tr class='c3-tooltip-name-" + d[i].id + "'>";
+      text +=
+        "<td class='name' style='background-color: " +
+        PluginManager.pluginConfiguration.Color6 +
+        "; color: " +
+        PluginManager.pluginConfiguration.Color2 +
+        "'>" +
+        name +
+        "</td>";
+      text +=
+        "<td class='value' style='color: " +
+        PluginManager.pluginConfiguration.Color2 +
+        "'>" +
+        value +
+        "</td>";
+      text += "</tr>";
+    }
+  }
+  return text + "</table>";
+}
+
+function renderChart() {
+  // Define attributes for chart
+  var barColors = [
+    PluginManager.pluginConfiguration.Color14,
+    PluginManager.pluginConfiguration.Color13,
+    PluginManager.pluginConfiguration.Color4,
+    PluginManager.pluginConfiguration.Color7,
+  ];
+
+  var sizeJson = getSize();
+
+  //destroy chart object before setting new reference
+  if (PluginManager.helpers.isDefined(chartReference)) {
+    chartReference.destroy();
+  }
+
+  chartReference = c3.generate({
+    bindto: chartSelector,
+    data: {
+      columns: [["surveyExceptions", 0.03, 0.03, 0.03, 0.03]],
+      names: {
+        surveyExceptions:
+          PluginManager.locale.labels.CardSurveyExceptions_NoExceptions,
+      },
+      color: function (color, d) {
+        return barColors[d.index];
+      },
+      type: "bar",
+      labels: {
+        show: true,
+        format: function (v, id, i, j) {
+          return Math.floor(v);
+        },
+      },
+    },
+    bar: {
+      width: {
+        ratio: 0.4,
+      },
+    },
+    size: sizeJson,
+    axis: {
+      rotated: true,
+      x: {
+        type: "category",
+        categories: [
+          PluginManager.locale.labels.CardSurveyExceptions_Distributed,
+          PluginManager.locale.labels.CardSurveyExceptions_OutOfStock,
+          PluginManager.locale.labels.CardSurveyExceptions_Facings,
+          PluginManager.locale.labels.CardSurveyExceptions_Price,
+        ],
+      },
+      y: {
+        padding: {
+          top: 0,
+          bottom: 0,
+        },
+        show: false,
+        max: 6,
+      },
+    },
+    padding: {
+      left: 90,
+    },
+
+    grid: {
+      y: {
+        lines: [
+          { value: 1 },
+          { value: 2 },
+          { value: 3 },
+          { value: 4 },
+          { value: 5 },
+        ],
+      },
+      x: {
+        show: false,
+      },
+      lines: {
+        front: false,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      format: {
+        value: function (v, id, i, j) {
+          return Math.floor(v);
+        },
+      },
+      contents: tooltipFunction,
+    },
+  });
+
+  setAxisDefaultColor();
+
+  // Set grid lines color
+  if (isMaximizedMode()) {
+    d3.selectAll(".c3-ygrid-line").select("line").style("stroke-width", 1);
+  } else {
+    d3.selectAll(".c3-ygrid-line").select("line").style("stroke-width", 0);
+  }
+  d3.selectAll(".c3-ygrid-line")
+    .select("line")
+    .style("stroke", PluginManager.pluginConfiguration.Color11);
+  d3.select(chartSelector)
+    .select("svg")
+    .selectAll("path")
+    .style("stroke-width", 0);
+  d3.select(chartSelector)
+    .select("svg")
+    .selectAll("path")
+    .style("fill", PluginManager.pluginConfiguration.Color1);
+
+  // Set data
+  inputChanged();
+}
+
+function isMaximizedMode() {
+  return (
+    PluginManager.helpers.isDefined(PluginManager.maximizedMode) &&
+    PluginManager.maximizedMode == "1"
+  );
+}
+    ]]></UIComponentJS>
+</UIPluginV2>

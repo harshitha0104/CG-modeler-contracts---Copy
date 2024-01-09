@@ -1,0 +1,18 @@
+<DataSource name="DsLoPrmRecentState" businessObjectClass="LoPrmRecentState" readonly="false" external="false" editableEntity="PrmRecentState" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="PrmRecentState" column="PKey" />
+    <Attribute name="prmPromotionPKey" table="PrmRecentState" column="PrmPromotionPKey" />
+    <Attribute name="usrUserPKey" table="PrmRecentState" column="UsrUserPKey" />
+    <Attribute name="wfeStatePKey" table="PrmRecentState" column="WfeStatePKey" />
+    <Attribute name="done" table="PrmRecentState" column="Done" />
+  </Attributes>
+  <Entities>
+    <Entity name="PrmRecentState" alias="" idAttribute="PKey" />
+  </Entities>
+  <!--DS is filled only on StateTransition.-->
+  <QueryCondition><![CDATA[
+      (1=0)
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters />
+</DataSource>

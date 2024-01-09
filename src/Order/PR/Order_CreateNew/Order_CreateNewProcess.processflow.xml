@@ -1,0 +1,97 @@
+<Process name="Order::CreateNewProcess" defaultAction="IsInvalidOrder_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="OrderBo" type="BoOrder" />
+        <Declaration name="SdoMetaPKey" type="DomPKey" />
+        <Declaration name="OrdererPKey" type="DomPKey" />
+        <Declaration name="ClbMainPKey" type="DomPKey" />
+        <Declaration name="CallInContext_clbMainPKey" type="DomPKey" />
+        <Declaration name="CallOutOfStockProducts" type="String" />
+        <!-- SF/CASDIF -->
+        <Declaration name="SfReplicationCallbacks" type="BoSfReplicationCallbacks" />
+        <!-- SF/CASDIF -->
+        <Declaration name="isOrderDataAvailable" type="DomBool" />
+        <Declaration name="DelRole" type="BoDeliveryRole" />
+      </Declarations>
+      <Parameters>
+        <Input name="SdoMetaPKey" type="DomPKey" />
+        <Input name="OrdererPKey" type="DomPKey" />
+        <Input name="ClbMainPKey" type="DomPKey" />
+        <Input name="EtpWarehousePKey" type="DomPKey" />
+        <Input name="CallInContext_clbMainPKey" type="DomPKey" />
+        <Input name="CallOutOfStockProducts" type="Object" />
+        <Input name="BoCall" type="BoCall" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateOrder" actionType="CREATE" type="BoOrder">
+        <Parameters>
+          <Input name="SdoMetaPKey" value="ProcessContext::SdoMetaPKey" />
+          <Input name="OrdererPKey" value="ProcessContext::OrdererPKey" />
+          <Input name="ClbMainPKey" value="ProcessContext::ClbMainPKey" />
+          <Input name="etpWarehousePKey" value="ProcessContext::EtpWarehousePKey" />
+          <Input name="CallInContext_clbMainPKey" value="ProcessContext::CallInContext_clbMainPKey" />
+          <Input name="OwnerPKey" value="ApplicationContext::User.pKey" />
+          <Input name="ResponsiblePKey" value="ApplicationContext::User.pKey" />
+          <Input name="CallOutOfStockProducts" value="ProcessContext::CallOutOfStockProducts" />
+          <Input name="boCallCache" value="ProcessContext::BoCall" />
+        </Parameters>
+        <Return name="ProcessContext::OrderBo" />
+      </Action>
+      <Action name="CreateReplicationCallBacksBo" actionType="CREATE" type="BoSfReplicationCallbacks">
+        <Return name="ProcessContext::SfReplicationCallbacks" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="IsInvalidOrder_Decision" actionType="DECISION" parameter="ProcessContext::OrderBo.isInvalidOrder">
+        <Case value="1" action="End" />
+        <CaseElse action="CheckDataAvailability" />
+      </Action>
+      <!-- SF/CASDIF Start -->
+      <Action name="CheckDataAvailability" actionType="LOGIC" call="ProcessContext::SfReplicationCallbacks.isOrderOnDemandDataAvailable">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::OrdererPKey" />
+        </Parameters>
+        <Return name="ProcessContext::isOrderDataAvailable" />
+        <TransitionTo action="DataAvailability_Decision" />
+      </Action>
+      <Action name="DataAvailability_Decision" actionType="DECISION" parameter="ProcessContext::isOrderDataAvailable">
+        <Case value="1" action="StartNavigation" />
+        <Case value="2" action="Message_OrderDataNotOnDevice" />
+        <CaseElse action="LoadOrderOnDemandData" />
+      </Action>
+      <Action name="StartNavigation" actionType="DECISION" parameter="ProcessContext::OrderBo.boOrderMeta.sdoSubType">
+        <Case value="Delivery" action="StartNavigation_Delivery" />
+        <CaseElse action="StartNavigation_Order" />
+        <CaseEmpty action="StartNavigation_Order" />
+      </Action>
+      <Action name="LoadOrderOnDemandData" actionType="LOGIC" call="ProcessContext::SfReplicationCallbacks.requestOrderOnDemandDataAsync">
+        <Parameters>
+          <Input name="customerIds" value="ProcessContext::OrdererPKey" />
+        </Parameters>
+        <TransitionTo action="Message_OrderDataNotOnDevice" />
+      </Action>
+      <Action name="Message_OrderDataNotOnDevice" actionType="CONFIRM" confirmType="Ok">
+        <Message messageId="CasConfirmOrderDataNotOnDevice" />
+        <Cases>
+          <Case value="Ok" action="End" />
+        </Cases>
+      </Action>
+      <Action name="StartNavigation_Delivery" actionType="PROCESS" process="Order::PreDeliveryNavigationProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::OrderBo" />
+        </Parameters>
+      </Action>
+      <!-- SF/CASDIF End -->
+      <Action name="StartNavigation_Order" actionType="PROCESS" process="Order::PreOrderNavigationProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::OrderBo" />
+        </Parameters>
+      </Action>
+      <Action name="End" actionType="END" />
+    </Actions>
+  </Body>
+</Process>

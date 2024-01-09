@@ -1,0 +1,23 @@
+<DataSource name="DsBoTripList" backendSystem="sf" businessObjectClass="BoTripList" external="false" editableEntity="Trip_List__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Trip_List__c" column="Id" />
+    <Attribute name="tripListName" table="Trip_List__c" column="Name" />
+    <Attribute name="metaType" table="Trip_List__c" column="Type__c" />
+    <Attribute name="validFrom" table="Trip_List__c" column="Valid_From__c" />
+    <Attribute name="validThru" table="Trip_List__c" column="Valid_Thru__c" />
+    <Attribute name="responsiblePKey" table="Trip_List__c" column="Responsible__c" />
+    <Attribute name="description" table="Trip_List__c" column="Description_#Language#__c" />
+    <Attribute name="salesOrg" table="Trip_List__c" column="Sales_Org__c" />
+    <Attribute name="ownerPKey" table="Trip_List__c" column="OwnerId" />
+  </Attributes>
+  <Entities>
+    <Entity name="Trip_List__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[      
+       Trip_List__c.Id = #pKey#
+    ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

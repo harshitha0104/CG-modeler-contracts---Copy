@@ -1,0 +1,17 @@
+<LookupObject name="LuOrderer">
+  <DataSource name="DsLuOrderer" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="name" type="DomBpaName" dataSourceProperty="name" />
+    <SimpleProperty name="hitClosedListing" type="DomBool" dataSourceProperty="hitClosedListing" />
+    <SimpleProperty name="collectClosedListing" type="DomBool" dataSourceProperty="collectClosedListing" />
+    <SimpleProperty name="considerModule" type="DomBool" dataSourceProperty="considerModule" />
+    <SimpleProperty name="payerDocTaType" type="DomBpaPaymentPolicy" dataSourceProperty="payerDocTaType" />
+    <SimpleProperty name="orderDocTaType" type="DomBpaPaymentPolicy" dataSourceProperty="orderDocTaType" />
+    <SimpleProperty name="invoiceDocTaType" type="DomBpaPaymentPolicy" dataSourceProperty="invoiceDocTaType" />
+    <SimpleProperty name="payerValidFrom" type="DomDate" dataSourceProperty="payerValidFrom" />
+    <SimpleProperty name="payerValidThru" type="DomDate" dataSourceProperty="payerValidThru" />
+    <SimpleProperty name="paymentMode" type="DomPaymentMethod" dataSourceProperty="paymentMode" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>

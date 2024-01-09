@@ -1,0 +1,7 @@
+<ListItem name="LiUsersOfOrgUnitByRole">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty id="true" name="usrMainPKey" type="DomPKey" dataSourceProperty="usrMainPKey" />
+    <SimpleProperty name="main" type="DomBool" dataSourceProperty="main" />
+  </SimpleProperties>
+</ListItem>

@@ -1,0 +1,10 @@
+<ListObject name="LoCallNotes" generateLoadMethod="false">
+  <DataSource name="DsLoCallNotes" />
+  <Item objectClass="LiCallNote" />
+  <Methods>
+    <Method name="loadAsync" />
+    <Method name="getInfoForNotesCard" />
+    <Method name="getNotesForCard" />
+    <Method name="updateVisitNoteText" />
+  </Methods>
+</ListObject>

@@ -1,0 +1,39 @@
+<DataSource name="DsBoUserSettings" backendSystem="sf" businessObjectClass="BoUserSettings" external="false" editableEntity="User_Setting__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="User_Setting__c" column="Id" />
+    <Attribute name="usrMainPKey" table="User_Setting__c" column="User__c" />
+    <Attribute name="clbCalendarInitialViewMobility" table="User_Setting__c" column="Initial_View__c" />
+    <DerivedAttribute name="clbVisitsInMapMobility" value="'0'" />
+    <DerivedAttribute name="clbDisplayUserInMapMobility" value="'0'" />
+    <DerivedAttribute name="clbDisplayVisitsInMapMobility" value="'0'" />
+    <Attribute name="clbCalendarInitialTime" table="User_Setting__c" column="Initial_Time__c" />
+    <Attribute name="clbCalendarDefaultCallStatus" table="User_Setting__c" column="Default_Visit_Status__c" />
+    <Attribute name="syncTimeIntervall" table="User_Setting__c" column="Sync_Time_Interval__c" />
+    <Attribute name="pictureQuality" table="User_Setting__c" column="Picture_Quality__c" />
+    <Attribute name="pictureQualityValues" table="Sync_Mobile_App_PL_Repo__c" column="ValidationCode__c" />
+    <Attribute name="usrLandingPageMobility" table="User_Setting__c" column="Landing_Page__c" />
+    <Attribute name="clbDisplayTrafficInMapMobility" table="User_Setting__c" column="Traffic_In_Map__c" />
+    <Attribute name="clbDisplayRouteInMapMobility" table="User_Setting__c" column="Route_In_Map__c" />
+    <Attribute name="clbShowCalendarWeekMobility" table="User_Setting__c" column="Show_Calendar_Week__c" />
+    <Attribute name="clbAgendaDisplayTimeMobility" table="User_Setting__c" column="Show_Agenda_Time__c" />
+    <Attribute name="displayWeekend" table="User_Setting__c" column="Display_Weekend__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="User_Setting__c" alias="" idAttribute="Id" />
+    <Entity name="Sync_Mobile_App_PL_Repo__c" alias="">
+      <Join Type="inner">
+        <ComplexJoin><![CDATA[
+                Sync_Mobile_App_PL_Repo__c.Mobile_App_Domain__c='DomRpsPictureQuality'
+                AND (Sync_Mobile_App_PL_Repo__c.Code__c=User_Setting__c.Picture_Quality__c OR Sync_Mobile_App_PL_Repo__c.Picklist_Value__c=User_Setting__c.Picture_Quality__c)
+            ]]></ComplexJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+        User_Setting__c.User__c = #usrMainPKey#
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="usrMainPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,541 @@
+<UIDescription  name="Contract::CustomerContractUI" schemaVersion="1.1">
+  <Page pagePattern="MasterDetailSectionPage" masterSectionFlex="40" detailSectionFlex="60">
+    <ViewVariables>
+      <ViewVariable name="currentTabName" value="Main" />
+    </ViewVariables>
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="TitleId" defaultLabel="Contracts" bindingMode="ONE_TIME" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="createCustomerContract">
+          <Bindings>
+            <Resource target="Text" type="Label" id="createCustomerContractId" defaultLabel="New" />
+            <Resource target="Icon" type="Image" id="Plus_PB" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="createCustomerContract" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="CustomerContractList" searchable="true" master="true" groupBy="customerName" dataSource="ProcessContext::CustomerContractList.Items[]">
+          <Items name="Items" itemPattern="CustomerContractItem">
+            <Bindings>
+              <Resource target="OwnerImage" type="Image" id="UserDarkGrey16" defaultImage="UserDarkGrey16" bindingMode="ONE_TIME" />
+              <Resource target="ResponsibleImage" type="Image" id="UserArrowDarkGrey16" defaultImage="UserArrowDarkGrey16" bindingMode="ONE_TIME" />
+              <Resource target="PhaseImage" type="Image" id="InfoDarkGrey16" defaultImage="InfoDarkGrey16" bindingMode="ONE_TIME" />
+              <Binding target="PrmText" type="Text" binding=".prmText" bindingMode="ONE_WAY" />
+              <Binding target="CustomerName" type="Text" binding=".customerName" bindingMode="ONE_WAY" />
+              <Binding target="DateFrom" type="Date" binding=".dateFrom" bindingMode="ONE_WAY" />
+              <Binding target="DateThru" type="Date" binding=".dateThru" bindingMode="ONE_WAY" />
+              <Binding target="ResponsibleName" type="Text" binding=".responsibleUserName" bindingMode="ONE_WAY" />
+              <Binding target="OwnerName" type="Text" binding=".ownerUserName" bindingMode="ONE_WAY" />
+              <Binding target="Phase" type="Text" binding=".phase.text" bindingMode="ONE_WAY" />
+              <Resource target="Hyphen" type="Label" id="noId" defaultLabel=" - " />
+              <Resource target="Spacer" type="Label" id="Spacer" defaultLabel="    " />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col>
+                  <Row layoutType="itemIdentifier" bindingId="PrmText" />
+                  <Row height="1.2em" layoutType="itemSecondary" bindingId="CustomerName" />
+                  <Row>
+                    <Col height="1.2em" layoutType="itemSecondary" bindingId="DateFrom" />
+                    <Col height="1.2em" layoutType="itemSecondary" bindingId="Hyphen" />
+                    <Col height="1.2em" layoutType="itemSecondary" bindingId="DateThru" />
+                  </Row>
+                  <Row>
+                    <Col width="1em" height="1.2em" layoutType="Image" bindingId="PhaseImage" />
+                    <Col width="0.1em" layoutType="itemSecondary" bindingId="Spacer" />
+                    <Col layoutType="itemSecondary" bindingId="Phase" />
+                  </Row>
+                  <Row>
+                    <Col width="1em" height="1.2em" layoutType="Image" bindingId="ResponsibleImage" />
+                    <Col width="0.1em" layoutType="itemSecondary" bindingId="Spacer" />
+                    <Col layoutType="itemSecondary" bindingId="ResponsibleName" />
+                    <Col width="2em" layoutType="itemSecondary" bindingId="Spacer" />
+                    <Col width="1em" height="1.2em" layoutType="Image" bindingId="OwnerImage" />
+                    <Col width="0.1em" layoutType="itemSecondary" bindingId="Spacer" />
+                    <Col layoutType="itemSecondary" bindingId="OwnerName" />
+                  </Row>
+                </Col>
+              </Default>
+            </ItemListLayout>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::ContextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="listItemSelected" resetMultiAreas="true">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+            <ContextOpeningEvent event="contextMenuOpening">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="phase" value=".phase" />
+                <Param name="hasSubstitute" value=".hasSubstitute" />
+                <Param name="isSubstituted" value=".isSubstituted" />
+                <Param name="responsiblePKey" value=".responsiblePKey" />
+                <Param name="hasSubstituteSubBpaRelUsrPKey" value=".hasSubstituteSubBpaRelUsrPKey" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="contextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextSelectedEvent>
+          </Events>
+          <SearchAttributes>
+            <SearchAttribute name="CustomerName" />
+            <SearchAttribute name="phase" />
+            <SearchAttribute name="DateFrom" />
+            <SearchAttribute name="DateThru" />
+            <SearchAttribute name="ResponsibleUserName" />
+            <SearchAttribute name="PrmText" />
+          </SearchAttributes>
+        </GroupedList>
+      </Area>
+    </Section>
+    <Section sectionName="detailSection" sectionPattern="TabbedViewAreaSection" currentTab="View::currentTabName">
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="Main">
+              <Bindings>
+                <Resource target="image" type="Image" id="MainGrey24" defaultImage="MainGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="MainId" defaultLabel="Main" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Products">
+              <Bindings>
+                <Binding type="Visible" target="Visible" call="ProcessContext::CustomerContractDetail.checkProductTabVisible" />
+                <Resource target="image" type="Image" id="ProductsGrey24" defaultImage="ProductsGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="ProductId" defaultLabel="Products" bindingMode="ONE_TIME" />
+                <Binding target="Info" type="Text" binding="ProcessContext::CustomerContractDetail.luPrmCttTacticProductCount.productCount" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Tactic">
+              <Bindings>
+                <Resource target="image" type="Image" id="StarGrey24" defaultImage="StarGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="TacticId" defaultLabel="Tactic" bindingMode="ONE_TIME" />
+                <Binding target="Info" type="Text" binding="ProcessContext::CustomerContractDetail.luPrmCttTacticProductCount.tacticCount" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events></Events>
+        </TabSelector>
+      </Area>
+      <Area areaName="Main" areaPattern="GroupedElementsArea">
+        <MenuItems>
+          <MenuItem directlyVisible="true" itemId="releaseCustomerContract">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::CustomerContractDetail.isNextStateAvailable">
+                <Parameters>
+                  <Input name="stateType" type="Literal" value="ForApproval" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="releaseCustomerContractId" defaultLabel="ForApproval" />
+              <Resource target="Icon" type="Image" id="CheckCircleGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="releaseCustomerContract" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="approveCustomerContract">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::CustomerContractDetail.isNextStateAvailable">
+                <Parameters>
+                  <Input name="stateType" type="Literal" value="Committed" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="approveCustomerContractId" defaultLabel="Committed" />
+              <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="approveCustomerContract" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="rejectCustomerContract">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::CustomerContractDetail.isNextStateAvailable">
+                <Parameters>
+                  <Input name="stateType" type="Literal" value="Rejected" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="rejectCustomerContractId" defaultLabel="Rejected" />
+              <Resource target="Icon" type="Image" id="CancelGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="rejectCustomerContract" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="cancelCustomerContract">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::CustomerContractDetail.isNextStateAvailable">
+                <Parameters>
+                  <Input name="stateType" type="Literal" value="Cancelled" />
+                </Parameters>
+              </Binding>
+              <Resource target="Text" type="Label" id="cancelCustomerContractId" defaultLabel="Cancel" />
+              <Resource target="Icon" type="Image" id="CancelledGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="cancelCustomerContract" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <GroupElement name="CustomerContractInfoGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="IdentificationId" defaultLabel="Identification" />
+          </Bindings>
+          <InputArea name="Id" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Id" id="CustomerContractId" />
+              <Binding target="Value" binding="ProcessContext::CustomerContractDetail.prmId" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="Contract">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Name" id="ContractName" />
+              <Binding target="Value" binding="ProcessContext::CustomerContractDetail.boSlogan.text" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="Customer" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Customer" id="CustomerName" />
+              <Binding target="Value" binding="ProcessContext::CustomerContractDetail.luCustomer.name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="ContractType" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Contract Type" id="ContractType" />
+              <Binding target="Value" binding="ProcessContext::CustomerContractDetail.luPrmMeta.text" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <DatePickerField name="InitiationDate" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Initiation Date" id="InitiationDate" />
+              <Binding target="Value" binding="ProcessContext::CustomerContractDetail.dateInitiation" bindingMode="ONE_WAY" />
+            </Bindings>
+          </DatePickerField>
+          <Merger name="StartEndDate" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Start / End Date" id="StartEndDateId" />
+            </Bindings>
+            <DatePickerField name="StartDate">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Start Date" id="StartDate" />
+                <Binding target="Value" binding="ProcessContext::CustomerContractDetail.dateFrom" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <DatePickerField name="EndDate">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="End Date" id="EndDate" />
+                <Binding target="Value" binding="ProcessContext::CustomerContractDetail.dateThru" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+          </Merger>
+        </GroupElement>
+        <GroupElement name="CustomerContractStatusGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="StatusTitleId" defaultLabel="Status" />
+          </Bindings>
+          <SelectionBox name="Status" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Current Status" id="CurrentStatusId" />
+              <Binding target="Value" binding="ProcessContext::CustomerContractDetail.phase" bindingMode="ONE_WAY" />
+              <Binding target="DataSource" toggleId="PrmContractPhase" bindingMode="ONE_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <InputArea name="Owner" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Owner" id="OwnerUserId" />
+              <Binding target="Value" binding="ProcessContext::CustomerContractDetail.luOwner.name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+          <InputArea name="Responsible" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Responsible" id="ResponsibleUserId" />
+              <Binding target="Value" binding="ProcessContext::CustomerContractDetail.luResponsible.name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+        <GroupElement name="CommentText">
+          <Bindings>
+            <Resource target="Title" type="Label" id="TextId" defaultLabel="Text" />
+          </Bindings>
+          <InputAreaMultiLine name="Text">
+            <Bindings>
+              <Binding target="Value" binding="ProcessContext::CustomerContractDetail.loPrmCttComment.current.text" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputAreaMultiLine>
+        </GroupElement>
+      </Area>
+      <Area areaName="Products" areaPattern="SingleElementArea">
+        <MenuItems>
+          <MenuItem directlyVisible="true" itemId="AddProductId">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::CustomerContractDetail.isContractEditable" />
+              <Binding type="Editable" target="Editable" call="ProcessContext::CustomerContractDetail.checkProductTabVisible" />
+              <Resource target="Text" type="Label" id="AddProductLabelId" defaultLabel="Add Product" />
+              <Resource target="Icon" type="Image" id="ProductPlusDarkGrey24" defaultImage="PlusDarkGrey24.png" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="addProduct" />
+            </Events>
+          </MenuItem>
+          <MenuItem directlyVisible="true" itemId="AddProductGroupId">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::CustomerContractDetail.isContractEditable" />
+              <Binding type="Editable" target="Editable" call="ProcessContext::CustomerContractDetail.checkProductTabVisible" />
+              <Resource target="Text" type="Label" id="AddProductGroupLabelId" defaultLabel="Add Product Group" />
+              <Resource target="Icon" type="Image" id="ProductGroupPlusDarkGrey24" defaultImage="PlusDarkGrey24.png" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="addProductGroup" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <GroupedList name="ProductList" indexBar="false" searchable="false" hasBorder="true" dataSource="ProcessContext::CustomerContractDetail.loPrmCttProducts.Items[]">
+          <Items name="Items" itemPattern="CttProductListItem">
+            <Bindings>
+              <Binding target="Image" type="Image" binding=".groupFlag" bindingMode="ONE_WAY" />
+              <Binding target="Product" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              <Binding target="Quantity" type="Stepper" binding=".quantity" minValue="0" maxValue="9999" bindingMode="TWO_WAY" formatV2="4.0" />
+              <Binding target="Discount" type="Dynamic" binding=".discount" formatBinding="formatType" typeField="dataType" stepSizeBinding="stepSize" stepperEnabledBinding="useStepper" minBinding="minValue" maxBinding="maxValue" bindingMode="TWO_WAY" />
+              <Binding target="Price" increment="0.1" formatV2="10.1" type="Stepper" binding=".specialPrice" bindingMode="TWO_WAY" />
+              <Resource target="QuantityLabel" type="Label" id="QuantityLabel" defaultLabel="Quantity" />
+              <Resource target="DiscountLabel" type="Label" id="DiscountLabel" defaultLabel="Discount" />
+              <Resource target="SpecialPriceLabel" type="Label" id="SpecialPriceLabel" defaultLabel="Special Price" />
+              <Resource target="ProductNameLabel" type="Label" id="ProductNameLabel" defaultLabel="Product Name" />
+            </Bindings>
+            <ItemListLayout>
+              <Tablet>
+                <Default>
+                  <Col>
+                    <Row>
+                      <Col width="2em" height="1.5em" layoutType="Image" bindingId="Image" />
+                      <Col flex="1" layoutType="itemName" bindingId="Product" />
+                    </Row>
+                    <Row>
+                      <Col width="2em" bindingId="Spacer" />
+                      <Col width="17em" layoutType="itemSecondary" bindingId="QuantityLabel" />
+                      <Col width="13em" layoutType="itemSecondary" bindingId="DiscountLabel" />
+                    </Row>
+                    <Row>
+                      <Col width="2em" bindingId="Spacer" />
+                      <Col width="9em" bindingId="Quantity" />
+                      <Col width="3em" bindingId="Spacer" />
+                      <Col width="5em" bindingId="Discount" />
+                    </Row>
+                  </Col>
+                </Default>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col>
+                    <Row>
+                      <Col width="2em" height="1.5em" layoutType="Image" bindingId="Image" />
+                      <Col flex="1" layoutType="itemName" bindingId="Product" />
+                    </Row>
+                    <Row>
+                      <Col width="1.0em" bindingId="Spacer" />
+                      <Col width="12em" layoutType="itemSecondary" bindingId="QuantityLabel" />
+                      <Col width="8em" layoutType="itemSecondary" bindingId="DiscountLabel" />
+                    </Row>
+                    <Row>
+                      <Col width="9em" bindingId="Quantity" />
+                      <Col width="6em" height="5em" bindingId="Discount" />
+                    </Row>
+                  </Col>
+                </Default>
+              </Phone>
+            </ItemListLayout>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::ProductContextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+          </Items>
+          <Events>
+            <ContextOpeningEvent event="productContextMenuOpening">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="productContextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+      <Area areaName="Tactic" areaPattern="SingleElementArea">
+        <MenuItems>
+          <MenuItem directlyVisible="true" itemId="AddTacticId">
+            <Bindings>
+              <Binding type="Visible" target="Visible" call="ProcessContext::CustomerContractDetail.isContractEditable" />
+              <Resource target="Text" type="Label" id="AddTacticLabelId" defaultLabel="Add Tactic" />
+              <Resource target="Icon" type="Image" id="StarPlusDarkGrey24" defaultImage="PlusDarkGrey24.png" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="addTactic" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <GroupedList name="TacticList" dataSource="ProcessContext::CustomerContractDetail.loPrmCttTactics.Items[]">
+          <Items name="Items" itemPattern="CttTacticListItem">
+            <Bindings>
+              <Binding target="CostAmount" type="Stepper" increment="1.0" minValue="0" formatV2="10.2" binding=".costAmount" bindingMode="TWO_WAY" />
+              <Binding target="DateFrom" type="Date" binding=".dateFrom" bindingMode="TWO_WAY" />
+              <Binding target="DateThru" type="Date" binding=".dateThru" bindingMode="TWO_WAY" />
+              <Binding target="Active" type="Combo" toggleId="Bool" binding=".active" bindingMode="TWO_WAY" />
+              <Binding target="TacticMetaName" type="Text" binding=".tacticMetaName" bindingMode="ONE_WAY" />
+              <Resource target="TacticNameLabel" type="Label" id="TacticNameLabel" defaultLabel="Tactic Name" />
+              <Resource target="DateLabel" type="Label" id="DateLabel" defaultLabel="Date" />
+              <Resource target="AmountLabel" type="Label" id="AmountLabel" defaultLabel="Amount" />
+              <Resource target="StatusLabel" type="Label" id="StatusLabel" defaultLabel="Status" />
+              <Resource target="DateFromLabel" type="Label" id="DateFromLabel" defaultLabel="Date From" />
+              <Resource target="DateThruLabel" type="Label" id="DateThruLabel" defaultLabel="Thru" />
+            </Bindings>
+            <ItemListLayout>
+              <Tablet>
+                <Default>
+                  <Header>
+                    <Col colSpan="2" bindingId="TacticNameLabel" align="left" />
+                    <Col colSpan="2" bindingId="DateLabel" />
+                    <Col colSpan="2" bindingId="AmountLabel" align="right" />
+                    <Col colSpan="1" bindingId="StatusLabel" align="left" />
+                  </Header>
+                  <Col width="12.0em" layoutType="itemPrimary" bindingId="TacticMetaName" />
+                  <Col width="1em" layoutType="itemSecondary" bindingId="Spacer" />
+                  <Col width="4em">
+                    <Row layoutType="itemValue" bindingId="DateFrom" />
+                    <Row layoutType="itemValue" bindingId="DateThru" />
+                  </Col>
+                  <Col width="1em" layoutType="itemSecondary" bindingId="Spacer" />
+                  <Col width="7em">
+                    <Row layoutType="itemSecondary" bindingId="CostAmount" />
+                  </Col>
+                  <Col width="1em" layoutType="itemSecondary" bindingId="Spacer" />
+                  <Col layoutType="itemSecondary" bindingId="Active" />
+                </Default>
+                <Apple>
+                  <Header>
+                    <Col flex="1" bindingId="TacticNameLabel" align="left" />
+                    <Col width="6.5em" bindingId="DateLabel" align="center" />
+                    <Col width="5em" bindingId="AmountLabel" align="center" />
+                    <Col width="4em" bindingId="StatusLabel" align="left" />
+                  </Header>
+                  <Col flex="1" layoutType="itemPrimary" bindingId="TacticMetaName" />
+                  <Col width="6.5em">
+                    <Row layoutType="itemValue" bindingId="DateFrom" />
+                    <Row layoutType="itemValue" bindingId="DateThru" />
+                  </Col>
+                  <Col width="5em">
+                    <Row layoutType="itemSecondary" bindingId="CostAmount" />
+                  </Col>
+                  <Col width="4em" layoutType="itemSecondary" bindingId="Active" />
+                </Apple>
+                <Android>
+                  <Header>
+                    <Col bindingId="TacticNameLabel" align="left" />
+                    <Col width="1em" />
+                    <Col width="7em" bindingId="DateLabel" />
+                    <Col width="1em" />
+                    <Col width="6em" bindingId="AmountLabel" align="right" />
+                    <Col width="1em" />
+                    <Col width="3em" bindingId="StatusLabel" align="left" />
+                  </Header>
+                  <Col flex="1" layoutType="itemPrimary" bindingId="TacticMetaName" />
+                  <Col width="1.0em" layoutType="itemSecondary" bindingId="Spacer" />
+                  <Col width="7em">
+                    <Row layoutType="itemValue" bindingId="DateFrom" />
+                    <Row layoutType="itemValue" bindingId="DateThru" />
+                  </Col>
+                  <Col width="1em" layoutType="itemSecondary" bindingId="Spacer" />
+                  <Col width="7em">
+                    <Row layoutType="itemSecondary" bindingId="CostAmount" />
+                  </Col>
+                  <Col width="1em" layoutType="itemSecondary" bindingId="Spacer" />
+                  <Col width="3em" layoutType="itemSecondary" bindingId="Active" />
+                </Android>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Header>
+                    <Col width="5em" bindingId="TacticNameLabel" align="left" />
+                    <Col width="9em" bindingId="AmountLabel" align="center" />
+                    <Col width="1em" bindingId="StatusLabel" align="center" />
+                  </Header>
+                  <Col width="5em">
+                    <Row layoutType="itemSecondary" bindingId="TacticMetaName" />
+                    <Row layoutType="itemSecondary" bindingId="Spacer" />
+                    <Row layoutType="itemValueSmall" bindingId="DateFrom" />
+                  </Col>
+                  <Col width="9em">
+                    <Row layoutType="itemSecondary" bindingId="CostAmount" />
+                    <Row layoutType="itemValueSmall" bindingId="DateThru" />
+                  </Col>
+                  <Col width="1em" height="1em" layoutType="itemSecondary" bindingId="Active"></Col>
+                </Default>
+              </Phone>
+            </ItemListLayout>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::TacticContextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+          </Items>
+          <Events>
+            <ContextOpeningEvent event="tacticContextMenuOpening">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="tacticContextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

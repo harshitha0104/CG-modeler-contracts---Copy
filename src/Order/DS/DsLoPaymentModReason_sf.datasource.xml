@@ -1,0 +1,20 @@
+<DataSource name="DsLoPaymentModReason" backendSystem="sf" external="true" businessObjectClass="LoPaymentModReason" schemaVersion="2.0">
+  <Database platform="SQLite">
+    <Load><![CDATA[
+      // Intended to be empty - Wizard validation BO!
+      return undefined;
+   ]]></Load>
+    <Update><![CDATA[
+      // Intended to be empty - Wizard validation BO!
+      return undefined;
+   ]]></Update>
+    <Insert><![CDATA[
+      // Intended to be empty - Wizard validation BO!
+      return undefined;
+   ]]></Insert>
+    <Delete><![CDATA[
+      // Intended to be empty - Wizard validation BO!
+      return undefined;
+   ]]></Delete>
+  </Database>
+</DataSource>

@@ -1,0 +1,32 @@
+<UIDescription name="Reporting::OverviewUI" schemaVersion="0.0.0.5" >
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="ReportingOverviewId" defaultLabel="Report Overview" bindingMode="ONE_TIME" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="ReportOverviewList" searchable="false" groupBy="grouping" sortBy="groupSort" dataSource="ProcessContext::OverviewList.Items[]" direction="ASC">
+          <Items name="Items" itemPattern="ReportOverviewItem">
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemIdentifier" bindingId="ReportName" />
+              </Col>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="ReportName" type="Text" binding=".reportName" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="reportId" value=".reportId" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

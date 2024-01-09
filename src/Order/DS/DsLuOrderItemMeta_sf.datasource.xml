@@ -1,0 +1,25 @@
+<DataSource name="DsLuOrderItemMeta" backendSystem="sf" businessObjectClass="LuOrderItemMeta" external="false" readOnly="true" editableEntity="Order_Item_Template__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Order_Item_Template__c" column="Id" />
+    <Attribute name="text" table="Order_Item_Template__c" column="Description_#Language#__c" />
+    <Attribute name="shortText" table="Order_Item_Template__c" column="Description_#Language#__c" />
+    <Attribute name="useClosedListing" table="Order_Item_Template__c" column="Closed_Listing__c" />
+    <Attribute name="prdProposalItemMetaPosition" table="Order_Item_Template__c" column="Position__c" />
+    <Attribute name="useAssortmentSdoItem" table="Order_Item_Template__c" column="Assortment_Relation__c" />
+    <Attribute name="priceEffect" table="Order_Item_Template__c" column="Price_Effect__c" />
+    <Attribute name="saveZeroQuantity" table="Order_Item_Template__c" column="Save_Zero_Quantity__c" />
+    <Attribute name="calculationGroup" table="Order_Item_Template__c" column="Calculation_Group__c" />
+    <Attribute name="modifyPresetQuantity" table="Order_Item_Template__c" column="Modify_Quantity__c" />
+    <Attribute name="scanIncrementQuantity" table="Order_Item_Template__c" column="Scanning_Increment__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order_Item_Template__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        Order_Item_Template__c.Id = #pKey#
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT"/>
+  </Parameters>
+</DataSource>

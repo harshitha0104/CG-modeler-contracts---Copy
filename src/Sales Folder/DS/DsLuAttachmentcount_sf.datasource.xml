@@ -1,0 +1,22 @@
+<DataSource name="DsLuAttachmentcount" backendSystem="sf" businessObjectClass="LuAttachmentcount" external="false" editableEntity="SF_File" schemaVersion="2.0" readOnly="true">
+  <Attributes>
+    <DerivedAttribute name="salesFolderAttachmentCount" value="Count(*)" />
+  </Attributes>
+  <Entities>
+    <Entity name="SF_File" alias="" idAttribute="Id" />
+    <Entity name="SF_FileLink" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SF_FileLink.FileId" comparator="eq" rightSideType="Attribute" rightSideValue="SF_File.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+   SF_FileLink.ParentId = #pKey#
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

@@ -1,0 +1,39 @@
+<ListItem name="LiUsrTimeEntry" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="businessModified" type="DomBusinessModified" dataSourceProperty="businessModified" />
+    <SimpleProperty name="tmgTourPKey" type="DomPKey" dataSourceProperty="tmgTourPKey" />
+    <SimpleProperty name="clbMainPKey" type="DomPKey" dataSourceProperty="clbMainPKey" />
+    <SimpleProperty name="description" type="DomText" dataSourceProperty="description" />
+    <SimpleProperty name="duration" type="DomDurationUnit" dataSourceProperty="duration" />
+    <SimpleProperty name="effectiveTimeFrom" type="DomTime" dataSourceProperty="effectiveTimeFrom" />
+    <SimpleProperty name="effectiveTimeThru" type="DomTime" dataSourceProperty="effectiveTimeThru" />
+    <SimpleProperty name="timeFromThru" type="DomText" dataSourceProperty="timeFromThru" />
+    <SimpleProperty name="effectiveDateFrom" type="DomDate" dataSourceProperty="effectiveDateFrom" />
+    <SimpleProperty name="effectiveDateThru" type="DomDate" dataSourceProperty="effectiveDateThru" />
+    <SimpleProperty name="note" type="DomLongDescription" dataSourceProperty="note" />
+    <SimpleProperty name="reasonCode" type="DomUsrTimeEntryReasonCode" dataSourceProperty="reasonCode" />
+    <SimpleProperty name="systemTimeFrom" type="DomDateTime" dataSourceProperty="systemTimeFrom" />
+    <SimpleProperty name="systemTimeThru" type="DomDateTime" dataSourceProperty="systemTimeThru" />
+    <SimpleProperty name="effectiveUTCTimeFrom" type="DomDateTime" dataSourceProperty="effectiveUTCTimeFrom" />
+    <SimpleProperty name="effectiveUTCTimeThru" type="DomDateTime" dataSourceProperty="effectiveUTCTimeThru" />
+    <SimpleProperty name="usrDailyReportPKey" type="DomPKey" dataSourceProperty="usrDailyReportPKey" />
+    <SimpleProperty name="usrTimeEntryMetaPKey" type="DomPKey" dataSourceProperty="usrTimeEntryMetaPKey" />
+    <SimpleProperty name="usrTimeEntryMetaText" type="DomText" storable="false" dataSourceProperty="usrTimeEntryMetaText" />
+    <SimpleProperty name="activityType" type="DomUsrActivityType" storable="false" dataSourceProperty="activityType" />
+    <SimpleProperty name="signImage" type="DomString" dataSourceProperty="sign" />
+    <SimpleProperty name="manual" type="DomBool" dataSourceProperty="manual" />
+    <SimpleProperty name="productiveTimeEffect" type="DomUsrTimeEntryEffect" storable="false" dataSourceProperty="productiveTimeEffect" />
+    <SimpleProperty name="orgTimeFrom" type="DomString" dataSourceProperty="orgTimeFrom" />
+    <SimpleProperty name="orgTimeThru" type="DomString" dataSourceProperty="orgTimeThru" />
+    <SimpleProperty name="orgPKey" type="DomPKey" />
+    <SimpleProperty name="effectiveTimeFromGeoOffset" type="DomUsrGeoTimeOffset" dataSourceProperty="effectiveTimeFromGeoOffset" />
+    <SimpleProperty name="effectiveTimeFromDSTOffset" type="DomUsrDSTTimeOffset" dataSourceProperty="effectiveTimeFromDSTOffset" />
+    <SimpleProperty name="effectiveTimeThruGeoOffset" type="DomUsrGeoTimeOffset" dataSourceProperty="effectiveTimeThruGeoOffset" />
+    <SimpleProperty name="effectiveTimeThruDSTOffset" type="DomUsrDSTTimeOffset" dataSourceProperty="effectiveTimeThruDSTOffset" />
+    <SimpleProperty name="systemTimeFromGeoOffset" type="DomUsrGeoTimeOffset" dataSourceProperty="systemTimeFromGeoOffset" />
+    <SimpleProperty name="systemTimeFromDSTOffset" type="DomUsrDSTTimeOffset" dataSourceProperty="systemTimeFromDSTOffset" />
+    <SimpleProperty name="systemTimeThruGeoOffset" type="DomUsrGeoTimeOffset" dataSourceProperty="systemTimeThruGeoOffset" />
+    <SimpleProperty name="systemTimeThruDSTOffset" type="DomUsrDSTTimeOffset" dataSourceProperty="systemTimeThruDSTOffset" />
+  </SimpleProperties>
+</ListItem>

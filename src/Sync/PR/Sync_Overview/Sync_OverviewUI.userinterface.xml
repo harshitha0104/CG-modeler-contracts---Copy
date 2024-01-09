@@ -1,0 +1,52 @@
+<UIDescription name="Sync::OverviewUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage">
+    <PageHeader>
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="syncData">
+          <Bindings>
+            <Resource target="Text" type="Label" id="SyncronizeId" defaultLabel="Synchronize" />
+            <Resource target="Icon" type="Image" id="ArrowsDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="syncData" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="PackagesList" groupby="type" hasBorder="true" dataSource="ProcessContext::PackagesList.Items[]">
+          <Items name="Items" itemPattern="PackagesList">
+            <ItemListLayout>
+              <Default>
+                <Col width="1.5em" layoutType="itemIdentifier" bindingId="changeSetId" />
+                <Col width="5em" layoutType="itemSecondary" bindingId="type" />
+                <Col width="6em" layoutType="itemSecondary" bindingId="workState" />
+                <Col width="10em" layoutType="itemSecondary" bindingId="time" />
+              </Default>
+              <Phone>
+                <Default>
+                  <Col>
+                    <Row>
+                      <Col width="2em">
+                        <Row layoutType="itemIdentifierSmall" bindingId="changeSetId" />
+                        <Row layoutType="itemSecondary" bindingId="workState" />
+                      </Col>
+                      <Col width="10em" layoutType="itemSecondary" bindingId="time" />
+                    </Row>
+                  </Col>
+                </Default>
+              </Phone>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="changeSetId" type="Text" binding=".changeSetId" bindingMode="ONE_WAY" />
+              <Binding target="workState" type="Text" binding=".workState.text" bindingMode="ONE_WAY" />
+              <Binding target="time" type="Text" binding=".time" bindingMode="ONE_WAY" />
+              <Binding target="type" type="Text" binding=".type" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

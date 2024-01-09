@@ -1,0 +1,4 @@
+<ValidationMessages name="BoContactPartnerMessages" businessObject="BoContactPartner" schemaVersion="0.0.0.5">
+  <ValidationMessage name="CasBpaMainContactPartnerLastNameMustNotBeEmpty" defaultMessage="Please enter a Last Name." comment="Validates if the lastname of contactpartner is not empty." />
+  <ValidationMessage name="CasBpaMainContactPartnerEmailInvalid" defaultMessage="Please provide a valid email for the contact partner." comment="Validates if the email of contactpartner is valid." />
+</ValidationMessages>

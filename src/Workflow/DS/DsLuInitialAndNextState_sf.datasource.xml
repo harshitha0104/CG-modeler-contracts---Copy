@@ -1,0 +1,19 @@
+<DataSource name="DsLuInitialAndNextState" backendSystem="sf" businessObjectClass="LuInitialAndNextState" external="false" readOnly="true" editableEntity="Workflow_State_Transition__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="initialStatePKey" table="Workflow_State_Transition__c" column="From_Status__c" />
+    <Attribute name="initialStateType" table="Workflow_State_Transition__c" column="From_Status__c" />
+    <Attribute name="nextStatePKey" table="Workflow_State_Transition__c" column="To_Status__c" />
+    <Attribute name="nextStateType" table="Workflow_State_Transition__c" column="To_Status__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Workflow_State_Transition__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+      Workflow_State_Transition__c.From_Initial_Stage__c = '1'
+      AND Workflow_State_Transition__c.Workflow__c = #wfeWorkflowPKey#     
+    ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="wfeWorkflowPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

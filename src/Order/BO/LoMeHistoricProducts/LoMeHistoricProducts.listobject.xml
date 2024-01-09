@@ -1,0 +1,5 @@
+<ListObject name="LoMeHistoricProducts" generateLoadMethod="true" >
+  <DataSource name="DsLoMeHistoricProducts" />
+  <Item objectClass="LiMeHistoricProducts" />
+  <Methods></Methods>
+</ListObject>

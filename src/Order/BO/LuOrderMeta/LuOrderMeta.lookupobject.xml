@@ -1,0 +1,11 @@
+<LookupObject name="LuOrderMeta">
+  <DataSource name="DsLuOrderMeta" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="text" type="DomString" dataSourceProperty="text" />
+    <SimpleProperty name="sdoSubType" type="DomSdoSubType" storable="false" dataSourceProperty="sdoSubType" />
+    <SimpleProperty name="splittingOption" type="DomSdoSplittingOption" storable="false" dataSourceProperty="splittingOption" />
+    <SimpleProperty name="splittingRule" type="DomSdoSplittingRule" storable="false" dataSourceProperty="splittingRule" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>

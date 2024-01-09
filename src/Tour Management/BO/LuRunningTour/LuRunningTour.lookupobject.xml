@@ -1,0 +1,21 @@
+<LookupObject name="LuRunningTour" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuRunningTour" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="dateFrom" type="DomDate" storable="true" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" storable="true" dataSourceProperty="dateThru" />
+    <SimpleProperty name="id" type="DomId" storable="true" dataSourceProperty="id" />
+    <SimpleProperty name="tmgMetaPKey" type="DomPKey" storable="true" dataSourceProperty="tmgMetaPKey" />
+    <SimpleProperty name="considerMultipleWarehouses" type="DomPKey" storable="true" dataSourceProperty="considerMultipleWarehouses" />
+    <SimpleProperty name="startEtpWarehousePKey" type="DomPKey" storable="true" dataSourceProperty="startEtpWarehousePKey" />
+    <SimpleProperty name="etpVehicleTruckPKey" type="DomPKey" storable="true" dataSourceProperty="etpVehicleTruckPKey" />
+    <SimpleProperty name="defaultEtpVehicleTruckPKey" type="DomPKey" storable="true" dataSourceProperty="defaultEtpVehicleTruckPKey" />
+    <SimpleProperty name="driverName" type="DomUsrName" storable="true" dataSourceProperty="driverName" />
+    <SimpleProperty name="text" type="DomText" storable="false" dataSourceProperty="text" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="endOfDayAllowed" />
+  </Methods>
+</LookupObject>

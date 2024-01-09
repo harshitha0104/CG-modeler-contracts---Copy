@@ -1,0 +1,92 @@
+<Process name="Call::LoadCallProcess" defaultAction="CheckIfTimeCardIsAvailable" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="CallBO" type="BoCall" />
+        <Declaration name="TimeCardAvailable" type="String" />
+      </Declarations>
+      <Parameters>
+        <Input name="CallPKey" type="String" />
+        <Input name="ResponsiblePKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadCallBO" actionType="LOAD" type="BoCall">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::CallPKey" />
+          <Input name="referenceUserPKey" value="ProcessContext::ResponsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::CallBO" />
+      </Action>
+      <Action name="SetConfiguration" actionType="LOGIC" call="ProcessContext::CallBO.captureProceedingTime" />
+      <Action name="CheckLoadOnDemand" actionType="LOGIC" call="ProcessContext::CallBO.loadOnDemand">
+        <Parameters>
+          <Input name="object" value="Attachments" type="Literal" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="LOGIC" name="CheckIfTimeCardIsAvailable" call="Utils.isDefined">
+        <Parameters>
+          <Input name="timeCard" value="ProcessContext::CallBO.boUserDailyReport" />
+        </Parameters>
+        <Return name="ProcessContext::TimeCardAvailable" />
+        <TransitionTo action="TimeCard_SaveDecision" />
+      </Action>
+      <Action name="TimeCard_SaveDecision" actionType="DECISION" parameter="ProcessContext::TimeCardAvailable">
+        <Case value="true" action="PrepareTimeCardForSave" />
+        <CaseElse action="IsCallDirty" />
+      </Action>
+      <!-- Save Call if dirty (e.g. because of captureProceedingTime). Otherwise "Unsaved Changes" message is popping up if app is swipted to background  -->
+      <Action actionType="DECISION" name="IsCallDirty" parameter="ProcessContext::CallBO.objectStatus">
+        <Case value="1" action="Navigation_Decision" />
+        <CaseElse action="SaveBoCall" />
+      </Action>
+      <Action name="SaveBoCall" actionType="SAVE" >
+        <TransitionTo action="Navigation_Decision" />
+      </Action>
+      <Action name="Navigation_Decision" actionType="DECISION" parameter="ProcessContext::CallBO.luCallMeta.mobilityUserGuidance">
+        <Case value="Sales" action="StartNavigationStoreCockpit" />
+        <Case value="Merchandizing" action="StartNavigationStoreCockpit" />
+        <Case value="Delivery" action="StartNavigationProcess" />
+        <Case value="NonCustomer" action="StartNavigationProcess" />
+        <CaseElse action="StartNavigationProcess" />
+      </Action>
+      <Action actionType="PROCESS" name="StartNavigationStoreCockpit" process="Call::StoreCockpitTabProcess">
+        <Parameters>
+          <Input name="MainBO" value="ProcessContext::CallBO" />
+          <Input name="CustomerPKey" value="ProcessContext::CallBO.bpaMainPKey" />
+          <Input name="CurrentCustomerPKey" value="ProcessContext::CallBO.BpaMainPKey" />
+          <Input name="CurrentCustomerName" value="ProcessContext::CallBO.luCustomer.name" />
+          <Input name="CallDate" value="ProcessContext::CallBO.DateFrom" />
+          <Input name="LeadTime" value="ProcessContext::CallBO.LuCallMeta.PrmFindingLeadTime" />
+          <Input name="MobilityUserGuidance" value="ProcessContext::CallBO.luCallMeta.mobilityUserGuidance" />
+          <Input name="CallDateThru" value="ProcessContext::CallBO.DateThru" />
+        </Parameters>
+      </Action>
+      <Action actionType="PROCESS" name="StartNavigationProcess" process="Call::NavigationProcess">
+        <Parameters>
+          <Input name="CallBO" value="ProcessContext::CallBO" />
+        </Parameters>
+      </Action>
+      <Action actionType="LOGIC" name="PrepareTimeCardForSave" call="ProcessContext::CallBO.setCloseTimeEntry">
+        <Parameters>
+          <Input name="closeTE" value="0" type="Literal" />
+        </Parameters>
+        <TransitionTo action="SaveTimeCard" />
+      </Action>
+      <Action name="SaveTimeCard" actionType="SAVE">
+        <Parameters></Parameters>
+        <TransitionTo action="ResetTESaveFlag" />
+      </Action>
+      <Action actionType="LOGIC" name="ResetTESaveFlag" call="ProcessContext::CallBO.setCloseTimeEntry">
+        <Parameters>
+          <Input name="closeTE" value="1" type="Literal" />
+        </Parameters>
+        <TransitionTo action="IsCallDirty" />
+      </Action>
+    </Actions>
+  </Body>
+</Process>

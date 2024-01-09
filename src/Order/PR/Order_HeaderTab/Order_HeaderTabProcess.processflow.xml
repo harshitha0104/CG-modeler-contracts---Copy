@@ -1,0 +1,490 @@
+<Process name="Order::HeaderTabProcess" defaultAction="ShowHeader_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="DeliveryRecipientLookupPKey" type="DomPKey" />
+        <Declaration name="BrokerCustomerLookupPKey" type="DomPKey" />
+        <Declaration name="CancelReleaseProcess" type="DomString" />
+        <Declaration name="BoOrderPrintTextItems" type="BoOrderPrintTextItems" />
+        <Declaration name="BoCustomerRole" type="BoCustomerRole" />
+        <Declaration name="PrintId" type="String" />
+        <Declaration name="IsReleased" type="DomBool" />
+        <Declaration name="SelectedSplittingGroup" type="String" />
+        <Declaration name="SplittedBO" type="BoOrder" />
+        <Declaration name="SplittingGroups" type="Object" />
+        <Declaration name="LoCpConditionTemplateText" type="LoCpConditionTemplateText" />
+        <Declaration name="ReleaseInProgress" type="DomString" />
+        <Declaration name="FinalPath" type="DomString" />
+        <Declaration name="PreviewButtonVisible" type="DomBool" />
+      </Declarations>
+      <Parameters>
+        <Input name="MainBO" type="BoOrder" />
+        <Input name="HeaderView" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOGIC" name="StoreSysReleasePKey" call="ProcessContext::MainBO.storeSysReleaseProcessPKey" />
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <!-- Show Header / Delivery Header -->
+      <Action name="ShowHeader_Decision" actionType="DECISION" parameter="ProcessContext::MainBO.boOrderMeta.sdoSubType">
+        <Case value="Delivery" action="PrepareShowDeliveryHeaderList" />
+        <CaseElse action="ShowHeader_ReplenishmentDecision" />
+        <CaseEmpty action="ShowHeader_ReplenishmentDecision" />
+      </Action>
+      <Action name="ShowHeader_ReplenishmentDecision" actionType="DECISION" parameter="ProcessContext::MainBO.documentType">
+        <Case value="Replenishment" action="ShowReplenishmentHeader" />
+        <CaseElse action="ShowHeader" />
+      </Action>
+      <Action name="PrepareShowDeliveryHeaderList" actionType="CREATE" type="LoUomSummary">
+        <Return name="ProcessContext::shipmentList" />
+        <TransitionTo action="PrepareShowDeliveryHeaderToggle" />
+      </Action>
+      <Action name="PrepareShowDeliveryHeaderToggle" actionType="LOAD" type="LoSysToggleItem">
+        <Parameters>
+          <Input name="id" type="Literal" value="PrdLogisticUnit" />
+        </Parameters>
+        <Return name="ProcessContext::uomToggle" />
+        <TransitionTo action="PrepareShowDeliveryHeader" />
+      </Action>
+      <Action actionType="LOGIC" name="PrepareShowDeliveryHeader" call="ProcessContext::MainBO.summarizeUoMMovement">
+        <Parameters>
+          <Input name="inList" value="ProcessContext::shipmentList" />
+          <Input name="OrderItemMetaList" value="ProcessContext::MainBO.boOrderMeta.loOrderItemMetas" />
+          <Input name="uomToggle" value="ProcessContext::uomToggle" />
+        </Parameters>
+        <TransitionTo action="ShowDeliveryHeader" />
+      </Action>
+      <Action actionType="VIEW" name="ShowDeliveryHeader">
+        <UIDescription>Order::DeliveryHeaderTabUI</UIDescription>
+        <Events>
+          <Event name="holdbackOrder" action="HoldBackOrder" />
+          <Event name="calculateOrderValue" action="CalculateOrderValue" />
+          <Event name="releaseOrder" action="ReleaseOrder" />
+          <Event name="reviewReleaseInformation" action="ReviewReleaseInformation" />
+          <Event name="previewOrderConfirmation" action="ShowPrintPreview" />
+          <Event name="deliveryRecipientLookup" action="OpenDeliveryRecipientLookup" />
+          <Event name="brokerCustomerLookup" action="OpenBrokerCustomerLookup" />
+          <Event name="showPrint" action="ShowPrintInvoicePDFAttachment" />
+        </Events>
+      </Action>
+      <Action actionType="VIEW" name="ShowHeader">
+        <UIDescription>Order::HeaderTab</UIDescription>
+        <Events>
+          <Event name="holdbackOrder" action="HoldBackOrder" />
+          <Event name="calculateOrderValue" action="CalculateOrderValue" />
+          <Event name="releaseOrder" action="ReleaseOrder" />
+          <Event name="reviewReleaseInformation" action="ReviewReleaseInformation" />
+          <Event name="previewOrderConfirmation" action="ShowPrintPreview" />
+          <Event name="deliveryRecipientLookup" action="OpenDeliveryRecipientLookup" />
+          <Event name="brokerCustomerLookup" action="OpenBrokerCustomerLookup" />
+          <Event name="PaymentCollectedChanged" action="isPaymentCollectedChanged" />
+          <Event name="showPrint" action="ShowPrintInvoicePDFAttachment" />
+        </Events>
+      </Action>
+      <Action actionType="VIEW" name="ShowReplenishmentHeader">
+        <UIDescription>Order::ReplenishmentHeaderUI</UIDescription>
+        <Events>
+          <Event name="holdbackOrder" action="HoldBackOrder" />
+          <Event name="calculateOrderValue" action="CalculateOrderValue" />
+          <Event name="releaseOrder" action="ReleaseOrder" />
+          <Event name="reviewReleaseInformation" action="ReviewReleaseInformation" />
+          <Event name="deliveryRecipientLookup" action="OpenDeliveryRecipientLookup" />
+          <Event name="brokerCustomerLookup" action="OpenBrokerCustomerLookup" />
+        </Events>
+      </Action>
+      <Action name="isPaymentCollectedChanged" actionType="LOGIC" call="ProcessContext::MainBO.releaseButtonActive" />
+      <!-- Actions for Delivery Recipient Lookup -->
+      <Action actionType="PROCESS" name="OpenDeliveryRecipientLookup" process="DeliveryRecipient::LookupProcess">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainBO.ordererPKey" />
+          <Input name="deliveryRecipientPKey" value="ProcessContext::MainBO.luDeliveryRecipient.pKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::DeliveryRecipientLookupPKey" value="customerPKey" />
+        </ReturnValues>
+        <TransitionTo action="SetDeliveryRecipientPKey" />
+      </Action>
+      <Action actionType="LOGIC" name="SetDeliveryRecipientPKey" call="ProcessContext::MainBO.setDeliveryRecipientPKey">
+        <Parameters>
+          <Input name="newValue" value="ProcessContext::DeliveryRecipientLookupPKey" />
+        </Parameters>
+        <TransitionTo action="LoadDeliveryRecipientLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadDeliveryRecipientLookup" type="LuDeliveryRecipient">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::DeliveryRecipientLookupPKey" />
+        </Parameters>
+        <Return name="ProcessContext::MainBO.luDeliveryRecipient" />
+      </Action>
+      <!-- Actions for Broker Customer Lookup -->
+      <Action actionType="PROCESS" name="OpenBrokerCustomerLookup" process="Broker::LookupProcess">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::MainBO.ordererPKey" />
+          <Input name="brokerPKey" value="ProcessContext::MainBO.luBrokerCustomer.pKey" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::BrokerCustomerLookupPKey" value="customerPKey" />
+        </ReturnValues>
+        <TransitionTo action="SetBrokerCustomerPKey" />
+      </Action>
+      <Action actionType="LOGIC" name="SetBrokerCustomerPKey" call="ProcessContext::MainBO.setBrokerCustomerPKey">
+        <Parameters>
+          <Input name="newValue" value="ProcessContext::BrokerCustomerLookupPKey" />
+        </Parameters>
+        <TransitionTo action="LoadBrokerCustomerLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadBrokerCustomerLookup" type="LuCustomer">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::BrokerCustomerLookupPKey" />
+        </Parameters>
+        <Return name="ProcessContext::MainBO.luBrokerCustomer" />
+      </Action>
+      <!-- Actions for Context Menu (Release, HoldBack) -->
+      <Action actionType="LOGIC" name="HoldBackOrder" call="ProcessContext::MainBO.holdBack">
+        <TransitionTo action="SaveMainBO" />
+      </Action>
+      <Action actionType="LOGIC" name="ReleaseOrder" call="ProcessContext::MainBO.release">
+        <TransitionTo action="ProcessValidateReasonCode" />
+      </Action>
+      <!-- PRINTING SPLITTING GROUPS -->
+      <Action actionType="LOGIC" name="CheckAvailableSplittingGroups" call="ProcessContext::MainBO.getFirstSplittingGroup">
+        <Parameters>
+          <Input name="availableSplittingGroups" value="ProcessContext::SplittingGroups" />
+        </Parameters>
+        <Return name="ProcessContext::SelectedSplittingGroup" />
+        <TransitionTo action="CreateSplittedOrder" />
+      </Action>
+      <Action actionType="LOGIC" name="ShowPrintPreview" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="no" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::ReleaseInProgress" />
+        <TransitionTo action="CheckIfSplittingRequired" />
+      </Action>
+      <Action actionType="DECISION" name="CheckIfSplittingRequired" parameter="ProcessContext::MainBO.splittingOption">
+        <Case value="1" action="CheckIfAlreadySplitted" />
+        <CaseElse action="CreateBoOrderPrintTextItems" />
+      </Action>
+      <Action actionType="DECISION" name="CheckIfAlreadySplitted" parameter="ProcessContext::IsReleased">
+        <Case value="true" action="CreateBoOrderPrintTextItems" />
+        <CaseElse action="OpenSplittedGroupsFlyout" />
+      </Action>
+      <Action actionType="PROCESS" name="OpenSplittedGroupsFlyout" process="Order::FlyoutSelectSplittingGroupProcess">
+        <Parameters>
+          <Input name="loSplittingGroups" value="ProcessContext::MainBO.loSplittingGroups" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::SelectedSplittingGroup" value="splittingGroup" />
+        </ReturnValues>
+        <TransitionTo action="CheckIfNoSplittingGroupSelected" />
+      </Action>
+      <Action name="CheckIfNoSplittingGroupSelected" actionType="DECISION" parameter="ProcessContext::SelectedSplittingGroup">
+        <Case value="undefined" action="ShowHeader_Decision" />
+        <CaseElse action="CreateSplittedOrder" />
+      </Action>
+      <Action actionType="LOGIC" name="CreateSplittedOrder" call="ProcessContext::MainBO.esCreateSplittedOrder">
+        <Parameters>
+          <Input name="splittingGroup" value="ProcessContext::SelectedSplittingGroup" />
+        </Parameters>
+        <Return name="ProcessContext::SplittedBO" />
+        <TransitionTo action="CreateBoOrderPrintTextItemsForSplittingGroup" />
+      </Action>
+      <Action actionType="CREATE" name="CreateBoOrderPrintTextItemsForSplittingGroup" type="BoOrderPrintTextItems">
+        <Parameters>
+          <Input name="phase" value="ProcessContext::SplittedBO.phase" />
+          <Input name="subType" value="ProcessContext::SplittedBO.documentType" />
+          <Input name="reportPolicy" value="ProcessContext::SplittedBO.boOrderMeta.reportPolicy" />
+          <Input name="documentTransactionType" value="ProcessContext::SplittedBO.docTaType" />
+        </Parameters>
+        <Return name="ProcessContext::BoOrderPrintTextItems" />
+        <TransitionTo action="LoadPriceListForSplittingGroup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadPriceListForSplittingGroup" type="BoCustomerRole">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::SplittedBO.luOrderer.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::BoCustomerRole" />
+        <TransitionTo action="PreparePrint_SetPrintItemsForSplittingGroup" />
+      </Action>
+      <Action actionType="LOGIC" name="PreparePrint_SetPrintItemsForSplittingGroup" call="ProcessContext::SplittedBO.setLoPrintItems">
+        <Parameters>
+          <Input name="loPrintItems" value="ProcessContext::SplittedBO.loItems" />
+        </Parameters>
+        <TransitionTo action="LoadConditionTemplateTextsForSplitting" />
+      </Action>
+      <Action actionType="LOAD" name="LoadConditionTemplateTextsForSplitting" type="LoCpConditionTemplateText">
+        <Parameters />
+        <Return name="ProcessContext::LoCpConditionTemplateText" />
+        <TransitionTo action="PreparePrintForSplittingGroup" />
+      </Action>
+      <Action actionType="LOGIC" name="PreparePrintForSplittingGroup" call="ProcessContext::SplittedBO.preparePrint">
+        <Parameters>
+          <Input name="loCpConditionTemplateText" value="ProcessContext::LoCpConditionTemplateText" />
+        </Parameters>
+        <TransitionTo action="CalculateEmptiesForPrintoutForSplittingGroup" />
+      </Action>
+      <Action actionType="LOGIC" name="CalculateEmptiesForPrintoutForSplittingGroup" call="ProcessContext::SplittedBO.calculateEmptiesForPrintout">
+        <TransitionTo action="setPrintIdForSplittingGroup" />
+      </Action>
+      <!-- Setting printId -->
+      <Action name="setPrintIdForSplittingGroup" actionType="DECISION" parameter="ProcessContext::SplittedBO.boOrderMeta.sdoSubType">
+        <Case value="OrderEntry" action="setOrderConfirmationPrintIdForSplittingGroup" />
+        <CaseElse action="setPrintIdByReportPolicyForSplittingGroup" />
+      </Action>
+      <!-- Redirect to OrderConfirmationPDF for all report policies, action is needed for extensibility reasons -->
+      <Action name="setPrintIdByReportPolicyForSplittingGroup" actionType="DECISION" parameter="ProcessContext::SplittedBO.boOrderMeta.reportPolicy">
+        <Case value="Confirmation" action="setOrderConfirmationPrintIdForSplittingGroup" />
+        <CaseElse action="setOrderConfirmationPrintIdForSplittingGroup" />
+      </Action>
+      <Action actionType="LOGIC" name="setOrderConfirmationPrintIdForSplittingGroup" call="ProcessContext::SplittedBO.determinePrintId">
+        <Return name="ProcessContext::PrintId" />
+        <TransitionTo action="previewDocumentForSplittingGroup" />
+      </Action>
+      <Action name="previewDocumentForSplittingGroup" actionType="PRINTV2" printId="ProcessContext::PrintId" locale="ApplicationContext::user.languageSpoken" showShareButton="true" watermark="ProcessContext::BoOrderPrintTextItems.documentStatus">
+        <Parameters>
+          <Input name="order" value="ProcessContext::SplittedBO" />
+          <Input name="salesOrg" value="ApplicationContext::SalesOrg" />
+          <Input name="textItems" value="ProcessContext::BoOrderPrintTextItems" />
+        </Parameters>
+        <TransitionTo action="RemoveCurrentSplittingGroup" />
+      </Action>
+      <Action actionType="LOGIC" name="RemoveCurrentSplittingGroup" call="ProcessContext::MainBO.removeCurrentSplittingGroup">
+        <Parameters>
+          <Input name="availableSplittingGroups" value="ProcessContext::SplittingGroups" />
+          <Input name="splittingGroup" value="ProcessContext::SelectedSplittingGroup" />
+        </Parameters>
+        <Return name="ProcessContext::SplittingGroups" />
+        <TransitionTo action="CheckIfSplittingGroupPresent" />
+      </Action>
+      <Action actionType="DECISION" name="CheckIfSplittingGroupPresent" parameter="ProcessContext::SplittingGroups">
+        <Case value="Empty" action="setSplittedBO" />
+        <CaseElse action="CheckIfReleaseInProgress" />
+      </Action>
+      <Action actionType="DECISION" name="CheckIfReleaseInProgress" parameter="ProcessContext::IsReleased">
+        <Case value="true" action="CheckAvailableSplittingGroups" />
+        <CaseElse action="setSplittedBO" />
+      </Action>
+      <Action actionType="LOGIC" name="setSplittedBO" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value=" " type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::SplittedBO" />
+        <TransitionTo action="checkIfReleased" />
+      </Action>
+      <!-- END PRINTING SPLITTING GROUPS -->
+      <Action actionType="CREATE" name="CreateBoOrderPrintTextItems" type="BoOrderPrintTextItems">
+        <Parameters>
+          <Input name="phase" value="ProcessContext::MainBO.phase" />
+          <Input name="subType" value="ProcessContext::MainBO.documentType" />
+          <Input name="reportPolicy" value="ProcessContext::MainBO.boOrderMeta.reportPolicy" />
+          <Input name="documentTransactionType" value="ProcessContext::MainBO.docTaType" />
+          <Input name="releaseInProgress" value="ProcessContext::ReleaseInProgress" />
+          <Input name="signatures" value="ProcessContext::MainBO.loSysSignatureBlob" />
+        </Parameters>
+        <Return name="ProcessContext::BoOrderPrintTextItems" />
+        <TransitionTo action="LoadPriceList" />
+      </Action>
+      <Action actionType="LOAD" name="LoadPriceList" type="BoCustomerRole">
+        <Parameters>
+          <Input name="customerPKey" value="ProcessContext::MainBO.luOrderer.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::BoCustomerRole" />
+        <TransitionTo action="PreparePrint_SetPrintItems" />
+      </Action>
+      <Action actionType="LOGIC" name="PreparePrint_SetPrintItems" call="ProcessContext::MainBO.setLoPrintItems">
+        <Parameters>
+          <Input name="loPrintItems" value="ProcessContext::MainBO.loItems" />
+        </Parameters>
+        <TransitionTo action="LoadConditionTemplateTexts" />
+      </Action>
+      <Action actionType="LOAD" name="LoadConditionTemplateTexts" type="LoCpConditionTemplateText">
+        <Parameters />
+        <Return name="ProcessContext::LoCpConditionTemplateText" />
+        <TransitionTo action="PreparePrint" />
+      </Action>
+      <Action actionType="LOGIC" name="PreparePrint" call="ProcessContext::MainBO.preparePrint">
+        <Parameters>
+          <Input name="loCpConditionTemplateText" value="ProcessContext::LoCpConditionTemplateText" />
+        </Parameters>
+        <TransitionTo action="CalculateEmptiesForPrintout" />
+      </Action>
+      <Action actionType="LOGIC" name="CalculateEmptiesForPrintout" call="ProcessContext::MainBO.calculateEmptiesForPrintout">
+        <TransitionTo action="setPrintId" />
+      </Action>
+      <!-- Setting printId -->
+      <Action name="setPrintId" actionType="DECISION" parameter="ProcessContext::MainBO.boOrderMeta.sdoSubType">
+        <Case value="OrderEntry" action="setOrderConfirmationPrintId" />
+        <CaseElse action="setPrintIdByReportPolicy" />
+      </Action>
+      <!-- Redirect to OrderConfirmationPDF for all report policies, action is needed for extensibility reasons -->
+      <Action name="setPrintIdByReportPolicy" actionType="DECISION" parameter="ProcessContext::MainBO.boOrderMeta.reportPolicy">
+        <Case value="Confirmation" action="setOrderConfirmationPrintId" />
+        <CaseElse action="setOrderConfirmationPrintId" />
+      </Action>
+      <Action actionType="LOGIC" name="setOrderConfirmationPrintId" call="ProcessContext::MainBO.determinePrintId">
+        <Return name="ProcessContext::PrintId" />
+        <TransitionTo action="previewDocument" />
+      </Action>
+      <Action name="previewDocument" actionType="PRINTV2" printId="ProcessContext::PrintId" locale="ApplicationContext::user.languageSpoken" showShareButton="true" watermark="ProcessContext::BoOrderPrintTextItems.documentStatus" generateAndSave="ProcessContext::BoOrderPrintTextItems.printV2GenerateAndSave">
+        <Parameters>
+          <Input name="order" value="ProcessContext::MainBO" />
+          <Input name="salesOrg" value="ApplicationContext::SalesOrg" />
+          <Input name="textItems" value="ProcessContext::BoOrderPrintTextItems" />
+          <Input name="blobPkey" value="ProcessContext::BoOrderPrintTextItems.blobPKey" />
+          <Input name="signature1" value="ProcessContext::BoOrderPrintTextItems.signature1MediaPath" />
+        </Parameters>
+        <Return name="ProcessContext::FinalPath" />
+        <TransitionTo action="CheckIfPrintGenerationRequired" />
+      </Action>
+      <Action name="CheckIfPrintGenerationRequired" actionType="DECISION" parameter="ProcessContext::FinalPath">
+        <CaseEmpty action="checkIfReleased" />
+        <CaseElse action="GeneratePrintInvoicePDF" />
+      </Action>
+      <Action name="checkIfReleased" actionType="DECISION" parameter="ProcessContext::IsReleased">
+        <Case value="true" action="CheckIfNeedsSplitting" />
+        <CaseElse action="ShowHeader_Decision" />
+      </Action>
+      <Action actionType="LOGIC" name="GeneratePrintInvoicePDF" call="ProcessContext::MainBO.createPrintInvoicePDF">
+        <Parameters>
+          <Input name="finalPath" value="ProcessContext::FinalPath" />
+          <Input name="blobPkey" value="ProcessContext::BoOrderPrintTextItems.blobPKey" />
+        </Parameters>
+        <TransitionTo action="setPhaseInBeforeSave" />
+      </Action>
+      <!-- END PRINTING -->
+      <Action actionType="LOGIC" name="ProcessValidateReasonCode" call="ProcessContext::MainBO.processValidateReasonCode">
+        <Return name="ProcessContext::CancelReleaseProcess" />
+        <TransitionTo action="CheckCancelReleaseReasonCode" />
+      </Action>
+      <Action name="CheckCancelReleaseReasonCode" actionType="DECISION" parameter="ProcessContext::CancelReleaseProcess">
+        <Case value="Cancel" action="CancelRelease" />
+        <CaseElse action="ProcessForcedRecalc" />
+      </Action>
+      <Action actionType="LOGIC" name="ProcessForcedRecalc" call="ProcessContext::MainBO.processForcedRecalc">
+        <Return name="ProcessContext::CancelReleaseProcess" />
+        <TransitionTo action="CheckCancelRelease" />
+      </Action>
+      <Action name="CheckCancelRelease" actionType="DECISION" parameter="ProcessContext::CancelReleaseProcess">
+        <Case value="Cancel" action="CancelRelease" />
+        <CaseElse action="Release_ValidateBeforeReleaseProcess" />
+      </Action>
+      <!-- Integration of release process -->
+      <Action name="Release_ValidateBeforeReleaseProcess" actionType="VALIDATION">
+        <Validations>
+          <Validation name="ProcessContext::MainBO.doValidateAsync" />
+        </Validations>
+        <TransitionTo action="Release_CheckValidationResultforReleaseProc" />
+      </Action>
+      <Action name="Release_CheckValidationResultforReleaseProc" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="setReleaseValidationDone" />
+        <CaseElse action="cancelRelease" />
+      </Action>
+      <Action actionType="LOGIC" name="setReleaseValidationDone" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::MainBO.ReleaseValidationDone" />
+        <TransitionTo action="OpenReleaseProcess" />
+      </Action>
+      <Action actionType="LOGIC" name="CreateReleaseBoBeforeSplitting" call="ProcessContext::MainBO.esCreateReleaseBoBeforeSplitting">
+        <TransitionTo action="ExecuteSplitting" />
+      </Action>
+      <Action actionType="PROCESS" name="OpenReleaseProcess" process="System::ReleaseHandlerProcess">
+        <Parameters>
+          <Input name="referenceObject" value="ProcessContext::MainBO" />
+        </Parameters>
+        <ReturnValues>
+          <Return name="ProcessContext::releaseProcessOutcome" value="releaseProcessOutcome" />
+        </ReturnValues>
+        <TransitionTo action="CheckReleaseCancelledByProcess" />
+      </Action>
+      <Action name="CheckReleaseCancelledByProcess" actionType="DECISION" parameter="ProcessContext::releaseProcessOutcome">
+        <Case value="Cancel" action="CancelRelease" />
+        <CaseElse action="CheckIfNeedsSplitting" />
+      </Action>
+      <Action actionType="DECISION" name="CheckIfNeedsSplitting" parameter="ProcessContext::MainBO.splittingOption">
+        <Case value="1" action="CreateReleaseBoBeforeSplitting" />
+        <CaseElse action="CheckIfPreviewButtonIsVisible" />
+      </Action>
+      <Action actionType="LOGIC" name="CheckIfPreviewButtonIsVisible" call="ProcessContext::MainBO.isPrintPreviewVisible">
+        <Return name="ProcessContext::PreviewButtonVisible" />
+        <TransitionTo action="DecisionOnPreviewButtonVisibility" />
+      </Action>
+      <Action actionType="DECISION" name="DecisionOnPreviewButtonVisibility" parameter="ProcessContext::PreviewButtonVisible">
+        <Case value="true" action="GeneratePrintPDF" />
+        <CaseElse action="setPhaseInBeforeSave" />
+      </Action>
+      <Action actionType="LOGIC" name="GeneratePrintPDF" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="yes" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::ReleaseInProgress" />
+        <TransitionTo action="CreateBoOrderPrintTextItems" />
+      </Action>
+      <Action actionType="LOGIC" name="setPhaseInBeforeSave" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::MainBO.SetPhaseInBeforeSave" />
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="LOGIC" name="ExecuteSplitting" call="ProcessContext::MainBO.executeSplitting">
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="LOGIC" name="CancelRelease" call="ProcessContext::MainBO.cancelRelease">
+        <Parameters />
+        <TransitionTo action="ShowHeader_Decision" />
+      </Action>
+      <!-- Release Information Review -->
+      <Action actionType="PROCESS" name="ReviewReleaseInformation" process="System::ReleaseHandlerProcess">
+        <Parameters>
+          <Input name="referenceObject" value="ProcessContext::MainBO" />
+          <Input name="readOnlyMode" type="Literal" value="1" />
+        </Parameters>
+        <TransitionTo action="ShowHeader_Decision" />
+      </Action>
+      <Action name="SaveMainBO" actionType="SAVE">
+        <Parameters>
+          <Input name="boOrder" value="ProcessContext::mainBO" />
+        </Parameters>
+        <TransitionTo action="End" />
+      </Action>
+      <!-- Complex Pricing -->
+      <Action name="CalculateOrderValue" actionType="LOGIC" call="ProcessContext::MainBO.cpCalculate">
+        <TransitionTo action="refreshEARights" />
+      </Action>
+      <Action name="refreshEARights" actionType="LOGIC" call="BindingUtils.refreshEARights">
+        <Parameters>
+          <Input name="includeLists" type="Literal" value="0" />
+        </Parameters>
+      </Action>
+      <Action name="DisableRoundingOrderQuantityOn" actionType="LOGIC" call="ProcessContext::MainBO.toggleRoundingOrder">
+        <Parameters>
+          <Input name="value" type="Literal" value="ON" />
+        </Parameters>
+      </Action>
+      <Action name="DisableRoundingOrderQuantityOff" actionType="LOGIC" call="ProcessContext::MainBO.toggleRoundingOrder">
+        <Parameters>
+          <Input name="value" type="Literal" value="OFF" />
+        </Parameters>
+      </Action>
+      <!-- Display Print Invoice PDF as an attachment -->
+      <Action name="ShowPrintInvoicePDFAttachment" actionType="PROCESS" process="Order::ShowPrintInvoiceProcess">
+        <Parameters>
+          <Input name="loOrderAttachment" value="ProcessContext::MainBO.loOrderAttachment" />
+        </Parameters>
+        <TransitionTo action="ResetPrintAttachmentUsageFilter" />
+      </Action>
+      <Action name="ResetPrintAttachmentUsageFilter" actionType="LOGIC" call="ProcessContext::MainBO.loOrderAttachment.resetFilter">
+        <Parameters>
+          <Input name="field" value="usage" type="Literal" />
+        </Parameters>
+      </Action>
+      <!-- End of Release Information Review -->
+      <Action actionType="END" name="End" />
+    </Actions>
+  </Body>
+</Process>

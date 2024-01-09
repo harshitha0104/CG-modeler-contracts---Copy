@@ -1,0 +1,39 @@
+<DataSource name="DsLoProductInformationForInvalidated" backendSystem="sf" businessObjectClass="LoProductInformationForInvalidated" external="false" readOnly="true" editableEntity="Product2" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Order_Item__c" column="Id" />
+    <Attribute name="prdMainPKey" table="Product2" column="Id" />
+    <Attribute name="text1" table="Product2" column="Description_1_#Language#__c" />
+    <Attribute name="shortId" table="Product2" column="Product_Short_Code__c" />
+    <Attribute name="groupText" table="ProductGroup" column="Description_1_#Language#__c" />
+    <Attribute name="groupId" table="ProductGroup" column="Consumer_Goods_Product_Code__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Product2" alias="" idAttribute="Id" />
+    <Entity name="Order_Item__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Product2.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Order_Item__c.Product__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Product2" alias="ProductGroup">
+      <Join Type="inner">
+        <ComplexJoin><![CDATA[
+            Product2.#criterionAttribute# = ProductGroup.Consumer_Goods_Product_Code__c AND ProductGroup.Sales_Org__c = '#SalesOrg#'
+            ]]></ComplexJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[  
+        (#addCondSdoItemPKeys#)
+        AND Product2.Sales_Org__c = '#SalesOrg#'
+    ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Product2" attribute="Id" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="criterionAttribute" treatAs="sqlSnippet" />
+    <Parameter name="addCondSdoItemPKeys" treatAs="sqlSnippet" />
+    <Parameter name="sdoItemPKeys" type="LIST" />
+  </Parameters>
+</DataSource>

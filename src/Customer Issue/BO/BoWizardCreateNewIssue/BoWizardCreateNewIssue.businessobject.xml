@@ -1,0 +1,42 @@
+<BusinessObject name="BoWizardCreateNewIssue" schemaVersion="1.1" generateLoadMethod="false" generateCreateMethod="true">
+  <DataSource name="DsBoWizardCreateNewIssue" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="customerPKey" type="DomPKey" />
+    <SimpleProperty name="callCustomerPKey" type="DomPKey" />
+    <SimpleProperty name="svcRequestMetaPKey" type="DomPKey" />
+    <SimpleProperty name="isManagedCustomer" type="DomBool" />
+    <SimpleProperty name="isSubstituted" type="DomBool" />
+    <SimpleProperty name="substitutedUsrPKey" type="DomPKey" />
+    <SimpleProperty name="hasSubstitute" type="DomBool" />
+    <SimpleProperty name="callPKey" type="DomPKey" />
+    <SimpleProperty name="text" type="DomText" />
+    <SimpleProperty name="dueDate" type="DomDate" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups>
+    <ObjectLookup name="luCustomer" objectClass="LuCustomer" dataSourceProperty="customerPKey" lookupProperty="pKey" loadMode="onDemand" />
+    <ObjectLookup name="luSvcRequestMeta" objectClass="LuSvcRequestMeta" dataSourceProperty="svcRequestMetaPKey" lookupProperty="pKey" loadMode="onDemand" />
+  </ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="setEARights" />
+    <Method name="reloadManagementInformation" />
+    <Method name="checkSubstitution" />
+  </Methods>
+  <Validations>
+    <Validation name="validateNotEmpty" />
+    <Validation name="validateDueDate" />
+    <Validation name="validateSub" />
+  </Validations>
+</BusinessObject>

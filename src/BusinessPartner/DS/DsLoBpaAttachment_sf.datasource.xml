@@ -1,0 +1,34 @@
+<DataSource name="DsLoBpaAttachment" backendSystem="sf" businessObjectClass="LoBpaAttachment" external="false" readOnly="true" editableEntity="SF_File" schemaVersion="2.0" linkedEntityAttributeName="customerPKey">
+  <Attributes>
+    <Attribute name="pKey" table="SF_FileLink" column="Id" />
+    <DerivedAttribute name="type" value="replace(SF_File.PathOnClient, rtrim(SF_File.PathOnClient, replace(SF_File.PathOnClient, '.', '')), '')" />
+    <Attribute name="description" table="SF_File" column="Description" />
+    <Attribute name="customerPKey" table="SF_FileLink" column="ParentId" />
+    <Attribute name="mediaPath" table="SF_File" column="VersionData" />
+    <DerivedAttribute name="fileType" value="replace(PathOnClient, rtrim(PathOnClient, replace(PathOnClient, '.', '')), '')" />
+    <Attribute name="fileName" table="SF_File" column="PathOnClient" />
+    <Attribute name="usage" table="SF_File" column="Usage__c" />
+    <DerivedAttribute name="attachmentBlobPKey" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="SF_File" alias="" idAttribute="Id" />
+    <Entity name="SF_FileLink" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="SF_File.Id" comparator="eq" rightSideType="Attribute" rightSideValue="SF_FileLink.FileId" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+   SF_FileLink.ParentId = #referencePKey#
+   #addCond#
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="SF_File" attribute="CreatedDate" direction="DESC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="referencePKey" type="TEXT" />
+    <Parameter name="addCond" treatAs="sqlSnippet" />
+  </Parameters>
+</DataSource>

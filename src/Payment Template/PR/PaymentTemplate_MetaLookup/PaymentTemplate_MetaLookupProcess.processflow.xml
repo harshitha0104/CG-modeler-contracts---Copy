@@ -1,0 +1,33 @@
+<Process name="PaymentTemplate::MetaLookupProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="PaymentTypeList" type="LoPaymentType" />
+      </Declarations>
+      <Parameters>
+        <Input name="MetaType" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action actionType="LOAD" name="GetPaymentTypeList" type="LoPaymentType">
+        <Return name="ProcessContext::PaymentTypeList" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>PaymentTemplate::MetaLookupUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="End" />
+        </Events>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="metaPKey" value="Event.pKey" />
+          <Return name="text" value="Event.text" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

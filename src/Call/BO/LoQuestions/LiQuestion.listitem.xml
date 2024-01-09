@@ -1,0 +1,56 @@
+<ListItem name="LiQuestion">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="true" dataSourceProperty="pKey" />
+    <SimpleProperty name="jobDefinitionListText" type="DomText" storable="false" dataSourceProperty="jobDefinitionListText" />
+    <SimpleProperty name="questionText" type="DomText" storable="false" dataSourceProperty="questionText" />
+    <SimpleProperty name="dataType" type="DomString" storable="false" dataSourceProperty="dataType" />
+    <SimpleProperty name="dataLength" type="DomVariant" storable="false" dataSourceProperty="dataLength" />
+    <SimpleProperty name="toggleId" type="DomId" storable="false" dataSourceProperty="toggleId" />
+    <SimpleProperty name="value" type="DomVariant" storable="true" dataSourceProperty="value" />
+    <SimpleProperty name="defaultValue" type="DomVariant" storable="false" dataSourceProperty="defaultValue" />
+    <SimpleProperty name="useStepper" type="DomBool" storable="false" dataSourceProperty="useStepper" />
+    <SimpleProperty name="stepSize" type="DomDecimal" storable="false" dataSourceProperty="stepSize" />
+    <SimpleProperty name="considerMinValue" type="DomBool" storable="false" dataSourceProperty="considerMinValue" />
+    <SimpleProperty name="minValue" type="DomString" storable="false" dataSourceProperty="minValue" />
+    <SimpleProperty name="minDatePolicy" type="DomJobDatePolicy" storable="false" dataSourceProperty="minDatePolicy" />
+    <SimpleProperty name="considerMaxValue" type="DomBool" storable="false" dataSourceProperty="considerMaxValue" />
+    <SimpleProperty name="maxValue" type="DomString" storable="false" dataSourceProperty="maxValue" />
+    <SimpleProperty name="decimalPlaces" type="DomSmallInteger" storable="false" dataSourceProperty="decimalPlaces" />
+    <SimpleProperty name="maxDatePolicy" type="DomJobDatePolicy" storable="false" dataSourceProperty="maxDatePolicy" />
+    <SimpleProperty name="posId" type="DomPKey" storable="false" dataSourceProperty="posId" />
+    <SimpleProperty name="bpaMainPKey" type="DomPKey" storable="true" dataSourceProperty="bpaMainPKey" />
+    <SimpleProperty name="clbMainPKey" type="DomPKey" storable="true" dataSourceProperty="clbMainPKey" />
+    <SimpleProperty name="done" type="DomJobDone" storable="true" dataSourceProperty="done" />
+    <SimpleProperty name="jobActionSuccess" type="DomJobAction" storable="true" dataSourceProperty="jobActionSuccess" />
+    <SimpleProperty name="jobDefinitionMetaPKey" type="DomPKey" storable="true" dataSourceProperty="jobDefinitionMetaPKey" />
+    <SimpleProperty name="jobDefinitionPKey" type="DomPKey" storable="true" dataSourceProperty="jobDefinitionPKey" />
+    <SimpleProperty name="jobListPKey" type="DomPKey" storable="true" dataSourceProperty="jobListPKey" />
+    <SimpleProperty name="lastValue" type="DomVariant" storable="true" dataSourceProperty="lastValue" />
+    <SimpleProperty name="mandatory" type="DomInteger" storable="true" dataSourceProperty="mandatory" />
+    <SimpleProperty name="mandatoryImageId" type="DomString" storable="true" dataSourceProperty="mandatoryImageId" />
+    <SimpleProperty name="manual" type="DomBool" storable="true" dataSourceProperty="manual" />
+    <SimpleProperty name="prdMainPKey" type="DomPKey" storable="true" dataSourceProperty="prdMainPKey" />
+    <SimpleProperty name="sort" type="DomInteger" storable="true" dataSourceProperty="sort" />
+    <SimpleProperty name="visitDate" type="DomDate" storable="true" dataSourceProperty="visitDate" />
+    <SimpleProperty name="visitTime" type="DomTime" storable="true" dataSourceProperty="visitTime" />
+    <SimpleProperty name="clbPOSCheckPKey" type="DomPKey" storable="true" dataSourceProperty="clbPOSCheckPKey" />
+    <SimpleProperty name="pOS" type="DomBool" storable="true" dataSourceProperty="pOS" />
+    <SimpleProperty name="listed" type="DomBool" storable="true" dataSourceProperty="listed" />
+    <SimpleProperty name="planned" type="DomBool" storable="true" dataSourceProperty="planned" />
+    <SimpleProperty name="history" type="DomBool" storable="true" dataSourceProperty="history" />
+    <SimpleProperty name="prdPOSContentPKey" type="DomPKey" storable="true" dataSourceProperty="prdPOSContentPKey" />
+    <SimpleProperty name="targetValue" type="DomVariant" storable="true" dataSourceProperty="targetValue" />
+    <SimpleProperty name="thresholdViolation" type="DomJobThresholdViolation" storable="true" dataSourceProperty="thresholdViolation" />
+    <SimpleProperty name="jobMetaPKey" type="DomPKey" storable="true" dataSourceProperty="jobMetaPKey" />
+    <SimpleProperty name="cameraIcon" type="DomString" dataSourceProperty="cameraIcon" />
+    <SimpleProperty name="pictureCount" type="DomString" />
+    <SimpleProperty name="conditionAnswers" type="DomString" dataSourceProperty="conditionAnswers" />
+    <SimpleProperty name="conditionOperator" type="DomString" dataSourceProperty="conditionOperator" />
+    <SimpleProperty name="condition" type="DomPKey" dataSourceProperty="condition" />
+    <SimpleProperty name="considerScore" type="DomString" dataSourceProperty="considerScore" />
+    <SimpleProperty name="score" type="DomDecimal" dataSourceProperty="score" />
+    <SimpleProperty name="scoreAnswers" type="DomString" dataSourceProperty="scoreAnswers" />
+    <SimpleProperty name="jobDefListPKey" type="DomPKey" dataSourceProperty="jobDefListPKey" />
+    <SimpleProperty name="visible" type="DomBool" dataSourceProperty="visible" />
+  </SimpleProperties>
+</ListItem>

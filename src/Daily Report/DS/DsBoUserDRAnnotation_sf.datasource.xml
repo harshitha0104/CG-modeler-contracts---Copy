@@ -1,0 +1,19 @@
+<DataSource name="DsBoUserDRAnnotation" backendSystem="sf" businessObjectClass="BoUserDRAnnotation" external="false" editableEntity="User_Document__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="User_Document__c" column="Id" />
+    <DerivedAttribute name="language" value="' '" />
+    <Attribute name="text" table="User_Document__c" column="Annotation__c" />
+    <DerivedAttribute name="usage" value="' '" />
+    <DerivedAttribute name="referencePKey" value="' '" />
+  </Attributes>
+  <Entities>
+    <Entity name="User_Document__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+      User_Document__c.Id = #usrDocPKey#
+   ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="usrDocPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

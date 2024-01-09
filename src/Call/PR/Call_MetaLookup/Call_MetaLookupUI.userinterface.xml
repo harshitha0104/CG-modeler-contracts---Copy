@@ -1,0 +1,34 @@
+<UIDescription name="Call::MetaLookupUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="CallCreateNewTitleId" defaultLabel="Call Type" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="CallMetaList" dataSource="ProcessContext::CallMetaList.Items[]">
+          <Items name="Items" itemPattern="CallCreateNewItemCallTemplate">
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemName" bindingId="clbText" />
+              </Col>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="clbText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="TemplateItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="metaType" value=".metaType" />
+                <Param name="id" value=".id" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

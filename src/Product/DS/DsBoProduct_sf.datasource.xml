@@ -1,0 +1,25 @@
+<DataSource name="DsBoProduct" businessObjectClass="BoProduct" backendSystem="sf" external="false" editableEntity="Product2" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Product2" column="Id" />
+    <Attribute name="text1" table="Product2" column="Description_1_#Language#__c" />
+    <Attribute name="id" table="Product2" column="Consumer_Goods_Product_Code__c" />
+    <Attribute name="shortId" table="Product2" column="Product_Short_Code__c" />
+    <Attribute name="ean" table="Product2" column="GTIN__c" />
+    <Attribute name="foreignProduct" table="Product2" column="Competitive_Product__c" />
+    <Attribute name="prdType" table="Product2" column="Product_Type__c" />
+    <Attribute name="taxClassification" table="Product2" column="Tax_Classification__c" />
+    <Attribute name="category" table="Product2" column="Category__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Product2" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+        Product2.Id = #pKey#
+        AND Product2.Sales_Org__c = '#SalesOrg#'
+      ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <GroupBy></GroupBy>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT" />
+  </Parameters>
+</DataSource>

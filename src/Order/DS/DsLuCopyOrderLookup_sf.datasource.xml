@@ -1,0 +1,18 @@
+<DataSource name="DsLuCopyOrderLookup" backendSystem="sf" businessObjectClass="LuCopyOrderLookup" external="false" readOnly="true" editableEntity="Order__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Order__c" column="Id" />
+    <Attribute name="sdoMetaPKey" table="Order__c" column="Order_Template__c" />
+    <Attribute name="ordererPKey" table="Order__c" column="Order_Account__c" />
+    <Attribute name="headerDiscount" table="Order__c" column="Header_Discount_Percentage__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Order__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+		Id = #pKey#
+     ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="pKey" type="TEXT"/>
+  </Parameters>
+</DataSource>

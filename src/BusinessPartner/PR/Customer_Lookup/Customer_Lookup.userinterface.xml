@@ -1,0 +1,73 @@
+<UIDescription name="Customer::Lookup" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionDialogPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="CustomerLookupTitleId" defaultLabel="Customers" />
+      </Bindings>
+      <MenuItems>
+        <MenuItem itemId="SortByDistance" directlyVisible="false">
+          <Bindings>
+            <Resource target="Text" type="Label" id="SortByDistanceId" defaultLabel="Sort by Distance" />
+            <Resource target="Icon" type="Image" id="Distance" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="sortByDistance" />
+          </Events>
+        </MenuItem>
+        <MenuItem itemId="SortByAlphabet" directlyVisible="false">
+          <Bindings>
+            <Resource target="Text" type="Label" id="SortByAlphabetId" defaultLabel="Sort Alphabetically" />
+            <Resource target="Icon" type="Image" id="SortDarkGrey24Inv" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="sortByAlphabet" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="CustomerList" groupBy="grouping1" indexBar="true" searchable="true" dataSource="ProcessContext::CustomerList.Items[]">
+          <Items name="Items" itemPattern="CustomerLookupItem">
+            <Bindings>
+              <Binding target="Name" type="Text" binding=".name" bindingMode="ONE_WAY" />
+              <Binding target="MainAddress" type="Text" binding=".mainAddress" bindingMode="ONE_WAY" />
+              <Binding target="Distance" type="Text" binding=".distanceText" bindingMode="ONE_WAY" />
+            </Bindings>
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemIdentifier" bindingId="Name" />
+                <Row layoutType="itemSecondary" bindingId="MainAddress" />
+              </Col>
+              <Col width="2em">
+                <Row layoutType="itemValue" bindingId="Spacer" />
+              </Col>
+              <Col align="right">
+                <Row layoutType="itemIdentifier pull-right" bindingId="Distance" />
+              </Col>
+            </ItemListLayout>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+                <Param name="name" value=".name" />
+                <Param name="substitutedUsrPKey" value=".substitutedUsrPKey" />
+                <Param name="subValidFrom" value=".subValidFrom" />
+                <Param name="subValidThru" value=".subValidThru" />
+                <Param name="isManagedCustomer" value=".managed" />
+                <Param name="managementRelationValidFrom" value=".managementRelationValidFrom" />
+                <Param name="managementRelationValidThru" value=".managementRelationValidThru" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+          <SearchAttributes>
+            <SearchAttribute name="Name" />
+            <SearchAttribute name="MainAddress" />
+            <SearchAttribute name="CustomerId" />
+          </SearchAttributes>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

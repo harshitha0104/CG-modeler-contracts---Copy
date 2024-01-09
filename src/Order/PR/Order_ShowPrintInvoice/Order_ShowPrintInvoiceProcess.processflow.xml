@@ -1,0 +1,26 @@
+<Process name="Order::ShowPrintInvoiceProcess" defaultAction="ShowPrintInvoiceAttachment" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations />
+      <Parameters>
+        <Input name="loOrderAttachment" type="LoOrderAttachment" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="FilterPrintPDFAttachments" actionType="LOGIC" call="ProcessContext::loOrderAttachment.setFilter">
+        <Parameters>
+          <Input name="fieldName" value="usage" type="Literal" />
+          <Input name="value" value="Printout" type="Literal" />
+          <Input name="operator" value="EQ" type="Literal" />
+        </Parameters>
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="ShowPrintInvoiceAttachment" actionType="VIEW">
+        <UIDescription>Order::ShowPrintInvoiceUI</UIDescription>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

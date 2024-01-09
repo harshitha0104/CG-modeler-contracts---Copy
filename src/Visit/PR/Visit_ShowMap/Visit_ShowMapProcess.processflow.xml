@@ -1,0 +1,23 @@
+<Process name="Visit::ShowMapProcess" defaultAction="showView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations></Declarations>
+      <Parameters>
+        <Input name="CardVisits_VisitList" type="Object" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="InitializeDisplayTrafficWithUserSetting" actionType="LOGIC" call="ApplicationContext::User.boUserSettings.getClbDisplayTrafficInMapMobility">
+        <Return name="ProcessContext::DisplayTraffic" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>Visit::ShowMapUI</UIDescription>
+      </Action>
+      
+    </Actions>
+  </Body>
+</Process>

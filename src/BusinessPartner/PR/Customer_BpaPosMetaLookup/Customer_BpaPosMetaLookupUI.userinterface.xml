@@ -1,0 +1,32 @@
+<UIDescription name="Customer::BpaPosMetaLookupUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="BpaPosMetaLookupTitleId" defaultLabel="POS" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="BpaPosMetaMetaList" dataSource="ProcessContext::BpaPosMetaList.Items[]">
+          <Items name="Items" itemPattern="BpaPosMetaTemplates">
+            <ItemListLayout>
+              <Col>
+                <Row layoutType="itemTitle" bindingId="IdText" />
+              </Col>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="IdText" type="Text" binding=".id" bindingMode="ONE_WAY" />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="TemplateItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

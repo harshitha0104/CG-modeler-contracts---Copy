@@ -1,0 +1,17 @@
+<DataSource name="DsBoPrmAnchor" businessObjectClass="BoPrmAnchor" distinct="false" readonly="false" external="false" editableEntity="PrmAnchor" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="PrmAnchor" column="PKey" />
+    <Attribute name="text" table="PrmAnchor" column="Text" />
+    <Attribute name="prmPromotionPKey" table="PrmAnchor" column="PrmPromotionPKey" />
+  </Attributes>
+  <Entities>
+    <Entity name="PrmAnchor" alias="" idAttribute="PKey" />
+  </Entities>
+  <QueryCondition><![CDATA[
+   PrmAnchor.PrmPromotionPKey = #prmPromotionPKey#
+  ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters>
+    <Parameter name="prmPromotionPKey" type="TEXT" />
+  </Parameters>
+</DataSource>

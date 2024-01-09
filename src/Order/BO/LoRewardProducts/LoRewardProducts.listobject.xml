@@ -1,0 +1,16 @@
+<ListObject name="LoRewardProducts" generateLoadMethod="true" schemaVersion="1.1">
+  <!-- this LO is used for reward products and for tactic products determined via a reward classification --> 
+  <DataSource name="DsLoRewardProducts" />
+  <Item objectClass="LiRewardProducts" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="loadAsync" />
+    <Method name="saveAsync" />
+    <Method name="getTotalQuantityInReward" />
+  </Methods>
+</ListObject>

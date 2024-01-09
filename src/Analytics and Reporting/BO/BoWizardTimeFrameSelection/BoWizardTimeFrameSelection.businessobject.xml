@@ -1,0 +1,32 @@
+<BusinessObject name="BoWizardTimeFrameSelection"  generateLoadMethod="true" generateCreateMethod="true">
+  <DataSource name="DsBoWizardTimeFrameSelection" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="startDate" type="DomDate" dataSourceProperty="startDate" />
+    <SimpleProperty name="endDate" type="DomDate" dataSourceProperty="endDate" />
+    <SimpleProperty name="userPKey" type="DomPKey" dataSourceProperty="userPKey" />
+    <SimpleProperty name="userName" type="DomString" dataSourceProperty="userName" />
+    <SimpleProperty name="isSV" type="DomBool" dataSourceProperty="isSV" />
+  </SimpleProperties>
+  <ObjectLookups />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="createAsync" />
+    <Method name="setEARights" />
+    <Method name="update" />
+  </Methods>
+  <Validations>
+    <Validation name="validateDate" />
+    <Validation name="validateUser" />
+    <Validation name="validate" />    
+  </Validations>
+</BusinessObject>

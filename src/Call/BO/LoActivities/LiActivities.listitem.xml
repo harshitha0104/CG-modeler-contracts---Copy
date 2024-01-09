@@ -1,0 +1,18 @@
+<ListItem name="LiActivities">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="icon" type="DomText" storable="false" dataSourceProperty="icon" />
+    <SimpleProperty name="slogan" type="DomText" storable="false" dataSourceProperty="slogan" />
+    <SimpleProperty name="validFrom" type="DomDate" storable="false" dataSourceProperty="validFrom" />
+    <SimpleProperty name="validThru" type="DomDate" storable="false" dataSourceProperty="validThru" />
+    <SimpleProperty name="callType" type="DomText" storable="false" dataSourceProperty="callType" />
+    <SimpleProperty name="alertIcon" type="DomText" storable="false" dataSourceProperty="alertIcon" />
+    <SimpleProperty name="activityTemplate" type="DomText" storable="false" dataSourceProperty="activityTemplate" />
+    <SimpleProperty name="promotionDateFrom" type="DomDate" storable="true" dataSourceProperty="promotionDateFrom" />
+    <SimpleProperty name="promotionDateThru" type="DomValidThru" storable="true" dataSourceProperty="promotionDateThru" />
+    <SimpleProperty name="promotionId" type="DomPKey" storable="true" dataSourceProperty="promotionId" />
+    <SimpleProperty name="promotionSlogan" type="DomText" storable="true" dataSourceProperty="promotionSlogan" />
+    <SimpleProperty name="promotionIcon" type="DomText" storable="false" dataSourceProperty="promotionIcon" />
+    <SimpleProperty name="dateRange" type="DomText" />
+  </SimpleProperties>
+</ListItem>

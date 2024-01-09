@@ -1,0 +1,13 @@
+<ListItem name="LiLogistics">
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="piecesPerParentUnit" type="DomPrdPiecesPerUnit" dataSourceProperty="piecesPerParentUnit" />
+    <SimpleProperty name="piecesPerSmallestUnit" type="DomPrdPiecesPerUnit" dataSourceProperty="piecesPerSmallestUnit" />
+    <SimpleProperty name="unitType" type="DomPrdLogisticUnit" dataSourceProperty="unitType" />
+    <SimpleProperty name="cndCpVolume" type="DomDecimal" dataSourceProperty="cndCpVolume" />
+    <SimpleProperty name="cndCpWeight" type="DomDecimal" dataSourceProperty="cndCpWeight" />
+    <SimpleProperty name="eAN" type="DomPrdNumber" dataSourceProperty="eAN" />
+    <SimpleProperty name="empties" type="DomText" dataSourceProperty="empties" />
+    <SimpleProperty name="emptiesQuantity" type="DomDecimal" dataSourceProperty="emptiesQuantity" />
+  </SimpleProperties>
+</ListItem>

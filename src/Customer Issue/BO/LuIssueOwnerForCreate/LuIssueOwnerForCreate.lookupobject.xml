@@ -1,0 +1,11 @@
+<LookupObject name="LuIssueOwnerForCreate" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuIssueOwnerForCreate" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" storable="false" dataSourceProperty="pKey" />
+    <SimpleProperty name="usrMainPKey" type="DomPKey" storable="false" dataSourceProperty="usrMainPKey" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+  </Methods>
+</LookupObject>

@@ -1,0 +1,52 @@
+<BusinessObject name="BoWizardRescheduleCall" schemaVersion="1.1"  generateLoadMethod="true" generateCreateMethod="true">
+  <DataSource name="DsBoCall" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="dateFrom" type="DomDate" dataSourceProperty="dateFrom" />
+    <SimpleProperty name="dateThru" type="DomDate" dataSourceProperty="dateThru" />
+    <SimpleProperty name="timeFrom" type="DomTime" storable="true" dataSourceProperty="timeFrom">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="timeThru" type="DomTime" storable="true" dataSourceProperty="timeThru">
+      <Events>
+        <Event name="onChanged" eventHandler="onPropertyChanged" />
+      </Events>
+    </SimpleProperty>
+    <SimpleProperty name="allDay" type="DomBool" dataSourceProperty="allDay" />
+    <SimpleProperty name="duration" type="DomInteger" />
+    <SimpleProperty name="hasSubstitute" type="DomBool" />
+    <SimpleProperty name="isSubstituted" type="DomBool" />
+    <SimpleProperty name="isManaged" type="DomBool" />
+    <SimpleProperty name="customerPKey" type="DomPKey" />
+    <SimpleProperty name="substitutedFrom" type="DomDate" />
+    <SimpleProperty name="substitutedThru" type="DomDate" />
+    <SimpleProperty name="managementRelationValidFrom" type="DomDate" />
+    <SimpleProperty name="managementRelationValidThru" type="DomDate" />
+    <SimpleProperty name="calledByWizard" type="DomBool" />
+    <SimpleProperty name="timeFromChanged" type="DomBool" />
+    <SimpleProperty name="callBo" type="Object" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeInitialize" />
+    <Method name="afterInitialize" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeCreateAsync" />
+    <Method name="afterCreateAsync" />
+    <Method name="loadManagementInformation" />
+    <Method name="onPropertyChanged" />
+    <Method name="setEARights" />
+  </Methods>
+  <Validations>
+    <Validation name="validateRescheduleCall" />
+  </Validations>
+</BusinessObject>

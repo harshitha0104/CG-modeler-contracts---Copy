@@ -1,0 +1,15 @@
+<LookupObject name="LuProduct">
+  <DataSource name="DsLuProduct" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="prdId" type="DomId" storable="false" dataSourceProperty="prdId" />
+    <SimpleProperty name="shortText" type="DomText" dataSourceProperty="shortText" />
+    <SimpleProperty name="text1" type="DomText" dataSourceProperty="text1" />
+    <SimpleProperty name="text2" type="DomText" dataSourceProperty="text2" />
+    <SimpleProperty name="groupId" type="DomId" dataSourceProperty="groupId" />
+    <SimpleProperty name="groupShortText" type="DomText" dataSourceProperty="groupShortText" />
+    <SimpleProperty name="eAN" type="DomPrdNumber" dataSourceProperty="eAN" />
+    <SimpleProperty name="category" type="DomPrdCategory" dataSourceProperty="category" />
+  </SimpleProperties>
+  <Methods></Methods>
+</LookupObject>

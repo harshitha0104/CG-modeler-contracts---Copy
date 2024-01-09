@@ -1,0 +1,815 @@
+<UIPluginV2 name="CardReportingUiPluginV2">
+  <Interface>
+    <Property id="maximizedMode" />
+    <Property id="mode" />
+    <Property id="unsuccessfulVisitRate" />
+    <Property id="visitRate" />
+    <Property id="selectedDate" />
+    <Property id="currentDate" />
+    <List id="salesData">
+      <Property id="pKey" />
+      <Property id="netSales" />
+      <Property id="year " />
+      <Property id="month" />
+    </List>
+  </Interface>
+  <Labels>
+    <Label id="ThousandSign_Chart" />
+    <Label id="CardReportingSales_Title" />
+    <Label id="CardReportingSales_SubTitle" />
+    <Label id="CardReportingSales_Currency" />
+    <Label id="CardReportingSales_January" />
+    <Label id="CardReportingSales_February" />
+    <Label id="CardReportingSales_March" />
+    <Label id="CardReportingSales_April" />
+    <Label id="CardReportingSales_May" />
+    <Label id="CardReportingSales_June" />
+    <Label id="CardReportingSales_July" />
+    <Label id="CardReportingSales_August" />
+    <Label id="CardReportingSales_September" />
+    <Label id="CardReportingSales_October" />
+    <Label id="CardReportingSales_November" />
+    <Label id="CardReportingSales_December" />
+    <Label id="CardReportingUnsuccessfulVisits_Title" />
+    <Label id="CardReportingUnsuccessfulVisits_SubTitleTour" />
+    <Label id="CardReportingUnsuccessfulVisits_SubTitleRetail" />
+    <Label id="CardReportingVisitRate_Title" />
+    <Label id="CardReportingVisitRate_SubTitleTour" />
+    <Label id="CardReportingVisitRate_SubTitleRetail" />
+    <Label id="CardReportingVisitRate_SubTitleRetail_CurrentDate" />
+  </Labels>
+  <Libraries>
+    <Library name="C3JS" />
+    <Library name="D3JS" />
+  </Libraries>
+  <UIComponentHTML name="UIComponentHTML"><![CDATA[
+    <div class="WrappingContainer">
+        <div id="Component_sales" class="ComponentContainer">
+            <div id="TitleContainer_sales">
+                <span id="Title_sales"></span>
+                <span id="Subtitle_sales"></span>
+            </div>
+            <div id="ChartContainer_sales" class="SalesChart">
+                <div id="Chart_sales"></div>
+            </div>
+        </div>
+        <div id="Component_unsuccessfulVisits" class="ComponentContainer">
+            <div>
+                <span id="Title_unsuccessfulVisits"></span>
+                <span id="Subtitle_unsuccessfulVisits"></span>
+            </div>
+            <div id="ChartContainer_unsuccessfulVisits" class="GaugeChart">
+                <div id="Chart_unsuccessfulVisits"></div>
+            </div>
+        </div>
+        <div id="Component_visitRate" class="ComponentContainer">
+            <div>
+                <span id="Title_visitRate"></span>
+                <span id="Subtitle_visitRate"></span>
+            </div>
+            <div id="ChartContainer_visitRate" class="GaugeChart">
+                <div id="Chart_visitRate"></div>
+            </div>
+        </div>
+    </div>
+    ]]></UIComponentHTML>
+  <UIComponentCSS name="UIComponentCSS"><![CDATA[
+	
+	/* overall wrapper class to remove scroll-bar */
+	.WrappingContainer {
+		overflow: hidden;
+	}
+
+    /* component wrapper class for layouting */
+	.ComponentContainer {
+		padding-top: 12px;
+	}
+	
+	/* sales chart */
+	.SalesChart {
+		/*background-color: #FFFFFF;*/
+	}
+
+    .SalesChart .c3 line  {
+    	display: none;
+    }
+
+    .SalesChart .c3-axis-x .domain {
+        display: none;
+    }
+
+    .SalesChart .c3-axis-x-label {
+
+    }
+
+	/* gauge chart */
+	.GaugeChart {
+		/*background-color: #FFFFFF;*/
+	}
+
+    .GaugeChart .c3-legend-item {
+       font: 12px Regular; 
+    }
+  	.GaugeChart .c3-gauge-value {
+       font: 16px Regular; 
+    }
+    .GaugeChart .c3-chart-arcs-gauge-min, .GaugeChart .c3-chart-arcs-gauge-max {
+       font: 11px Regular; 
+    }
+
+    /* ######################
+      ###     FONTS      ###
+      ###################### */
+
+    @font-face {
+      font-family: "Regular";
+	  font-weight: 400;
+      src: local("Arial");
+    }
+
+    @font-face {
+      font-family: "Light";
+	  font-weight: 300;
+      src: local("Arial");
+    }
+
+    @font-face {
+      font-family: "Medium";
+	  font-weight: 500;
+      src: local("Arial");
+    }
+
+    ]]></UIComponentCSS>
+  <UIComponentJS name="UIComponentJS"><![CDATA[
+
+let config_sales = {};
+
+let config_unsuccessfulVisits = {
+    measures: [10, 50, 100],
+    measureColors: [],
+};
+
+let config_visitRate = {
+    measures: [60, 90, 100],
+    measureColors: [],
+};
+
+let chartReference_sales;
+let chartReference_unsuccessfulVisits;
+let chartReference_visitRate;
+
+const selectors = {
+    // sales
+    component_sales: "#Component_sales",
+
+    title_sales: "#Title_sales",
+    subTitle_sales: "#Subtitle_sales",
+
+    chartContainer_sales: "#ChartContainer_sales",
+    chart_sales: "#Chart_sales",
+
+    // unsuccessfulVisits
+    component_unsuccessfulVisits: "#Component_unsuccessfulVisits",
+    title_unsuccessfulVisits: "#Title_unsuccessfulVisits",
+    subTitle_unsuccessfulVisits: "#Subtitle_unsuccessfulVisits",
+
+    chartContainer_unsuccessfulVisits: "#ChartContainer_unsuccessfulVisits",
+    chart_unsuccessfulVisits: "#Chart_unsuccessfulVisits",
+
+    // visitRate  
+    component_visitRate: "#Component_visitRate",
+    title_visitRate: "#Title_visitRate",
+    subTitle_visitRate: "#Subtitle_visitRate",
+
+    chartContainer_visitRate: "#ChartContainer_visitRate",
+    chart_visitRate: "#Chart_visitRate",
+};
+
+function connectCallback() {
+    renderChart_sales();
+    renderChart_unsuccessfulVisits();
+    renderChart_visitRate();
+}
+
+function disconnectCallback() {
+    if (PluginManager.helpers.isDefined(chartReference_sales)) {
+        chartReference_sales.destroy();
+    }
+    if (PluginManager.helpers.isDefined(chartReference_unsuccessfulVisits)) {
+        chartReference_unsuccessfulVisits.destroy();
+    }
+    if (PluginManager.helpers.isDefined(chartReference_visitRate)) {
+        chartReference_visitRate.destroy();
+    }
+}
+
+function renderCallback() {
+    inputChanged_sales();
+    inputChanged_unsuccessfulVisits();
+    inputChanged_visitRate();
+}
+
+/*############################
+   ###    sales chart       ###
+   ############################*/
+
+function resize_sales() {
+    // get new size for sales, compare with current size and resize if required only
+    var sizeJson = getSize_sales();
+    if (sizeJson.width !== config_sales.sizeJson.width || sizeJson.height !== config_sales.sizeJson.height) {
+        chartReference_sales.resize(sizeJson);
+        config_sales.sizeJson = sizeJson;
+    }
+}
+
+function setConfig_sales() {
+    config_sales = {
+        tickStyle: {
+            font: PluginManager.pluginConfiguration.FontRegular10,
+            color: PluginManager.pluginConfiguration.Color9,
+        },
+        titleStyle: {
+            font: PluginManager.pluginConfiguration.FontMedium14,
+            color: PluginManager.pluginConfiguration.Color9,
+        },
+        subTitleStyle: {
+            font: PluginManager.pluginConfiguration.FontRegular12,
+            color: PluginManager.pluginConfiguration.Color22,
+            'padding-left': "10px",
+        },
+        barColors: [
+            PluginManager.pluginConfiguration.Color4,
+            PluginManager.pluginConfiguration.Color12,
+        ],
+        barLabelColors: [
+            PluginManager.pluginConfiguration.Color9,
+            PluginManager.pluginConfiguration.Color12,
+        ],
+    };
+}
+
+function changeBarLabelSize_sales() {
+    // Set size of axis labels
+    d3.select(".c3-texts-CY").selectAll("text").style("font", getLabelSize_sales());
+    d3.select(".c3-texts-LY").selectAll("text").style("font", getLabelSize_sales());
+}
+
+function getLabelSize_sales() {
+    if (PluginManager.deviceInfo.isWindows) {
+        return PluginManager.pluginConfiguration.FontMedium14;
+    } else {
+        if (isMaximizedMode() &&
+            !PluginManager.deviceInfo.isPhone
+        ) {
+            return PluginManager.pluginConfiguration.FontRegular12;
+        } else {
+            return PluginManager.pluginConfiguration.FontRegular10;
+        }
+    }
+}
+
+function changeMonthLabelSize_sales() {
+    var svg = d3.select(selectors.chart_sales);
+    var text = svg.selectAll("text");
+    text.style("font", PluginManager.pluginConfiguration.FontRegular10);
+}
+
+function inputChanged_sales(existingJsonData) {
+
+    var jsonData;
+    if (PluginManager.helpers.isDefined(existingJsonData)) {
+        jsonData = existingJsonData;
+    } else {
+        jsonData = prepareData_sales(PluginManager.salesData.data);
+    }
+
+    var chart = chartReference_sales;
+
+    if (
+        PluginManager.helpers.isDefined(chart) &&
+        PluginManager.helpers.isDefined(chart.internal) &&
+        PluginManager.helpers.isDefined(chart.internal.cache)
+    ) {
+
+        // resize sales chart on demand
+        resize_sales();
+
+        chart.load({
+            columns: jsonData.data.columns,
+            done: function () {
+                changeBarLabelSize_sales();
+                changeMonthLabelSize_sales();
+            },
+        });
+
+        chart.axis.range(jsonData.axisRange);
+        chart.focus();
+
+        var chartDiv = d3.select(selectors.chart_sales);
+        var eventRect = chartDiv.selectAll(".c3-event-rect");
+
+        eventRect.on("mouseout", function (elem) { });
+    }
+}
+
+function renderChart_sales() {
+    // set config for sales chart
+    setConfig_sales();
+
+    var jsonData = prepareData_sales(PluginManager.salesData.data);
+
+    // Calculate dimensions of the chart
+    var sizeJson = getSize_sales();
+    config_sales.sizeJson = sizeJson;
+
+    var getBarColor_sales = function (color, d) {
+        return config_sales.barColors[(d.id && d.id == "LY") || d == "LY" ? 1 : 0];
+    };
+
+    var monthArray = [];
+    for (var i = 0; i < jsonData.months.length; i++) {
+        switch (jsonData.months[i]) {
+            case "1":
+                monthArray.push(PluginManager.locale.labels.CardReportingSales_January);
+                break;
+            case "2":
+                monthArray.push(PluginManager.locale.labels.CardReportingSales_February);
+                break;
+            case "3":
+                monthArray.push(PluginManager.locale.labels.CardReportingSales_March);
+                break;
+            case "4":
+                monthArray.push(PluginManager.locale.labels.CardReportingSales_April);
+                break;
+            case "5":
+                monthArray.push(PluginManager.locale.labels.CardReportingSales_May);
+                break;
+            case "6":
+                monthArray.push(PluginManager.locale.labels.CardReportingSales_June);
+                break;
+            case "7":
+                monthArray.push(PluginManager.locale.labels.CardReportingSales_July);
+                break;
+            case "8":
+                monthArray.push(PluginManager.locale.labels.CardReportingSales_August);
+                break;
+            case "9":
+                monthArray.push(PluginManager.locale.labels.CardReportingSales_September);
+                break;
+            case "10":
+                monthArray.push(PluginManager.locale.labels.CardReportingSales_October);
+                break;
+            case "11":
+                monthArray.push(PluginManager.locale.labels.CardReportingSales_November);
+                break;
+            case "12":
+                monthArray.push(PluginManager.locale.labels.CardReportingSales_December);
+                break;
+        }
+    }
+
+    //destroy chart object before setting new reference
+    if (PluginManager.helpers.isDefined(chartReference_sales)) {
+        chartReference_sales.destroy();
+    }
+
+    // Create Chart
+    chartReference_sales = c3.generate({
+        bindto: selectors.chart_sales,
+
+        data: {
+            columns: [[], []],
+            color: getBarColor_sales,
+            type: "bar",
+            labels: {
+                format: function (v) {
+                    return formatValue(v);
+                }
+            },
+        },
+
+        bar: {
+            width: {
+                ratio: 0.7,
+            },
+        },
+
+        size: sizeJson,
+
+        axis: {
+            rotated: true,
+            x: {
+                type: "category",
+                categories: monthArray,
+                show: true,
+            },
+            y: {
+                padding: {
+                    top: 50,
+                    bottom: 0,
+                },
+                show: false,
+                max: 1000,
+            },
+        },
+        grid: {
+            x: {
+                show: false,
+            },
+            y: {
+                show: false,
+            },
+        },
+        legend: {
+            show: false,
+        },
+        tooltip: {
+            show: false,
+        },
+    });
+
+    var title = PluginManager.locale.labels.CardReportingSales_Title;
+    var subtitle = PluginManager.locale.labels.CardReportingSales_SubTitle;
+
+    if (isMaximizedMode()) {
+        var component = document.getElementById(
+            selectors.component_sales.substring(1)
+        );
+        styleElement(component, {
+            "padding-left": "20px",
+			"padding-right": "20px",
+            //overflow: "auto"
+        });
+
+    }
+
+    var titleElement = document.getElementById(selectors.title_sales.substring(1));
+    styleElement(titleElement, config_sales.titleStyle, title);
+
+    var subtitleElement = document.getElementById(selectors.subTitle_sales.substring(1));
+    styleElement(subtitleElement, config_sales.subTitleStyle, subtitle);
+
+    // call inputChanged to first set of data
+    inputChanged_sales(jsonData);
+}
+
+function getSize_sales() {
+    let sizeJson;
+    var d3Container = d3.select(selectors.chartContainer_sales);
+
+    if (PluginManager.helpers.isDefined(d3Container)) {
+        //resize in case of orientation change
+        if (isMaximizedMode()) {
+            sizeJson = {
+                width:
+                    d3Container._groups[0][0].parentElement.parentElement.parentElement
+                        .offsetWidth * 0.9,
+                //hack: because card container is not rendered at this time height is not available ... uses width for calculating height
+                height:
+                    (d3Container._groups[0][0].parentElement.parentElement.parentElement
+                        .offsetWidth *
+                        0.75) /
+                    3,
+            };
+        } else {
+            sizeJson = {
+                width:
+                    d3Container._groups[0][0].parentElement.parentElement.parentElement
+                        .offsetWidth * 0.96,
+                //hack: because card container is not rendered at this time height is not available ... uses width for calculating height
+                height:
+                    d3Container._groups[0][0].parentElement.parentElement.parentElement
+                        .offsetWidth * 0.44,
+            };
+        }
+    }
+    return sizeJson;
+}
+
+function prepareData_sales(loCustomerSalesRevenue) {
+    var months = [];
+    var resultPrevYear = [];
+    var resultCurrYear = [];
+
+    var maxValue1 = 0;
+    var maxValue2 = 0;
+    var currentYear = parseInt(PluginManager.helpers.createDateToday().getUTCFullYear());
+    var prevYear = currentYear - 1;
+
+    if (PluginManager.helpers.isDefined(loCustomerSalesRevenue)) {
+        var items = loCustomerSalesRevenue;
+        var searchKeys = items[0].searchKeys.split(",");
+        var half_length = Math.ceil(searchKeys.length / 2);
+
+        var firstHalf = false;
+        var found = false;
+
+        for (var i = 0; i < searchKeys.length; i++) {
+            found = false;
+
+            if (i < searchKeys.length / 2) {
+                months.push(searchKeys[i].substring(0, searchKeys[i].indexOf("_")));
+                firstHalf = true;
+            } else {
+                firstHalf = false;
+            }
+
+            for (var j = 0; j < items.length; j++) {
+                if (items[j].pKey === searchKeys[i]) {
+                    if (firstHalf) {
+                        resultCurrYear.push(items[j].netSales);
+                    } else {
+                        resultPrevYear.push(items[j].netSales);
+                    }
+
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                if (firstHalf) {
+                    resultCurrYear.push(0);
+                }
+                else {
+                    resultPrevYear.push(0);
+                }
+            }
+        }
+
+        maxValue1 = resultPrevYear.reduce(function (p, v) {
+            return p > v ? p : v;
+        });
+        maxValue2 = resultCurrYear.reduce(function (p, v) {
+            return p > v ? p : v;
+        });
+    }
+    maxValue1 = Math.max(maxValue1, maxValue2);
+
+    var axisMax = Math.max(Math.ceil(maxValue1 * 1.1), 1000);
+
+    resultPrevYear = ["LY"].concat(resultPrevYear);
+    resultCurrYear = ["CY"].concat(resultCurrYear);
+
+    var jsonData = {
+        months: months,
+        data: {
+            columns: [resultCurrYear, resultPrevYear],
+        },
+        axisRange: {
+            max: {
+                y: axisMax,
+            },
+        },
+    };
+
+    return jsonData;
+}
+
+/*#########################################
+   ###    unsuccessfulVisits chart       ###
+   #########################################*/
+
+function setStyles_unsuccessfulVisits() {
+    config_unsuccessfulVisits.measureColors = [
+        PluginManager.pluginConfiguration.Color15,
+        PluginManager.pluginConfiguration.Color16,
+        PluginManager.pluginConfiguration.Color14
+    ];
+
+    config_unsuccessfulVisits.titleStyle = {
+        font: PluginManager.pluginConfiguration.FontMedium14,
+        color: PluginManager.pluginConfiguration.Color9,
+    };
+
+    config_unsuccessfulVisits.subTitleStyle = {
+        font: PluginManager.pluginConfiguration.FontRegular12,
+        color: PluginManager.pluginConfiguration.Color22,
+        'padding-left': "10px",
+    };
+}
+
+function inputChanged_unsuccessfulVisits() {
+    if (PluginManager.helpers.isDefined(chartReference_unsuccessfulVisits)) {
+        chartReference_unsuccessfulVisits.load({
+            columns: [
+                [
+                    PluginManager.locale.labels.CardReportingUnsuccessfulVisits_Title,
+                    PluginManager.unsuccessfulVisitRate
+                ],
+            ],
+        });
+    }
+}
+
+function renderChart_unsuccessfulVisits() {
+
+    if (PluginManager.helpers.isDefined(PluginManager.unsuccessfulVisitRate)) {
+
+        //destroy chart object before setting new reference
+        if (PluginManager.helpers.isDefined(chartReference_unsuccessfulVisits)) {
+            chartReference_unsuccessfulVisits.destroy();
+        }
+
+        //set styles and colors
+        if (PluginManager.helpers.isDefined(PluginManager.pluginConfiguration)) {
+            setStyles_unsuccessfulVisits();
+        }
+
+        //create chart
+        chartReference_unsuccessfulVisits = c3.generate({
+            bindto: selectors.chart_unsuccessfulVisits,
+            data: {
+                columns: [
+                    [
+                        PluginManager.locale.labels.CardReportingUnsuccessfulVisits_Title,
+                        PluginManager.unsuccessfulVisitRate
+                    ],
+                ],
+                type: "gauge",
+            },
+            gauge: {},
+            color: {
+                pattern: config_unsuccessfulVisits.measureColors, // the three color levels for the percentage values.
+                threshold: {
+                    values: config_unsuccessfulVisits.measures,
+                },
+            },
+            size: {
+                height: 140,
+            },
+            tooltip: {
+                show: false
+            }
+        });
+
+        var title = PluginManager.locale.labels.CardReportingUnsuccessfulVisits_Title;
+        var subtitle;
+        if (PluginManager.helpers.isDefined(PluginManager.mode) && PluginManager.mode === "DSD") {
+            subtitle = PluginManager.locale.labels.CardReportingUnsuccessfulVisits_SubTitleTour;
+        } else
+            subtitle = PluginManager.locale.labels.CardReportingUnsuccessfulVisits_SubTitleRetail;
+
+        var titleElement = document.getElementById(selectors.title_unsuccessfulVisits.substring(1));
+        styleElement(titleElement, config_unsuccessfulVisits.titleStyle, title);
+
+        var subtitleElement = document.getElementById(selectors.subTitle_unsuccessfulVisits.substring(1));
+        styleElement(subtitleElement, config_unsuccessfulVisits.subTitleStyle, subtitle);
+
+        if (isMaximizedMode()) {
+            var component = document.getElementById(selectors.component_unsuccessfulVisits.substring(1));
+            styleElement(component, {
+                "padding-left": "20px",
+				"padding-right": "20px",
+                //overflow: "auto"
+            });
+        }
+
+    }
+}
+
+/*################################
+   ###    visitRate chart       ###
+   ################################*/
+
+function setStyles_visitRate() {
+    config_visitRate.measureColors = [
+        PluginManager.pluginConfiguration.Color14,
+        PluginManager.pluginConfiguration.Color16,
+        PluginManager.pluginConfiguration.Color15
+    ];
+
+    config_visitRate.titleStyle = {
+        font: PluginManager.pluginConfiguration.FontMedium14,
+        color: PluginManager.pluginConfiguration.Color9,
+    };
+
+    config_visitRate.subTitleStyle = {
+        font: PluginManager.pluginConfiguration.FontRegular12,
+        color: PluginManager.pluginConfiguration.Color22,
+        'padding-left': "10px",
+    };
+}
+
+function inputChanged_visitRate() {
+    if (PluginManager.helpers.isDefined(chartReference_visitRate)) {
+        chartReference_visitRate.load({
+            columns: [[PluginManager.locale.labels.CardReportingVisitRate_Title, PluginManager.visitRate]],
+        });
+    }
+}
+
+function renderChart_visitRate() {
+
+    if (PluginManager.helpers.isDefined(PluginManager.visitRate)) {
+
+        //destroy chart object before setting new reference
+        if (PluginManager.helpers.isDefined(chartReference_visitRate)) {
+            chartReference_visitRate.destroy();
+        }
+
+        //set styles and colors
+        if (PluginManager.helpers.isDefined(PluginManager.pluginConfiguration)) {
+            setStyles_visitRate();
+        }
+
+        //create chart
+        chartReference_visitRate = c3.generate({
+            bindto: selectors.chart_visitRate,
+            data: {
+                columns: [
+                    [PluginManager.locale.labels.CardReportingVisitRate_Title, PluginManager.visitRate],
+                ],
+                type: "gauge",
+            },
+            gauge: {},
+            color: {
+                pattern: config_visitRate.measureColors, // the three color levels for the percentage values.
+                threshold: {
+                    values: config_visitRate.measures,
+                },
+            },
+            size: {
+                height: 140,
+            },
+            tooltip: {
+                show: false
+            }
+        });
+
+        var title = PluginManager.locale.labels.CardReportingVisitRate_Title;
+        var subtitle;
+        if (PluginManager.helpers.isDefined(PluginManager.mode) && PluginManager.mode === "DSD") {
+            subtitle = PluginManager.locale.labels.CardReportingVisitRate_SubTitleTour;
+        } else {
+            if (PluginManager.helpers.isDefined(PluginManager.selectedDate) && PluginManager.helpers.isDefined(PluginManager.currentDate) && PluginManager.selectedDate == PluginManager.currentDate)
+                subtitle = PluginManager.locale.labels.CardReportingVisitRate_SubTitleRetail;
+            else
+                subtitle = PluginManager.locale.labels.CardReportingVisitRate_SubTitleRetail_CurrentDate;
+        }
+
+        var titleElement = document.getElementById(selectors.title_visitRate.substring(1));
+        styleElement(titleElement, config_visitRate.titleStyle, title);
+
+        var subtitleElement = document.getElementById(selectors.subTitle_visitRate.substring(1));
+        styleElement(subtitleElement, config_visitRate.subTitleStyle, subtitle);
+
+        if (isMaximizedMode()) {
+            var component = document.getElementById(selectors.component_visitRate.substring(1));
+            styleElement(component, {
+                "padding-left": "20px",
+				"padding-right": "20px",
+                //overflow: "auto"
+            });
+        }
+
+    }
+}
+
+/*
+################################
+#### element styling helper ####
+################################ 
+*/
+function styleElement(element, styleDefinition, text) {
+    if (PluginManager.helpers.isDefined(element) && PluginManager.helpers.isDefined(element.style) && PluginManager.helpers.isDefined(styleDefinition)) {
+        // apply text
+        if (PluginManager.helpers.isDefined(text)) {
+            element.textContent = text;
+        }
+        // apply style
+        Object.keys(styleDefinition).forEach((ele) => element.style.setProperty(ele, styleDefinition[ele]));
+    }
+}
+
+function isMaximizedMode() {
+    return (PluginManager.helpers.isDefined(PluginManager.maximizedMode) && PluginManager.maximizedMode == "1");
+}
+
+/* 
+################################
+custom value formatting using d3
+################################ 
+*/
+let locale;
+
+function setupLocale() {
+    locale = d3.formatLocale(
+        {
+            "decimal": PluginManager.locale.formats.NumberFormats.DecimalSeparator.value,
+            "thousands": PluginManager.locale.formats.NumberFormats.ThousandSeparator.value,
+            "grouping": [3],
+            "currency": [PluginManager.locale.labels.CardReportingSales_Currency, ""]
+        }
+    );
+}
+
+function formatValue(d) {
+    if (!PluginManager.helpers.isDefined(locale)) {
+        setupLocale();
+    }
+    return locale.format("$,")(d);
+}
+
+    ]]></UIComponentJS>
+</UIPluginV2>

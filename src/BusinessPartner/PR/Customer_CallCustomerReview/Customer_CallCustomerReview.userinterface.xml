@@ -1,0 +1,2250 @@
+<UIDescription name="Customer::CallCustomerReview" schemaVersion="0.0.0.5"  simpleEditorOnly="true">
+  <Page pagePattern="SingleSectionPage" cachable="false">
+    <ViewVariables>
+      <ViewVariable name="currentTabName" value="Main" />
+    </ViewVariables>
+    <PageHeader>
+      <Bindings>
+        <Binding target="title" binding="ProcessContext::CustomerDetail.name" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="TabbedViewAreaSection" currentTab="View::currentTabName">
+      <Area areaName="tabArea" areaPattern="TabElementArea">
+        <TabSelector name="TabSelector">
+          <Items>
+            <Tab tabName="Main" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="MainGrey24" defaultImage="MainGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="MainId" defaultLabel="Main" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Map" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="MapGrey24" defaultImage="MapGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="MapId" defaultLabel="Map" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <!--Account Harmonization: obsolete
+            <Tab tabName="OpeningHours" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="ClockGrey24" defaultImage="ClockGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="OpeningHoursId" defaultLabel="OpeningHours" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            Account Harmonization: obsolete-->
+            <!-- Open Hours Tab -->
+            <Tab tabName="OpenHours" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="ClockGrey24" defaultImage="ClockGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="OpenHoursId" defaultLabel="Open Hours" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Contact" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="UserGrey24" defaultImage="UserGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="ContactId" defaultLabel="Contact" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Revenue" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="DollarGrey24" defaultImage="DollarGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="SalesId" defaultLabel="Sales" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="POS" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="ShelfGrey24" defaultImage="ShelfGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="POSId" defaultLabel="POS" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Call" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="SuitcaseGrey24" defaultImage="SuitcaseGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="CallOverviewId" defaultLabel="Call" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Roles" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="UserClipboardGrey24" defaultImage="UserClipboardGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="BpaRolesId" defaultLabel="Roles" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="ListingClassification" backendSystem="sf">
+              <Bindings>
+                <Resource target="image" type="Image" id="ListingClassification" defaultImage="ListingClassification" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="ListingClassificationId" defaultLabel="Listing Classification" bindingMode="ONE_TIME" />
+                <Binding type="Visible" target="Visible" call="ProcessContext::CustomerDetail.getTabVisibility" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Relations" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="ConnectionGrey24" defaultImage="ConnectionGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="RelationsId" defaultLabel="Relations" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+            <Tab tabName="Attachments" backendSystem="both">
+              <Bindings>
+                <Resource target="image" type="Image" id="ClipGrey24" defaultImage="ClipGrey24" bindingMode="ONE_TIME" />
+                <Resource target="text" type="Label" id="AttachmentId" defaultLabel="Attachments" bindingMode="ONE_TIME" />
+              </Bindings>
+            </Tab>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="tabSelected" storeTabNameIn="currentTabName" />
+          </Events>
+        </TabSelector>
+      </Area>
+      <Area areaPattern="MultiArea" areaName="Main">
+        <Area areaName="Main" areaPattern="GroupedElementsArea">
+          <MenuItems>
+            <MenuItem directlyVisible="false" itemId="UpdateGeoCoordinates">
+              <Bindings>
+                <Resource target="Text" type="Label" id="UpdateGeoCoordinatesId" defaultLabel="Update Location" />
+                <Resource target="Icon" type="Image" id="ArrowsDarkGrey24" defaultImage="ArrowsDarkGrey24" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="updateGeoCoordinates">
+                  <SelectArea name="Main" />
+                </ButtonPressedEvent>
+              </Events>
+            </MenuItem>
+            <MenuItem itemId="Navigate" directlyVisible="false">
+              <Bindings>
+                <Resource target="Text" type="Label" id="NavigateId" defaultLabel="Navigate to Customer" />
+                <Resource target="Icon" type="Image" id="TripDarkGrey24" defaultImage="TripDarkGrey24" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="navigatePressed">
+                  <SelectArea name="Main" />
+                </ButtonPressedEvent>
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <GroupElement name="IdentificationGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="IdentificationId" defaultLabel="Identification" />
+            </Bindings>
+            <InputArea name="Id" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="IdId" defaultLabel="Id" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.customerId" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="Name">
+              <Bindings>
+                <Resource target="Label" type="Label" id="NameId" defaultLabel="Name" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.name" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="SecondName">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Name2Id" defaultLabel="Second Name" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.name2" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="Matchcode">
+              <Bindings>
+                <Resource target="Label" type="Label" id="MatchcodeId" defaultLabel="Matchcode" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.matchcode" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <Merger name="Street" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Street No." id="Street" />
+              </Bindings>
+              <InputArea name="Street">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="StreetId" defaultLabel="Street" />
+                  <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerAddress.MainAddress.street" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+              <InputArea name="House no">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="HouseNumberId" defaultLabel="House No." />
+                  <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerAddress.MainAddress.houseNumber" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+            </Merger>
+            <Merger name="City" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="ZIP City" id="City" />
+              </Bindings>
+              <InputArea name="ZIP">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="ZipCodeId" defaultLabel="ZIP" />
+                  <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerAddress.MainAddress.zipCode" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+              <InputArea name="City">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="CityId" defaultLabel="City" />
+                  <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerAddress.MainAddress.city" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+            </Merger>
+            <!--Account Harmonization: changed to simple InputArea
+            <SelectionBox name="State">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CountryStateId" defaultLabel="State" />
+                <Binding target="DataSource" toggleId="CountryState" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerAddress.MainAddress.countryState" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+   Account Harmonization: changed to simple InputArea-->
+            <InputArea name="State">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CountryStateId" defaultLabel="State" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerAddress.MainAddress.countryState" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+          </GroupElement>
+          <GroupElement name="CommunicationGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="CommunicationId" defaultLabel="Communication" />
+            </Bindings>
+            <Merger name="CustomerPhoneMerger" pattern="oneInputControlTwoButtonsMax">
+              <InputArea name="CustomerPhone">
+                <Bindings>
+                  <Resource target="Label" type="Label" defaultLabel="Phone" id="PhoneId" />
+                  <Binding target="Value" binding="ProcessContext::CustomerDetail.phone1" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+              <ImageButton name="CustomerPhoneSMS">
+                <Bindings>
+                  <Resource target="Image" type="Image" id="SpeechBubbleGrey24" />
+                </Bindings>
+                <Events>
+                  <ButtonPressedEvent event="smsPressed" />
+                </Events>
+              </ImageButton>
+              <ImageButton name="CustomerPhoneImage">
+                <Bindings>
+                  <Resource target="Image" type="Image" id="PhoneGrey24" />
+                </Bindings>
+                <Events>
+                  <ButtonPressedEvent event="phonePressed" />
+                </Events>
+              </ImageButton>
+            </Merger>
+            <InputArea name="Fax">
+              <Bindings>
+                <Resource target="Label" type="Label" id="FaxId" defaultLabel="Fax" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.fax1" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <Merger name="CustomerEmailMerger" pattern="twoInputControls" labelHandling="Combined" separator="," leftRatio="10" rightRatio="1">
+              <InputArea name="CustomerEmail">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="EmailId" defaultLabel="EMail" />
+                  <Binding target="Value" binding="ProcessContext::CustomerDetail.email1" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+              <ImageButton name="CustomerEmailImage">
+                <Bindings>
+                  <Resource target="Image" type="Image" id="EnvelopeGrey24" />
+                </Bindings>
+                <Events>
+                  <ButtonPressedEvent event="mailPressed" />
+                </Events>
+              </ImageButton>
+            </Merger>
+          </GroupElement>
+          <GroupElement name="ClassificationGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="ClassificationId" defaultLabel="Classification" />
+            </Bindings>
+            <SelectionBox name="Prio">
+              <Bindings>
+                <Resource target="Label" type="Label" id="PrioId" defaultLabel="Prio" />
+                <Binding target="DataSource" toggleId="ABC" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.priority" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="ClassOfTrade">
+              <Bindings>
+                <Resource target="Label" type="Label" id="ClassOfTradeId" defaultLabel="Class Of Trade" />
+                <Binding target="DataSource" toggleId="BpaClassOfTrade" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.classOfTrade" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="Type">
+              <Bindings>
+                <Resource target="Label" type="Label" id="TypeId" defaultLabel="Customer Type" />
+                <Binding target="DataSource" toggleId="BpaCompanyType" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.companyType" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </GroupElement>
+          <GroupElement name="StatusGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="StatusId" defaultLabel="Status" />
+            </Bindings>
+            <SelectionBox name="Phase">
+              <Bindings>
+                <Resource target="Label" type="Label" id="PhaseId" defaultLabel="Phase" />
+                <Binding target="DataSource" toggleId="BpaPhase" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.phase" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <SelectionBox name="SalesRelevant">
+              <Bindings>
+                <Resource target="Label" type="Label" id="SalesRelevantId" defaultLabel="Sales Relevant" />
+                <Binding target="DataSource" toggleId="BpaSalesRelevant" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.salesRelevant" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <DatePickerField name="DateClosure">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Closure Date" id="DateClosure" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.dateClosure" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <CheckBox name="IsDeleted" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="Deleted" defaultLabel="Deleted" />
+                <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.deleted" bindingMode="ONE_WAY" />
+              </Bindings>
+            </CheckBox>
+          </GroupElement>
+          <GroupElement name="LocationGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="LocationId" defaultLabel="Location" />
+            </Bindings>
+            <Merger name="Coordinates" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Latitude / Longitude" id="Coordinates" />
+              </Bindings>
+              <InputArea name="Latitude" disabled="true">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="LatitudeId" defaultLabel="Latitude" />
+                  <Binding target="Value" type="Decimal" binding="ProcessContext::CustomerDetail.LoCustomerAddress.MainAddress.latitude" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+              <InputArea name="Longitude" disabled="true">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="LongitudeId" defaultLabel="Longitude" />
+                  <Binding target="Value" type="Decimal" binding="ProcessContext::CustomerDetail.LoCustomerAddress.MainAddress.longitude" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+            </Merger>
+          </GroupElement>
+          <GroupElement name="TradeOrgGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="TradeOrgId" defaultLabel="Trade Org." />
+            </Bindings>
+            <InputArea name="Name" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="TradeOrgNameId" defaultLabel="Name" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.LuCustomerTradeOrg.name" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="City" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="TradeOrgCityId" defaultLabel="City" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.LuCustomerTradeOrg.city" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="ID" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="TradeOrgIdId" defaultLabel="ID" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.LuCustomerTradeOrg.id" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+          </GroupElement>
+        </Area>
+      </Area>
+      <Area areaName="Map" areaPattern="SingleElementArea" lazyLoading="true">
+        <MenuItems>
+          <MenuItem directlyVisible="false" itemId="UpdateGeoCoordinates">
+            <Bindings>
+              <Resource target="Text" type="Label" id="UpdateGeoCoordinatesId" defaultLabel="Update Location" />
+              <Resource target="Icon" type="Image" id="ArrowsDarkGrey24" defaultImage="ArrowsDarkGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="updateGeoCoordinates">
+                <SelectArea name="Map" />
+              </ButtonPressedEvent>
+            </Events>
+          </MenuItem>
+          <MenuItem itemId="Navigate" directlyVisible="false">
+            <Bindings>
+              <Resource target="Text" type="Label" id="NavigateId" defaultLabel="Navigate to Customer" />
+              <Resource target="Icon" type="Image" id="TripDarkGrey24" defaultImage="TripDarkGrey24" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="navigatePressed">
+                <SelectArea name="Main" />
+              </ButtonPressedEvent>
+            </Events>
+          </MenuItem>
+        </MenuItems>
+        <GoogleMap name="myMap" latitudeField="latitude" longitudeField="longitude" initialZoomLevel="15">
+          <Bindings>
+            <Binding target="longitude" binding="ProcessContext::MainAddress.longitude" bindingMode="ONE_WAY" />
+            <Binding target="latitude" binding="ProcessContext::MainAddress.latitude" bindingMode="ONE_WAY" />
+          </Bindings>
+        </GoogleMap>
+      </Area>
+      <!--Account Harmonization: obsolete
+      <Area areaPattern="MultiArea" areaName="OpeningHours" lazyLoading="true">
+        <Area areaName="OpeningHoursOverview" areaPattern="SingleElementArea">
+          <MenuItems>
+            <MenuItem directlyVisible="true" itemId="NewOpeningHour">
+              <Bindings>
+                <Resource target="Text" type="Label" id="NewOpeningHourId" defaultLabel="New" />
+                <Resource target="Icon" type="Image" id="PlusDarkGrey24" defaultImage="PlusDarkGrey24" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="newOpeningHour">
+                  <SelectArea name="OpeningHoursEdit" />
+                </ButtonPressedEvent>
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <GroupedList name="CustomerOpeningTimeList" searchable="false" hasBorder="true" dataSource="ProcessContext::CustomerDetail.LoCustomerOpeningTime.Items[]">
+            <Items name="Items" itemPattern="CallCustomerOpeningTimeItem">
+              <Bindings>
+                <Binding target="TimeFrom" type="Text" binding=".timeFrom" bindingMode="ONE_WAY" />
+                <Binding target="TimeThru" type="Text" binding=".timeThru" bindingMode="ONE_WAY" />
+                <Binding target="OpenDays" type="Text" binding=".openDays" bindingMode="ONE_WAY" />
+                <Resource target="OpeningDaysLabel" type="Label" id="OpeningDaysLabelId" defaultLabel="Opening Days" />
+                <Resource target="OpeningHoursSeparatorLabel" type="Label" id="OpeningHoursSeparatorLabelId" defaultLabel=" - " />
+                <Resource target="OpeningTimeImageId" type="Image" id="Clock_F" defaultImage="Clock_F" bindingMode="ONE_TIME" />
+              </Bindings>
+              <ItemListLayout>
+                <Default>
+                  <Col width="2.5em" height="1.5em" layoutType="Image" bindingId="OpeningTimeImageId" />
+                  <Col>
+                    <Row>
+                      <Col width="2.5em" layoutType="itemIdentifier" bindingId="TimeFrom" />
+                      <Col width="1em" layoutType="itemIdentifier" bindingId="OpeningHoursSeparatorLabel" />
+                      <Col width="3em" layoutType="itemIdentifier" bindingId="TimeThru" />
+                    </Row>
+                    <Row>
+                      <Col width="7em" layoutType="itemLabel" bindingId="OpeningDaysLabel" />
+                      <Col flex="1" layoutType="itemValue" bindingId="OpenDays" />
+                    </Row>
+                  </Col>
+                </Default>
+                <Tablet>
+                  <Default>
+                    <Col width="2.5em" height="1.5em" layoutType="Image" bindingId="OpeningTimeImageId" />
+                    <Col layoutType="itemLeft">
+                      <Row>
+                        <Col width="2.5em" layoutType="itemIdentifier" bindingId="TimeFrom" />
+                        <Col width="0.5em" layoutType="itemIdentifier itemCenter" bindingId="OpeningHoursSeparatorLabel" />
+                        <Col width="3em" layoutType="itemIdentifier" bindingId="TimeThru" />
+                      </Row>
+                      <Row>
+                        <Col width="7em" layoutType="itemLabel" bindingId="OpeningDaysLabel" />
+                        <Col flex="1" layoutType="itemValue" bindingId="OpenDays" />
+                      </Row>
+                    </Col>
+                  </Default>
+                  <Apple>
+                    <Col width="2.5em" height="1.5em" layoutType="Image" bindingId="OpeningTimeImageId" />
+                    <Col layoutType="itemLeft">
+                      <Row>
+                        <Col width="2.5em" layoutType="itemIdentifier" bindingId="TimeFrom" />
+                        <Col width="0.5em" layoutType="itemIdentifier itemCenter" bindingId="OpeningHoursSeparatorLabel" />
+                        <Col width="3em" layoutType="itemIdentifier" bindingId="TimeThru" />
+                      </Row>
+                      <Row>
+                        <Col width="7em" layoutType="itemLabel" bindingId="OpeningDaysLabel" />
+                        <Col flex="1" layoutType="itemValue" bindingId="OpenDays" />
+                      </Row>
+                    </Col>
+                  </Apple>
+                </Tablet>
+                <Phone>
+                  <Default>
+                    <Col width="2.0em" height="1.5em" layoutType="Image" bindingId="OpeningTimeImageId" />
+                    <Col>
+                      <Row>
+                        <Col width="2.5em" layoutType="itemIdentifier" bindingId="TimeFrom" />
+                        <Col width="1em" layoutType="itemIdentifier" bindingId="OpeningHoursSeparatorLabel" />
+                        <Col width="3em" layoutType="itemIdentifier" bindingId="TimeThru" />
+                      </Row>
+                      <Row layoutType="itemPaddingTop">
+                        <Col width="7em" layoutType="itemLabel itemPaddingTop" bindingId="OpeningDaysLabel" />
+                        <Col flex="1" layoutType="itemValue" bindingId="OpenDays" />
+                      </Row>
+                    </Col>
+                  </Default>
+                  <Apple>
+                    <Col width="2.0em" height="1.5em" layoutType="Image" bindingId="OpeningTimeImageId" />
+                    <Col>
+                      <Row>
+                        <Col width="2.5em" layoutType="itemIdentifierSmall" bindingId="TimeFrom" />
+                        <Col width="0.7em" layoutType="itemIdentifierSmall itemCenter" bindingId="OpeningHoursSeparatorLabel" />
+                        <Col width="3em" layoutType="itemIdentifierSmall" bindingId="TimeThru" />
+                      </Row>
+                      <Row layoutType="itemPaddingTop">
+                        <Col width="7em" layoutType="itemLabel itemPaddingTop" bindingId="OpeningDaysLabel" />
+                        <Col flex="1" layoutType="itemValue" bindingId="OpenDays" />
+                      </Row>
+                    </Col>
+                  </Apple>
+                </Phone>
+              </ItemListLayout>
+              <ContextMenu>
+                <Bindings>
+                  <Binding target="DataSource" binding="ProcessContext::ContextMenuList.Items[]" bindingMode="ONE_WAY" />
+                </Bindings>
+                <Items name="OpeningHoursContextMenuItems">
+                  <Bindings>
+                    <Binding target="Icon" type="Image" binding=".actionImg" />
+                    <Binding target="Text" type="Label" binding=".actionId" />
+                  </Bindings>
+                </Items>
+              </ContextMenu>
+            </Items>
+            <Events>
+              <ItemSelectedEvent event="openingHoursSelected">
+                <Params>
+                  <Param name="pKey" value=".pKey" />
+                </Params>
+                <SelectArea name="OpeningHoursEdit" />
+              </ItemSelectedEvent>
+              <ContextOpeningEvent event="contextMenuOpeningHoursOpened" />
+              <ContextSelectedEvent event="contextMenuItemOpeningHoursSelected">
+                <Params>
+                  <Param name="pKey" value=".pKey" />
+                </Params>
+              </ContextSelectedEvent>
+            </Events>
+          </GroupedList>
+        </Area>
+        <Area areaName="OpeningHoursEdit" areaPattern="GroupedElementsArea">
+          <MenuItems>
+            <MenuItem directlyVisible="true" itemId="AcceptOpeningHourChanges">
+              <Bindings>
+                <Resource target="Text" type="Label" id="AcceptOpeningHourChangesId" defaultLabel="Done" />
+                <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="acceptOpeningHourChanges">
+                  <ValidateAndSelectArea name="OpeningHoursOverview" />
+                </ButtonPressedEvent>
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <GroupElement name="OpeningDaysGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="OpeningDaysId" defaultLabel="Opening Days" />
+            </Bindings>
+            <CheckBox name="Monday">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Monday" id="MondayId" />
+                <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoCustomerOpeningTime.Current.monday" bindingMode="TWO_WAY" />
+              </Bindings>
+            </CheckBox>
+            <CheckBox name="Tuesday">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Tuesday" id="TuesdayId" />
+                <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoCustomerOpeningTime.Current.tuesday" bindingMode="TWO_WAY" />
+              </Bindings>
+            </CheckBox>
+            <CheckBox name="Wednesday">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Wednesday" id="WednesdayId" />
+                <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoCustomerOpeningTime.Current.wednesday" bindingMode="TWO_WAY" />
+              </Bindings>
+            </CheckBox>
+            <CheckBox name="Thursday">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Thursday" id="ThursdayId" />
+                <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoCustomerOpeningTime.Current.thursday" bindingMode="TWO_WAY" />
+              </Bindings>
+            </CheckBox>
+            <CheckBox name="Friday">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Friday" id="FridayId" />
+                <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoCustomerOpeningTime.Current.friday" bindingMode="TWO_WAY" />
+              </Bindings>
+            </CheckBox>
+            <CheckBox name="Saturday">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Saturday" id="SaturdayId" />
+                <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoCustomerOpeningTime.Current.saturday" bindingMode="TWO_WAY" />
+              </Bindings>
+            </CheckBox>
+            <CheckBox name="Sunday">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Sunday" id="SundayId" />
+                <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoCustomerOpeningTime.Current.sunday" bindingMode="TWO_WAY" />
+              </Bindings>
+            </CheckBox>
+          </GroupElement>
+          <GroupElement name="OpeningHoursGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="OpeningHoursId" defaultLabel="Opening Hours" />
+            </Bindings>
+            <TimePickerField name="FromTime">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Time From" id="TimeFrom" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerOpeningTime.Current.timeFrom" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+            <TimePickerField name="ThruTime">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Time Thru" id="TimeThru" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerOpeningTime.Current.timeThru" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </GroupElement>
+        </Area>
+      </Area>
+      Account Harmonization: obsolete -->
+      <Area areaName="OpenHours" areaPattern="MultiArea" lazyLoading="true">
+        <Area areaName="OpenHoursOverview" areaPattern="SingleElementArea">
+          <MenuItems>
+            <MenuItem itemId="NewTimeSlot" directlyVisible="true">
+              <Bindings>
+                <Resource target="Text" type="Label" id="NewTimeSlotId" defaultLabel="New" />
+                <Resource target="Icon" type="Image" id="PlusDarkGrey24" defaultImage="PlusDarkGrey24" />
+                <Binding type="Visible" target="Visible" call="ProcessContext::AccountOperatingHourEnabled.getValue" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="newTimeSlot">
+                  <SelectArea name="TimeSlotEdit" />
+                </ButtonPressedEvent>
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <GroupedList name="OpenHoursList" groupBy="groupText" searchable="false" dataSource="ProcessContext::CustomerDetail.loOpenHours.items[]">
+            <Items name="Items" itemPattern="CustomerOpenHoursPattern">
+              <Bindings>
+                <Binding target="dayOfWeek" type="Text" binding=".dayOfWeek.text" bindingMode="ONE_WAY" />
+                <Binding target="dayOfWeekValue" type="Text" binding=".dayOfWeek.code" bindingMode="ONE_WAY" />
+                <Binding target="startTime" type="Text" binding=".startTime" bindingMode="ONE_WAY" />
+                <Binding target="endTime" type="Text" binding=".endTime" bindingMode="ONE_WAY" />
+                <Resource target="startTimeHeader" type="Label" id="OpenHoursStartTime" defaultLabel="Start time" />
+                <Resource target="endTimeHeader" type="Label" id="OpenHoursEndTime" defaultLabel="End time" />
+              </Bindings>
+              <ItemListLayout>
+                <Default>
+                  <Col>
+                    <Row layoutType="itemIdentifier" bindingId="dayOfWeek" />
+                    <Row layoutType="itemSecondary" bindingId="startTimeHeader" />
+                    <Row layoutType="itemSecondary" bindingId="endTimeHeader" />
+                  </Col>
+                  <Col>
+                    <Row />
+                    <Row layoutType="itemValueSmall" bindingId="startTime" />
+                    <Row layoutType="itemValueSmall" bindingId="endTime" />
+                  </Col>
+                </Default>
+              </ItemListLayout>
+              <ContextMenu>
+                <Bindings>
+                  <Binding target="DataSource" binding="ProcessContext::TimeSlotContextMenu.Items[]" bindingMode="ONE_WAY" />
+                </Bindings>
+                <Items name="TimeSlotContextMenutems">
+                  <Bindings>
+                    <Binding target="Icon" type="Image" binding=".actionImg" />
+                    <Binding target="Text" type="Label" binding=".actionId" />
+                    <Binding target="Editable" type="Editable" binding=".actionEnabled" />
+                  </Bindings>
+                </Items>
+              </ContextMenu>
+            </Items>
+            <Events>
+              <ItemSelectedEvent event="timeSlotSelected">
+                <SelectArea name="TimeSlotEdit" />
+                <Params>
+                  <Param name="pKey" value=".pKey" />
+                  <Param name="dayOfWeek" value=".dayOfWeekValue" />
+                  <Param name="startTime" value=".startTimeToSave" />
+                  <Param name="endTime" value=".endTimeToSave" />
+                  <Param name="operatingHoursId" value=".operatingHoursId" />
+                </Params>
+              </ItemSelectedEvent>
+              <ContextOpeningEvent event="timeSlotContextMenuOpened" />
+              <ContextSelectedEvent event="timeSlotContextMenuItemSelected">
+                <Params>
+                  <Param name="pKey" value=".pKey" />
+                </Params>
+              </ContextSelectedEvent>
+            </Events>
+          </GroupedList>
+        </Area>
+        <Area areaName="TimeSlotEdit" areaPattern="GroupedElementsArea">
+          <MenuItems>
+            <MenuItem itemId="AcceptTimeSlotChanges" directlyVisible="true">
+              <Bindings>
+                <Resource target="Text" type="Label" id="AcceptTimeSlotChangesId" defaultLabel="Done" />
+                <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="acceptTimeSlotChanges">
+                  <ValidateAndSelectArea name="OpenHoursOverview" />
+                </ButtonPressedEvent>
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <GroupElement name="TimeSlotGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="TimeSlotGroupId" defaultLabel="Time Slot" />
+            </Bindings>
+            <SelectionBox name="DayOfWeek">
+              <Bindings>
+                <Resource target="Label" type="Label" id="dayOfWeek" defaultLabel="Day of week" />
+                <Binding target="DataSource" toggleId="DayOfWeek" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::TimeSlot.dayOfWeek" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <TimePickerField name="StartTimeTimeSlot">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Start time" id="TimeFromTimeSlot" />
+                <Binding target="Value" binding="ProcessContext::TimeSlot.startTime" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+            <TimePickerField name="EndTimeTimeSlot">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="End time" id="TimeThruTimeSlot" />
+                <Binding target="Value" binding="ProcessContext::TimeSlot.endTime" bindingMode="TWO_WAY" />
+              </Bindings>
+            </TimePickerField>
+          </GroupElement>
+        </Area>
+      </Area>
+      <!-- ###################### Contact ###################### -->
+      <Area areaPattern="MultiArea" areaName="Contact" lazyLoading="true">
+        <Area areaName="ContactOverview" areaPattern="SingleElementArea">
+          <MenuItems>
+            <MenuItem directlyVisible="true" itemId="NewContact">
+              <Bindings>
+                <Resource target="Text" type="Label" id="NewContactId" defaultLabel="New" />
+                <Resource target="Icon" type="Image" id="PlusDarkGrey24" defaultImage="PlusDarkGrey24" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="newContact">
+                  <ValidateAndSelectArea name="ContactEdit" />
+                </ButtonPressedEvent>
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <GroupedList name="ContactPartnerList" searchable="false" hasBorder="true" dataSource="ProcessContext::CustomerDetail.LoContactPartner.Items[]">
+            <Items name="Items" itemPattern="CallCustomerContactListItem">
+              <Bindings>
+                <Binding target="MainFunctionText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                <Binding target="ContactJobTitle" type="Text" binding=".jobTitle" bindingMode="ONE_WAY" />
+                <Resource target="ContactPhone1Label" type="Label" defaultLabel="Phone" id="ContactPhone1Id" />
+                <Binding target="ContactPhone1" type="Text" binding=".phone1" bindingMode="ONE_WAY" />
+                <Resource target="ContactPhone2Label" type="Label" defaultLabel="Mobile" id="ContactPhone2Id" />
+                <Binding target="ContactPhone2" type="Text" binding=".phone2" bindingMode="ONE_WAY" />
+                <Binding target="Department" type="Text" binding=".department" bindingMode="ONE_WAY" />
+                <Binding target="ContactPartnerName" type="Text" binding=".contactPartnerName" bindingMode="ONE_WAY" />
+                <Binding target="MediaPath" type="Blob" binding=".mediaPath" fileTypeBinding=".fileType" roundedEdge="true" />
+              </Bindings>
+              <ItemListLayout>
+                <Default>
+                  <Col width="5em">
+                    <Row>
+                      <Col width="3em" layoutType="Image" bindingId="MediaPath" />
+                    </Row>
+                  </Col>
+                  <Col flex="1">
+                    <Row layoutType="itemIdentifier" bindingId="ContactPartnerName" />
+                    <Row layoutType="itemSecondary" bindingId="MainFunctionText" />
+                    <Row layoutType="itemSecondary" bindingId="Department" />
+                  </Col>
+                  <Col width="2.1em">
+                    <Row layoutType="itemLabel" bindingId="ContactPhone1Label" />
+                    <Row layoutType="itemLabel" bindingId="ContactPhone2Label" />
+                  </Col>
+                  <Col width="6.5em">
+                    <Row layoutType="itemValue" bindingId="ContactPhone1" />
+                    <Row layoutType="itemValue" bindingId="ContactPhone2" />
+                  </Col>
+                </Default>
+                <Tablet>
+                  <Default>
+                    <Col width="5em">
+                      <Row>
+                        <Col width="3em" layoutType="Image" bindingId="MediaPath" />
+                      </Row>
+                    </Col>
+                    <Col flex="1">
+                      <Row layoutType="itemIdentifier" bindingId="ContactPartnerName" />
+                      <Row layoutType="itemSecondary" bindingId="MainFunctionText" />
+                      <Row layoutType="itemSecondary" bindingId="Department" />
+                    </Col>
+                    <Col width="2.1em">
+                      <Row layoutType="itemLabel" bindingId="ContactPhone1Label" />
+                      <Row layoutType="itemLabel" bindingId="ContactPhone2Label" />
+                    </Col>
+                    <Col width="6.5em">
+                      <Row layoutType="itemValue" bindingId="ContactPhone1" />
+                      <Row layoutType="itemValue" bindingId="ContactPhone2" />
+                    </Col>
+                  </Default>
+                  <Apple>
+                    <Col width="5em">
+                      <Row>
+                        <Col width="3em" layoutType="Image" bindingId="MediaPath" />
+                      </Row>
+                    </Col>
+                    <Col flex="1">
+                      <Row layoutType="itemIdentifier" bindingId="ContactPartnerName" />
+                      <Row layoutType="itemSecondary" bindingId="MainFunctionText" />
+                      <Row layoutType="itemSecondary" bindingId="Department" />
+                    </Col>
+                    <Col width="2.1em">
+                      <Row layoutType="itemLabel" bindingId="ContactPhone1Label" />
+                      <Row layoutType="itemLabel" bindingId="ContactPhone2Label" />
+                    </Col>
+                    <Col width="6.5em">
+                      <Row layoutType="itemValue" bindingId="ContactPhone1" />
+                      <Row layoutType="itemValue" bindingId="ContactPhone2" />
+                    </Col>
+                  </Apple>
+                </Tablet>
+                <Phone>
+                  <Default>
+                    <Col width="3.5em">
+                      <Row>
+                        <Col width="3em" layoutType="Image" bindingId="MediaPath" />
+                      </Row>
+                    </Col>
+                    <Col flex="1">
+                      <Row layoutType="itemIdentifier" bindingId="ContactPartnerName" />
+                      <Row layoutType="itemSecondary" bindingId="MainFunctionText" />
+                      <Row layoutType="itemSecondary" bindingId="Department" />
+                    </Col>
+                  </Default>
+                  <Android>
+                    <Col width="3.5em">
+                      <Row>
+                        <Col width="3em" layoutType="Image" bindingId="MediaPath" />
+                      </Row>
+                    </Col>
+                    <Col flex="1">
+                      <Row layoutType="itemIdentifier" bindingId="ContactPartnerName" />
+                      <Row layoutType="itemSecondary" bindingId="MainFunctionText" />
+                      <Row layoutType="itemSecondary" bindingId="Department" />
+                    </Col>
+                  </Android>
+                  <Apple>
+                    <Col width="3.5em">
+                      <Row>
+                        <Col width="3em" layoutType="Image" bindingId="MediaPath" />
+                      </Row>
+                    </Col>
+                    <Col flex="1">
+                      <Row layoutType="itemIdentifier" bindingId="ContactPartnerName" />
+                      <Row layoutType="itemSecondary" bindingId="MainFunctionText" />
+                      <Row layoutType="itemSecondary" bindingId="Department" />
+                    </Col>
+                  </Apple>
+                </Phone>
+              </ItemListLayout>
+              <ContextMenu>
+                <Bindings>
+                  <Binding target="DataSource" binding="ProcessContext::ContextMenuList.Items[]" bindingMode="ONE_WAY" />
+                </Bindings>
+                <Items name="ContactContextMenuItems">
+                  <Bindings>
+                    <Binding target="Icon" type="Image" binding=".actionImg" />
+                    <Binding target="Text" type="Label" binding=".actionId" />
+                  </Bindings>
+                </Items>
+              </ContextMenu>
+            </Items>
+            <Events>
+              <ItemSelectedEvent event="contactPartnerSelected">
+                <Params>
+                  <Param name="pKey" value=".bpaContactPartnerPKey" />
+                </Params>
+                <SelectArea name="ContactEdit" />
+              </ItemSelectedEvent>
+              <ContextOpeningEvent event="contextMenuContactOpened" />
+              <ContextSelectedEvent event="contextMenuItemContactSelected">
+                <Params>
+                  <Param name="pKey" value=".pKey" />
+                </Params>
+              </ContextSelectedEvent>
+            </Events>
+          </GroupedList>
+        </Area>
+        <Area areaName="ContactEdit" areaPattern="GroupedElementsArea">
+          <MenuItems>
+            <MenuItem directlyVisible="true" itemId="AcceptContactChanges">
+              <Bindings>
+                <Resource target="Text" type="Label" id="AcceptContactChangesId" defaultLabel="Done" />
+                <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="acceptContactChanges">
+                  <ValidateAndSelectArea name="ContactOverview" />
+                </ButtonPressedEvent>
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <GroupElement name="ContactPartnerGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="ContactPartnerGroupId" defaultLabel="Contact Partner" />
+            </Bindings>
+            <SelectionBox name="Salutation">
+              <Bindings>
+                <Resource target="Label" type="Label" id="SalutationId" defaultLabel="Salutation" />
+                <Binding target="DataSource" toggleId="BpaSalutation" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.salutation" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <InputArea name="FirstName">
+              <Bindings>
+                <Resource target="Label" type="Label" id="ContactFirstNameId" defaultLabel="First Name" />
+                <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.firstName" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="LastName">
+              <Bindings>
+                <Resource target="Label" type="Label" id="ContactLastNameId" defaultLabel="Last Name" />
+                <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.lastName" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="JobTitle">
+              <Bindings>
+                <Resource target="Label" type="Label" id="JobTitleId" defaultLabel="Job Title" />
+                <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.jobTitle" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <SelectionBox name="Function">
+              <Bindings>
+                <Resource target="Label" type="Label" id="FunctionId" defaultLabel="Main Function" />
+                <Binding target="DataSource" toggleId="BpaFunction" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.mainFunction" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <InputArea name="Department">
+              <Bindings>
+                <Resource target="Label" type="Label" id="DepartmentId" defaultLabel="Department" />
+                <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.department" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="Description">
+              <Bindings>
+                <Resource target="Label" type="Label" id="DescriptionId" defaultLabel="Description" />
+                <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.description" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+          </GroupElement>
+          <GroupElement name="AddressGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="AddressGroupId" defaultLabel="Address" />
+            </Bindings>
+            <Merger name="Street" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Street No." id="Street" />
+              </Bindings>
+              <InputArea name="Street">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="StreetId" defaultLabel="Street" />
+                  <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.LoContactPartnerAddress.MainAddress.street" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+              <InputArea name="HouseNumber">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="HouseNumberId" defaultLabel="House No." />
+                  <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.LoContactPartnerAddress.MainAddress.houseNumber" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+            </Merger>
+            <Merger name="City" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="ZIP City" id="City" />
+              </Bindings>
+              <InputArea name="ZipCode">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="ZipCodeId" defaultLabel="ZIP" />
+                  <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.LoContactPartnerAddress.MainAddress.zipCode" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+              <InputArea name="City">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="CityId" defaultLabel="City" />
+                  <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.LoContactPartnerAddress.MainAddress.city" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+            </Merger>
+            <SelectionBox name="CountryState">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CountryStateId" defaultLabel="State" />
+                <Binding target="DataSource" toggleId="CountryState" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.LoContactPartnerAddress.MainAddress.countryState" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </GroupElement>
+          <GroupElement name="CommunicationGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="CommunicationGroupId" defaultLabel="Communication" />
+            </Bindings>
+            <Merger name="ContactPartnerPhone1Merger" pattern="oneInputControlTwoButtonsMax">
+              <InputArea name="ContactPartnerPhone1">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="PhoneId" defaultLabel="Phone" />
+                  <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.phone1" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+              <ImageButton name="ContactPartnerSMS1">
+                <Bindings>
+                  <Resource target="Image" type="Image" id="SpeechBubbleGrey24" />
+                </Bindings>
+                <Events>
+                  <ButtonPressedEvent event="contactPartnerSms1Pressed" />
+                </Events>
+              </ImageButton>
+              <ImageButton name="ContactPartnerPhone1Image">
+                <Bindings>
+                  <Resource target="Image" type="Image" id="PhoneGrey24" />
+                </Bindings>
+                <Events>
+                  <ButtonPressedEvent event="contactPartnerPhone1Pressed" />
+                </Events>
+              </ImageButton>
+            </Merger>
+            <Merger name="ContactPartnerPhone2Merger" pattern="oneInputControlTwoButtonsMax">
+              <InputArea name="ContactPartnerPhone2">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="MobileId" defaultLabel="Mobile" />
+                  <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.phone2" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+              <ImageButton name="ContactPartnerSMS2">
+                <Bindings>
+                  <Resource target="Image" type="Image" id="SpeechBubbleGrey24" />
+                </Bindings>
+                <Events>
+                  <ButtonPressedEvent event="contactPartnerSms2Pressed" />
+                </Events>
+              </ImageButton>
+              <ImageButton name="ContactPartnerPhone2Image">
+                <Bindings>
+                  <Resource target="Image" type="Image" id="PhoneGrey24" />
+                </Bindings>
+                <Events>
+                  <ButtonPressedEvent event="contactPartnerPhone2Pressed" />
+                </Events>
+              </ImageButton>
+            </Merger>
+            <InputArea name="Fax">
+              <Bindings>
+                <Resource target="Label" type="Label" id="FaxId" defaultLabel="Fax" />
+                <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.fax1" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+            <Merger name="MeMail" pattern="twoInputControls" labelHandling="Combined" separator="," leftRatio="10" rightRatio="1">
+              <InputArea name="Email">
+                <Bindings>
+                  <Resource target="Label" type="Label" defaultLabel="Email" id="EmailId" />
+                  <Binding target="Value" binding="ProcessContext::ContactPartnerDetail.email1" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+              <ImageButton name="Mail">
+                <Bindings>
+                  <Resource target="Image" type="Image" id="EnvelopeGrey24" />
+                </Bindings>
+                <Events>
+                  <ButtonPressedEvent event="contactPartnerMailPressed" />
+                </Events>
+              </ImageButton>
+            </Merger>
+          </GroupElement>
+        </Area>
+      </Area>
+      <Area areaName="Revenue" areaPattern="SingleElementArea">
+        <UIPluginV2 name="CustomerRevenueReportUiPlugin" uiPlugin="CustomerRevenueReportUiPluginV2">
+          <Bindings>
+            <Binding target="maximizedMode" type="Text" binding="ProcessContext::MaximizedMode" bindingMode="ONE_WAY" />
+            <List target="customerSales" dataSource="ProcessContext::CustomerDetail.loCustomerSalesRevenue.items[]">
+              <Binding target="pKey" type="Text" binding=".pKey" />
+              <Binding target="netSales" type="Text" binding=".netSales" />
+              <Binding target="year " type="Text" binding=".year" />
+              <Binding target="month" type="Text" binding=".month" />
+            </List>
+          </Bindings>
+          <Events />
+        </UIPluginV2>
+      </Area>
+      <Area areaPattern="MultiArea" areaName="POS" lazyLoading="true">
+        <Area areaName="POSOverview" areaPattern="SingleElementArea">
+          <MenuItems>
+            <MenuItem directlyVisible="true" itemId="NewPOS">
+              <Bindings>
+                <Resource target="Text" type="Label" id="NewPOSId" defaultLabel="New" />
+                <Resource target="Icon" type="Image" id="PlusDarkGrey24" defaultImage="PlusDarkGrey24" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="newPOS">
+                  <ValidateAndSelectArea name="POSOverview" />
+                </ButtonPressedEvent>
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <GroupedList name="POSListOverview" searchable="false" groupBy="name" hasBorder="true" dataSource="ProcessContext::CustomerDetail.LoCustomerPOSRelation.Items[]">
+            <Items name="Items" itemPattern="CallCustomerPOSRelationItem">
+              <Bindings>
+                <Binding target="Name" type="Text" binding=".name" bindingMode="ONE_WAY" />
+                <Binding target="PosId" type="Text" binding=".posId" bindingMode="ONE_WAY" />
+                <Binding target="PosText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                <Binding target="PosMandatoryIcon" type="Image" binding=".mandatoryImage" bindingMode="ONE_WAY" />
+                <Binding target="PosValidFrom" type="Date" binding=".validFrom" bindingMode="ONE_WAY" />
+                <Binding target="PosValidThru" type="Date" binding=".validThru" bindingMode="ONE_WAY" />
+                <Resource target="PosValidFromLabel" type="Label" defaultLabel="Valid From" id="PosValidFromLabelId" />
+                <Resource target="PosValidThruLabel" type="Label" defaultLabel="Valid Thru" id="PosValidThruLabelId" />
+                <Resource target="Spacer" type="Label" defaultLabel=" " id="SpacerId" />
+              </Bindings>
+              <ItemListLayout>
+                <Default>
+                  <Col width="1em" height="2em" layoutType="Image" bindingId="PosMandatoryIcon" />
+                  <Col width="8em">
+                    <Row layoutType="itemIdentifier" bindingId="PosText" />
+                  </Col>
+                  <Col width="1.5em" bindingId="Spacer" />
+                  <Col width="3.5em">
+                    <Row layoutType="itemLabel" bindingId="PosValidFromLabel" />
+                    <Row layoutType="itemLabel" bindingId="PosValidThruLabel" />
+                  </Col>
+                  <Col width="5em">
+                    <Row layoutType="itemValue" bindingId="PosValidFrom" />
+                    <Row layoutType="itemValue" bindingId="PosValidThru" />
+                  </Col>
+                </Default>
+                <Tablet>
+                  <Default>
+                    <Col width="1em" height="2em" layoutType="Image" bindingId="PosMandatoryIcon" />
+                    <Col width="8em">
+                      <Row layoutType="itemIdentifier" bindingId="PosText" />
+                    </Col>
+                    <Col width="1.5em" bindingId="Spacer" />
+                    <Col width="3.5em">
+                      <Row layoutType="itemLabel" bindingId="PosValidFromLabel" />
+                      <Row layoutType="itemLabel" bindingId="PosValidThruLabel" />
+                    </Col>
+                    <Col width="5em">
+                      <Row layoutType="itemValue" bindingId="PosValidFrom" />
+                      <Row layoutType="itemValue" bindingId="PosValidThru" />
+                    </Col>
+                  </Default>
+                  <Apple>
+                    <Col width="1em" height="2em" layoutType="Image" bindingId="PosMandatoryIcon" />
+                    <Col width="8em">
+                      <Row layoutType="itemIdentifier" bindingId="PosText" />
+                    </Col>
+                    <Col width="1.5em" bindingId="Spacer" />
+                    <Col width="3.5em">
+                      <Row layoutType="itemLabel" bindingId="PosValidFromLabel" />
+                      <Row layoutType="itemLabel" bindingId="PosValidThruLabel" />
+                    </Col>
+                    <Col width="5em">
+                      <Row layoutType="itemValue" bindingId="PosValidFrom" />
+                      <Row layoutType="itemValue" bindingId="PosValidThru" />
+                    </Col>
+                  </Apple>
+                </Tablet>
+                <Phone>
+                  <Default>
+                    <Col width="0.5em" height="2em" layoutType="Image" bindingId="PosMandatoryIcon" />
+                    <Col width="4.2em">
+                      <Row layoutType="itemIdentifier" bindingId="PosText" />
+                    </Col>
+                    <Col width="1em" bindingId="Spacer" />
+                    <Col width="3.5em">
+                      <Row layoutType="itemLabel" bindingId="PosValidFromLabel" />
+                      <Row layoutType="itemLabel" bindingId="PosValidThruLabel" />
+                    </Col>
+                    <Col width="4.2em">
+                      <Row layoutType="itemValue" bindingId="PosValidFrom" />
+                      <Row layoutType="itemValue" bindingId="PosValidThru" />
+                    </Col>
+                  </Default>
+                  <Android>
+                    <Col width="0.5em" height="2em" layoutType="Image" bindingId="PosMandatoryIcon" />
+                    <Col width="4.2em">
+                      <Row layoutType="itemIdentifier" bindingId="PosText" />
+                    </Col>
+                    <Col width="1em" bindingId="Spacer" />
+                    <Col width="3.5em">
+                      <Row layoutType="itemLabel" bindingId="PosValidFromLabel" />
+                      <Row layoutType="itemLabel" bindingId="PosValidThruLabel" />
+                    </Col>
+                    <Col width="4.2em">
+                      <Row layoutType="itemValue" bindingId="PosValidFrom" />
+                      <Row layoutType="itemValue" bindingId="PosValidThru" />
+                    </Col>
+                  </Android>
+                  <Apple>
+                    <Col width="0.5em" height="2em" layoutType="Image" bindingId="PosMandatoryIcon" />
+                    <Col width="4em">
+                      <Row layoutType="itemIdentifier" bindingId="PosText" />
+                    </Col>
+                    <Col width="1em" bindingId="Spacer" />
+                    <Col width="3.5em">
+                      <Row layoutType="itemLabel" bindingId="PosValidFromLabel" />
+                      <Row layoutType="itemLabel" bindingId="PosValidThruLabel" />
+                    </Col>
+                    <Col width="4.2em">
+                      <Row layoutType="itemValue" bindingId="PosValidFrom" />
+                      <Row layoutType="itemValue" bindingId="PosValidThru" />
+                    </Col>
+                  </Apple>
+                </Phone>
+              </ItemListLayout>
+              <ContextMenu>
+                <Bindings>
+                  <Binding target="DataSource" binding="ProcessContext::ContextMenuList.Items[]" bindingMode="ONE_WAY" />
+                </Bindings>
+                <Items name="POSContextMenuItems">
+                  <Bindings>
+                    <Binding target="Icon" type="Image" binding=".actionImg" />
+                    <Binding target="Text" type="Label" binding=".actionId" />
+                    <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                  </Bindings>
+                </Items>
+              </ContextMenu>
+            </Items>
+            <Events>
+              <ItemSelectedEvent event="posSelected">
+                <Params>
+                  <Param name="pKey" value=".pKey" />
+                </Params>
+                <SelectArea name="POSEdit" />
+              </ItemSelectedEvent>
+              <ContextOpeningEvent event="contextMenuPOSOpened">
+                <Params>
+                  <Param name="continued" value=".continued" />
+                </Params>
+              </ContextOpeningEvent>
+              <ContextSelectedEvent event="contextMenuItemPOSSelected">
+                <Params>
+                  <Param name="pKey" value=".pKey" />
+                </Params>
+              </ContextSelectedEvent>
+            </Events>
+          </GroupedList>
+        </Area>
+        <Area areaName="POSEdit" areaPattern="GroupedElementsArea">
+          <MenuItems>
+            <MenuItem directlyVisible="true" itemId="AcceptPOSChanges">
+              <Bindings>
+                <Resource target="Text" type="Label" id="AcceptPOSChangesId" defaultLabel="Done" />
+                <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="acceptPOSChanges">
+                  <ValidateAndSelectArea name="POSOverview" />
+                </ButtonPressedEvent>
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <GroupElement name="POSMainGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="POSMainGroupId" defaultLabel="POS" />
+            </Bindings>
+            <InputArea name="Template" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="POSTemplateId" defaultLabel="Type" />
+                <Binding target="Value" binding="ProcessContext::POSDetail.BoPosMeta.text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="Id" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="POSIdId" defaultLabel="Id" />
+                <Binding target="Value" binding="ProcessContext::POSDetail.id" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="Name">
+              <Bindings>
+                <Resource target="Label" type="Label" id="POSNameId" defaultLabel="Name" />
+                <Binding target="Value" binding="ProcessContext::POSDetail.name" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+          </GroupElement>
+          <GroupElement name="POSRelationGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="POSRelationGroupId" defaultLabel="POS Relation" />
+            </Bindings>
+            <InputArea name="Description" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="POSDescriptionId" defaultLabel="Description" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerPOSRelation.Current.text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <CheckBox name="Mandatory" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" id="POSMandatoryId" defaultLabel="Mandatory" />
+                <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoCustomerPOSRelation.Current.mandatory" bindingMode="ONE_WAY" />
+              </Bindings>
+            </CheckBox>
+            <DatePickerField name="ValidFrom">
+              <Bindings>
+                <Resource target="Label" type="Label" id="POSValidFromId" defaultLabel="Valid From" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerPOSRelation.Current.validFrom" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+            <DatePickerField name="ValidThru">
+              <Bindings>
+                <Resource target="Label" type="Label" id="POSValidThruId" defaultLabel="Valid Thru" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerPOSRelation.Current.validThru" bindingMode="TWO_WAY" />
+              </Bindings>
+            </DatePickerField>
+          </GroupElement>
+        </Area>
+      </Area>
+      <Area areaPattern="MultiArea" areaName="Address" lazyLoading="true">
+        <Area areaName="AddressOverview" areaPattern="SingleElementArea">
+          <MenuItems>
+            <MenuItem directlyVisible="true" itemId="NewAddress">
+              <Bindings>
+                <Resource target="Text" type="Label" id="NewAddressId" defaultLabel="New" />
+                <Resource target="Icon" type="Image" id="PlusDarkGrey24" defaultImage="PlusDarkGrey24.png" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="newAddress">
+                  <SelectArea name="AddressEdit" />
+                </ButtonPressedEvent>
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <GroupedList name="CustomerAddressList" searchable="false" hasBorder="true" dataSource="ProcessContext::CustomerDetail.LoCustomerAddress.Items[]">
+            <Items name="Items" itemPattern="CallCustomerAddressItem">
+              <Bindings>
+                <Binding target="Usage" type="Image" binding=".usage.imageId" bindingMode="ONE_WAY" />
+                <Resource target="CustSpaceLabel" type="Label" defaultLabel=" " id="CustSpaceLabelId" />
+                <Resource target="CustSeparatorLabel" type="Label" defaultLabel="," id="CustSeparatorLabelId" />
+                <Binding target="CustCity" type="Text" binding=".city" bindingMode="TWO_WAY" />
+                <Binding target="CustCountryState" type="Text" binding=".countryState" bindingMode="TWO_WAY" />
+                <Binding target="CustHouseNumber" type="Text" binding=".houseNumber" bindingMode="TWO_WAY" />
+                <Binding target="CustStreet" type="Text" binding=".street" bindingMode="TWO_WAY" />
+                <Binding target="CustZipCode" type="Text" binding=".zipCode" bindingMode="TWO_WAY" />
+              </Bindings>
+              <ItemListLayout>
+                <Default>
+                  <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="Usage" />
+                  <Col layoutType="itemLeft">
+                    <Row>
+                      <Col layoutType="itemIdentifier" bindingId="CustStreet" />
+                      <Col layoutType="itemSecondary" bindingId="CustSpaceLabel" />
+                      <Col layoutType="itemIdentifier" bindingId="CustHouseNumber" />
+                    </Row>
+                    <Row>
+                      <Col layoutType="itemSecondary" bindingId="CustZipCode" />
+                      <Col layoutType="itemSecondary" bindingId="CustCity" />
+                      <Col width="0.2em" layoutType="itemSecondary" bindingId="CustSeparatorLabel" />
+                      <Col layoutType="itemSecondary" bindingId="CustCountryState" />
+                    </Row>
+                  </Col>
+                </Default>
+                <Tablet>
+                  <Default>
+                    <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="Usage" />
+                    <Col layoutType="itemLeft">
+                      <Row>
+                        <Col layoutType="itemIdentifier" bindingId="CustStreet" />
+                        <Col layoutType="itemSecondary" bindingId="CustSpaceLabel" />
+                        <Col layoutType="itemIdentifier" bindingId="CustHouseNumber" />
+                      </Row>
+                      <Row>
+                        <Col layoutType="itemSecondary" bindingId="CustZipCode" />
+                        <Col layoutType="itemSecondary" bindingId="CustCity" />
+                        <Col width="0.2em" layoutType="itemSecondary" bindingId="CustSeparatorLabel" />
+                        <Col layoutType="itemSecondary" bindingId="CustCountryState" />
+                      </Row>
+                    </Col>
+                  </Default>
+                  <Apple>
+                    <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="Usage" />
+                    <Col layoutType="itemLeft">
+                      <Row>
+                        <Col layoutType="itemIdentifier" bindingId="CustStreet" />
+                        <Col layoutType="itemSecondary" bindingId="CustSpaceLabel" />
+                        <Col layoutType="itemIdentifier" bindingId="CustHouseNumber" />
+                      </Row>
+                      <Row>
+                        <Col layoutType="itemSecondary" bindingId="CustZipCode" />
+                        <Col layoutType="itemSecondary" bindingId="CustCity" />
+                        <Col width="0.2em" layoutType="itemSecondary" bindingId="CustSeparatorLabel" />
+                        <Col layoutType="itemSecondary" bindingId="CustCountryState" />
+                      </Row>
+                    </Col>
+                  </Apple>
+                </Tablet>
+                <Phone>
+                  <Default>
+                    <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="Usage" />
+                    <Col layoutType="itemLeft">
+                      <Row>
+                        <Col layoutType="itemIdentifier" bindingId="CustStreet" />
+                        <Col layoutType="itemValue" bindingId="CustSpaceLabel" />
+                        <Col layoutType="itemIdentifier" bindingId="CustHouseNumber" />
+                      </Row>
+                      <Row>
+                        <Col layoutType="itemSecondary" bindingId="CustZipCode" />
+                        <Col layoutType="itemSecondary" bindingId="CustCity" />
+                        <Col layoutType="itemValue" bindingId="CustSeparatorLabel" />
+                        <Col layoutType="itemSecondary" bindingId="CustCountryState" />
+                      </Row>
+                    </Col>
+                  </Default>
+                  <Apple>
+                    <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="Usage" />
+                    <Col layoutType="itemLeft">
+                      <Row>
+                        <Col layoutType="itemIdentifier" bindingId="CustStreet" />
+                        <Col layoutType="itemValue" bindingId="CustSpaceLabel" />
+                        <Col layoutType="itemIdentifier" bindingId="CustHouseNumber" />
+                      </Row>
+                      <Row>
+                        <Col layoutType="itemSecondary" bindingId="CustZipCode" />
+                        <Col layoutType="itemSecondary" bindingId="CustCity" />
+                        <Col layoutType="itemValue" bindingId="CustSeparatorLabel" />
+                        <Col layoutType="itemSecondary" bindingId="CustCountryState" />
+                      </Row>
+                    </Col>
+                  </Apple>
+                </Phone>
+              </ItemListLayout>
+              <ContextMenu>
+                <Bindings>
+                  <Binding target="DataSource" binding="ProcessContext::ContextMenuList.Items[]" bindingMode="ONE_WAY" />
+                </Bindings>
+                <Items name="AddressContextMenuItems">
+                  <Bindings>
+                    <Binding target="Icon" type="Image" binding=".actionImg" />
+                    <Binding target="Text" type="Label" binding=".actionId" />
+                  </Bindings>
+                </Items>
+              </ContextMenu>
+            </Items>
+            <Events>
+              <ItemSelectedEvent event="addressSelected">
+                <Params>
+                  <Param name="pKey" value=".pKey" />
+                </Params>
+                <SelectArea name="AddressEdit" />
+              </ItemSelectedEvent>
+              <ContextOpeningEvent event="contextMenuAddressOpened" />
+              <ContextSelectedEvent event="contextMenuItemAddressSelected">
+                <Params>
+                  <Param name="pKey" value=".pKey" />
+                </Params>
+              </ContextSelectedEvent>
+            </Events>
+          </GroupedList>
+        </Area>
+        <Area areaName="AddressEdit" areaPattern="GroupedElementsArea">
+          <MenuItems>
+            <MenuItem directlyVisible="true" itemId="AcceptAddressChanges">
+              <Bindings>
+                <Resource target="Text" type="Label" id="AcceptAddressChangesId" defaultLabel="Done" />
+                <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="acceptAddressChanges">
+                  <SelectArea name="AddressOverview" />
+                </ButtonPressedEvent>
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <GroupElement name="AddressGroup">
+            <Bindings>
+              <Resource target="Title" type="Label" id="AddressGroupId" defaultLabel="Address" />
+            </Bindings>
+            <SelectionBox name="Usage">
+              <Bindings>
+                <Resource target="Label" type="Label" id="UsageId" defaultLabel="Usage" />
+                <Binding target="DataSource" toggleId="BpaAddressType" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerAddress.Current.usage" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            <Merger name="Street" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Street No." id="Street" />
+              </Bindings>
+              <InputArea name="Street">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="StreetId" defaultLabel="Street" />
+                  <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerAddress.Current.street" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+              <InputArea name="HouseNumber">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="HouseNumberId" defaultLabel="No." />
+                  <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerAddress.Current.houseNumber" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+            </Merger>
+            <Merger name="City" pattern="twoInputControls" labelHandling="Own" leftRatio="1" rightRatio="1">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="ZIP City" id="City" />
+              </Bindings>
+              <InputArea name="ZipCode">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="ZipCodeId" defaultLabel="ZIP" />
+                  <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerAddress.Current.zipCode" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+              <InputArea name="City">
+                <Bindings>
+                  <Resource target="Label" type="Label" id="CityId" defaultLabel="City" />
+                  <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerAddress.Current.city" bindingMode="TWO_WAY" />
+                </Bindings>
+              </InputArea>
+            </Merger>
+            <!--Account Harmonization: changed to simple InputArea     
+            <SelectionBox name="CountryState">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CountryStateId" defaultLabel="State" />
+                <Binding target="DataSource" toggleId="CountryState" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerAddress.Current.countryState" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+            Account Harmonization: changed to simple InputArea-->
+            <InputArea name="CountryState">
+              <Bindings>
+                <Resource target="Label" type="Label" id="CountryStateId" defaultLabel="State" />
+                <Binding target="Value" binding="ProcessContext::CustomerDetail.LoCustomerAddress.Current.countryState" bindingMode="TWO_WAY" />
+              </Bindings>
+            </InputArea>
+          </GroupElement>
+        </Area>
+      </Area>
+      <Area areaName="Call" areaPattern="SingleElementArea" lazyLoading="true">
+        <GroupedList name="CustomerCallList" searchable="false" dataSource="ProcessContext::CustomerCallList.Items[]">
+          <Items name="Items" itemPattern="CallCustomerCallItem">
+            <Bindings>
+              <Binding target="DateFrom" type="Date" binding=".dateFrom" bindingMode="ONE_WAY" />
+              <Binding target="TimeFrom" type="Text" binding=".timeFrom" bindingMode="ONE_WAY" />
+              <Binding target="Description" type="Text" binding=".subject" bindingMode="ONE_WAY" />
+              <Binding target="ClbStatus" type="Text" binding=".clbStatus" bindingMode="ONE_WAY" />
+              <Binding target="Responsible" type="Text" binding=".responsibleName" bindingMode="ONE_WAY" />
+              <Binding target="ClbStatusImage" type="Image" binding=".clbStatus.ImageId" bindingMode="ONE_WAY" />
+              <Resource target="TimeImageId" type="Image" id="ClockGrey16" defaultImage="ClockGrey16" />
+              <Resource target="DateImageId" type="Image" id="DayGrey16" defaultImage="DayGrey16" />
+              <Resource target="ResponsibleImageId" type="Image" id="UserGrey16" defaultImage="UserGrey16" />
+              <Binding target="typeWithStatusImage" type="Image" binding=".clbTypeStatus" bindingMode="ONE_WAY" />
+            </Bindings>
+            <ItemListLayout>
+              <Default>
+                <Col width="2.1em" height="1.4em" layoutType="Image" bindingId="typeWithStatusImage" />
+                <Col>
+                  <Row>
+                    <Col layoutType="itemIdentifier" bindingId="Description" />
+                  </Row>
+                  <Row>
+                    <Col width="1.5em" layoutType="Image" bindingId="DateImageId" />
+                    <Col width="6em" layoutType="itemSecondary" bindingId="DateFrom" />
+                    <Col width="1.5em" layoutType="Image" bindingId="TimeImageId" />
+                    <Col width="4em" layoutType="itemSecondary" bindingId="TimeFrom" />
+                  </Row>
+                  <Row>
+                    <Col width="1.5em" layoutType="Image" bindingId="ResponsibleImageId" />
+                    <Col layoutType="itemValue" bindingId="Responsible" />
+                  </Row>
+                </Col>
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="typeWithStatusImage" />
+                  <Col height="2.5em">
+                    <Row layoutType="itemIdentifier" bindingId="Description" />
+                    <Row layoutType="itemPaddingTop">
+                      <Col width="1.3em" height="1.6em" layoutType="Image" bindingId="DateImageId" />
+                      <Col width="7em" layoutType="itemSecondary itemPaddingTop" bindingId="DateFrom" />
+                      <Col width="1.3em" height="1.6em" layoutType="Image" bindingId="TimeImageId" />
+                      <Col width="4.2em" layoutType="itemSecondary itemPaddingTop" bindingId="TimeFrom" />
+                      <Col width="1.3em" height="1.6em" layoutType="Image" bindingId="ResponsibleImageId" />
+                      <Col layoutType="itemValue" bindingId="Responsible" />
+                    </Row>
+                  </Col>
+                </Default>
+                <Apple>
+                  <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="typeWithStatusImage" />
+                  <Col height="2.5em">
+                    <Row layoutType="itemIdentifier" bindingId="Description" />
+                    <Row layoutType="itemPaddingTop">
+                      <Col width="1.3em" height="1.6em" layoutType="Image" bindingId="DateImageId" />
+                      <Col width="7em" layoutType="itemSecondary itemPaddingTop" bindingId="DateFrom" />
+                      <Col width="1.3em" height="1.6em" layoutType="Image" bindingId="TimeImageId" />
+                      <Col width="4.2em" layoutType="itemSecondary itemPaddingTop" bindingId="TimeFrom" />
+                      <Col width="1.3em" height="1.6em" layoutType="Image" bindingId="ResponsibleImageId" />
+                      <Col layoutType="itemValue" bindingId="Responsible" />
+                    </Row>
+                  </Col>
+                </Apple>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col width="1.3em" height="1.2em" layoutType="Image" bindingId="typeWithStatusImage" />
+                  <Col flex="1">
+                    <Row layoutType="itemIdentifier" bindingId="Description" />
+                    <Row>
+                      <Col width="1em" height="1em" layoutType="Image" bindingId="DateImageId" />
+                      <Col width="3.7em" layoutType="itemSecondary" bindingId="DateFrom" />
+                      <Col width="1em" height="1em" layoutType="Image" bindingId="TimeImageId" />
+                      <Col width="2.4em" layoutType="itemSecondary" bindingId="TimeFrom" />
+                      <Col width="1em" height="1em" layoutType="Image" bindingId="ResponsibleImageId" />
+                      <Col layoutType="itemValue" bindingId="Responsible" />
+                    </Row>
+                  </Col>
+                </Default>
+                <Android>
+                  <Col width="1.3em" height="1.2em" layoutType="Image" bindingId="typeWithStatusImage" />
+                  <Col flex="1">
+                    <Row layoutType="itemIdentifier" bindingId="Description" />
+                    <Row>
+                      <Col width="1em" height="1em" layoutType="Image" bindingId="DateImageId" />
+                      <Col width="3.7em" layoutType="itemSecondary" bindingId="DateFrom" />
+                      <Col width="1em" height="1em" layoutType="Image" bindingId="TimeImageId" />
+                      <Col width="2.4em" layoutType="itemSecondary" bindingId="TimeFrom" />
+                      <Col width="1em" height="1em" layoutType="Image" bindingId="ResponsibleImageId" />
+                      <Col layoutType="itemValue" bindingId="Responsible" />
+                    </Row>
+                  </Col>
+                </Android>
+                <Apple>
+                  <Col width="2em" height="1.4em" layoutType="Image" bindingId="typeWithStatusImage" />
+                  <Col flex="1">
+                    <Row layoutType="itemIdentifier" bindingId="Description" />
+                    <Row>
+                      <Col width="1.5em" layoutType="Image" bindingId="DateImageId" />
+                      <Col width="6em" layoutType="itemSecondary" bindingId="DateFrom" />
+                      <Col width="1.5em" layoutType="Image" bindingId="TimeImageId" />
+                      <Col width="3em" layoutType="itemSecondary" bindingId="TimeFrom" />
+                      <Col width="1.5em" layoutType="Image" bindingId="ResponsibleImageId" />
+                      <Col layoutType="itemValue" bindingId="Responsible" />
+                    </Row>
+                  </Col>
+                </Apple>
+              </Phone>
+            </ItemListLayout>
+          </Items>
+        </GroupedList>
+      </Area>
+      <Area areaName="OpenItems" areaPattern="GroupedElementsArea" lazyLoading="true">
+        <GroupElement name="TotalsGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="OpenItemsTotalId" defaultLabel="Total" />
+          </Bindings>
+          <Merger name="InOutTotals" pattern="twoInputControls" labelHandling="Combined" separator=" / " leftRatio="1" rightRatio="1" disabled="true">
+            <InputArea name="OpenItemsTotalOut" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Debit" id="OpenItemsTotalInId" />
+                <Binding target="Value" type="Decimal" formatV2="15.2" binding="ProcessContext::CustomerDetail.totalDebit" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+            <InputArea name="OpenItemsTotalIn" disabled="true">
+              <Bindings>
+                <Resource target="Label" type="Label" defaultLabel="Credit" id="OpenItemsTotalOutId" />
+                <Binding target="Value" type="Decimal" formatV2="15.2" binding="ProcessContext::CustomerDetail.totalCredit" bindingMode="ONE_WAY" />
+              </Bindings>
+            </InputArea>
+          </Merger>
+          <InputArea name="OpenItemsTotalSum" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Total" id="OpenItemsTotalSumId" />
+              <Binding target="Value" type="Decimal" formatV2="15.2" binding="ProcessContext::CustomerDetail.totalDebitCredit" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+        <EmbeddedList name="OpenItemsList" dataSource="ProcessContext::CustomerDetail.loBpaOpenItem.Items[]">
+          <Items name="Items" itemPattern="CallCustomerOpenItemsListItem">
+            <ItemListLayout>
+              <Default>
+                <Col>
+                  <Row>
+                    <Col width="2.5em" layoutType="Image" bindingId="DebitCreditIcon" />
+                    <Col width="5em">
+                      <Row layoutType="itemIdentifier" bindingId="Amount" />
+                      <Row layoutType="itemValue" bindingId="Spacer" />
+                    </Col>
+                    <Col width="4em">
+                      <Row layoutType="itemSecondary" bindingId="Currency" />
+                      <Row layoutType="itemValue" bindingId="Spacer" />
+                    </Col>
+                    <Col width="3em" bindingId="Spacer" />
+                    <Col>
+                      <Row>
+                        <Col width="6.5em" layoutType="itemLabel pull-right" bindingId="InvoiceNo" />
+                        <Col width="1em" bindingId="Spacer" />
+                        <Col width="6em" layoutType="itemValue itemLeft" bindingId="ReceiptId" />
+                      </Row>
+                      <Row>
+                        <Col width="6.5em" layoutType="itemLabel pull-right" bindingId="Receipt" />
+                        <Col width="1em" bindingId="Spacer" />
+                        <Col width="6em" layoutType="itemValue itemLeft" bindingId="ReceiptDate" />
+                      </Row>
+                      <Row>
+                        <Col width="6.5em" layoutType="itemLabel pull-right" bindingId="Due" />
+                        <Col width="1em" bindingId="Spacer" />
+                        <Col width="6em" layoutType="itemValue itemLeft" bindingId="DueDate" />
+                      </Row>
+                    </Col>
+                  </Row>
+                </Col>
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col>
+                    <Row>
+                      <Col width="2.5em" layoutType="Image" bindingId="DebitCreditIcon" />
+                      <Col width="5em">
+                        <Row layoutType="itemIdentifier" bindingId="Amount" />
+                        <Row layoutType="itemValue" bindingId="Spacer" />
+                      </Col>
+                      <Col width="4em">
+                        <Row layoutType="itemSecondary" bindingId="Currency" />
+                        <Row layoutType="itemValue" bindingId="Spacer" />
+                      </Col>
+                      <Col width="3em" bindingId="Spacer" />
+                      <Col>
+                        <Row>
+                          <Col width="6.5em" layoutType="itemLabel pull-right" bindingId="InvoiceNo" />
+                          <Col width="1em" bindingId="Spacer" />
+                          <Col width="6em" layoutType="itemValue itemLeft" bindingId="ReceiptId" />
+                        </Row>
+                        <Row>
+                          <Col width="6.5em" layoutType="itemLabel pull-right" bindingId="Receipt" />
+                          <Col width="1em" bindingId="Spacer" />
+                          <Col width="6em" layoutType="itemValue itemLeft" bindingId="ReceiptDate" />
+                        </Row>
+                        <Row>
+                          <Col width="6.5em" layoutType="itemLabel pull-right" bindingId="Due" />
+                          <Col width="1em" bindingId="Spacer" />
+                          <Col width="6em" layoutType="itemValue itemLeft" bindingId="DueDate" />
+                        </Row>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Default>
+                <Apple>
+                  <Col>
+                    <Row>
+                      <Col width="2.5em" layoutType="Image" bindingId="DebitCreditIcon" />
+                      <Col width="5em">
+                        <Row layoutType="itemIdentifier" bindingId="Amount" />
+                        <Row layoutType="itemValue" bindingId="Spacer" />
+                      </Col>
+                      <Col width="4em">
+                        <Row layoutType="itemSecondary" bindingId="Currency" />
+                        <Row layoutType="itemValue" bindingId="Spacer" />
+                      </Col>
+                      <Col width="3em" bindingId="Spacer" />
+                      <Col>
+                        <Row>
+                          <Col width="6.5em" layoutType="itemLabel pull-right" bindingId="InvoiceNo" />
+                          <Col width="1em" bindingId="Spacer" />
+                          <Col width="6em" layoutType="itemValue itemLeft" bindingId="ReceiptId" />
+                        </Row>
+                        <Row>
+                          <Col width="6.5em" layoutType="itemLabel pull-right" bindingId="Receipt" />
+                          <Col width="1em" bindingId="Spacer" />
+                          <Col width="6em" layoutType="itemValue itemLeft" bindingId="ReceiptDate" />
+                        </Row>
+                        <Row>
+                          <Col width="6.5em" layoutType="itemLabel pull-right" bindingId="Due" />
+                          <Col width="1em" bindingId="Spacer" />
+                          <Col width="6em" layoutType="itemValue itemLeft" bindingId="DueDate" />
+                        </Row>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Apple>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col>
+                    <Row>
+                      <Col width="2.1em" layoutType="Image" bindingId="DebitCreditIcon" />
+                      <Col width="5em">
+                        <Row layoutType="itemIdentifier" bindingId="Amount" />
+                        <Row layoutType="itemSecondary" bindingId="Spacer" />
+                      </Col>
+                      <Col width="2.8em">
+                        <Row layoutType="itemSecondary" bindingId="Currency" />
+                        <Row layoutType="itemSecondary" bindingId="Spacer" />
+                      </Col>
+                      <Col width="4em" bindingId="Spacer" />
+                      <Col width="4em">
+                        <Row layoutType="itemLabel pull-right" bindingId="InvoiceNo" />
+                        <Row layoutType="itemLabel pull-right" bindingId="Receipt" />
+                        <Row layoutType="itemLabel pull-right" bindingId="Due" />
+                      </Col>
+                      <Col width="1em" bindingId="Spacer" />
+                      <Col width="4em">
+                        <Row layoutType="itemValue itemLeft" bindingId="ReceiptId" />
+                        <Row layoutType="itemValue itemLeft" bindingId="ReceiptDate" />
+                        <Row layoutType="itemValue itemLeft" bindingId="DueDate" />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Default>
+                <Apple>
+                  <Col>
+                    <Row>
+                      <Col width="2.1em" layoutType="Image" bindingId="DebitCreditIcon" />
+                      <Col width="4.0em">
+                        <Row layoutType="itemIdentifier" bindingId="Amount" />
+                        <Row layoutType="itemValue" bindingId="Spacer" />
+                      </Col>
+                      <Col width="2.2em">
+                        <Row layoutType="itemSecondary" bindingId="Currency" />
+                        <Row layoutType="itemSecondary" bindingId="Spacer" />
+                      </Col>
+                      <Col width="1em" bindingId="Spacer" />
+                      <Col width="5em">
+                        <Row layoutType="itemLabel pull-right" bindingId="InvoiceNo" />
+                        <Row layoutType="itemLabel pull-right" bindingId="Receipt" />
+                        <Row layoutType="itemLabel pull-right" bindingId="Due" />
+                      </Col>
+                      <Col width="1em" bindingId="Spacer" />
+                      <Col width="4em">
+                        <Row layoutType="itemValue itemLeft" bindingId="ReceiptId" />
+                        <Row layoutType="itemValue itemLeft" bindingId="ReceiptDate" />
+                        <Row layoutType="itemValue itemLeft" bindingId="DueDate" />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Apple>
+              </Phone>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="Amount" type="Decimal" formatV2="15.2" binding=".amount" bindingMode="ONE_WAY" />
+              <Binding target="ReceiptId" type="Text" binding=".receiptId" bindingMode="ONE_WAY" />
+              <Binding target="ReceiptDate" type="Date" binding=".receiptDate" bindingMode="ONE_WAY" />
+              <Binding target="DueDate" type="Date" binding=".dueDate" bindingMode="ONE_WAY" />
+              <Binding target="DebitCreditIcon" type="Image" binding=".debitCreditIcon" bindingMode="ONE_WAY" />
+              <Binding target="Currency" type="Text" binding=".currency.text" bindingMode="ONE_WAY" />
+              <Resource target="InvoiceNo" type="Label" defaultLabel="Invoice #" id="InvoiceNoId" />
+              <Resource target="Receipt" type="Label" defaultLabel="Receipt Date" id="ReceiptDateId" />
+              <Resource target="Due" type="Label" defaultLabel="Due Date" id="DueDateId" />
+              <Resource target="Spacer" type="Label" defaultLabel=" " id="SpacerId" />
+            </Bindings>
+          </Items>
+        </EmbeddedList>
+      </Area>
+      <Area areaName="Roles" areaPattern="GroupedElementsArea" lazyLoading="true">
+        <GroupElement name="BpaRoleGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="BpaRolesId" defaultLabel="Roles" />
+          </Bindings>
+          <CheckBox name="HasDeliveryRole" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="DeliveryRoleId" defaultLabel="Delivery Recipient" />
+              <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoBpaRole.HasDeliveryRole" bindingMode="ONE_WAY" />
+            </Bindings>
+          </CheckBox>
+          <CheckBox name="HasOrderRole" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Orderer" id="OrderRoleId" />
+              <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoBpaRole.HasOrderRole" bindingMode="ONE_WAY" />
+            </Bindings>
+          </CheckBox>
+          <CheckBox name="HasCustomerRole" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Customer" id="CustomerRoleId" />
+              <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoBpaRole.HasCustomerRole" bindingMode="ONE_WAY" />
+            </Bindings>
+          </CheckBox>
+          <CheckBox name="HasBrokerRole" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Wholesaler" id="BrokerRoleId" />
+              <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoBpaRole.HasBrokerRole" bindingMode="ONE_WAY" />
+            </Bindings>
+          </CheckBox>
+          <CheckBox name="HasPayerRole" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Payer" id="PayerRoleId" />
+              <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoBpaRole.HasPayerRole" bindingMode="ONE_WAY" />
+            </Bindings>
+          </CheckBox>
+          <CheckBox name="HasBillToRole" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Bill-To" id="BillToRoleId" />
+              <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoBpaRole.HasBillToRole" bindingMode="ONE_WAY" />
+            </Bindings>
+          </CheckBox>
+          <CheckBox name="HasPromotionRole" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" defaultLabel="Promotion" id="PromotionRoleId" />
+              <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoBpaRole.HasPromotionRole" bindingMode="ONE_WAY" />
+            </Bindings>
+          </CheckBox>
+          <CheckBox name="HasStoreRole" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="StoreRoleId" defaultLabel="Store" />
+              <Binding target="checkedValue" binding="ProcessContext::CustomerDetail.LoBpaRole.HasStoreRole" bindingMode="ONE_WAY" />
+            </Bindings>
+          </CheckBox>
+        </GroupElement>
+        <GroupElement name="OrderRoleAttributeGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="OrderRoleAttributeGroupId" defaultLabel="Orderer Role" />
+          </Bindings>
+          <SelectionBox name="OrdererType" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="OrdererTypeId" defaultLabel="Orderer Type" />
+              <Binding target="DataSource" toggleId="BpaOrdererType" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::CustomerDetail.BoOrderRole.ordererType" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <CheckBox name="SdoMetaBlocked" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="SdoMetaBlockedId" defaultLabel="Template Blocked" />
+              <Binding target="checked" binding="ProcessContext::CustomerDetail.BoOrderRole.sdoMetaBlocked" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+        </GroupElement>
+        <GroupElement name="CustomerRoleAttributeGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="CustomerRoleAttributeGroupId" defaultLabel="Customer Role" />
+          </Bindings>
+          <InputArea name="CustomerNumber" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="CustomerNumberId" defaultLabel="Customer Number" />
+              <Binding target="Value" binding="ProcessContext::CustomerDetail.BoCustomerRole.customerNumber" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <SelectionBox name="PriceType" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="PriceTypeId" defaultLabel="Price Type" />
+              <Binding target="DataSource" toggleId="ConditionType" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::CustomerDetail.BoCustomerRole.priceType" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <SelectionBox name="PriceListType" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="PriceListTypeId" defaultLabel="Price List Type" />
+              <Binding target="DataSource" toggleId="PriceListType" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::CustomerDetail.BoCustomerRole.priceListType" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+        </GroupElement>
+        <GroupElement name="PayerRoleAttributeGroup">
+          <Bindings>
+            <Resource target="Title" type="Label" id="PayerRoleAttributeGroupId" defaultLabel="Payer Role" />
+          </Bindings>
+          <InputArea name="OverallCreditLimit" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="OverallCreditLimitId" defaultLabel="Credit Limit" />
+              <Binding target="Value" binding="ProcessContext::CustomerDetail.BoPayerRole.overAllCreditLimit" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+          <SelectionBox name="CreditRating" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="CreditRatingId" defaultLabel="Credit Rating" />
+              <Binding target="DataSource" toggleId="ABC" bindingMode="TWO_WAY" />
+              <Binding target="Value" binding="ProcessContext::CustomerDetail.BoPayerRole.creditRating" bindingMode="TWO_WAY" />
+            </Bindings>
+            <Items>
+              <Bindings>
+                <Binding target="ItemValue" type="Text" binding=".id" bindingMode="ONE_WAY" />
+                <Binding target="ItemText" type="Text" binding=".text" bindingMode="ONE_WAY" />
+              </Bindings>
+            </Items>
+          </SelectionBox>
+          <CheckBox name="CreditBlock" disabled="true">
+            <Bindings>
+              <Resource target="Label" type="Label" id="CreditBlockId" defaultLabel="Credit Block" />
+              <Binding target="checked" binding="ProcessContext::CustomerDetail.BoPayerRole.creditBlock" bindingMode="TWO_WAY" />
+            </Bindings>
+          </CheckBox>
+        </GroupElement>
+      </Area>
+      <Area areaPattern="MultiArea" areaName="ListingClassification" lazyLoading="true">
+        <Area areaName="ListingClassificationOverview" areaPattern="SingleElementArea">
+          <GroupedList name="PrdCategoryList" dataSource="ProcessContext::CustomerDetail.loListingClassification.Items[]">
+            <Bindings>
+              <Resource target="Title" type="Label" id="ListingClassificationId" defaultLabel="Listing Classification" />
+            </Bindings>
+            <Items name="Items" itemPattern="PrdCategoryItem">
+              <ItemListLayout>
+                <Default>
+                  <Col width="20em" layoutType="itemIdentifier" bindingId="text" />
+                  <Col width="0.5em" layoutType="Image" bindingId="warningIcon" />
+                  <Col width="8em" layoutType="itemValue" bindingId="listingModuleName" />
+                  <Col width="0.5em" layoutType="Image" bindingId="icon" />
+                </Default>
+                <Tablet>
+                  <Default>
+                    <Col width="20em" layoutType="itemIdentifier" bindingId="text" />
+                    <Col width="0.5em" layoutType="Image" bindingId="warningIcon" />
+                    <Col width="8em" layoutType="itemValue" bindingId="listingModuleName" />
+                    <Col width="0.5em" layoutType="Image" bindingId="icon" />
+                  </Default>
+                </Tablet>
+                <Phone>
+                  <Default>
+                    <Col width="8em" layoutType="itemIdentifier" bindingId="text" />
+                    <Col width="0.5em" layoutType="Image" bindingId="warningIcon" />
+                    <Col width="4em" layoutType="itemValue" bindingId="listingModuleName" />
+                    <Col width="0.5em" layoutType="Image" bindingId="icon" />
+                  </Default>
+                </Phone>
+              </ItemListLayout>
+              <Bindings>
+                <Binding target="text" type="Text" binding=".text" bindingMode="ONE_WAY" />
+                <Binding target="listingModuleName" type="Text" binding=".listingModuleName" bindingMode="ONE_WAY" />
+                <Binding target="warningIcon" type="Image" binding=".warningIcon" bindingMode="ONE_WAY" />
+                <Resource target="icon" type="Image" id="ChevronRightSmall" defaultImage="ChevronRightSmall.png" />
+              </Bindings>
+            </Items>
+            <Events>
+              <ItemSelectedEvent event="prdCategorySelected">
+                <SelectArea name="ListingModule" />
+              </ItemSelectedEvent>
+            </Events>
+          </GroupedList>
+        </Area>
+        <Area areaName="ListingModule" areaPattern="GroupedElementsArea">
+          <MenuItems>
+            <MenuItem directlyVisible="true" itemId="AcceptListingModuleChanges">
+              <Bindings>
+                <Resource target="Text" type="Label" id="AcceptListingModuleChangesId" defaultLabel="Done" />
+                <Resource target="Icon" type="Image" id="CheckDarkGrey24" />
+              </Bindings>
+              <Events>
+                <ButtonPressedEvent event="acceptListingModuleChanges">
+                  <SelectArea name="ListingClassificationOverview" />
+                </ButtonPressedEvent>
+              </Events>
+            </MenuItem>
+          </MenuItems>
+          <GroupElement name="ListingModuleGroup">
+            <Bindings>
+              <Binding target="Title" binding="ProcessContext::CustomerDetail.loListingClassification.Current.text" bindingMode="ONE_WAY" />
+            </Bindings>
+            <SelectionBox name="ListingModuleBox">
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::CustomerDetail.loListingModules" bindingMode="TWO_WAY" />
+                <Binding target="Value" binding="ProcessContext::selectedListingModule" bindingMode="TWO_WAY" />
+              </Bindings>
+              <Items>
+                <Bindings>
+                  <Binding target="ItemValue" type="Text" binding=".pKey" bindingMode="ONE_WAY" />
+                  <Binding target="ItemText" type="Text" binding=".listingModuleName" bindingMode="ONE_WAY" />
+                </Bindings>
+              </Items>
+            </SelectionBox>
+          </GroupElement>
+        </Area>
+      </Area>
+      <Area areaName="Relations" areaPattern="SingleElementArea" lazyLoading="true">
+        <GroupedList name="CustomerRelationList" searchable="false" hasBorder="true" groupBy="relation" dataSource="ProcessContext::CustomerRelationList.Items[]">
+          <Items name="Items" itemPattern="CallCustomerRelationItem">
+            <ItemListLayout>
+              <Default>
+                <Col>
+                  <Row>
+                    <Col width="1.5em" height="1.5em" layoutType="Image" bindingId="RelMain" />
+                    <Col layoutType="itemIdentifier" bindingId="RelSpaceLabel" />
+                    <Col width="15em" layoutType="itemIdentifier" bindingId="RelName" />
+                    <Col width="2em" bindingId="Spacer" />
+                    <Col>
+                      <Row>
+                        <Col width="1.5em" layoutType="itemLabel pull-right" bindingId="RelIdLabel" />
+                        <Col width="0.5em" bindingId="Spacer" />
+                        <Col width="8em" layoutType="itemValue" bindingId="RelId" />
+                      </Row>
+                      <Row>
+                        <Col width="1.8em" layoutType="itemLabel pull-right" bindingId="RelCityLabel" />
+                        <Col width="0.5em" bindingId="Spacer" />
+                        <Col width="8em" layoutType="itemValue" bindingId="RelCity" />
+                      </Row>
+                    </Col>
+                  </Row>
+                </Col>
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col>
+                    <Row>
+                      <Col width="1.5em" height="1.5em" layoutType="Image" bindingId="RelMain" />
+                      <Col layoutType="itemIdentifier" bindingId="RelSpaceLabel" />
+                      <Col width="15em" layoutType="itemIdentifier" bindingId="RelName" />
+                      <Col width="2em" bindingId="Spacer" />
+                      <Col>
+                        <Row>
+                          <Col width="1.5em" layoutType="itemLabel pull-right" bindingId="RelIdLabel" />
+                          <Col width="0.5em" bindingId="Spacer" />
+                          <Col width="8em" layoutType="itemValue" bindingId="RelId" />
+                        </Row>
+                        <Row>
+                          <Col width="1.8em" layoutType="itemLabel pull-right" bindingId="RelCityLabel" />
+                          <Col width="0.5em" bindingId="Spacer" />
+                          <Col width="8em" layoutType="itemValue" bindingId="RelCity" />
+                        </Row>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Default>
+                <Apple>
+                  <Col>
+                    <Row>
+                      <Col width="1.5em" height="1.5em" layoutType="Image" bindingId="RelMain" />
+                      <Col layoutType="itemIdentifier" bindingId="RelSpaceLabel" />
+                      <Col width="15em" layoutType="itemIdentifier" bindingId="RelName" />
+                      <Col width="2em" bindingId="Spacer" />
+                      <Col>
+                        <Row>
+                          <Col width="1.5em" layoutType="itemLabel pull-right" bindingId="RelIdLabel" />
+                          <Col width="0.5em" bindingId="Spacer" />
+                          <Col width="8em" layoutType="itemValue" bindingId="RelId" />
+                        </Row>
+                        <Row>
+                          <Col width="1.8em" layoutType="itemLabel pull-right" bindingId="RelCityLabel" />
+                          <Col width="0.5em" bindingId="Spacer" />
+                          <Col width="8em" layoutType="itemValue" bindingId="RelCity" />
+                        </Row>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Apple>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col width="2em" height="1.5em" layoutType="Image" bindingId="RelMain" />
+                  <Col width="8.5em" layoutType="itemIdentifier" bindingId="RelName" />
+                  <Col width="1.5em">
+                    <Row layoutType="itemLabel pull-right" bindingId="RelIdLabel" />
+                    <Row layoutType="itemLabel pull-right" bindingId="RelCityLabel" />
+                  </Col>
+                  <Col width="0.5em" bindingId="Spacer" />
+                  <Col flex="1">
+                    <Row layoutType="itemValue" bindingId="RelId" />
+                    <Row layoutType="itemValue" bindingId="RelCity" />
+                  </Col>
+                </Default>
+                <Apple>
+                  <Col width="2em" height="1.5em" layoutType="Image" bindingId="RelMain" />
+                  <Col width="8.5em" layoutType="itemIdentifier" bindingId="RelName" />
+                  <Col width="1.5em">
+                    <Row layoutType="itemLabel pull-right" bindingId="RelIdLabel" />
+                    <Row layoutType="itemLabel pull-right" bindingId="RelCityLabel" />
+                  </Col>
+                  <Col width="0.5em" bindingId="Spacer" />
+                  <Col flex="1">
+                    <Row layoutType="itemValue" bindingId="RelId" />
+                    <Row layoutType="itemValue" bindingId="RelCity" />
+                  </Col>
+                </Apple>
+              </Phone>
+            </ItemListLayout>
+            <Bindings>
+              <Binding target="Relation" type="Text" binding=".relation" bindingMode="ONE_WAY" />
+              <Resource target="RelSpaceLabel" type="Label" defaultLabel="  " id="RelSpaceLabelId" />
+              <Binding target="RelName" type="Text" binding=".name" bindingMode="ONE_WAY" />
+              <Binding target="RelId" type="Text" binding=".relationId" bindingMode="ONE_WAY" />
+              <Binding target="RelCity" type="Text" binding=".city" bindingMode="ONE_WAY" />
+              <Binding target="RelMain" type="Image" binding=".imageId" bindingMode="ONE_WAY" />
+              <Resource target="RelIdLabel" type="Label" id="RelIdLabel" defaultLabel="Id" />
+              <Resource target="RelCityLabel" type="Label" id="RelCityLabel" defaultLabel="City" />
+              <Resource target="Spacer" type="Label" defaultLabel=" " id="SpacerId" />
+            </Bindings>
+          </Items>
+        </GroupedList>
+      </Area>
+      <Area areaName="Attachments" areaPattern="SingleElementArea">
+        <MediaListControl name="CallPromotionAttachments" dataSource="ProcessContext::CustomerDetail.loAttachment.Items[]">
+          <Bindings>
+            <Binding bindingMode="ONE_WAY" binding=".mediaPath" type="Text" target="MediaPath" />
+            <Binding bindingMode="ONE_WAY" binding=".description" type="Text" target="Description" />
+            <Binding bindingMode="ONE_WAY" binding=".type" type="Text" target="Type" />
+          </Bindings>
+        </MediaListControl>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

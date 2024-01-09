@@ -1,0 +1,34 @@
+<Process name="Order::PasteFromClipboardProcess" defaultAction="ShowClipboard" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="ImportedItems" type="Object" />
+      </Declarations>
+      <Parameters>
+        <Input name="ValidationList" type="LoFastOrderProducts" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions></EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowClipboard">
+        <UIDescription>Order::PasteFromClipboardUI</UIDescription>
+        <Events>
+          <Event name="ReloadFromClipboard" action="ReloadFromClipboard" />
+          <Event name="EndDataImport" action="ImportFromClipboard" />
+        </Events>
+      </Action>
+      <Action name="ReloadFromClipboard" actionType="LOGIC" call="DataImportWizard.reloadFromClipboard" />
+      <Action name="ImportFromClipboard" actionType="LOGIC" call="DataImportWizard.getImportedItemsAsync">
+        <Return name="ProcessContext::ImportedItems" />
+        <TransitionTo action="EndWithImportedItems" />
+      </Action>
+      <Action name="EndWithImportedItems" actionType="END">
+        <ReturnValues>
+          <Return name="ImportedItems" value="ProcessContext::ImportedItems" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

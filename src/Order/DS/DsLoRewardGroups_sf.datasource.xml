@@ -1,0 +1,21 @@
+<DataSource name="DsLoRewardGroups" backendSystem="sf" businessObjectClass="LoRewardGroups" external="false" editableEntity="Promotion_Reward_Group__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Promotion_Reward_Group__c" column="Id" />
+    <Attribute name="multiplicity" table="Promotion_Reward_Group__c" column="Reward_Multiplicity__c" />
+    <Attribute name="promotionPKey" table="Promotion_Reward_Group__c" column="Promotion__c" />
+    <DerivedAttribute name="rewardGroupTitle" value="Promotion_Reward_Group__c.Title_#Language#__c || ' (' || Promotion_Reward_Group__c.Count_Hurdles__c || CASE WHEN Promotion_Reward_Group__c.Count_Hurdles__c = 1 THEN ' Hurdle)' ELSE ' Hurdles)' END" />
+    <Attribute name="sort" table="Promotion_Reward_Group__c" column="Sort__c" />
+    <Attribute name="rewardGroupDescription" table="Promotion_Reward_Group__c" column="Description_#Language#__c" />
+  </Attributes>
+  <Entities>
+    <Entity name="Promotion_Reward_Group__c" alias="" idAttribute="Id" />
+  </Entities>
+  <QueryCondition><![CDATA[
+  Promotion_Reward_Group__c.Promotion__c in (#promotionPKeyList#)
+  AND Promotion_Reward_Group__c.Included__c = '1'
+  ]]></QueryCondition>
+  <OrderCriteria />
+  <Parameters>
+    <Parameter name="promotionPKeyList" type="LIST" />
+  </Parameters>
+</DataSource>

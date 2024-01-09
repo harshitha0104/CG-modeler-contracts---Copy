@@ -1,0 +1,13 @@
+<ListItem name="LiTodoAttachments">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" id="true" />
+    <SimpleProperty name="svcTodoPKey" type="DomPKey" dataSourceProperty="svcTodoPKey" />
+    <SimpleProperty name="creationDate" type="DomPKey" dataSourceProperty="creationDate" />
+    <SimpleProperty name="fileName" type="DomFileName" dataSourceProperty="fileName" />
+    <SimpleProperty name="mediaPath" type="DomBlob" dataSourceProperty="mediaPath" blobTable="SvcTodoAttachmentBlob" blobPKeyField="attachmentBlobPKey" />
+    <SimpleProperty name="description" type="DomText" dataSourceProperty="description" />
+    <SimpleProperty name="type" type="DomFileType" dataSourceProperty="type" />
+    <SimpleProperty name="attachmentTextPKey" type="DomPKey" dataSourceProperty="attachmentTextPKey" />
+    <SimpleProperty name="attachmentBlobPKey" type="DomPKey" dataSourceProperty="attachmentBlobPKey" />
+  </SimpleProperties>
+</ListItem>

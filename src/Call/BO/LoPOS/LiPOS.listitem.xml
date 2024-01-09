@@ -1,0 +1,24 @@
+<ListItem name="LiPOS">
+  <SimpleProperties>
+    <SimpleProperty name="posId" type="DomPKey" dataSourceProperty="posId" />
+    <SimpleProperty name="clbMainPKey" type="DomPKey" dataSourceProperty="clbMainPKey" />
+    <SimpleProperty name="bpaMainPKey" type="DomPKey" dataSourceProperty="bpaMainPKey" />
+    <SimpleProperty name="metaType" type="DomBpaPOSMetaType" dataSourceProperty="metaType" />
+    <SimpleProperty name="name" type="DomText" dataSourceProperty="name" />
+    <SimpleProperty name="count" type="DomInteger" dataSourceProperty="count" />
+    <SimpleProperty name="surveyCount" type="DomInteger" dataSourceProperty="count" />
+    <SimpleProperty name="questionCount" type="DomInteger" dataSourceProperty="count" />
+    <SimpleProperty name="isPOS" type="DomBool" dataSourceProperty="isPOS" />
+    <SimpleProperty name="questionsInitialized" type="DomBool" dataSourceProperty="questionsInitialized" />
+    <SimpleProperty name="productsInitialized" type="DomBool" dataSourceProperty="surveysInitialized" />
+    <SimpleProperty name="posContentPKey" type="DomPKey" dataSourceProperty="posContentPKey" />
+    <SimpleProperty name="posContentProductCount" type="DomInteger" dataSourceProperty="posContentProductCount" />
+    <SimpleProperty name="isPOSCheck" type="DomBool" dataSourceProperty="isPOSCheck" />
+    <SimpleProperty name="isKubsch" type="DomBool" dataSourceProperty="isKubsch" />
+    <SimpleProperty name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="imageId" type="DomText" dataSourceProperty="imageId" />
+    <SimpleProperty name="surveyProducts" type="Object" />
+    <SimpleProperty name="surveys" type="Object" />
+    <SimpleProperty name="posMetaPKey" type="DomPKey" dataSourceProperty="posMetaPKey" />   
+  </SimpleProperties>
+</ListItem>

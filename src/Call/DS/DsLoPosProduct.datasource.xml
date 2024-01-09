@@ -1,0 +1,35 @@
+<DataSource name="DsLoPosProduct" businessObjectClass="LoPosProduct" external="false" distinct="false" readOnly="true" editableEntity="PrdPOSProduct" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="productPKey" table="PrdPOSProduct" column="ProductPKey" />
+    <Attribute name="jobDefinitionMetaPKey" table="PrdPOSTargetValue" column="JobDefinitionMetaPKey" />
+    <Attribute name="targetValueColumn" table="JobDefinitionMeta" column="TargetValueColumn" />
+    <Attribute name="targetValue" table="PrdPOSTargetValue" column="TargetValue" />
+  </Attributes>
+  <Entities>
+    <Entity name="PrdPOSProduct" alias="" />
+    <Entity name="PrdPOSTargetValue" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="PrdPOSProduct.PKey" comparator="eq" rightSideType="Attribute" rightSideValue="PrdPOSTargetValue.PrdPOSProductPKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="JobDefinitionMeta" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="PrdPOSTargetValue.JobDefinitionMetaPKey" comparator="eq" rightSideType="Attribute" rightSideValue="JobDefinitionMeta.PKey" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+			PrdPOSProduct.PrdPOSContentPKey = #prdPosContentPkey#
+			AND PrdPOSProduct.Exclude = '0'
+		]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="PrdPOSProduct" attribute="ProductPKey" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="prdPosContentPkey" type="TEXT" />
+  </Parameters>
+</DataSource>

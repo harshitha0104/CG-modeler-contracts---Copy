@@ -1,0 +1,258 @@
+<Process name="Application::UserCockpitProcess" defaultAction="ShowCockpit" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <!-- Helper -->
+        <Declaration name="CardController" type="BoUserCockpitHelper" />
+        <Declaration name="CardDate" type="DomDate" />
+        <!-- Card: Summary -->
+        <Declaration name="CardUserWelcome_DataLoaded" type="DomBool" />
+        <Declaration name="LuVisitCount" type="LuVisitCountByDate" />
+        <!-- Card: Visits of today -->
+        <Declaration name="CardVisits_InformationText" type="String" />
+        <Declaration name="CardVisits_DataLoaded" type="DomBool" />
+        <Declaration name="CardVisits_DisplayedSubcomponentName" type="String" />
+        <Declaration name="CardVisits_VisitList" type="LoVisitsByDate" />
+        <Declaration name="CardVisits_refreshRelatedData" type="DomBool" />
+        <!-- Context Menu items -->
+        <Declaration name="CardVisits_ContextMenuList" type="LoVisitOverviewContextMenu" />
+        <Declaration name="CardMap_VisitList" type="LoVisitMap" />
+        <Declaration name="VisitList" type="LoVisit" />
+      </Declarations>
+      <Parameters>
+        <Input name="Mode" type="String" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <!-- Card Controller-->
+      <Action name="CreateCardController" actionType="Create" type="BoUserCockpitHelper">
+        <Parameters>
+          <Input name="mode" value="ProcessContext::Mode" />
+        </Parameters>
+        <Return name="ProcessContext::CardController" />
+      </Action>
+      <!-- Initiate CardDate as Current Date-->
+      <Action actionType="LOGIC" name="SetCardDate" call="Utils.createAnsiDateToday">
+        <Return name="ProcessContext::CardDate" />
+      </Action>
+      <Action name="CardVisits_GetVisits" actionType="CREATE" type="LoVisit">
+        <Return name="ProcessContext::VisitList" />
+      </Action>
+      <Action name="CardMap_CreateVisitMap" actionType="CREATE" type="LoVisitMap">
+        <Return name="ProcessContext::CardMap_VisitList" />
+      </Action>
+      <Action name="InitializeCWWithUserSetting" actionType="LOGIC" call="ApplicationContext::User.boUserSettings.getClbShowCalendarWeekMobility">
+        <Return name="ProcessContext::DisplayCalendarWeek" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <!-- View Action -->
+      <Action name="ShowCockpit" actionType="VIEW">
+        <UIDescription>Application::UserCockpitUI</UIDescription>
+        <Events>
+          <Event name="openOrderOverview" action="OrderOverview" />
+          <Event name="openUsrSettings" action="UsrSettings" />
+          <Event name="OpenAboutScreen" action="OpenAboutScreen" />
+          <Event name="User_Logout" action="LogoutUser" />
+          <Event name="CardUserWelcome_loadData" action="CardUserWelcome_loadData" />
+          <Event name="CardVisits_loadData" action="CardVisits_loadData" />
+          <Event name="CardVisits_itemSelected" action="CardVisits_LoadCallFinal" />
+          <Event name="CardVisits_showVisitCalendar" action="CardVisits_ShowVisitCalendar" />
+          <Event name="CardVisits_contextMenuOpening" action="CardVisits_GetContextMenu" />
+          <Event name="CardVisits_contextMenuItemSelected" action="CardVisits_ContextMenu_Result_Decision" />
+          <!-- Card: Visits guide -->
+          <Event name="CardVisitsGuideMap_loadData" action="CardVisitsGuideMap_LoadVisitsForToday" />
+          <Event name="CardVisitsGuide_loadData" action="InitializeDisplayTrafficWithUserSetting" />
+          <Event name="CardVisitGuide_ShowGuideVisitMap" action="CardVisitGuide_Navigate" />
+          <Event name="CardVisitsGuide_ShowMaximizedMap" action="CardVisitGuide_ShowGuideVisitMap" />
+          <Event name="CardVisitGuide_ShowAgendaDailyView" action="CardVisitGuide_ShowAgendaDailyView" />
+          <!--Manually Refresh Cockpit -->
+          <Event name="refreshCockpitUI" action="ReloadCockpitCards" />
+        </Events>
+      </Action>
+      <Action actionType="LOGIC" name="LogoutUser" call="ApplicationContext::User.logout" />
+      <!-- Process Actions -->
+      <Action actionType="PROCESS" name="OrderOverview" process="Order::OverviewProcess" />
+      <Action actionType="PROCESS" name="UsrSettings" process="User::UsrSettingsProcess" />
+      <Action actionType="PROCESS" name="OpenAboutScreen" process="Application::AboutProcess" />
+      <!-- Summary Card -->
+      <Action name="CardUserWelcome_loadData" actionType="LOAD" type="LuVisitCountByDate">
+        <Parameters>
+          <Input name="cardDate" value="ProcessContext::CardDate" />
+        </Parameters>
+        <Return name="ProcessContext::LuVisitCount" />
+        <TransitionTo action="CardUserWelcome_refreshSalesCockpitData" />
+      </Action>
+      <Action actionType="LOGIC" name="CardUserWelcome_refreshSalesCockpitData" call="ProcessContext::CardController.refreshSalesCockpitData">
+        <Return name="ProcessContext::CardController" />
+        <TransitionTo action="SetCardUserWelcome_DataLoaded" />
+      </Action>
+      <Action name="SetCardUserWelcome_DataLoaded" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::CardUserWelcome_DataLoaded" />
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <TransitionTo action="CardWelcome_RefreshRelatedData_Decision" />
+      </Action>
+      <Action name="CardWelcome_RefreshRelatedData_Decision" actionType="DECISION" parameter="ProcessContext::CardVisits_refreshRelatedData">
+        <Case value="1" action="CardVisitsGuideMap_LoadVisitsForToday" />
+        <CaseElse action="ShowCockpit" />
+        <CaseEmpty action="ShowCockpit" />
+      </Action>
+      <!-- Visits Card -->
+      <Action name="CardVisits_loadData" actionType="LOAD" type="LoVisitsByDate">
+        <Parameters>
+          <Input name="cardDate" value="ProcessContext::CardDate" />
+        </Parameters>
+        <Return name="ProcessContext::CardVisits_VisitList" />
+        <TransitionTo action="CardVisits_GetCardInformation" />
+      </Action>
+      <Action actionType="LOGIC" name="CardVisits_GetCardInformation" call="ProcessContext::CardVisits_VisitList.getInfoForCard">
+        <Parameters>
+          <Input name="limitOfCardItems" value="ProcessContext::CardController.limitOfCardItems" />
+        </Parameters>
+        <Return name="ProcessContext::CardVisits_InformationText" />
+        <TransitionTo action="AssignDisplayedSubcomponentNameForVisit" />
+      </Action>
+      <Action name="AssignDisplayedSubcomponentNameForVisit" actionType="LOGIC" call="ProcessContext::CardController.getDisplayedSubcomponentName">
+        <Parameters>
+          <Input name="loItems" value="ProcessContext::CardVisits_VisitList" />
+          <Input name="type" value="Visits" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::CardVisits_DisplayedSubcomponentName" />
+        <TransitionTo action="SetVisitCard_DataLoaded" />
+      </Action>
+      <Action name="SetVisitCard_DataLoaded" actionType="LOGIC" call="Utils.identity">
+        <Return name="ProcessContext::CardVisits_DataLoaded" />
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <TransitionTo action="CardVisits_RefreshRelatedData_Decision" />
+      </Action>
+      <Action name="CardVisits_RefreshRelatedData_Decision" actionType="DECISION" parameter="ProcessContext::CardVisits_refreshRelatedData">
+        <Case value="1" action="CardUserWelcome_loadData" />
+        <CaseElse action="ShowCockpit" />
+        <CaseEmpty action="ShowCockpit" />
+      </Action>
+      <Action actionType="PROCESS" name="CardVisits_ShowVisitCalendar" process="Visit::CalendarProcess">
+        <Parameters>
+          <Input name="VisitView" value="Week" />
+          <Input name="currentDate" value="ProcessContext::CardDate" />
+        </Parameters>
+      </Action>
+      <Action name="CardVisits_LoadCallFinal" actionType="PROCESS" process="Visit::LoadVisitProcess">
+        <Parameters>
+          <Input name="VisitPKey" value="Event.pKey" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentUser" />
+        </Parameters>
+      </Action>
+      <!-- Get Action Items -->
+      <Action name="CardVisits_GetContextMenu" actionType="LOAD" type="LoVisitOverviewContextMenu">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+          <Input name="visitStatus" value="Event.visitStatus" />
+        </Parameters>
+        <Return name="ProcessContext::CardVisits_ContextMenuList" />
+      </Action>
+      <Action name="CardVisits_ContextMenu_Result_Decision" actionType="DECISION" parameter="Event.selected">
+        <Case value="Execute" action="CardVisits_LoadCallFinal" />
+        <Case value="Abandon" action="CardVisits_AbandonVisit" />
+        <Case value="Complete" action="SetVisit_Complete" />
+        <Case value="Re-Schedule" action="CardVisits_RescheduleVisit" />
+        <Case value="Info" action="CardVisits_VisitInfo" />
+        <Case value="NavigateToCustomer" action="CardVisits_NavigateToCustomer" />
+        <CaseElse action="ShowCockpit" />
+        <CaseEmpty action="ShowCockpit" />
+      </Action>
+      <Action name="CardVisits_refresh" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="value" value="1" type="Literal" />
+        </Parameters>
+        <Return name="ProcessContext::CardVisits_refreshRelatedData" />
+        <TransitionTo action="CardVisits_loadData" />
+      </Action>
+      <Action name="SetVisit_Complete" actionType="PROCESS" process="Visit::ChangeStatusWizardProcess">
+        <Parameters>
+          <Input name="VisitPKey" value="Event.pKey" />
+          <Input name="targetClbStatus" value="Completed" type="Literal" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentUser" />
+        </Parameters>
+        <TransitionTo action="CardVisits_refresh" />
+      </Action>
+      <Action name="CardVisits_VisitInfo" actionType="PROCESS" process="Visit::InfoProcess">
+        <Parameters>
+          <Input name="VisitPKey" value="Event.pKey" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentUser" />
+        </Parameters>
+      </Action>
+      <Action name="CardVisits_AbandonVisit" actionType="PROCESS" process="Visit::ChangeStatusWizardProcess">
+        <Parameters>
+          <Input name="VisitPKey" value="Event.pKey" />
+          <Input name="targetClbStatus" value="Abandoned" type="Literal" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentUser" />
+        </Parameters>
+        <TransitionTo action="CardVisits_refresh" />
+      </Action>
+      <!-- Reschedule visit actions-->
+      <Action name="CardVisits_RescheduleVisit" actionType="PROCESS" process="Visit::RescheduleProcess">
+        <Parameters>
+          <Input name="VisitPKey" value="Event.pKey" />
+          <Input name="dateFrom" value="Event.dateFrom" />
+          <Input name="timeFrom" value="Event.timeFrom" />
+          <Input name="dateThru" value="Event.dateThru" />
+          <Input name="timeThru" value="Event.timeThru" />
+          <Input name="ResponsiblePKey" value="ProcessContext::CurrentUser" />
+        </Parameters>
+        <TransitionTo action="CardVisits_refresh" />
+      </Action>
+      <!-- Navigate to customer actions-->
+      <Action actionType="LOGIC" name="CardVisits_NavigateToCustomer" call="ProcessContext::CardVisits_VisitList.navigateToCustomer">
+        <Parameters>
+          <Input name="MainPKey" value="Event.pKey" />
+        </Parameters>
+      </Action>
+      <!-- Card: Visits Guide  START-->
+      <Action name="CardVisitsGuideMap_LoadVisitsForToday" actionType="LOGIC" call="ProcessContext::VisitList.getVisitsByDate">
+        <Parameters>
+          <Input name="currentDateStart" value="ProcessContext::CardDate" />
+          <Input name="currentDateEnd" value="ProcessContext::CardDate" />
+          <Input name="dateFunction" value="None" type="Literal" />
+          <Input name="filterVisits" value="All" />
+        </Parameters>
+        <Return name="ProcessContext::ProcessContext::CardDate" />
+        <TransitionTo action="CardMap_LoadRelevantVisit" />
+      </Action>
+      <Action actionType="LOGIC" name="CardMap_LoadRelevantVisit" call="ProcessContext::CardMap_VisitList.addRelevantItem">
+        <Parameters>
+          <Input name="loVisitList" value="ProcessContext::VisitList" />
+        </Parameters>
+        <Return name="ProcessContext::CardMap_DataLoaded" />
+      </Action>
+      <Action actionType="PROCESS" name="CardVisitGuide_ShowGuideVisitMap" process="Visit::ShowMapProcess">
+        <Parameters>
+          <Input name="CardVisits_VisitList" value="ProcessContext::CardVisits_VisitList" />
+        </Parameters>
+      </Action>
+      <Action actionType="PROCESS" name="CardVisitGuide_ShowAgendaDailyView" process="Visit::CalendarProcess">
+        <Parameters>
+          <Input name="VisitView" value="DayWithMap" />
+          <Input name="currentDate" value="ProcessContext::CardDate" />
+        </Parameters>
+      </Action>
+      <Action name="InitializeDisplayTrafficWithUserSetting" actionType="LOGIC" call="ApplicationContext::User.boUserSettings.getClbDisplayTrafficInMapMobility">
+        <Return name="ProcessContext::DisplayTraffic" />
+      </Action>
+      <Action actionType="LOGIC" name="CardVisitGuide_Navigate" call="ProcessContext::CardMap_VisitList.navigate" />
+     <!-- Reload Cockpit START -->
+      <Action actionType="LOGIC" name="ReloadCockpitCards" call="CardController.triggerReload">
+        <Parameters>
+          <Input name="areaName" value="mainArea" type="Literal" />
+        </Parameters>
+        <TransitionTo action="ShowCockpit" />
+      </Action>
+      <!-- Reload Cockpit END-->
+    </Actions>
+  </Body>
+</Process>

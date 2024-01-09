@@ -1,0 +1,11 @@
+<LookupObject name="LuUser">
+  <DataSource name="DsLuUser" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="name" type="DomUsrName" dataSourceProperty="name" />
+    <SimpleProperty name="id" type="DomId" dataSourceProperty="id" />
+    <SimpleProperty name="firstName" type="DomString" dataSourceProperty="firstName" />
+    <SimpleProperty name="lastName" type="DomString" dataSourceProperty="lastName" />
+  </SimpleProperties>
+  <Methods />
+</LookupObject>

@@ -1,0 +1,44 @@
+<BusinessObject name="BoSalesCockpitHelper" schemaVersion="1.1">
+  <DataSource name="DsBoSalesCockpitHelper" />
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="cardVisists_dataLoaded" type="DomBool" />
+    <SimpleProperty name="cardUserWelcome_DateText" type="DomText" />
+    <SimpleProperty name="isTourUser" type="DomBool" />
+    <SimpleProperty name="collapseState_CardUserWelcome" type="DomBool" />
+    <SimpleProperty name="collapseState_CardSync" type="DomBool" />
+    <SimpleProperty name="collapseState_CardVisits" type="DomBool" />
+    <SimpleProperty name="collapseState_CardReporting" type="DomBool" />
+    <SimpleProperty name="collapseState_CardUserNotifications" type="DomBool" />
+    <SimpleProperty name="collapseState_CardTasks" type="DomBool" />
+    <SimpleProperty name="collapseState_CardCustomerTasks" type="DomBool" />
+    <SimpleProperty name="collapseState_CardActivities" type="DomBool" />
+    <SimpleProperty name="collapseState_CardCustomersOverdue" type="DomBool" />
+    <SimpleProperty name="cardVisits_emptyMainMessage" type="DomText" />
+    <SimpleProperty name="cardVisits_emptySubMessage" type="DomText" />
+    <SimpleProperty name="cardTasks_emptyMainMessage" type="DomText" />
+    <SimpleProperty name="cardTasks_emptySubMessage" type="DomText" />
+    <SimpleProperty name="cardCustomerTasks_emptyMainMessage" type="DomText" />
+    <SimpleProperty name="cardCustomerTasks_emptySubMessage" type="DomText" />
+    <SimpleProperty name="cardCustomersOverdue_emptyMainMessage" type="DomText" />
+    <SimpleProperty name="collapseState_CardVisitsGuide" type="DomBool" />
+    <SimpleProperty name="dsdMode" type="DomBool" />
+    <SimpleProperty name="numberOfListItems" type="DomInteger" />
+    <SimpleProperty name="isCurrentDateIsToday" type="DomBool" />
+    <SimpleProperty name="collapseState_CardMobileLinks" type="DomBool" />
+    <SimpleProperty name="collapseState_CardQuickAccess" type="DomBool" />
+  </SimpleProperties>
+  <NestedObjects></NestedObjects>
+  <ObjectLookups></ObjectLookups>
+  <ListObjects></ListObjects>
+  <Methods>
+    <Method name="afterCreateAsync" />
+    <Method name="isCardVisible" />
+    <Method name="isCardMaximizable" />
+    <Method name="isCardCollapsible" />
+    <Method name="getDisplayedSubcomponentName" />
+    <Method name="refreshSalesCockpitData" />
+    <Method name="checkIsCurrentDateToday" />
+    <Method name="getCockpitMenuVisibility" />
+  </Methods>
+</BusinessObject>

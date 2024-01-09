@@ -1,0 +1,167 @@
+<Process name="Visit::RescheduleProcess" defaultAction="Silent_Decision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="VisitBo" type="BoVisit" />
+        <Declaration name="RescheduleVisitBo" type="BoWizardRescheduleVisit" />
+        <Declaration name="duration" type="String" />
+        <Declaration name="RetailStoreBo" type="BoRetailStore" />
+        <Declaration name="OperatingHoursBo" type="BoOperatingHours" />
+      </Declarations>
+      <Parameters>
+        <Input name="VisitPKey" type="DomPKey" />
+        <Input name="dateThru" type="String" />
+        <Input name="timeThru" type="String" />
+        <Input name="dateFrom" type="String" />
+        <Input name="timeFrom" type="String" />
+        <Input name="Silent" type="DomString" />
+        <Input name="ResponsiblePKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="LoadVisit" actionType="LOAD" type="BoVisit">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::VisitPKey" />
+          <Input name="referenceUserPKey" value="ProcessContext::ResponsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::VisitBo" />
+      </Action>
+      <Action name="LoadVisitWizardBo" actionType="CREATE" type="BoWizardRescheduleVisit">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::VisitPKey" />
+          <Input name="dateFrom" value="ProcessContext::VisitBo.plannedStartDate" />
+          <Input name="timeFrom" value="ProcessContext::VisitBo.plannedStartTime" />
+          <Input name="dateThru" value="ProcessContext::VisitBo.plannedEndDate" />
+          <Input name="timeThru" value="ProcessContext::VisitBo.plannedEndTime" />
+          <Input name="duration" value="ProcessContext::VisitBo.duration" />
+        </Parameters>
+        <Return name="ProcessContext::RescheduleVisitBo" />
+      </Action>
+      <Action name="loadRetailStore" actionType="LOAD" type="BoRetailStore">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::VisitBo.storeId" />
+        </Parameters>
+        <Return name="ProcessContext::RetailStoreBo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action name="Silent_Decision" actionType="DECISION" parameter="ProcessContext::Silent">
+        <Case value="1" action="doesOperatingHoursExist" />
+        <Case value="2" action="WizardValidation" />
+        <CaseElse action="ShowDetail" />
+        <CaseEmpty action="ShowDetail" />
+      </Action>
+      <!-- opening hours validation -->
+      <Action name="doesOperatingHoursExist" actionType="DECISION" parameter="ProcessContext::RetailStoreBo.operatingHoursId">
+        <CaseEmpty action="RescheduleVisit" />
+        <CaseElse action="loadOperatingHours" />
+      </Action>
+      <Action name="loadOperatingHours" actionType="LOAD" type="BoOperatingHours">
+        <Parameters>
+          <Input name="operatingHoursId" value="ProcessContext::RetailStoreBo.operatingHoursId" />
+        </Parameters>
+        <Return name="ProcessContext::OperatingHoursBo" />
+        <TransitionTo action="validateOperatingHours" />
+      </Action>
+      <Action name="validateOperatingHours" actionType="LOGIC" call="ProcessContext::VisitBo.validateOperatingHours">
+        <Parameters>
+          <Input name="dateFrom" value="ProcessContext::dateFrom" />
+          <Input name="timeFrom" value="ProcessContext::timeFrom" />
+          <Input name="operatingHoursBo" value="ProcessContext::OperatingHoursBo" />
+        </Parameters>
+        <Return name="ProcessContext::validationResult" />
+        <TransitionTo action="validateOperatingHoursdecision" />
+      </Action>
+      <Action name="validateOperatingHoursdecision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="true" action="RescheduleVisit" />
+        <Case value="false" action="OperatingHoursvalidationMsg" />
+        <CaseElse action="OperatingHoursvalidationMsg" />
+        <CaseEmpty action="OperatingHoursvalidationMsg" />
+      </Action>
+      <Action name="OperatingHoursvalidationMsg" actionType="CONFIRM" confirmType="Ok">
+        <Message messageId="visitTimingsIsNotInBetweenStoreTimings" />
+        <Cases>
+          <Case value="Ok" action="EndCancel" />
+        </Cases>
+      </Action>
+      <!-- opening hours validation end -->
+      <Action actionType="LOGIC" name="RescheduleVisit" call="ProcessContext::VisitBo.reschedule">
+        <Parameters>
+          <Input name="newDateFrom" value="ProcessContext::dateFrom" />
+          <Input name="newTimeFrom" value="ProcessContext::timeFrom" />
+          <Input name="newDateThru" value="ProcessContext::dateThru" />
+          <Input name="newTimeThru" value="ProcessContext::timeThru" />
+        </Parameters>
+        <TransitionTo action="End" />
+      </Action>
+      <Action actionType="View" name="ShowDetail">
+        <UIDescription>Visit::RescheduleUI</UIDescription>
+        <Events>
+          <Event name="rescheduleVisit" action="WizardValidation" />
+        </Events>
+      </Action>
+      <Action actionType="VALIDATION" name="WizardValidation">
+        <Validations>
+          <Validation name="ProcessContext::RescheduleVisitBo.validateRescheduleVisit" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="doesOperatingHoursExistForWizard" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowDetail" />
+        <CaseEmpty action="EndCancel" />
+      </Action>
+      <!-- operating hours validation -->
+      <Action name="doesOperatingHoursExistForWizard" actionType="DECISION" parameter="ProcessContext::RetailStoreBo.operatingHoursId">
+        <CaseEmpty action="RescheduleVisitByWizard" />
+        <CaseElse action="loadOperatingHoursForWizard" />
+      </Action>
+      <Action name="loadOperatingHoursForWizard" actionType="LOAD" type="BoOperatingHours">
+        <Parameters>
+          <Input name="operatingHoursId" value="ProcessContext::RetailStoreBo.operatingHoursId" />
+        </Parameters>
+        <Return name="ProcessContext::OperatingHoursBo" />
+        <TransitionTo action="validateOperatingHoursForWizard" />
+      </Action>
+      <Action name="validateOperatingHoursForWizard" actionType="LOGIC" call="ProcessContext::VisitBo.validateOperatingHours">
+        <Parameters>
+          <Input name="dateFrom" value="ProcessContext::RescheduleVisitBo.dateFrom" />
+          <Input name="timeFrom" value="ProcessContext::RescheduleVisitBo.timeFrom" />
+          <Input name="operatingHoursBo" value="ProcessContext::OperatingHoursBo" />
+        </Parameters>
+        <Return name="ProcessContext::validationResult" />
+        <TransitionTo action="validateOperatingHoursDecisionForWizard" />
+      </Action>
+      <Action name="validateOperatingHoursDecisionForWizard" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="true" action="RescheduleVisitByWizard" />
+        <Case value="false" action="OperatingHoursvalidationMsg" />
+        <CaseElse action="OperatingHoursvalidationMsg" />
+        <CaseEmpty action="OperatingHoursvalidationMsg" />
+      </Action>
+      <!-- operating hours validation end -->
+      <Action actionType="LOGIC" name="RescheduleVisitByWizard" call="ProcessContext::VisitBo.reschedule">
+        <Parameters>
+          <Input name="newDateFrom" value="ProcessContext::RescheduleVisitBo.dateFrom" />
+          <Input name="newTimeFrom" value="ProcessContext::RescheduleVisitBo.timeFrom" />
+          <Input name="newDateThru" value="ProcessContext::RescheduleVisitBo.dateThru" />
+          <Input name="newTimeThru" value="ProcessContext::RescheduleVisitBo.timeThru" />
+          <Input name="newDuration" value="ProcessContext::RescheduleVisitBo.duration" />
+        </Parameters>
+        <TransitionTo action="EndCancel" />
+      </Action>
+      <Action actionType="END" name="EndCancel">
+        <ReturnValues>
+          <Return name="refreshRequired" type="Literal" value="0" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="refreshRequired" type="Literal" value="1" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

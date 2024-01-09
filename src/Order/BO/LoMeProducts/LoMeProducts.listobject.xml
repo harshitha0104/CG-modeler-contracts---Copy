@@ -1,0 +1,6 @@
+<!-- // OBSOLETE!! - No longer called by core - Data is retrieved via datasource from LoProductForAdd via temp table containing the merge result-->
+<ListObject name="LoMeProducts" generateLoadMethod="true" >
+  <DataSource name="DsLoMeProducts" />
+  <Item objectClass="LiMeProducts" />
+  <Methods></Methods>
+</ListObject>

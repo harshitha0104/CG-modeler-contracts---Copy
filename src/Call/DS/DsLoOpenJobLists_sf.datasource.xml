@@ -1,0 +1,185 @@
+<DataSource name="DsLoOpenJobLists" backendSystem="sf" businessObjectClass="LoOpenJobLists" external="false" distinct="true" readOnly="true" editableEntity="Job_List__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Job_List__c" column="Id" />
+    <Attribute name="jobDefinitionListText" table="Job_Definition_List__c" column="Description_#Language#__c" />
+    <Attribute name="validFrom" table="Job_List__c" column="Valid_From__c" />
+    <Attribute name="validThru" table="Job_List__c" column="Valid_Thru__c" />
+    <Attribute name="clbMetaPKey" table="Job_List__c" column="Visit_Template__c" />
+    <Attribute name="userPKey" table="Job_List__c" column="Manager__c" />
+    <Attribute name="customerPKey" table="Job_List__c" column="Account__c" />
+    <Attribute name="customerName" table="Account" column="Name" />
+    <Attribute name="customerId" table="Account" column="Id" />
+    <Attribute name="customerStreet" table="Account" column="ShippingStreet" />
+    <Attribute name="customerZIP" table="Account" column="ShippingPostalCode" />
+    <Attribute name="customerCity" table="Account" column="ShippingCity" />
+    <Attribute name="customerState" table="Account" column="ShippingState" />
+    <Attribute name="promotionId" table="Job_Definition_List__c" column="Promotion__c" />
+    <Attribute name="promotionSlogan" table="Promotion__c" column="Slogan_#Language#__c" />
+    <Attribute name="promotionDateFrom" table="Promotion__c" column="Date_from__c" />
+    <Attribute name="promotionDateThru" table="Promotion__c" column="Date_thru__c" />
+    <DerivedAttribute name="customerAddress" value="trim(Account.ShippingStreet)|| ''  || CASE WHEN length(trim(Account.ShippingStreet)) &gt; 0 THEN ', ' ELSE '' END || Account.ShippingCity" />
+    <DerivedAttribute name="managed" value="CASE WHEN Account_Manager__c.Id IS NULL THEN '0' ELSE '1' END" />
+    <DerivedAttribute name="substituted" value="CASE WHEN SubMain.Substituted__c IS NULL THEN '0' ELSE '1' END" />
+    <DerivedAttribute name="substitutedUsrPKey" value="CASE WHEN SubMain.Substituted__c IS NULL THEN ' ' ELSE SubMain.Substituted__c END" />
+  </Attributes>
+  <Entities>
+    <Entity name="Job_List__c" alias="" />
+    <Entity name="Job_Definition_List__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Job_List__c.Job_Definition_List__c" comparator="eq" rightSideType="Attribute" rightSideValue="Job_Definition_List__c.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Account" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Job_List__c.Account__c" comparator="eq" rightSideType="Attribute" rightSideValue="Account.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Account_Manager__c" alias="">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="Job_List__c.Account__c" comparator="eq" rightSideType="Attribute" rightSideValue="Account_Manager__c.Account__c" />
+          <Condition leftSideValue="Job_List__c.Manager__c" comparator="eq" rightSideType="Attribute" rightSideValue="Account_Manager__c.User__c" />
+          <Condition leftSideValue="Account_Manager__c.User__c" comparator="eq" rightSideType="Parameter" rightSideValue="'#responsiblePKey#'" />
+          <Condition leftSideValue="Account_Manager__c.Valid_From__c" leftSideType="Date" comparator="le" comparatorType="Date" rightSideValue="#referenceDateThru#" rightSideType="Date" />
+          <Condition leftSideValue="Account_Manager__c.Valid_Thru__c" leftSideType="Date" comparator="ge" comparatorType="Date" rightSideValue="#referenceDateFrom#" rightSideType="Date" />
+          <Condition leftSideValue="Account_Manager__c.Management_Type__c" comparator="ne" rightSideType="Parameter" rightSideValue="'Substitution'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Substitution__c" alias="SubBpaRel">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="SubBpaRel.Account__c" comparator="eq" rightSideType="Attribute" rightSideValue="Job_List__c.Account__c" />
+          <Condition leftSideValue="SubBpaRel.Substitute__c" comparator="eq" rightSideType="Parameter" rightSideValue="'#responsiblePKey#'" />
+          <Condition leftSideValue="SubBpaRel.Active__c" comparator="eq" rightSideType="Parameter" rightSideValue="'1'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Substitution__c" alias="SubMain">
+      <Join Type="left">
+        <SimpleJoin>
+          <Condition leftSideValue="SubMain.Id" comparator="eq" rightSideType="Attribute" rightSideValue="SubBpaRel.Substitution__c" />
+          <Condition leftSideValue="SubMain.Substituted__c" comparator="eq" rightSideType="Attribute" rightSideValue="Job_List__c.Manager__c" />
+          <Condition leftSideValue="SubMain.Active__c" comparator="eq" rightSideType="Parameter" rightSideValue="'1'" />
+          <Condition leftSideValue="SubMain.Sales_Org__c" comparator="eq" rightSideType="Parameter" rightSideValue="'#SALESORG#'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Promotion__c" alias="">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="Job_Definition_List__c.Promotion__c" comparator="eq" rightSideType="Attribute" rightSideValue="Promotion__c.Id" />
+          <Condition leftSideValue="Promotion__c.Active__c" comparator="eq" rightSideType="Parameter" rightSideValue="'1'" />
+          <Condition leftSideValue="Promotion__c.Phase__c" comparator="eq" rightSideType="Parameter" rightSideValue="'Committed'" />
+          <Condition leftSideValue="Promotion__c.Date_From__c" leftSideType="Date" comparator="le" comparatorType="Date" rightSideValue="#referenceDateThru#" rightSideType="Date" />
+          <Condition leftSideValue="Promotion__c.Date_Thru__c" leftSideType="Date" comparator="ge" comparatorType="Date" rightSideValue="#referenceDateFrom#" rightSideType="Date" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+Job_List__c.Done__c = '0'
+AND Job_Definition_List__c.Approval_State__c <> 'Canceled'
+AND #compareAsDate('Job_List__c.Valid_From__c', 'Date','<=' , #referenceDateThru# , 'Date')# 
+AND #compareAsDate('Job_List__c.Valid_Thru__c', 'Date','>=' , #referenceDateFrom# , 'Date')#    
+AND Job_List__c.Visit__c =' '
+AND (
+	Account_Manager__c.Id IS NOT NULL
+	OR (
+		SubMain.Id IS NOT NULL
+		AND (
+			SubMain.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #referenceDateThru#
+			AND SubMain.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #referenceDateFrom#
+			AND SubBpaRel.Valid_From__c - SubMain.Lead_Time__c * 86400 <= #referenceDateThru#
+			AND SubBpaRel.Valid_Thru__c + SubMain.Follow_Up_Time__c * 86400 >= #referenceDateFrom#
+		)
+	)
+)
+]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Job_Definition_List__c" attribute="Description_#Language#__c" direction="ASC" />
+    <OrderCriterion entity="Account" attribute="Name" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="responsiblePKey" type="TEXT" />
+    <Parameter name="referenceDateThru" type="INTEGER" />
+    <Parameter name="referenceDateFrom" type="INTEGER" />
+    <Parameter name="customerPKeyComp" type="TEXT" />
+    <Parameter name="customerPKey" type="TEXT" />
+    <Parameter name="jobDefinitionListTextComp" type="TEXT" />
+    <Parameter name="jobDefinitionListText" type="TEXT" />
+    <Parameter name="customerStreetComp" type="TEXT" />
+    <Parameter name="customerStreet" type="TEXT" />
+    <Parameter name="customerZIPComp" type="TEXT" />
+    <Parameter name="customerZIP" type="TEXT" />
+    <Parameter name="customerCityComp" type="TEXT" />
+    <Parameter name="customerCity" type="TEXT" />
+    <Parameter name="customerStateComp" type="TEXT" />
+    <Parameter name="customerState" type="TEXT" />
+    <Parameter name="validFromComp" type="TEXT" />
+    <Parameter name="validFrom" type="INTEGER" />
+    <Parameter name="validThruComp" type="TEXT" />
+    <Parameter name="validThru" type="INTEGER" />
+    <Parameter name="substitutedComp" type="TEXT" />
+    <Parameter name="substituted" type="TEXT" />
+  </Parameters>
+  <QuickSearchParameters>
+    <QuickSearchParameter name="Job_Definition_List__c.Description_#Language#__c" />
+    <QuickSearchParameter name="Account.Name" />
+    <QuickSearchParameter name="customerAddress" />
+    <QuickSearchParameter name="promotionSlogan" />
+    <QuickSearchParameter name="promotionDateFrom" />
+    <QuickSearchParameter name="promotionDateThru" />
+  </QuickSearchParameters>
+  <ConditionalParameters>
+    <ConditionalParameter name="customerPKey">
+      <SimpleConditions>
+        <Condition leftSideValue="Job_List__c.Account__c" comparator="#customerPKeyComp#" rightSideType="Attribute" rightSideValue="'#customerPKey#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="jobDefinitionListText">
+      <SimpleConditions>
+        <Condition leftSideValue="Job_Definition_List__c.Description_#Language#__c" comparator="#jobDefinitionListTextComp#" rightSideType="Attribute" rightSideValue="'#jobDefinitionListText#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="customerStreet">
+      <SimpleConditions>
+        <Condition leftSideValue="Account.ShippingStreet" comparator="#customerStreetComp#" rightSideType="Attribute" rightSideValue="'#customerStreet#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="customerZIP">
+      <SimpleConditions>
+        <Condition leftSideValue="Account.ShippingPostalCode" comparator="#customerZIPComp#" rightSideType="Attribute" rightSideValue="'#customerZIP#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="customerCity">
+      <SimpleConditions>
+        <Condition leftSideValue="Account.ShippingCity" comparator="#customerCityComp#" rightSideType="Attribute" rightSideValue="'#customerCity#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="customerState">
+      <SimpleConditions>
+        <Condition leftSideValue="Account.ShippingState" comparator="#customerStateComp#" rightSideType="Attribute" rightSideValue="'#customerState#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="validFrom">
+      <SimpleConditions>
+        <Condition leftSideValue="Job_List__c.Valid_From__c" leftSideType="Date" comparator="#validFromComp#" rightSideValue="#validFrom#" rightSideType="Date" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="validThru">
+      <SimpleConditions>
+        <Condition leftSideValue="Job_List__c.Valid_Thru__c" leftSideType="Date" comparator="#validThruComp#" rightSideValue="#validThru#" rightSideType="Date" />
+      </SimpleConditions>
+    </ConditionalParameter>
+    <ConditionalParameter name="substituted">
+      <SimpleConditions>
+        <Condition leftSideValue="substituted" comparator="#substitutedComp#" rightSideType="Attribute" rightSideValue="'#substituted#'" />
+      </SimpleConditions>
+    </ConditionalParameter>
+  </ConditionalParameters>
+</DataSource>

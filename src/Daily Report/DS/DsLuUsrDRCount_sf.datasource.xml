@@ -1,0 +1,31 @@
+<DataSource name="DsLuUsrDRCount" backendSystem="sf" businessObjectClass="LuUsrDRCount" external="false" readOnly="true" editableEntity="User_Document__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="User_Document__c" column="Id" />
+    <DerivedAttribute name="dailyReportCount" value="Count(*)" />
+  </Attributes>
+  <Entities>
+    <Entity name="User_Document__c" alias="" />
+    <Entity name="User_Document_Template__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="User_Document__c.User_Document_Template__c" comparator="eq" rightSideType="Attribute" rightSideValue="User_Document_Template__c.Id" />
+          <Condition leftSideValue="User_Document_Template__c.Mobility_Relevant__c" comparator="eq" rightSideType="Literal" rightSideValue="'1'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="RecordType" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="User_Document_Template__c.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+          <Condition leftSideValue="RecordType.DeveloperName" comparator="eq" rightSideType="Literal" rightSideValue="'Daily_Report'" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[      
+        User_Document__c.Responsible__c = '#UserPKey#'
+        AND User_Document__c.Phase__c IN ('Released', 'Correction', 'Initial')
+     ]]></QueryCondition>
+  <OrderCriteria></OrderCriteria>
+  <Parameters></Parameters>
+</DataSource>

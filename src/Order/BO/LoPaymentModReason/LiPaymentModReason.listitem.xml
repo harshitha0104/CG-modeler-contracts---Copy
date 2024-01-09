@@ -1,0 +1,6 @@
+<ListItem name="LiPaymentModReason" >
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" storable="true" />
+    <SimpleProperty name="modReason" type="DomSdoPaymentModReason" storable="false" dataSourceProperty="modReason" />
+  </SimpleProperties>
+</ListItem>

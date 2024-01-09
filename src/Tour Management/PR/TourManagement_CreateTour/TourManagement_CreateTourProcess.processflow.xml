@@ -1,0 +1,94 @@
+<Process name="TourManagement::CreateTourProcess" defaultAction="ShowView" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="validationBo" type="BoWizardCreateNewTour" />
+        <Declaration name="TourMetaLookupPKey" type="DomPKey" />
+        <Declaration name="TmgUserLookupPKey" type="DomPKey" />
+        <Declaration name="WarehouseLookupPKey" type="DomPKey" />
+        <Declaration name="WarehouseList" type="LoEtpWarehouse" />
+        <Declaration name="WarehouseId" type="DomId" />
+      </Declarations>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="CreateValidationBo" actionType="CREATE" type="BoWizardCreateNewTour">
+        <Return name="ProcessContext::validationBo" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="ShowView">
+        <UIDescription>TourManagement::CreateTourUI</UIDescription>
+        <Events>
+          <Event name="warehouseLookup" action="OpenWarehouseLookup" />
+          <Event name="templateLookup" action="OpenTemplateLookup" />
+          <Event name="createTour" action="setDirty" />
+        </Events>
+      </Action>
+      <!-- Actions for Tour Template Lookup -->
+      <Action actionType="PROCESS" name="OpenTemplateLookup" process="TourManagement::TourTemplateProcess">
+        <ReturnValues>
+          <Return name="ProcessContext::TourMetaLookupPKey" value="templatePKey" />
+        </ReturnValues>
+        <TransitionTo action="LoadTourLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadTourLookup" type="LuTourTemplate">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::TourMetaLookupPKey" />
+        </Parameters>
+        <Return name="ProcessContext::validationBo.luTemplate" />
+        <!--<TransitionTo action="setEARights" />-->
+      </Action>
+      <Action actionType="LOGIC" name="setEARights" call="ProcessContext::validationBo.setEARights">
+        <TransitionTo action="setNew" />
+      </Action>
+      <!-- Actions for Warehouse Lookup -->
+      <Action actionType="PROCESS" name="OpenWarehouseLookup" process="TourManagement::FlyoutSelectWarehouseProcess">
+        <ReturnValues>
+          <Return name="ProcessContext::WarehouseLookupPKey" value="warehousePKey" />
+        </ReturnValues>
+        <TransitionTo action="LoadWarehouseLookup" />
+      </Action>
+      <Action actionType="LOAD" name="LoadWarehouseLookup" type="LuEtpWarehouse">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::WarehouseLookupPKey" />
+        </Parameters>
+        <Return name="ProcessContext::validationBo.luWarehouse" />
+      </Action>
+      <!-- Validation actions -->
+      <Action actionType="VALIDATION" name="WizardValidations">
+        <Validations>
+          <Validation name="ProcessContext::validationBo.validateNotEmpty" />
+        </Validations>
+        <TransitionTo action="ValidationResult_Decision" />
+      </Action>
+      <Action name="ValidationResult_Decision" actionType="DECISION" parameter="ProcessContext::validationResult">
+        <Case value="validateOk" action="EndCreateTour" />
+        <Case value="validateDiscard" action="EndCancel" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <!-- Set validation business object dirty on clicking done button-->
+      <Action actionType="LOGIC" name="setDirty" call="ProcessContext::validationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="5" />
+        </Parameters>
+        <TransitionTo action="WizardValidations" />
+      </Action>
+      <!-- Set validation business object to new if not the done button has been clicked-->
+      <Action actionType="LOGIC" name="setNew" call="ProcessContext::validationBo.setObjectStatus">
+        <Parameters>
+          <Input name="objectStatus" type="Literal" value="2" />
+        </Parameters>
+      </Action>
+      <!-- End actions -->
+      <Action actionType="END" name="EndCreateTour">
+        <ReturnValues>
+          <Return name="templatePKey" value="ProcessContext::validationBo.luTemplate.pKey" />
+          <Return name="warehousePKey" value="ProcessContext::validationBo.luWarehouse.pKey" />
+        </ReturnValues>
+      </Action>
+      <Action actionType="END" name="EndCancel" />
+    </Actions>
+  </Body>
+</Process>

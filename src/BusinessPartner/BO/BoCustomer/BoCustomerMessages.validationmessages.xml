@@ -1,0 +1,17 @@
+<ValidationMessages name="BoCustomerMessages" businessObject="BoCustomer" schemaVersion="0.0.0.5">
+  <ValidationMessage name="CasBpaMainCustomerNameMustNotBeEmpty" defaultMessage="Please enter the name of customer." comment="Validates if the name of customer is not empty." />
+  <ValidationMessage name="CasBpaMainCustomerEmailInvalid" defaultMessage="Please provide a valid email for the customer." comment="Validates if the email of customer is valid." />
+  <ValidationMessage name="CasBpaMainContactPartnerLastNameEmpty" defaultMessage="Please specify the last name for the contact partner." comment="Validates if the lastname of contactpartner is not empty." />
+  <ValidationMessage name="CasBpaMainContactPartnerEmailInvalid" defaultMessage="Please provide a valid email for the contact partner." comment="Validates if the email of contactpartner is valid." />
+  <ValidationMessage name="CasBpaMainOpeningTimeFromGreaterTimeThru" defaultMessage="Time from of opening time must be earlier than Time Thru." comment="Validates that time from of opening time cannot be greater than time thru." />
+  <ValidationMessage name="CasBpaPosValidFromGreaterValidThru" defaultMessage="Valid From must be earlier or same as Valid Thru." comment="Validates that valid from of opening time cannot be greater than valid thru." />
+  <ValidationMessage name="CasBpaPOSNameMustNotBeEmpty" defaultMessage="Please enter the name of POS #posId#, #text#." comment="Validates that the name of pos is not empty." />
+  <ValidationMessage name="CasBpaPOSValidityPeriodMustNotOverlap" defaultMessage="The validity period of POS #posId#, #text# must not overlap." comment="Validates that the name of pos is not empty." />
+  <ValidationMessage name="CasBpaPOSNoDeletionAllowedMsg" defaultMessage="POS relation is mandatory. You cannot delete mandatory POS relations." comment="Validates that no mandatory POS relations will be deleted." />
+  <ValidationMessage name="CasBpaPOSConfirmDeletionMsg" defaultMessage="Are you sure you want to delete POS relation?" comment="Confirmation message for POS relation deletion" />
+  <ValidationMessage name="CasBpaLocationCouldNotBeUpdated" defaultMessage="Sorry, could not update the location." comment="Notification after failed manual location update" />
+  <ValidationMessage name="CasBpaSplittingRuleHasToBeFilled" defaultMessage="The splitting rule should not be blank." comment="The splitting rule cannot be blank." />
+  <ValidationMessage name="CasBpaSplittingRuleHasToBeBlank" defaultMessage="The splitting rule should be blank." comment="The splitting rule must be blank." />
+  <ValidationMessage name="CasBpaMainOpeningTimeFromOrTimeThruNotEmpty" defaultMessage="Please specify Time From and Time Thru for opening hours." comment="Time from and Time thru of opening hours cannot be blank." />
+  <ValidationMessage name="CasBpaPOSHasReferencedAsset" defaultMessage="Deleting this POS is not allowed because there are assets relying on it." comment="A POS cannot be deleted if it has referenced assets." />
+</ValidationMessages>

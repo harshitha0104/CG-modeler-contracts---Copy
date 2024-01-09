@@ -1,0 +1,19 @@
+<LookupObject name="LuLocation" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLuLocation" />
+  <SimpleProperties>
+    <SimpleProperty id="true" name="pKey" type="DomPKey" dataSourceProperty="pKey" />
+    <SimpleProperty name="name" type="DomText" dataSourceProperty="name" />
+    <SimpleProperty name="visitorAddressId" type="DomPKey" dataSourceProperty="visitorAddressId" />
+    <SimpleProperty name="city" type="DomText" dataSourceProperty="city" />
+    <SimpleProperty name="state" type="DomText" dataSourceProperty="state" />
+    <SimpleProperty name="postalCode" type="DomText" dataSourceProperty="postalCode" />
+    <SimpleProperty name="street" type="DomText" dataSourceProperty="street" />
+    <SimpleProperty name="latitude" type="DomText" dataSourceProperty="latitude" />
+    <SimpleProperty name="longitude" type="DomText" dataSourceProperty="longitude" />
+  </SimpleProperties>
+  <Methods>
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="loadAsync" />
+  </Methods>
+</LookupObject>

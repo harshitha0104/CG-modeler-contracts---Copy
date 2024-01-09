@@ -1,0 +1,57 @@
+<DataSource name="DsLoHurdles" backendSystem="sf" businessObjectClass="LoHurdles" external="false" editableEntity="Promotion_Hurdle__c" schemaVersion="2.0">
+  <Attributes>
+    <Attribute name="pKey" table="Promotion_Hurdle__c" column="Id" />
+    <Attribute name="hurdleTitle" table="Promotion_Hurdle__c" column="Title_#Language#__c" />
+    <Attribute name="booleanValue" table="Promotion_Hurdle__c" column="Boolean_Value__c" />
+    <Attribute name="numericValue" table="Promotion_Hurdle__c" column="Numeric_Value__c" />
+    <Attribute name="textValue" table="Promotion_Hurdle__c" column="Text_Value__c" />
+    <Attribute name="dateValue" table="Promotion_Hurdle__c" column="Date_Value__c" />
+    <Attribute name="classification" table="Promotion_Hurdle__c" column="Classification__c" />
+    <Attribute name="operator" table="Promotion_Hurdle__c" column="Operator__c" />
+    <Attribute name="operation" table="Promotion_Hurdle__c" column="Operation__c" />
+    <Attribute name="rewardGroupId" table="Promotion_Hurdle__c" column="Promotion_Reward_Group__c" />
+    <Attribute name="expressionFunction" table="Promotion_Hurdle_Expression__c" column="Expression_Function__c" />
+    <Attribute name="expressionResultType" table="Promotion_Hurdle_Expression__c" column="Expression_Result_Type__c" />
+    <Attribute name="jobDefinitionTemplate" table="Promotion_Hurdle_Expression__c" column="Job_Definition_Template__c" />
+    <Attribute name="prdMainPKey" table="Promotion_Hurdle_Expression__c" column="Product__c" />
+    <Attribute name="allowsClassification" table="Promotion_Hurdle_Expression__c" column="Allows_Classification__c" />
+    <Attribute name="promotionPKey" table="Promotion_Reward_Group__c" column="Promotion__c" />
+    <Attribute name="sort" table="Promotion_Hurdle__c" column="Sort__c" />
+    <Attribute name="promotionRewardGroupTitle" table="Promotion_Reward_Group__c" column="Title_#Language#__c" />
+    <Attribute name="hurdleType" table="RecordType" column="DeveloperName" />
+  </Attributes>
+  <Entities>
+    <Entity name="Promotion_Hurdle__c" alias="" idAttribute="Id" />
+    <Entity name="Promotion_Hurdle_Expression__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Promotion_Hurdle_Expression__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Promotion_Hurdle__c.Promotion_Hurdle_Expression__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="Promotion_Reward_Group__c" alias="">
+      <Join Type="inner">
+        <SimpleJoin>
+          <Condition leftSideValue="Promotion_Reward_Group__c.Id" comparator="eq" rightSideType="Attribute" rightSideValue="Promotion_Hurdle__c.Promotion_Reward_Group__c" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+    <Entity name="RecordType" alias="">
+      <Join Type="left outer">
+        <SimpleJoin>
+          <Condition leftSideValue="Promotion_Hurdle__c.RecordTypeId" comparator="eq" rightSideType="Attribute" rightSideValue="RecordType.Id" />
+        </SimpleJoin>
+      </Join>
+    </Entity>
+  </Entities>
+  <QueryCondition><![CDATA[
+  Promotion_Reward_Group__c.Promotion__c in (#promotionPKeyList#)
+  ]]></QueryCondition>
+  <OrderCriteria>
+    <OrderCriterion entity="Promotion_Hurdle__c" attribute="Promotion_Reward_Group__c" direction="ASC" />
+    <OrderCriterion entity="Promotion_Hurdle__c" attribute="Sort__c" direction="ASC" />
+  </OrderCriteria>
+  <Parameters>
+    <Parameter name="promotionPKeyList" type="LIST" />
+  </Parameters>
+</DataSource>

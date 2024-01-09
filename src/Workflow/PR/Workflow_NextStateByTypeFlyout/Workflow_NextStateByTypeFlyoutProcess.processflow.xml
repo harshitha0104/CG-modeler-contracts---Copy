@@ -1,0 +1,86 @@
+<Process name="Workflow::NextStateByTypeFlyoutProcess" defaultAction="NextStatesCountDecision" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="FlyoutBO" type="BoWfeFlyoutNextStateByType" />
+        <Declaration name="NextStateList" type="LoWfeState" />
+        <Declaration name="NextStateCount" type="String" />
+        <Declaration name="SelectedNextStatePKey" type="String" />
+        <Declaration name="SelectedNextStateType" type="String" />
+		<Declaration name="WorkflowBO" type="BoWorkflow" />
+      </Declarations>
+      <Parameters>
+        <!-- Can be a single StateType or a comma separated List of StateTypes -->
+        <Input name="NextStateTypes" type="String" />
+        <Input name="ActualStatePKey" type="String" />
+		<Input name="WfeWorkflowPKey" type="String" />        
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+		<Action name="LoadWorkflowBO" actionType="LOAD" type="BoWorkflow">
+			<Parameters>
+				<Input name="pKey" value="ProcessContext::WfeWorkflowPKey" />
+			</Parameters>
+			<Return name="ProcessContext::WorkflowBO" />
+		</Action>
+      <Action name="CreateFlyoutBO" actionType="CREATE" type="BoWfeFlyoutNextStateByType">
+        <Parameters>
+          <Input name="nextStateTypes" value="ProcessContext::NextStateTypes" />
+          <Input name="actualStatePKey" value="ProcessContext::ActualStatePKey" />
+          <Input name="workflowBO" value="ProcessContext::WorkflowBO" />
+        </Parameters>
+        <Return name="ProcessContext::FlyoutBO" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <!-- UI will not be triggered when list contains only one item -->
+      <Action name="NextStatesCountDecision" actionType="DECISION" parameter="ProcessContext::FlyoutBO.nextStateCount">
+        <Case value="1" action="GetNextStatePKey" />
+        <CaseElse action="ShowView" />
+      </Action>
+      <Action name="ShowView" actionType="View">
+        <UIDescription>Workflow::NextStatesFlyoutUI</UIDescription>
+        <Events>
+          <Event name="itemSelected" action="AssignNextStatePKey" />
+        </Events>
+      </Action>
+      <!-- START Assign Values from Event to ProcessContext -->
+      <Action name="AssignNextStatePKey" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="pKey" value="Event.pKey" />
+        </Parameters>
+        <Return name="ProcessContext::SelectedNextStatePKey" />
+        <TransitionTo action="AssignNextStateType" />
+      </Action>
+      <Action name="AssignNextStateType" actionType="LOGIC" call="Utils.identity">
+        <Parameters>
+          <Input name="pKey" value="Event.stateType" />
+        </Parameters>
+        <Return name="ProcessContext::SelectedNextStateType" />
+        <TransitionTo action="End" />
+      </Action>
+      <!-- END Assign Values from Event to ProcessContext -->
+      <!-- START Get Values from First ListItem to ProcessContext -->
+      <Action name="GetNextStatePKey" actionType="LOGIC" call="ProcessContext::FlyoutBO.getFirstNextStatePKey">
+        <Return name="ProcessContext::SelectedNextStatePKey" />
+        <TransitionTo action="GetNextStateType" />
+      </Action>
+      <Action name="GetNextStateType" actionType="LOGIC" call="ProcessContext::FlyoutBO.getStateTypeByState">
+        <Parameters>
+          <Input name="wfeStatePKey" value="ProcessContext::SelectedNextStatePKey" />
+        </Parameters>
+        <Return name="ProcessContext::SelectedNextStateType" />
+        <TransitionTo action="End" />
+      </Action>
+      <!-- END Get Values from First ListItem to ProcessContext -->
+      <Action actionType="END" name="End">
+        <ReturnValues>
+          <Return name="nextStatePKey" value="ProcessContext::SelectedNextStatePKey" />
+          <Return name="nextStateType" value="ProcessContext::SelectedNextStateType" />
+        </ReturnValues>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

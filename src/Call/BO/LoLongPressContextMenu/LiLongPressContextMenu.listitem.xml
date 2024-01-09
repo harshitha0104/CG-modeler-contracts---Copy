@@ -1,0 +1,11 @@
+<ListItem name="LiLongPressContextMenu">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty id="true" name="id" type="DomPKey" />
+    <SimpleProperty name="actionImg" type="DomId" />
+    <SimpleProperty name="actionId" type="DomId" />
+    <SimpleProperty name="processEvent" type="DomString" />
+    <SimpleProperty name="actionEnabled" type="DomBool" />
+    <SimpleProperty name="actionVisible" type="DomBool" />
+  </SimpleProperties>
+</ListItem>

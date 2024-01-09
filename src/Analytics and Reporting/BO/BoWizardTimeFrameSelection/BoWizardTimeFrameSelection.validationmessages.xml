@@ -1,0 +1,4 @@
+<ValidationMessages name="BoWizardTimeFrameSelectionMessages" businessObject="BoWizardTimeFrameSelection" schemaVersion="0.0.0.5">
+  <ValidationMessage name="CasWizardTimeFrameSelectionNegativeFrame" defaultMessage="The Start Date may not occur after the End Date." comment="Validation notification! The start date may not occur after the end date." />
+  <ValidationMessage name="CasWizardTimeFrameSelectionEmpty" defaultMessage="Please fill in all values." comment="Validation notification! Please fill in all values." />
+</ValidationMessages>

@@ -1,0 +1,65 @@
+<Process name="Visit::InfoProcess" defaultAction="showVisitInfo" schemaVersion="0.0.0.5">
+  <Entry>
+    <ProcessContext>
+      <Declarations>
+        <Declaration name="VisitBo" type="BoVisit" />
+        <Declaration name="RetailStoreDetail" type="BoRetailStore" />
+        <Declaration name="RetailStoreAddress" type="Object" />
+        <Declaration name="CompletedTasks" type="Object" />
+        <Declaration name="NotStartedTasks" type="Object" />
+        <Declaration name="InProgressTasks" type="Object" />
+      </Declarations>
+      <Parameters>
+        <Input name="VisitPKey" type="DomPKey" />
+        <Input name="targetClbStatus" type="String" />
+        <Input name="ResponsiblePKey" type="DomPKey" />
+      </Parameters>
+    </ProcessContext>
+    <EntryActions>
+      <Action name="loadVisit" actionType="LOAD" type="BoVisit">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::VisitPKey" />
+          <Input name="referenceUserPKey" value="ProcessContext::ResponsiblePKey" />
+        </Parameters>
+        <Return name="ProcessContext::VisitBo" />
+      </Action>
+      <Action actionType="LOAD" name="loadRetailStore" type="BoRetailStore">
+        <Parameters>
+          <Input name="pKey" value="ProcessContext::VisitBo.StoreId" />
+        </Parameters>
+        <Return name="ProcessContext::RetailStoreDetail" />
+      </Action>
+      <Action actionType="LOGIC" name="LoadRetailStoreAddress" call="ProcessContext::RetailStoreDetail.getRetailStoreAddress">
+        <Return name="ProcessContext::RetailStoreAddress" />
+      </Action>
+      <Action actionType="LOGIC" name="LoadCompletedTasks" call="ProcessContext::VisitBo.loadTasksBasedOnStatus">
+        <Parameters>
+          <Input name="Status" type="Literal" value="Completed" />
+          <Input name="Items" value="ProcessContext::VisitBo.loAssessmentTasks" />
+        </Parameters>
+        <Return name="ProcessContext::CompletedTasks" />
+      </Action>
+      <Action actionType="LOGIC" name="LoadNotStartedTasks" call="ProcessContext::VisitBo.loadTasksBasedOnStatus">
+        <Parameters>
+          <Input name="Status" type="Literal" value="NotStarted" />
+          <Input name="Items" value="ProcessContext::VisitBo.loAssessmentTasks" />
+        </Parameters>
+        <Return name="ProcessContext::NotStartedTasks" />
+      </Action>
+      <Action actionType="LOGIC" name="LoadInProgressTasks" call="ProcessContext::VisitBo.loadTasksBasedOnStatus">
+        <Parameters>
+          <Input name="Status" type="Literal" value="InProgress" />
+          <Input name="Items" value="ProcessContext::VisitBo.loAssessmentTasks" />
+        </Parameters>
+        <Return name="ProcessContext::InProgressTasks" />
+      </Action>
+    </EntryActions>
+  </Entry>
+  <Body>
+    <Actions>
+      <Action actionType="View" name="showVisitInfo">
+        <UIDescription>Visit::InfoUI</UIDescription>
+      </Action>
+    </Actions>
+  </Body>
+</Process>

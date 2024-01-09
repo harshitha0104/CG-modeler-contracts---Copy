@@ -1,0 +1,49 @@
+<UIDescription name="Call::AutomaticPlanningUI" schemaVersion="0.0.0.5"  layoutType="blank">
+  <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
+    <PageHeader>
+      <Bindings>
+        <Resource target="title" type="Label" id="AutomaticPlanning" defaultLabel="Automatic Planning" />
+      </Bindings>
+    </PageHeader>
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <Area areaName="mainArea" areaPattern="GroupedElementArea">
+        <GroupElement name="UserName">
+          <InputArea name="User" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="userName" defaultLabel="User : " />
+              <Binding target="Value" binding="ProcessContext::UserLookUp.name" bindingMode="ONE_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+        <GroupElement name="PlanningWeek">
+          <InputArea name="Week" editable="false">
+            <Bindings>
+              <Resource target="Label" type="Label" id="week" defaultLabel="Week : " />
+              <Binding target="Value" binding="ProcessContext::autoPlanWeeklyHeader" bindingMode="TWO_WAY" />
+            </Bindings>
+          </InputArea>
+        </GroupElement>
+        <MenuItems>
+          <!-- Delete Button -->
+          <MenuItem itemId="DeleteVisits" directlyVisible="true">
+            <Bindings>
+              <Resource target="Text" type="Label" id="DeleteVisitsId" defaultLabel="Delete" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="deleteAutomaticCalls" />
+            </Events>
+          </MenuItem>
+          <!-- Plan Visits Button -->
+          <MenuItem itemId="PlanVisits" directlyVisible="true">
+            <Bindings>
+              <Resource target="Text" type="Label" id="PlanVisitsId" defaultLabel="Plan Visits" />
+            </Bindings>
+            <Events>
+              <ButtonPressedEvent event="createAutomaticCalls" />
+            </Events>
+          </MenuItem>
+        </MenuItems>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

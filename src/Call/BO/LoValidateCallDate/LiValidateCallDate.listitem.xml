@@ -1,0 +1,14 @@
+<ListItem name="LiValidateCallDate">
+  <SimpleProperties>
+    <SimpleProperty name="pKey" type="DomPKey" />
+    <SimpleProperty name="monday" type="DomText" storable="false" dataSourceProperty="monday" />
+    <SimpleProperty name="tuesday" type="DomText" storable="false" dataSourceProperty="tuesday" />
+    <SimpleProperty name="wednesday" type="DomText" storable="false" dataSourceProperty="wednesday" />
+    <SimpleProperty name="thursday" type="DomText" storable="false" dataSourceProperty="thursday" />
+    <SimpleProperty name="friday" type="DomText" storable="false" dataSourceProperty="friday" />
+    <SimpleProperty name="saturday" type="DomText" storable="false" dataSourceProperty="saturday" />
+    <SimpleProperty name="sunday" type="DomText" storable="false" dataSourceProperty="sunday" />
+    <SimpleProperty name="timeFrom" type="DomTime" storable="false" dataSourceProperty="timeFrom" />
+    <SimpleProperty name="timeThru" type="DomTime" storable="false" dataSourceProperty="timeThru" />
+  </SimpleProperties>
+</ListItem>

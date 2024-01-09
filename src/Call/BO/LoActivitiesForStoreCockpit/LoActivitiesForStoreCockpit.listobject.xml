@@ -1,0 +1,13 @@
+<ListObject name="LoActivitiesForStoreCockpit" generateLoadMethod="true" schemaVersion="1.1">
+  <DataSource name="DsLoActivitiesForStoreCockpit" />
+  <Item objectClass="LiActivitiesForStoreCockpit" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="getActivitiesForCard" />
+  </Methods>
+</ListObject>

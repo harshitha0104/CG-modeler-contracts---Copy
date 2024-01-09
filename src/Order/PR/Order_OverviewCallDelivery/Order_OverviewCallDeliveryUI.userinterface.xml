@@ -1,0 +1,188 @@
+<UIDescription name="Order::OverviewCallDeliveryUI" schemaVersion="0.0.0.5">
+  <Page pagePattern="SingleSectionPage">
+    <PageHeader titleBinding="ProcessContext::ClbBO.luCustomer.name">
+      <MenuItems>
+        <MenuItem directlyVisible="true" itemId="createNewDelivery">
+          <Bindings>
+            <Resource target="Text" type="Label" id="createNewDeliveryId" defaultLabel="New" />
+            <Resource target="Icon" type="Image" id="PlusDarkGrey24" />
+            <Binding type="Visible" target="Visible" call="ProcessContext::ClbBO.getButtonVisibility">
+              <Parameters>
+                <Input name="token" type="Literal" value="btnCreateNewDelivery" />
+              </Parameters>
+            </Binding>
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="createNewDelivery" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="showAllDocuments">
+          <Bindings>
+            <Resource target="Text" type="Label" id="showAllDeliverysId" defaultLabel="All Documents" />
+            <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showAllDocuments" />
+          </Events>
+        </MenuItem>
+        <MenuItem directlyVisible="false" itemId="showOpenDocuments">
+          <Bindings>
+            <Resource target="Text" type="Label" id="OnlyshowOpenOrdersId" defaultLabel="Only Open" />
+            <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />
+          </Bindings>
+          <Events>
+            <ButtonPressedEvent event="showOpenDocuments" />
+          </Events>
+        </MenuItem>
+      </MenuItems>
+    </PageHeader>
+    <!-- [.. MASTER SECTION ..] -->
+    <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
+      <!-- [. AREA .] Main -->
+      <Area areaName="mainArea" areaPattern="SingleElementArea">
+        <GroupedList name="OrderList" searchable="false" onItemDisclosure="true" dataSource="ProcessContext::DelOverviewList.Items[]">
+          <Items name="Items" itemPattern="OrderOverviewDeliveryItem">
+            <ItemListLayout>
+              <Default>
+                <Col width="1.7em" height="1.4em" layoutType="Image" bindingId="Phase" />
+                <Col flex="1">
+                  <Row layoutType="itemValue" bindingId="OrderType" />
+                  <Row layoutType="itemIdentifierSmall" bindingId="Id" />
+                </Col>
+                <Col width="10em" layoutType="itemRight">
+                  <Row>
+                    <Col layoutType="itemImportantValue" bindingId="GrossTotalValue" />
+                    <Col layoutType="itemValue" width="0.5em" bindingId="EmptyLabel" />
+                    <Col layoutType="itemImportantValue" bindingId="Currency" />
+                  </Row>
+                  <Row layoutType="itemValue" bindingId="DocTaType" />
+                </Col>
+                <Col width="1.7em" height="1.4em" layoutType="Image" bindingId="Message" />
+              </Default>
+              <Tablet>
+                <Default>
+                  <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="Phase" />
+                  <Col flex="1">
+                    <Row layoutType="itemValue" bindingId="OrderType" />
+                    <Row layoutType="itemIdentifier" bindingId="Id" />
+                  </Col>
+                  <Col width="12em" layoutType="itemRight">
+                    <Row layoutType="itemValue" bindingId="DocTaType" />
+                    <Row>
+                      <Col layoutType="itemImportantValue" bindingId="GrossTotalValue" />
+                      <Col layoutType="itemValue" width="0.5em" bindingId="EmptyLabel" />
+                      <Col layoutType="itemImportantValue" bindingId="Currency" />
+                    </Row>
+                  </Col>
+                  <Col width="2.5em" height="1.7em" layoutType="Image" bindingId="Message" />
+                </Default>
+                <Apple>
+                  <Col width="2.5em" height="1.4em" layoutType="Image" bindingId="Phase" />
+                  <Col flex="1">
+                    <Row layoutType="itemValue" bindingId="OrderType" />
+                    <Row layoutType="itemIdentifier" bindingId="Id" />
+                  </Col>
+                  <Col width="12em" layoutType="itemRight">
+                    <Row layoutType="itemValue" bindingId="DocTaType" />
+                    <Row>
+                      <Col layoutType="itemImportantValue" bindingId="GrossTotalValue" />
+                      <Col layoutType="itemImportantValue" width="0.5em" bindingId="EmptyLabel" />
+                      <Col layoutType="itemImportantValue" bindingId="Currency" />
+                    </Row>
+                  </Col>
+                  <Col width="2.5em" height="2.5em" layoutType="Image" bindingId="Message" />
+                </Apple>
+              </Tablet>
+              <Phone>
+                <Default>
+                  <Col flex="1">
+                    <Row layoutType="itemSecondary itemEllipsis itemMarginRight" bindingId="OrderType" />
+                    <Row layoutType="itemIdentifierSmall itemEllipsis itemMarginRight" bindingId="Id" />
+                    <Row layoutType="itemSecondary itemEllipsis itemMarginRight" bindingId="PhaseText" />
+                  </Col>
+                  <Col width="5.6em" layoutType="itemRight">
+                    <Row layoutType="itemSecondary itemEllipsis itemMarginRight" bindingId="DocTaType" />
+                    <Row>
+                      <Col layoutType="itemRight itemImportantValueSmall" bindingId="GrossTotalValue" />
+                      <Col layoutType="itemImportantValueSmall" width="0.5em" bindingId="EmptyLabel" />
+                      <Col layoutType="itemRight itemImportantValueSmall" bindingId="Currency" />
+                    </Row>
+                  </Col>
+                  <Col width="2.1em" height="1.4em" layoutType="Image" bindingId="Message" />
+                </Default>
+                <Apple>
+                  <Col flex="1">
+                    <Row layoutType="itemSecondary itemEllipsis itemMarginRight" bindingId="OrderType" />
+                    <Row layoutType="itemIdentifierSmall itemEllipsis itemMarginRight" bindingId="Id" />
+                    <Row layoutType="itemSecondary itemEllipsis itemMarginRight" bindingId="PhaseText" />
+                  </Col>
+                  <Col width="5.6em" layoutType="itemRight">
+                    <Row layoutType="itemSecondary itemEllipsis itemMarginRight" bindingId="DocTaType" />
+                    <Row layoutType="itemRight">
+                      <Col layoutType="itemRight itemImportantValueSmall" bindingId="GrossTotalValue" />
+                      <Col layoutType="itemImportantValueSmall" width="0.5em" bindingId="EmptyLabel" />
+                      <Col layoutType="itemRight itemImportantValueSmall" bindingId="Currency" />
+                    </Row>
+                  </Col>
+                  <Col width="2.1em" height="1.4em" layoutType="Image" bindingId="Message" />
+                </Apple>
+              </Phone>
+            </ItemListLayout>
+            <ContextMenu>
+              <Bindings>
+                <Binding target="DataSource" binding="ProcessContext::ContextMenuList.Items[]" bindingMode="ONE_WAY" />
+              </Bindings>
+              <Items name="ContextMenuItems">
+                <Bindings>
+                  <Binding target="Icon" type="Image" binding=".actionImg" />
+                  <Binding target="Text" type="Label" binding=".actionId" />
+                  <Binding type="Editable" target="Editable" binding=".actionEnabled" />
+                </Bindings>
+              </Items>
+            </ContextMenu>
+            <Bindings>
+              <Binding target="Id" type="Text" binding=".id" bindingMode="ONE_WAY" />
+              <Binding target="Phase" type="Image" binding=".phase.imageId" bindingMode="ONE_WAY" />
+              <Binding target="Message" type="Image" binding=".message" bindingMode="ONE_WAY" />
+              <Binding target="PhaseText" type="Text" binding=".phase.text" bindingMode="ONE_WAY" />
+              <Binding target="OrderDate" type="Date" binding=".commitDate" bindingMode="ONE_WAY" />
+              <Binding target="DeliveryDate" type="Date" binding=".deliveryDate" bindingMode="ONE_WAY" />
+              <Binding target="Responsible" type="Text" binding=".responsibleName" bindingMode="ONE_WAY" />
+              <Binding target="GrossTotalValue" type="Decimal" formatV2="10.2" binding=".grossTotalValue" bindingMode="ONE_WAY" />
+              <Binding target="Currency" type="Text" binding=".currency.id" bindingMode="ONE_WAY" />
+              <Binding target="DocTaType" type="Text" binding=".docTaType.shortText" bindingMode="ONE_WAY" />
+              <Binding target="CustomerName" type="Text" binding=".customerName" bindingMode="ONE_WAY" />
+              <Resource target="OrderDateLabel" type="Label" id="orderDateId" defaultLabel="Order Date" />
+              <Resource target="DeliveryDateLabel" type="Label" id="deliveryDateId" defaultLabel="Delivery Date" />
+              <Binding target="OrderType" type="Text" binding=".orderType" bindingMode="ONE_WAY" />
+              <Resource target="TruckIcon" type="Image" id="TruckGrey16" defaultImage="TruckGrey16" />
+              <Resource target="EmptyLabel" type="Label" id="emptyLabelId" defaultLabel="      " />
+            </Bindings>
+          </Items>
+          <Events>
+            <ItemSelectedEvent event="itemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ItemSelectedEvent>
+            <ContextOpeningEvent event="contextMenuOpening">
+              <Params>
+                <Param name="deletionAllowed" value=".deletionAllowed" />
+                <Param name="phase" value=".phase" />
+                <Param name="mobilityRelevant" value=".mobilityRelevant" />
+                <Param name="sdoSubType" value=".sdoSubType" />
+                <Param name="clbMainPKey" value=".clbMainPKey" />
+                <Param name="responsiblePKey" value=".responsiblePKey" />
+              </Params>
+            </ContextOpeningEvent>
+            <ContextSelectedEvent event="contextMenuItemSelected">
+              <Params>
+                <Param name="pKey" value=".pKey" />
+              </Params>
+            </ContextSelectedEvent>
+          </Events>
+        </GroupedList>
+      </Area>
+    </Section>
+  </Page>
+</UIDescription>

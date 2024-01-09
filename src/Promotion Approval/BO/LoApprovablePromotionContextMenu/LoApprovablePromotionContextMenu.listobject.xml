@@ -1,0 +1,13 @@
+<ListObject name="LoApprovablePromotionContextMenu" generateLoadMethod="false" schemaVersion="1.1">
+  <DataSource name="DsLoApprovablePromotionContextMenu" />
+  <Item objectClass="LiApprovablePromotionContextMenu" />
+  <Methods>
+    <Method name="beforeSaveAsync" />
+    <Method name="afterSaveAsync" />
+    <Method name="afterLoadAsync" />
+    <Method name="beforeLoadAsync" />
+    <Method name="afterDoValidateAsync" />
+    <Method name="beforeDoValidateAsync" />
+    <Method name="saveAsync" />
+  </Methods>
+</ListObject>
