@@ -1115,7 +1115,7 @@
               <Resource id="Done" target="infoIcon" type="Image" />
             </Bindings>
           </NoDataMessage>
-          <ActionBar>
+          <!-- <ActionBar>
             <ImageButton name="AddNewCustomerTask">
               <Bindings>
                 <Resource target="Text" type="Label" id="AddNewCustomerTaskId" defaultLabel="Add new Customer Task" />
@@ -1125,7 +1125,7 @@
                 <ButtonPressedEvent event="CardCustomerTasks_addNewTaskPressed" />
               </Events>
             </ImageButton>
-          </ActionBar>
+          </ActionBar> -->
           <CockpitList name="CustomerTasks" hasBorder="false" dataSource="ProcessContext::CardCustomerTasks_TasksList.Items[]">
             <Items name="Items" itemPattern="CardCustomerTasksItems">
               <ItemListLayout>

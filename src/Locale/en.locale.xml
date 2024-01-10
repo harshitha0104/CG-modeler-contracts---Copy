@@ -746,7 +746,7 @@
       <Label id="Update_Trip_List_Title" text="Update Trip List" translationStatus="7" />
       <Label id="Delete_Trip_List_Title" text="Delete Trip List" translationStatus="7" />
       <Label id="TakePicture" text="Take Picture" translationStatus="7" />
-      <Label id="SelectPicture" text="Select Picture from Gallery" translationStatus="7" />
+      <!-- <Label id="SelectPicture" text="Select Picture from Gallery" translationStatus="7" /> -->
       <Label id="ReviewPicture" text="Review Pictures" translationStatus="7" />
       <!-- Group Title for Operating Hours list -->
       <Label id="LoTimeSlot_TitlePrefix" text="Deviation to current time: " translationStatus="7" />
@@ -1966,7 +1966,7 @@
         <Label id="Responsible" text="Responsible" translationStatus="7" />
         <Label id="CreationDueDatesId" text="Creation / Due Date" translationStatus="7" />
         <Label id="TakePictureId" text="Take Picture" translationStatus="7" />
-        <Label id="SelectPictureId" text="Select Picture" translationStatus="7" />
+        <!-- <Label id="SelectPictureId" text="Select Picture" translationStatus="7" /> -->
       </UserInterface>
       <UserInterface id="AssetManagementCallAssetOverviewUI">
         <Label id="AllAssets" text="All Assets" translationStatus="7" />
@@ -2085,7 +2085,7 @@
         <Label id="SubstitutedBy" text="Substituted by" translationStatus="7" />
         <Label id="CreationDueDatesId" text="Creation / Due Date" translationStatus="7" />
         <Label id="TakePictureId" text="Take Picture" translationStatus="7" />
-        <Label id="SelectPictureId" text="Select Picture" translationStatus="7" />
+        <!-- <Label id="SelectPictureId" text="Select Picture" translationStatus="7" /> -->
       </UserInterface>
       <UserInterface id="UserUserAndSupervisorLookupUI">
         <Label id="UserLookupTitleId" text="User" translationStatus="7" />
@@ -2143,7 +2143,7 @@
       <UserInterface id="CallAttachmentTabUI">
         <Label id="capturePictureId" text="Capture" translationStatus="7" />
         <Label id="takePictureId" text="Take Picture" translationStatus="7" />
-        <Label id="selectPictureId" text="Select Picture" translationStatus="7" />
+        <!-- <Label id="selectPictureId" text="Select Picture" translationStatus="7" /> -->
       </UserInterface>
       <UserInterface id="CallAttachmentTagsFlyoutUI">
         <Label id="Tags" text="Tags" translationStatus="7" />
@@ -3093,7 +3093,7 @@
         <Label id="CardLatestPicture_NoDataMessageMainText" text="No pictures yet!" translationStatus="7" />
         <Label id="CardLatestPicture_NoDataMessageSubText" text="Take pictures to get started with your reviews." translationStatus="7" />
         <Label id="TakePictureId" text="Take Picture" translationStatus="7" />
-        <Label id="SelectPictureId" text="Select Picture" translationStatus="7" />
+        <!-- <Label id="SelectPictureId" text="Select Picture" translationStatus="7" /> -->
         <Label id="AllPicturesLink" text="Review Pictures" translationStatus="7" />
         <Label id="PicturesCardTitle" text="Pictures" translationStatus="7" />
         <Label id="CardNotes_NoDataMessageMainText" text="No notes to display," translationStatus="7" />
@@ -3216,7 +3216,7 @@
       </UserInterface>
       <UserInterface id="CallPictureTakingUI">
         <Label id="takePictureId" text="Take Picture" translationStatus="7" />
-        <Label id="selectPictureId" text="Select Picture" translationStatus="7" />
+        <!-- <Label id="selectPictureId" text="Select Picture" translationStatus="7" /> -->
       </UserInterface>
       <UserInterface id="OrderFastOrderUI">
         <Label id="PastefromClipbardId" text="Paste from Clipboard" translationStatus="7" />

@@ -320,6 +320,6 @@
   <Label id="Update_Trip_List_Title" text="Update Trip List" translationStatus="7" />
   <Label id="Delete_Trip_List_Title" text="Delete Trip List" translationStatus="7" />
   <Label id="TakePicture" text="Take Picture" translationStatus="7" />
-  <Label id="SelectPicture" text="Select Picture from Gallery" translationStatus="7" />
+  <!-- <Label id="SelectPicture" text="Select Picture from Gallery" translationStatus="7" /> -->
   <Label id="ReviewPicture" text="Review Pictures" translationStatus="7" />
 </Global>

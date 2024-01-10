@@ -19,7 +19,7 @@
             <ButtonPressedEvent event="takePicture" />
           </Events>
         </MenuItem>
-        <MenuItem directlyVisible="true" itemId="selectPicture">
+        <!-- <MenuItem directlyVisible="true" itemId="selectPicture">
           <Bindings>
             <Binding type="Visible" target="Visible" call="ProcessContext::MainBO.getButtonVisibility">
               <Parameters>
@@ -32,7 +32,7 @@
           <Events>
             <ButtonPressedEvent event="selectPicture" />
           </Events>
-        </MenuItem>
+        </MenuItem> -->
       </MenuItems>
     </PageHeader>
     <Section sectionName="masterSection" sectionPattern="SingleAreaSection">

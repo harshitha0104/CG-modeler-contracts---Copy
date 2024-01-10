@@ -347,7 +347,7 @@
               <ButtonPressedEvent event="TakePicture" />
             </Events>
           </MenuItem>
-          <MenuItem directlyVisible="true" itemId="SelectPicture">
+          <!-- <MenuItem directlyVisible="true" itemId="SelectPicture">
             <Bindings>
               <Binding type="Visible" target="Visible" call="ProcessContext::IssueDetail.checkButtonVisibility">
                 <Parameters>
@@ -360,7 +360,7 @@
             <Events>
               <ButtonPressedEvent event="SelectPicture" />
             </Events>
-          </MenuItem>
+          </MenuItem> -->
         </MenuItems>
         <MediaListControl name="IssueAttachments" dataSource="ProcessContext::IssueDetail.loIssueAttachments.Items[]">
           <Bindings>
