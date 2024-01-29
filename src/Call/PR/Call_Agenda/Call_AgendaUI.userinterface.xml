@@ -6,7 +6,7 @@
         <!-- CW-REQUIRED: remove title binding -->
       </Bindings>
       <MenuItems>
-        <MenuItem directlyVisible="true" itemId="createNewCall">
+        <!-- <MenuItem directlyVisible="true" itemId="createNewCall">
           <Bindings>
             <Binding type="Visible" target="Visible" call="ProcessContext::OverviewList.createButtonEditable" />
             <Resource target="Text" type="Label" id="createNewCallId" defaultLabel="Create Call" />
@@ -15,7 +15,7 @@
           <Events>
             <ButtonPressedEvent event="createNewCall" />
           </Events>
-        </MenuItem>
+        </MenuItem> -->
         <!-- Break Button -->
         <MenuItem directlyVisible="false" itemId="allCalls">
           <Bindings>

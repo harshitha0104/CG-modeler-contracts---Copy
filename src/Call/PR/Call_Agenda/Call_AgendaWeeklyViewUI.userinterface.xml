@@ -6,7 +6,7 @@
         <!-- CW-REQUIRED: remove title binding -->
       </Bindings>
       <MenuItems>
-        <MenuItem directlyVisible="true" itemId="createNewCall">
+        <!-- <MenuItem directlyVisible="true" itemId="createNewCall">
           <Bindings>
             <Binding type="Visible" target="Visible" call="ProcessContext::OverviewList.createButtonEditable" />
             <Resource target="Text" type="Label" id="createNewCallId" defaultLabel="Create Call" />
@@ -15,7 +15,7 @@
           <Events>
             <ButtonPressedEvent event="createNewCall" />
           </Events>
-        </MenuItem>
+        </MenuItem> -->
         <!-- Break Button -->
         <MenuItem directlyVisible="false" itemId="ShowJobListSidebar">
           <Bindings>
@@ -87,7 +87,7 @@
             <ButtonPressedEvent event="deleteTripList" />
           </Events>
         </MenuItem>
-        <MenuItem directlyVisible="false" itemId="ShowTripListSidebar" backendSystem="both">
+        <!-- <MenuItem directlyVisible="false" itemId="ShowTripListSidebar" backendSystem="both">
           <Bindings>
             <Binding type="Editable" target="Editable" call="ProcessContext::OverviewList.creationAllowed" />
             <Resource target="Text" type="Label" id="createNewCallsViaTripListId" defaultLabel="Create Calls Via TripList" />
@@ -102,7 +102,7 @@
               </Params>
             </ButtonPressedEvent>
           </Events>
-        </MenuItem>
+        </MenuItem> -->
         <MenuItem directlyVisible="false" itemId="allCalls">
           <Bindings>
             <Resource target="Text" type="Label" id="AgendaSetFilterAllId" defaultLabel="All visits" />

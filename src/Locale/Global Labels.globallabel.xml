@@ -50,7 +50,7 @@
   <Label id="Copy" text="Copy" translationStatus="7" />
   <Label id="Unread" text="Unread" translationStatus="7" />
   <Label id="MarkAsRead" text="Mark As Read" translationStatus="7" />
-  <Label id="CreateVisit" text="Create Visit" translationStatus="7" />
+  <!-- <Label id="CreateVisit" text="Create Visit" translationStatus="7" /> -->
   <Label id="Sketch" text="Sketch" translationStatus="7" />
   <Label id="AddToHistory" text="Add to History" translationStatus="7" />
   <Label id="DeleteFromHistory" text="Delete from History" translationStatus="7" />

@@ -1,7 +1,7 @@
 <UIDescription name="Call::CreateNewWizardUI" schemaVersion="0.0.0.5">
   <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
     <PageHeader>
-      <Bindings>
+      <!-- <Bindings>
         <Resource target="title" type="Label" id="CallCreateNewTitleId" defaultLabel="New Call" />
       </Bindings>
       <MenuItems>
@@ -18,7 +18,7 @@
             </ButtonPressedEvent>
           </Events>
         </MenuItem>
-      </MenuItems>
+      </MenuItems> -->
     </PageHeader>
     <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
       <Area areaName="mainArea" areaPattern="GroupedElementsArea">

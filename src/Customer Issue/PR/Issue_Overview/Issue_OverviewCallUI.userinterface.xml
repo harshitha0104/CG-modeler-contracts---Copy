@@ -9,7 +9,7 @@
         <!-- CW-REQUIRED: remove title binding -->
       </Bindings>
       <MenuItems>
-        <MenuItem directlyVisible="true" itemId="AddIssue">
+        <!-- <MenuItem directlyVisible="true" itemId="AddIssue">
           <Bindings>
             <Resource target="Text" type="Label" id="AddIssueId" defaultLabel="Add Issue" />
             <Resource target="Icon" type="Image" id="Plus_PB" />
@@ -17,7 +17,7 @@
           <Events>
             <ButtonPressedEvent event="addIssue" />
           </Events>
-        </MenuItem>
+        </MenuItem> -->
         <MenuItem directlyVisible="false" itemId="AllIssue">
           <Bindings>
             <Resource target="Icon" type="Image" id="FilterDarkGrey24" defaultImage="FilterDarkGrey24" />

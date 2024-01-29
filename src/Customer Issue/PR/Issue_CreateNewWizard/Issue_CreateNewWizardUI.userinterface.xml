@@ -1,6 +1,6 @@
 <UIDescription name="Issue::CreateNewWizardUI" schemaVersion="0.0.0.5"  layoutType="blank">
   <Page pagePattern="SingleSectionDialogPage" onBackDiscard="true">
-    <PageHeader>
+    <!-- <PageHeader>
       <Bindings>
         <Resource target="title" type="Label" id="AddIssueId" defaultLabel="Add Issue" />
       </Bindings>
@@ -15,7 +15,7 @@
           </Events>
         </MenuItem>
       </MenuItems>
-    </PageHeader>
+    </PageHeader> -->
     <Section sectionName="masterSection" sectionPattern="SingleAreaSection">
       <Area areaName="mainArea" areaPattern="GroupedElementsArea">
         <GroupElement name="CustomerLookup">

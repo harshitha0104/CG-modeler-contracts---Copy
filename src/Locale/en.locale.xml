@@ -474,7 +474,7 @@
       <Label id="Copy" text="Copy" translationStatus="7" />
       <Label id="Unread" text="Unread" translationStatus="7" />
       <Label id="MarkAsRead" text="Mark As Read" translationStatus="7" />
-      <Label id="CreateVisit" text="Create Visit" translationStatus="7" />
+      <!-- <Label id="CreateVisit" text="Create Visit" translationStatus="7" /> -->
       <Label id="Sketch" text="Sketch" translationStatus="7" />
       <Label id="AddToHistory" text="Add to History" translationStatus="7" />
       <Label id="DeleteFromHistory" text="Delete from History" translationStatus="7" />
@@ -1144,8 +1144,8 @@
         <Label id="ByAlphabetId" text="Sort Alphabetically" translationStatus="7" />
       </UserInterface>
       <UserInterface id="CallAgendaUI">
-        <Label id="createNewCallId" text="Create Visit" translationStatus="7" />
-        <Label id="createNewCallsViaTripListId" text="Create Visits Via TripList" translationStatus="7" />
+        <!-- <Label id="createNewCallId" text="Create Visit" translationStatus="7" /> -->
+        <!-- <Label id="createNewCallsViaTripListId" text="Create Visits Via TripList" translationStatus="7" /> -->
         <Label id="AgendaSetFilterAllId" text="All visits" translationStatus="7" />
         <Label id="AgendaSetFilterPlannedId" text="Planned visits" translationStatus="7" />
         <Label id="AgendaPrevDayId" text="&lt;" translationStatus="7" />
@@ -1168,7 +1168,7 @@
         <Label id="scanCustomerId" text="Scan Customer" translationStatus="7" />
         <Label id="PlannedVisitsId" text="Planned Visits" translationStatus="7" />
         <Label id="FindCustomersId" text="Find Customers" translationStatus="7" />
-        <Label id="CreateCallId" text="Create Visit" translationStatus="7" />
+        <!-- <Label id="CreateCallId" text="Create Visit" translationStatus="7" /> -->
       </UserInterface>
       <UserInterface id="CallCancelWizardUI">
         <Label id="CallCancelTitleId" text="Cancel Visit" translationStatus="7" />
@@ -1231,8 +1231,8 @@
         <Label id="CallsNotValidForCreation" text="Visits were not valid and could not be created." translationStatus="7" />
         <Label id="EndOfDayReached" text="Visits could not be scheduled as end of the day was reached." translationStatus="7" />
       </UserInterface>
-      <UserInterface id="CallCreateNewWizardUI">
-        <Label id="CallCreateNewTitleId" text="New Visit" translationStatus="7" />
+      <!-- <UserInterface id="CallCreateNewWizardUI">
+         <Label id="CallCreateNewTitleId" text="New Visit" translationStatus="7" />
         <Label id="createNewCallId" text="Create" translationStatus="7" />
         <Label id="callTypeId" text="Visit Type" translationStatus="7" />
         <Label id="VisitDateId" text="Date" translationStatus="7" />
@@ -1245,7 +1245,7 @@
         <Label id="JobListValidFrom" text="Valid From" translationStatus="7" />
         <Label id="JobListValidThru" text="Valid Thru" translationStatus="7" />
         <Label id="AllDay" text="All Day" translationStatus="7" />
-      </UserInterface>
+      </UserInterface> -->
       <UserInterface id="CallInfoTabUI">
         <Label id="CallInformation" text="Visit Information" translationStatus="7" />
         <Label id="CustomerName" text="Customer" translationStatus="7" />
@@ -1701,8 +1701,8 @@
         <Label id="Spacer" text="    " translationStatus="7" />
       </UserInterface>
       <UserInterface id="CallAgendaWeeklyViewUI">
-        <Label id="createNewCallId" text="Create Visit" translationStatus="7" />
-        <Label id="createNewCallsViaTripListId" text="Create Visits Via TripList" translationStatus="7" />
+        <!-- <Label id="createNewCallId" text="Create Visit" translationStatus="7" /> -->
+        <!-- <Label id="createNewCallsViaTripListId" text="Create Visits Via TripList" translationStatus="7" /> -->
         <Label id="createNewCallsViaJobListsId" text="Plan Job Lists" translationStatus="7" />
         <Label id="createNewCallsViaManagedCustomersId" text="Plan Customers" translationStatus="7" />
         <Label id="AgendaSetFilterAllId" text="All visits" translationStatus="7" />
@@ -1946,7 +1946,7 @@
         <Label id="IssueTextId" text="Customer Task" translationStatus="7" />
         <Label id="ReleaseIssueId" text="Release" translationStatus="7" />
         <Label id="CompleteIssueId" text="Complete" translationStatus="7" />
-        <Label id="AddIssueId" text="Add Customer Task" translationStatus="7" />
+        <!-- <Label id="AddIssueId" text="Add Customer Task" translationStatus="7" /> -->
         <Label id="CreatedLabel" text="Created" translationStatus="7" />
         <Label id="DueLabel" text="Due" translationStatus="7" />
         <Label id="MainId" text="Main" translationStatus="7" />
@@ -2045,17 +2045,17 @@
         <Label id="SerialNumberId" text="Serial Number" translationStatus="7" />
         <Label id="DoneAssetId" text="Done" translationStatus="7" />
       </UserInterface>
-      <UserInterface id="IssueCreateNewWizardUI">
+      <!-- <UserInterface id="IssueCreateNewWizardUI">
         <Label id="AddIssueId" text="Add Customer Task" translationStatus="7" />
         <Label id="createNewIssueId" text="Create" translationStatus="7" />
         <Label id="IssueTypeId" text="Customer Task Type" translationStatus="7" />
         <Label id="CustomerId" text="Customer" translationStatus="7" />
         <Label id="Description" text="Description" translationStatus="7" />
         <Label id="DueDateId" text="Due Date" translationStatus="7" />
-      </UserInterface>
+      </UserInterface> -->
       <UserInterface id="IssueOverviewCallUI">
         <Label id="TitleId" text="Customer Tasks" translationStatus="7" />
-        <Label id="AddIssueId" text="Add Customer Task" translationStatus="7" />
+        <!-- <Label id="AddIssueId" text="Add Customer Task" translationStatus="7" /> -->
         <Label id="AllIssueId" text="All Customer Tasks" translationStatus="7" />
         <Label id="RelevantIssueId" text="Only Active" translationStatus="7" />
         <Label id="CreatedLabel" text="Created" translationStatus="7" />
@@ -2636,7 +2636,7 @@
         <Label id="OrderSelectSdoItemMeta" text="Item Template" translationStatus="7" />
       </UserInterface>
       <UserInterface id="CallTourViewUI">
-        <Label id="createNewCallId" text="Create Visit" translationStatus="7" />
+        <!-- <Label id="createNewCallId" text="Create Visit" translationStatus="7" /> -->
         <Label id="Break" text="Break" translationStatus="7" />
         <Label id="AgendaSetFilterAllId" text="All visits" translationStatus="7" />
         <Label id="OnlyAgendaSetFilterPlannedId" text="Only Planned visits" translationStatus="7" />
@@ -2948,7 +2948,7 @@
       </UserInterface>
       <UserInterface id="ApplicationCockpitUI">
         <Label id="VisitsCardTitle" text="Visits for today" translationStatus="7" />
-        <Label id="AddNewVisitId" text="Add new Visit" translationStatus="7" />
+        <!-- <Label id="AddNewVisitId" text="Add new Visit" translationStatus="7" /> -->
         <Label id="ShowCalendarLink" text="Show Visit Calendar" translationStatus="7" />
         <Label id="SynchDetailsLink" text="Synch Details" translationStatus="7" />
         <Label id="ReportingCardTitle" text="Reporting" translationStatus="7" />

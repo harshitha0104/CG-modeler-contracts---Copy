@@ -8,7 +8,7 @@
         <Resource target="title" type="Label" id="TitleId" defaultLabel="Issue Overview" bindingMode="ONE_TIME" />
       </Bindings>
       <MenuItems>
-        <MenuItem directlyVisible="true" itemId="AddIssue">
+        <!-- <MenuItem directlyVisible="true" itemId="AddIssue">
           <Bindings>
             <Resource target="Text" type="Label" id="AddIssueId" defaultLabel="Add Issue" />
             <Resource target="Icon" type="Image" id="Plus_PB" />
@@ -16,7 +16,7 @@
           <Events>
             <ButtonPressedEvent event="addIssue" />
           </Events>
-        </MenuItem>
+        </MenuItem> -->
       </MenuItems>
     </PageHeader>
     <!-- Master Section -->
